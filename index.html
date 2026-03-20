@@ -2168,6 +2168,159 @@
 
   calcSavings();
 
+  // ── REVIEWS CAROUSEL ──
+  const reviewCarousel = document.getElementById('reviewCarousel');
+  const reviewDotsWrap = document.getElementById('reviewDots');
+  if (reviewCarousel) {
+    const cards = reviewCarousel.querySelectorAll('.review-card');
+    const total = cards.length;
+    let rcur = 0;
+    let rTimer;
+    const rVisible = () => window.innerWidth < 700 ? 1 : window.innerWidth < 1100 ? 2 : 3;
+
+    function rBuildDots() {
+      if (!reviewDotsWrap) return;
+      reviewDotsWrap.innerHTML = '';
+      const pages = Math.ceil(total / rVisible());
+      const curPage = Math.floor(rcur / rVisible());
+      for (let i = 0; i < pages; i++) {
+        const d = document.createElement('div');
+        d.style.cssText = `width:${i===curPage?20:6}px;height:6px;border-radius:3px;background:${i===curPage?'var(--accent)':'var(--border)'};transition:all .3s;cursor:pointer`;
+        d.onclick = () => rGoTo(i * rVisible());
+        reviewDotsWrap.appendChild(d);
+      }
+    }
+
+    function rGoTo(n) {
+      rcur = Math.max(0, Math.min(n, total - rVisible()));
+      const w = cards[0].offsetWidth + 16;
+      reviewCarousel.style.transform = `translateX(-${rcur * w}px)`;
+      rBuildDots();
+    }
+
+    window.reviewNext = () => { const n = rcur + rVisible() >= total ? 0 : rcur + rVisible(); rGoTo(n); rReset(); };
+    window.reviewPrev = () => { rGoTo(Math.max(0, rcur - rVisible())); rReset(); };
+    function rReset() { clearInterval(rTimer); rTimer = setInterval(window.reviewNext, 4000); }
+
+    rBuildDots();
+    rReset();
+    window.addEventListener('resize', () => rGoTo(0));
+  }
+
+  // ── LIVE SAVINGS COUNTER ──
+  const liveSavingsEl = document.getElementById('liveSavings');
+  if (liveSavingsEl) {
+    let savings = 24000000;
+    const perSecond = 114;
+    const fmtSavings = n => n.toLocaleString('ru-RU');
+    liveSavingsEl.textContent = fmtSavings(savings);
+    setInterval(() => {
+      savings += perSecond;
+      liveSavingsEl.textContent = fmtSavings(savings);
+    }, 1000);
+  }
+
+  // ── ANIMATED COUNTERS ──
+  const counters = document.querySelectorAll('.counter');
+  const counterObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseInt(el.dataset.target);
+      const suffix = el.dataset.suffix || '';
+      const duration = 1200;
+      const step = target / (duration / 16);
+      let current = 0;
+      const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = Math.floor(current) + suffix;
+        if (current >= target) clearInterval(timer);
+      }, 16);
+      counterObserver.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(c => counterObserver.observe(c));
+
+  // ── SCROLL HASH ──
+  const sections = document.querySelectorAll('section[id]');
+  const hashObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.3) {
+        try { history.replaceState(null, '', '#' + entry.target.id); } catch(e) {}
+      }
+    });
+  }, { threshold: 0.3 });
+  sections.forEach(s => hashObserver.observe(s));
+
+  // ── STICKY CTA ──
+  const stickyCta = document.getElementById('stickyCta');
+  if (stickyCta) {
+    window.addEventListener('scroll', () => {
+      stickyCta.classList.toggle('visible', window.scrollY > 600);
+    });
+  }
+
+  // ── TARIFF PICKER IN CTA ──
+  let selectedTariff = 'Ещё не знаю';
+  function selectTariff(btn, name) {
+    document.querySelectorAll('.tariff-pick').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedTariff = name;
+  }
+
+  // ── FORM → TELEGRAM ──
+  function sendToTelegram() {
+    const name    = document.getElementById('ctaName')?.value || '';
+    const contact = document.getElementById('ctaContact')?.value || '';
+    const message = document.getElementById('ctaMessage')?.value || '';
+    const text = encodeURIComponent(
+      '👋 Новая заявка с сайта MAILSTACK\n\n' +
+      '📦 Тариф: ' + selectedTariff + '\n' +
+      (name    ? '📛 Имя: ' + name + '\n' : '') +
+      (contact ? '📬 Контакт: ' + contact + '\n' : '') +
+      (message ? '\n📝 Задача:\n' + message : '')
+    );
+    window.open('https://t.me/yourusername?text=' + text, '_blank');
+  }
+
+  // ── PAIN CAROUSEL ──
+  const carousel = document.getElementById('painCarousel');
+  const dotsWrap = document.getElementById('painDots');
+  if (carousel) {
+    const cards = carousel.querySelectorAll('.pain-card');
+    const total = cards.length;
+    const visible = () => window.innerWidth < 700 ? 1 : window.innerWidth < 1024 ? 2 : 3;
+    let cur = 0;
+    let autoTimer;
+
+    const pages = () => Math.ceil(total / visible());
+    function buildDots() {
+      dotsWrap.innerHTML = '';
+      for (let i = 0; i < pages(); i++) {
+        const d = document.createElement('div');
+        d.style.cssText = `width:${i===Math.floor(cur/visible())?20:6}px;height:6px;border-radius:3px;background:${i===Math.floor(cur/visible())?'var(--accent)':'var(--border)'};transition:all .3s;cursor:pointer`;
+        d.onclick = () => goTo(i * visible());
+        dotsWrap.appendChild(d);
+      }
+    }
+
+    function goTo(n) {
+      cur = Math.max(0, Math.min(n, total - visible()));
+      const cardW = cards[0].offsetWidth + 16;
+      carousel.style.transform = `translateX(-${cur * cardW}px)`;
+      buildDots();
+    }
+
+    window.painNext = () => { goTo(cur + visible()); if (cur >= total - visible()) goTo(0); resetAuto(); };
+    window.painPrev = () => { goTo(cur - visible()); if (cur < 0) goTo(0); resetAuto(); };
+
+    function resetAuto() { clearInterval(autoTimer); autoTimer = setInterval(() => { const next = cur + visible() >= total ? 0 : cur + visible(); goTo(next); }, 3500); }
+
+    buildDots();
+    resetAuto();
+    window.addEventListener('resize', () => { goTo(0); });
+  }
+
 </script>
 
 <!-- STICKY CTA -->
