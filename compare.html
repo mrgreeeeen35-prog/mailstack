@@ -782,7 +782,384 @@
     </div>
   </div>
 
-  <!-- ══ 6. ХОСТИНГ ══ -->
+  <!-- ══ 6. МОНИТОРИНГ ══ -->
+  <div class="compare-section" id="monitoring" style="padding-top:40px;border-top:1px solid var(--border)">
+    <div class="section-label">Мониторинг</div>
+    <h2>Мониторинг и<br><em>логи</em></h2>
+    <p class="section-desc">Контроль доступности, производительности, репутации и логов вашей email-инфраструктуры.</p>
+
+    <div class="tool-cards reveal">
+
+      <div class="tool-card recommended">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-free">Бесплатный</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★★</span> 4.9</div>
+        </div>
+        <div class="tool-name">Grafana + Prometheus</div>
+        <div class="tool-type">Дашборды и метрики</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · <a href="https://grafana.com" target="_blank" style="color:var(--accent);text-decoration:none">grafana.com ↗</a></div>
+        <div class="tool-desc">Дашборды в реальном времени: очереди писем, bounce rate, latency. Prometheus собирает метрики, Grafana визуализирует.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Дашборды в реальном времени</div>
+          <div class="pro">Гибкие алёрты по любым метрикам</div>
+          <div class="pro">Тысячи готовых дашбордов для Postfix, Dovecot</div>
+          <div class="con">Требует настройки экспортёров метрик</div>
+          <div class="con">Prometheus потребляет RAM при большом объёме</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          5 000 ₽ — настройка Grafana + Prometheus с дашбордами для вашей email-инфраструктуры.
+        </div>
+        <div class="tool-best">→ Лучший выбор для метрик и дашбордов</div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-free">Бесплатный</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★☆</span> 4.5</div>
+        </div>
+        <div class="tool-name">UptimeKuma</div>
+        <div class="tool-type">Мониторинг доступности</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · <a href="https://uptime.kuma.pet" target="_blank" style="color:var(--accent);text-decoration:none">uptime.kuma.pet ↗</a></div>
+        <div class="tool-desc">Простой мониторинг доступности сервисов с уведомлениями в Telegram, Slack и email. Красивый интерфейс.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Красивый и простой интерфейс</div>
+          <div class="pro">Уведомления в Telegram, Slack, email</div>
+          <div class="pro">Минимальные требования к серверу</div>
+          <div class="con">Только мониторинг доступности, не метрики</div>
+          <div class="con">Нет анализа логов</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          3 000 ₽ — установка и настройка UptimeKuma с мониторингом всех сервисов.
+        </div>
+        <div class="tool-best">→ Простой uptime-мониторинг</div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-free">Бесплатный</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★☆</span> 4.2</div>
+        </div>
+        <div class="tool-name">Graylog</div>
+        <div class="tool-type">Централизованные логи</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · <a href="https://graylog.org" target="_blank" style="color:var(--accent);text-decoration:none">graylog.org ↗</a></div>
+        <div class="tool-desc">Централизованный сбор и анализ логов. Поиск по логам Postfix, Dovecot, Rspamd в одном интерфейсе.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Поиск по логам всех сервисов в одном месте</div>
+          <div class="pro">Алёрты по паттернам в логах</div>
+          <div class="pro">Визуализация и дашборды</div>
+          <div class="con">Требует Elasticsearch — тяжелее</div>
+          <div class="con">Нужно 4+ ГБ RAM</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          5 000 ₽ — установка Graylog с настройкой сбора логов Postfix, Dovecot, Rspamd.
+        </div>
+        <div class="tool-best">→ Централизованные логи и поиск</div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-free">Бесплатный</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★★</span> 4.8</div>
+        </div>
+        <div class="tool-name">Blacklist-мониторинг</div>
+        <div class="tool-type">Проверка репутации IP</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · <a href="https://mxtoolbox.com/blacklists.aspx" target="_blank" style="color:var(--accent);text-decoration:none">mxtoolbox.com ↗</a></div>
+        <div class="tool-desc">Автоматическая проверка всех IP-адресов по 80+ DNSBL-спискам. Мгновенные алёрты при попадании в blacklist.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Проверка 80+ blacklist баз одновременно</div>
+          <div class="pro">Алёрты в Telegram при попадании в список</div>
+          <div class="pro">Автоматический мониторинг по расписанию</div>
+          <div class="con">Некоторые DNSBL имеют rate limits</div>
+          <div class="con">Delisting может занять 24–48ч</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          4 000 ₽ — настройка автоматического blacklist-мониторинга с алёртами.
+        </div>
+        <div class="tool-best">→ Обязателен для контроля репутации IP</div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-free">Бесплатный</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★★</span> 4.7</div>
+        </div>
+        <div class="tool-name">Google Postmaster + SNDS</div>
+        <div class="tool-type">Репутация у провайдеров</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · <a href="https://postmaster.google.com" target="_blank" style="color:var(--accent);text-decoration:none">postmaster.google.com ↗</a></div>
+        <div class="tool-desc">Официальные инструменты от Google и Microsoft для отслеживания репутации домена и IP. Показывают spam rate, authentication, delivery errors.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Данные напрямую от Google и Microsoft</div>
+          <div class="pro">Spam rate, репутация домена и IP</div>
+          <div class="pro">Ошибки доставки и аутентификации</div>
+          <div class="con">Данные с задержкой 24–48 часов</div>
+          <div class="con">Нужен минимальный объём для статистики</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          4 000 ₽ — подключение Google Postmaster Tools + Microsoft SNDS, настройка мониторинга.
+        </div>
+        <div class="tool-best">→ Контроль репутации у Gmail и Outlook</div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-free">Бесплатный</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★☆</span> 4.4</div>
+        </div>
+        <div class="tool-name">Parsedmarc (DMARC-агрегатор)</div>
+        <div class="tool-type">Аналитика DMARC-отчётов</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · <a href="https://domainaware.github.io/parsedmarc/" target="_blank" style="color:var(--accent);text-decoration:none">parsedmarc ↗</a></div>
+        <div class="tool-desc">Парсинг и визуализация DMARC-отчётов. Показывает кто отправляет почту от вашего домена, SPF/DKIM pass rate.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Автоматический парсинг DMARC XML</div>
+          <div class="pro">Визуализация через Grafana/Elasticsearch</div>
+          <div class="pro">Выявление несанкционированной отправки</div>
+          <div class="con">Требует настройки DMARC rua/ruf записей</div>
+          <div class="con">Нужен Elasticsearch для хранения</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          4 000 ₽ — настройка Parsedmarc с визуализацией DMARC-отчётов в Grafana.
+        </div>
+        <div class="tool-best">→ Аналитика DMARC и защита домена</div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-free">Бесплатный</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★☆</span> 4.3</div>
+        </div>
+        <div class="tool-name">Мониторинг очередей</div>
+        <div class="tool-type">Контроль mail queue</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · скрипты + Grafana</div>
+        <div class="tool-desc">Мониторинг очередей Postfix/Postal в реальном времени. Алёрты при росте deferred/bounce очередей выше порога.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Раннее обнаружение проблем с доставкой</div>
+          <div class="pro">Алёрты при переполнении очередей</div>
+          <div class="pro">Интеграция с Grafana дашбордами</div>
+          <div class="con">Требует кастомных экспортёров</div>
+          <div class="con">Пороги нужно калибровать под объём</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          3 000 ₽ — настройка мониторинга очередей с алёртами в Telegram.
+        </div>
+        <div class="tool-best">→ Контроль очередей и раннее обнаружение проблем</div>
+      </div>
+
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-title">✓ Вердикт MAILSTACK</div>
+      <div class="verdict-text"><strong>Grafana + Prometheus</strong> — основа мониторинга, метрики и дашборды. <strong>Blacklist-мониторинг</strong> и <strong>Google Postmaster + SNDS</strong> — обязательны для контроля репутации. <strong>UptimeKuma</strong> — простой uptime-чек. <strong>Parsedmarc</strong> — аналитика DMARC-отчётов. <strong>Graylog</strong> — если нужен поиск по логам. <strong>Мониторинг очередей</strong> — раннее обнаружение проблем доставки.</div>
+    </div>
+  </div>
+
+  <!-- ══ 7. БЕЗОПАСНОСТЬ ══ -->
+  <div class="compare-section" id="security" style="padding-top:40px;border-top:1px solid var(--border)">
+    <div class="section-label">Безопасность</div>
+    <h2>Защита<br><em>инфраструктуры</em></h2>
+    <p class="section-desc">Полная защита почтовых серверов: firewall, VPN, антиспам, hardening и контроль доступа.</p>
+
+    <div class="tool-cards reveal">
+
+      <div class="tool-card recommended">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-free">Бесплатный</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★★</span> 4.9</div>
+        </div>
+        <div class="tool-name">UFW / iptables</div>
+        <div class="tool-type">Firewall</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · встроен в Linux</div>
+        <div class="tool-desc">Базовый firewall — первый рубеж защиты. UFW — удобная обёртка над iptables. Открываем только нужные порты: 25, 465, 587, 993, 443.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Встроен в систему, нулевой overhead</div>
+          <div class="pro">Простые правила через UFW</div>
+          <div class="pro">Блокировка по IP/портам/протоколам</div>
+          <div class="con">Нет анализа трафика (только правила)</div>
+          <div class="con">UFW не поддерживает сложную маршрутизацию</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          3 000 ₽ — настройка UFW с правилами для email-сервисов и rate limiting.
+        </div>
+        <div class="tool-best">→ Обязательный базовый firewall</div>
+      </div>
+
+      <div class="tool-card recommended">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-free">Бесплатный</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★★</span> 4.9</div>
+        </div>
+        <div class="tool-name">WireGuard</div>
+        <div class="tool-type">VPN между серверами</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · <a href="https://www.wireguard.com" target="_blank" style="color:var(--accent);text-decoration:none">wireguard.com ↗</a></div>
+        <div class="tool-desc">Лёгкий и быстрый VPN для связи между серверами. Шифрованный туннель с минимальным overhead.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Минимальный overhead — быстрее OpenVPN</div>
+          <div class="pro">Простая настройка и конфигурация</div>
+          <div class="pro">Встроен в ядро Linux</div>
+          <div class="con">Нет встроенного управления пользователями</div>
+          <div class="con">Только UDP — может блокироваться</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          4 000 ₽ — настройка WireGuard VPN между серверами email-инфраструктуры.
+        </div>
+        <div class="tool-best">→ Лучший VPN для серверной связки</div>
+      </div>
+
+      <div class="tool-card recommended">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-free">Бесплатный</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★★</span> 4.8</div>
+        </div>
+        <div class="tool-name">Rspamd</div>
+        <div class="tool-type">Антиспам-фильтр</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · <a href="https://rspamd.com" target="_blank" style="color:var(--accent);text-decoration:none">rspamd.com ↗</a></div>
+        <div class="tool-desc">Мощный антиспам: машинное обучение, Bayes-фильтр, DKIM/ARC подпись, greylisting, rate limiting. Быстрее SpamAssassin в 10x.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">ML + Bayes фильтрация спама</div>
+          <div class="pro">DKIM/ARC подпись исходящей почты</div>
+          <div class="pro">Веб-интерфейс с графиками и статистикой</div>
+          <div class="con">Требует Redis для хранения статистики</div>
+          <div class="con">Обучение Bayes требует начального датасета</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          5 000 ₽ — настройка Rspamd с DKIM, Bayes-фильтром, greylisting и rate limiting.
+        </div>
+        <div class="tool-best">→ Лучший антиспам для почтовых серверов</div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-free">Бесплатный</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★☆</span> 4.5</div>
+        </div>
+        <div class="tool-name">CrowdSec</div>
+        <div class="tool-type">Коллективная защита</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · <a href="https://www.crowdsec.net" target="_blank" style="color:var(--accent);text-decoration:none">crowdsec.net ↗</a></div>
+        <div class="tool-desc">Коллективная защита: анализирует логи и блокирует атакующих на основе данных сообщества. Современная альтернатива Fail2ban.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Коллективная база атакующих IP</div>
+          <div class="pro">Современный движок анализа логов</div>
+          <div class="pro">Интеграция с firewall и CDN</div>
+          <div class="con">Требует подключения к облаку CrowdSec</div>
+          <div class="con">Сложнее в настройке чем Fail2ban</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          3 000 ₽ — установка CrowdSec с настройкой защиты SSH, Postfix, Dovecot.
+        </div>
+        <div class="tool-best">→ Коллективная IPS-защита</div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-free">Бесплатный</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★☆</span> 4.3</div>
+        </div>
+        <div class="tool-name">Fail2ban</div>
+        <div class="tool-type">Защита от брутфорса</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · <a href="https://www.fail2ban.org" target="_blank" style="color:var(--accent);text-decoration:none">fail2ban.org ↗</a></div>
+        <div class="tool-desc">Классическая защита: парсит логи и банит IP после N неудачных попыток входа. Работает с SSH, Postfix, Dovecot.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Простой и проверенный временем</div>
+          <div class="pro">Работает с SSH, Postfix, Dovecot из коробки</div>
+          <div class="pro">Минимальное потребление ресурсов</div>
+          <div class="con">Только локальная защита, нет community IP</div>
+          <div class="con">Настройка через конфиги, нет веб-интерфейса</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          2 000 ₽ — установка Fail2ban с настройкой защиты SSH, Postfix, Dovecot.
+        </div>
+        <div class="tool-best">→ Классическая защита от брутфорса</div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-free">Бесплатный</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★☆</span> 4.4</div>
+        </div>
+        <div class="tool-name">SSL/TLS Hardening</div>
+        <div class="tool-type">Шифрование соединений</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · Let's Encrypt + конфигурация</div>
+        <div class="tool-desc">Настройка TLS 1.2/1.3 для всех сервисов: Postfix, Dovecot, Nginx. Let's Encrypt сертификаты с автообновлением. DANE/TLSA записи.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Бесплатные сертификаты Let's Encrypt</div>
+          <div class="pro">Автообновление через certbot</div>
+          <div class="pro">DANE/TLSA повышает доверие получателей</div>
+          <div class="con">Certbot иногда конфликтует с панелями</div>
+          <div class="con">DANE требует DNSSEC на домене</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          3 000 ₽ — настройка TLS 1.3, Let's Encrypt, DANE/TLSA для всех сервисов.
+        </div>
+        <div class="tool-best">→ Обязательное шифрование всех соединений</div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-free">Бесплатный</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★☆</span> 4.4</div>
+        </div>
+        <div class="tool-name">SSH Hardening</div>
+        <div class="tool-type">Защита SSH-доступа</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · конфигурация sshd</div>
+        <div class="tool-desc">Отключение root login, парольной аутентификации, смена порта. Только ключи Ed25519, AllowUsers, MaxAuthTries.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Нулевой overhead — только конфигурация</div>
+          <div class="pro">Ключи Ed25519 вместо паролей</div>
+          <div class="pro">Резко снижает поверхность атаки</div>
+          <div class="con">Потеря ключа = потеря доступа</div>
+          <div class="con">Нестандартный порт может мешать скриптам</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          3 000 ₽ — полный hardening SSH: ключи, порт, AllowUsers, MaxAuthTries.
+        </div>
+        <div class="tool-best">→ Базовый hardening доступа к серверу</div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-free">Бесплатный</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★☆</span> 4.2</div>
+        </div>
+        <div class="tool-name">2FA для панелей</div>
+        <div class="tool-type">Двухфакторная аутентификация</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · TOTP (Google Authenticator)</div>
+        <div class="tool-desc">Двухфакторная аутентификация для Mailcow, MailWizz, Grafana и других панелей. TOTP через Google Authenticator или Authy.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Защита даже при утечке пароля</div>
+          <div class="pro">Поддержка всех панелей управления</div>
+          <div class="pro">Бесплатные TOTP-приложения</div>
+          <div class="con">Потеря TOTP-устройства = блокировка</div>
+          <div class="con">Не все панели поддерживают нативно</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          3 000 ₽ — настройка 2FA на всех панелях управления инфраструктурой.
+        </div>
+        <div class="tool-best">→ Дополнительный уровень защиты панелей</div>
+      </div>
+
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-title">✓ Вердикт MAILSTACK</div>
+      <div class="verdict-text"><strong>UFW</strong> + <strong>SSH Hardening</strong> + <strong>SSL/TLS</strong> — обязательный минимум на каждом сервере. <strong>WireGuard</strong> — для связи между серверами. <strong>Rspamd</strong> — антиспам и DKIM-подпись. <strong>CrowdSec</strong> — коллективная защита от атак. <strong>Fail2ban</strong> — если не нужна коллективная база. <strong>2FA</strong> — для всех веб-панелей.</div>
+    </div>
+  </div>
+
+  <!-- ══ 8. ХОСТИНГ ══ -->
   <div class="compare-section" id="hosting" style="padding-top:40px;border-top:1px solid var(--border)">
     <div class="section-label">Хостинг / VPS</div>
     <h2>Где держать<br><em>сервер?</em></h2>
@@ -1149,176 +1526,6 @@
         <strong>Максимум RAM за минимум денег</strong> → Contabo или Netcup.<br>
         <strong>Категорически избегать</strong> → DigitalOcean, Vultr, AWS, GCP, Azure для рассылок.
       </div>
-    </div>
-  </div>
-
-  <!-- ══ 7. МОНИТОРИНГ ══ -->
-  <div class="compare-section" id="monitoring" style="padding-top:40px;border-top:1px solid var(--border)">
-    <div class="section-label">Мониторинг</div>
-    <h2>Мониторинг и<br><em>логи</em></h2>
-    <p class="section-desc">Контроль доступности, производительности и логов вашей email-инфраструктуры.</p>
-
-    <div class="tool-cards reveal">
-
-      <div class="tool-card recommended">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-          <div class="tool-badge badge-free">Бесплатный</div>
-          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★★</span> 4.9</div>
-        </div>
-        <div class="tool-name">Grafana + Prometheus</div>
-        <div class="tool-type">Дашборды и метрики</div>
-        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · <a href="https://grafana.com" target="_blank" style="color:var(--accent);text-decoration:none">grafana.com ↗</a></div>
-        <div class="tool-desc">Дашборды в реальном времени: очереди писем, bounce rate, latency. Prometheus собирает метрики, Grafana визуализирует.</div>
-        <div class="tool-pros-cons">
-          <div class="pro">Дашборды в реальном времени</div>
-          <div class="pro">Гибкие алёрты по любым метрикам</div>
-          <div class="pro">Тысячи готовых дашбордов для Postfix, Dovecot</div>
-          <div class="con">Требует настройки экспортёров метрик</div>
-          <div class="con">Prometheus потребляет RAM при большом объёме</div>
-        </div>
-        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
-          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
-          5 000 ₽ — настройка Grafana + Prometheus с дашбордами для вашей email-инфраструктуры.
-        </div>
-        <div class="tool-best">→ Лучший выбор для метрик и дашбордов</div>
-      </div>
-
-      <div class="tool-card">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-          <div class="tool-badge badge-free">Бесплатный</div>
-          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★☆</span> 4.5</div>
-        </div>
-        <div class="tool-name">UptimeKuma</div>
-        <div class="tool-type">Мониторинг доступности</div>
-        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · <a href="https://uptime.kuma.pet" target="_blank" style="color:var(--accent);text-decoration:none">uptime.kuma.pet ↗</a></div>
-        <div class="tool-desc">Простой мониторинг доступности сервисов с уведомлениями в Telegram, Slack и email. Красивый интерфейс.</div>
-        <div class="tool-pros-cons">
-          <div class="pro">Красивый и простой интерфейс</div>
-          <div class="pro">Уведомления в Telegram, Slack, email</div>
-          <div class="pro">Минимальные требования к серверу</div>
-          <div class="con">Только мониторинг доступности, не метрики</div>
-          <div class="con">Нет анализа логов</div>
-        </div>
-        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
-          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
-          3 000 ₽ — установка и настройка UptimeKuma с мониторингом всех сервисов.
-        </div>
-        <div class="tool-best">→ Простой uptime-мониторинг</div>
-      </div>
-
-      <div class="tool-card">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-          <div class="tool-badge badge-free">Бесплатный</div>
-          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★☆</span> 4.2</div>
-        </div>
-        <div class="tool-name">Graylog</div>
-        <div class="tool-type">Централизованные логи</div>
-        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · <a href="https://graylog.org" target="_blank" style="color:var(--accent);text-decoration:none">graylog.org ↗</a></div>
-        <div class="tool-desc">Централизованный сбор и анализ логов. Поиск по логам Postfix, Dovecot, Rspamd в одном интерфейсе.</div>
-        <div class="tool-pros-cons">
-          <div class="pro">Поиск по логам всех сервисов в одном месте</div>
-          <div class="pro">Алёрты по паттернам в логах</div>
-          <div class="pro">Визуализация и дашборды</div>
-          <div class="con">Требует Elasticsearch — тяжелее</div>
-          <div class="con">Нужно 4+ ГБ RAM</div>
-        </div>
-        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
-          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
-          5 000 ₽ — установка Graylog с настройкой сбора логов Postfix, Dovecot, Rspamd.
-        </div>
-        <div class="tool-best">→ Централизованные логи и поиск</div>
-      </div>
-
-    </div>
-
-    <div class="verdict">
-      <div class="verdict-title">✓ Вердикт MAILSTACK</div>
-      <div class="verdict-text"><strong>Grafana + Prometheus</strong> — для метрик и дашбордов в реальном времени. <strong>UptimeKuma</strong> — для простого мониторинга доступности с уведомлениями. <strong>Graylog</strong> — если нужен поиск и анализ логов всех сервисов в одном месте.</div>
-    </div>
-  </div>
-
-  <!-- ══ 8. БЕЗОПАСНОСТЬ ══ -->
-  <div class="compare-section" id="security" style="padding-top:40px;border-top:1px solid var(--border)">
-    <div class="section-label">Безопасность</div>
-    <h2>Защита<br><em>инфраструктуры</em></h2>
-    <p class="section-desc">VPN, защита от брутфорса и коллективная безопасность для почтовых серверов.</p>
-
-    <div class="tool-cards reveal">
-
-      <div class="tool-card recommended">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-          <div class="tool-badge badge-free">Бесплатный</div>
-          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★★</span> 4.9</div>
-        </div>
-        <div class="tool-name">WireGuard</div>
-        <div class="tool-type">VPN между серверами</div>
-        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · <a href="https://www.wireguard.com" target="_blank" style="color:var(--accent);text-decoration:none">wireguard.com ↗</a></div>
-        <div class="tool-desc">Лёгкий и быстрый VPN для связи между серверами. Шифрованный туннель с минимальным overhead.</div>
-        <div class="tool-pros-cons">
-          <div class="pro">Минимальный overhead — быстрее OpenVPN</div>
-          <div class="pro">Простая настройка и конфигурация</div>
-          <div class="pro">Встроен в ядро Linux</div>
-          <div class="con">Нет встроенного управления пользователями</div>
-          <div class="con">Только UDP — может блокироваться</div>
-        </div>
-        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
-          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
-          4 000 ₽ — настройка WireGuard VPN между серверами email-инфраструктуры.
-        </div>
-        <div class="tool-best">→ Лучший VPN для серверной связки</div>
-      </div>
-
-      <div class="tool-card">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-          <div class="tool-badge badge-free">Бесплатный</div>
-          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★☆</span> 4.5</div>
-        </div>
-        <div class="tool-name">CrowdSec</div>
-        <div class="tool-type">Коллективная защита</div>
-        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · <a href="https://www.crowdsec.net" target="_blank" style="color:var(--accent);text-decoration:none">crowdsec.net ↗</a></div>
-        <div class="tool-desc">Коллективная защита: анализирует логи и блокирует атакующих на основе данных сообщества. Современная альтернатива Fail2ban.</div>
-        <div class="tool-pros-cons">
-          <div class="pro">Коллективная база атакующих IP</div>
-          <div class="pro">Современный движок анализа логов</div>
-          <div class="pro">Интеграция с firewall и CDN</div>
-          <div class="con">Требует подключения к облаку CrowdSec</div>
-          <div class="con">Сложнее в настройке чем Fail2ban</div>
-        </div>
-        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
-          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
-          3 000 ₽ — установка CrowdSec с настройкой защиты SSH, Postfix, Dovecot.
-        </div>
-        <div class="tool-best">→ Коллективная IPS-защита</div>
-      </div>
-
-      <div class="tool-card">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-          <div class="tool-badge badge-free">Бесплатный</div>
-          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★☆</span> 4.3</div>
-        </div>
-        <div class="tool-name">Fail2ban</div>
-        <div class="tool-type">Защита от брутфорса</div>
-        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · <a href="https://www.fail2ban.org" target="_blank" style="color:var(--accent);text-decoration:none">fail2ban.org ↗</a></div>
-        <div class="tool-desc">Классическая защита: парсит логи и банит IP после N неудачных попыток входа. Работает с SSH, Postfix, Dovecot.</div>
-        <div class="tool-pros-cons">
-          <div class="pro">Простой и проверенный временем</div>
-          <div class="pro">Работает с SSH, Postfix, Dovecot из коробки</div>
-          <div class="pro">Минимальное потребление ресурсов</div>
-          <div class="con">Только локальная защита, нет community IP</div>
-          <div class="con">Настройка через конфиги, нет веб-интерфейса</div>
-        </div>
-        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
-          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
-          2 000 ₽ — установка Fail2ban с настройкой защиты SSH, Postfix, Dovecot.
-        </div>
-        <div class="tool-best">→ Классическая защита от брутфорса</div>
-      </div>
-
-    </div>
-
-    <div class="verdict">
-      <div class="verdict-title">✓ Вердикт MAILSTACK</div>
-      <div class="verdict-text"><strong>WireGuard</strong> — обязателен для связи между серверами. <strong>CrowdSec</strong> — современная защита с коллективной базой атакующих. <strong>Fail2ban</strong> — проверенный минимум, если не нужна коллективная защита. Рекомендуем WireGuard + CrowdSec на каждом сервере.</div>
     </div>
   </div>
 
