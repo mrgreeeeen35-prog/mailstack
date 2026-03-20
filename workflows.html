@@ -929,11 +929,7 @@ document.querySelectorAll('.wf-tab').forEach(tab=>{
     tab.classList.add('active');
     const f=tab.dataset.filter;
     document.querySelectorAll('.wf-card').forEach(card=>{
-      if(f==='all'||card.dataset.tags.includes(f)){
-        card.style.display='';
-      }else{
-        card.style.display='none';
-      }
+      card.style.display=(f==='all'||card.dataset.tags.includes(f))?'block':'none';
     });
   });
 });
