@@ -162,12 +162,70 @@
 }
 .faq-item.open .faq-a { max-height: 300px; padding-bottom: 22px; }
 
+/* ── CONSTRUCTOR ── */
+.constructor-wrap { max-width: 1100px; }
+.constructor-cols {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 32px;
+  align-items: start;
+}
+.c-cat-tabs { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:20px; }
+.c-cat-tab { background:transparent; border:1px solid var(--border); color:var(--muted); padding:8px 16px; font-family:var(--font-mono); font-size:12px; cursor:pointer; transition:all 0.2s; letter-spacing:.04em; }
+.c-cat-tab:hover { border-color:var(--muted); color:var(--text); }
+.c-cat-tab.active { background:var(--accent); border-color:var(--accent); color:var(--bg); }
+.c-cat-panel { display:none; }
+.c-cat-panel.active { display:block; }
+.c-cards-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:10px; }
+.c-card { background:var(--bg); border:1px solid var(--border); padding:14px; cursor:pointer; transition:all 0.2s; position:relative; }
+.c-card:hover { border-color:rgba(0,229,255,.4); background:var(--surface); }
+.c-card.selected { border-color:var(--accent); background:rgba(0,229,255,.06); }
+.c-card.selected::after { content:'✓'; position:absolute; top:8px; right:10px; color:var(--accent); font-size:12px; font-weight:700; }
+.c-card-name { font-family:var(--font-head); font-size:14px; font-weight:700; color:var(--heading); margin-bottom:3px; }
+.c-card-desc { font-size:11px; color:var(--muted); line-height:1.5; margin-bottom:6px; }
+.c-card-badge { display:inline-block; font-size:9px; padding:1px 7px; margin-bottom:6px; letter-spacing:.06em; text-transform:uppercase; }
+.badge-rec  { background:rgba(0,255,136,.12); color:var(--accent3); border:1px solid rgba(0,255,136,.2); }
+.badge-free { background:rgba(0,255,136,.08); color:var(--accent3); border:1px solid rgba(0,255,136,.15); }
+.badge-paid { background:rgba(255,255,255,.05); color:var(--muted); border:1px solid var(--border); }
+.c-card-price { font-size:12px; color:var(--accent); font-weight:500; font-family:var(--font-mono); }
+.c-cat-note { font-size:11px; color:var(--muted); padding-top:6px; }
+.c-summary {
+  position: sticky;
+  top: 100px;
+  background: var(--surface);
+  border: 1px solid rgba(0,229,255,0.2);
+  padding: 32px;
+}
+.c-summary-title {
+  font-family: var(--font-head);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--heading);
+  margin-bottom: 20px;
+}
+.c-summary-list { min-height: 80px; }
+.c-empty { font-size: 13px; color: var(--muted); font-style: italic; }
+.c-summary-item {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: fadeUp 0.25s ease both;
+}
+.c-summary-item::before { content: '→'; color: var(--accent3); flex-shrink: 0; font-size: 12px; }
+.c-divider { height: 1px; background: var(--border); margin: 20px 0; }
+
 @media (max-width: 900px) {
   .service-full { grid-template-columns: 1fr; }
   .service-full:nth-child(even) .service-full-content { order: 1; border-left: none; }
   .service-full:nth-child(even) .service-full-visual { order: 2; border-left: none; border-top: 1px solid var(--border); }
   .service-full-visual { border-left: none; border-top: 1px solid var(--border); }
   .process-steps { grid-template-columns: 1fr 1fr; }
+  .constructor-cols { grid-template-columns: 1fr; }
+  .c-cards-grid { grid-template-columns: repeat(2,1fr); }
 }
 </style>
 </head>
@@ -208,6 +266,252 @@
   </div>
 </div>
 
+<!-- CONSTRUCTOR + CATALOG -->
+<section id="constructor" style="background: var(--bg2);">
+  <div class="section-label">Конструктор</div>
+  <h2>Собери свой<br><em>стек</em></h2>
+  <p class="section-desc">Выбери инструменты — справа соберётся твой стек и появится подходящий тариф.</p>
+
+  <div class="constructor-wrap reveal">
+    <div class="constructor-cols">
+
+      <!-- LEFT: tabbed catalog -->
+      <div class="constructor-left">
+
+        <!-- Category tabs -->
+        <div class="c-cat-tabs">
+          <button class="c-cat-tab active" data-ccat="mta">📡 Сервер</button>
+          <button class="c-cat-tab" data-ccat="marketing">📊 Рассылки</button>
+          <button class="c-cat-tab" data-ccat="support">💬 Поддержка</button>
+          <button class="c-cat-tab" data-ccat="automation">⚙️ Автоматизация</button>
+          <button class="c-cat-tab" data-ccat="extra">🔥 Доп. услуги</button>
+        </div>
+
+        <!-- MTA -->
+        <div class="c-cat-panel active" data-panel="mta">
+          <div class="c-cards-grid">
+            <div class="c-card" data-key="mta-bundle" data-price="17000" data-group="mta" data-radio="1">
+              <div class="c-card-name">Mailcow + Postal</div>
+              <div class="c-card-desc">Приём + отправка — полный стек</div>
+              <div class="c-card-badge badge-rec">рекомендуется</div>
+              <div class="c-card-price">17 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="mta-mailcow" data-price="8000" data-group="mta" data-radio="1">
+              <div class="c-card-name">Mailcow</div>
+              <div class="c-card-desc">Только приём и хранение почты</div>
+              <div class="c-card-price">8 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="mta-postal" data-price="9000" data-group="mta" data-radio="1">
+              <div class="c-card-name">Postal</div>
+              <div class="c-card-desc">Только отправка и ротация IP</div>
+              <div class="c-card-price">9 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="mta-iredmail" data-price="6000" data-group="mta" data-radio="1">
+              <div class="c-card-name">iRedMail</div>
+              <div class="c-card-desc">Готовый стек Postfix + Dovecot</div>
+              <div class="c-card-price">6 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="mta-postfix" data-price="12000" data-group="mta" data-radio="1">
+              <div class="c-card-name">Postfix / Exim</div>
+              <div class="c-card-desc">Ручная настройка под задачу</div>
+              <div class="c-card-price">12 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="mta-mailu" data-price="6000" data-group="mta" data-radio="1">
+              <div class="c-card-name">Mailu</div>
+              <div class="c-card-desc">Простая альтернатива Mailcow</div>
+              <div class="c-card-price">6 000 ₽</div>
+            </div>
+          </div>
+          <div class="c-cat-note">Выбери один — он будет основой стека</div>
+        </div>
+
+        <!-- MARKETING -->
+        <div class="c-cat-panel" data-panel="marketing">
+          <div class="c-cards-grid">
+            <div class="c-card" data-key="mk-mailwizz" data-price="5000" data-group="marketing">
+              <div class="c-card-name">MailWizz</div>
+              <div class="c-card-desc">Платформа рассылок с мульти-SMTP</div>
+              <div class="c-card-badge badge-paid">лицензия отдельно</div>
+              <div class="c-card-price">5 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="mk-mautic" data-price="5000" data-group="marketing">
+              <div class="c-card-name">Mautic</div>
+              <div class="c-card-desc">CRM + маркетинг + автоматизации</div>
+              <div class="c-card-badge badge-free">бесплатный</div>
+              <div class="c-card-price">5 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="mk-listmonk" data-price="3000" data-group="marketing">
+              <div class="c-card-name">Listmonk</div>
+              <div class="c-card-desc">Лёгкий инструмент для рассылок</div>
+              <div class="c-card-badge badge-free">бесплатный</div>
+              <div class="c-card-price">3 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="mk-sendy" data-price="3000" data-group="marketing">
+              <div class="c-card-name">Sendy</div>
+              <div class="c-card-desc">Рассылки через Amazon SES</div>
+              <div class="c-card-price">3 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="mk-phplist" data-price="3000" data-group="marketing">
+              <div class="c-card-name">phpList</div>
+              <div class="c-card-desc">Надёжный менеджер подписчиков</div>
+              <div class="c-card-badge badge-free">бесплатный</div>
+              <div class="c-card-price">3 000 ₽</div>
+            </div>
+          </div>
+          <div class="c-cat-note">Можно выбрать несколько</div>
+        </div>
+
+        <!-- SUPPORT -->
+        <div class="c-cat-panel" data-panel="support">
+          <div class="c-cards-grid">
+            <div class="c-card" data-key="sup-chatwoot" data-price="5000" data-group="support">
+              <div class="c-card-name">Chatwoot</div>
+              <div class="c-card-desc">Email, Telegram, WhatsApp в одном инбоксе</div>
+              <div class="c-card-badge badge-free">бесплатный</div>
+              <div class="c-card-price">5 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="sup-zammad" data-price="5000" data-group="support">
+              <div class="c-card-name">Zammad</div>
+              <div class="c-card-desc">Helpdesk с тикетами и SLA</div>
+              <div class="c-card-badge badge-free">бесплатный</div>
+              <div class="c-card-price">5 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="sup-freescout" data-price="4000" data-group="support">
+              <div class="c-card-name">FreeScout</div>
+              <div class="c-card-desc">Общие почтовые ящики для команды</div>
+              <div class="c-card-badge badge-free">бесплатный</div>
+              <div class="c-card-price">4 000 ₽</div>
+            </div>
+          </div>
+          <div class="c-cat-note">Можно выбрать несколько</div>
+        </div>
+
+        <!-- AUTOMATION -->
+        <div class="c-cat-panel" data-panel="automation">
+          <div class="c-cards-grid">
+            <div class="c-card" data-key="au-n8n" data-price="5000" data-group="automation">
+              <div class="c-card-name">n8n</div>
+              <div class="c-card-desc">500+ интеграций, триггеры, вебхуки</div>
+              <div class="c-card-badge badge-free">бесплатный</div>
+              <div class="c-card-price">5 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="au-activepieces" data-price="4000" data-group="automation">
+              <div class="c-card-name">Activepieces</div>
+              <div class="c-card-desc">Современная альтернатива Zapier</div>
+              <div class="c-card-badge badge-free">бесплатный</div>
+              <div class="c-card-price">4 000 ₽</div>
+            </div>
+          </div>
+          <div class="c-cat-note">Можно выбрать несколько</div>
+        </div>
+
+        <!-- EXTRA -->
+        <div class="c-cat-panel" data-panel="extra">
+          <div class="c-cards-grid">
+            <div class="c-card" data-key="ex-warmup-manual" data-price="5000" data-group="extra">
+              <div class="c-card-name">Ручной прогрев</div>
+              <div class="c-card-desc">Веду прогрев домена до рабочего объёма</div>
+              <div class="c-card-price">5 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="ex-warmup-auto" data-price="3000" data-group="extra">
+              <div class="c-card-name">Автопрогрев</div>
+              <div class="c-card-desc">Настройка сервиса автопрогрева</div>
+              <div class="c-card-badge badge-paid">сервис отдельно</div>
+              <div class="c-card-price">3 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="ex-audit" data-price="7000" data-group="extra">
+              <div class="c-card-name">Аудит доставляемости</div>
+              <div class="c-card-desc">Blacklist, репутация IP, DNS, score — отчёт + рекомендации</div>
+              <div class="c-card-price">7 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="ex-cleanup" data-price="0" data-group="extra">
+              <div class="c-card-name">Чистка базы</div>
+              <div class="c-card-desc">Удаляю невалидные, неактивные адреса и спам-ловушки</div>
+              <div class="c-card-price">от 0,3 ₽/контакт</div>
+            </div>
+            <div class="c-card" data-key="ex-bimi" data-price="8000" data-group="extra">
+              <div class="c-card-name">BIMI + лого в инбоксе</div>
+              <div class="c-card-desc">Логотип в Gmail и Apple Mail рядом с письмом</div>
+              <div class="c-card-price">8 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="ex-dmarc" data-price="3000" data-group="extra">
+              <div class="c-card-name">SPF / DKIM / DMARC</div>
+              <div class="c-card-desc">Полная настройка аутентификации писем</div>
+              <div class="c-card-price">3 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="ex-migration" data-price="10000" data-group="extra">
+              <div class="c-card-name">Миграция сервера</div>
+              <div class="c-card-desc">Переезд с cPanel, Plesk, другого Mailcow без потери писем</div>
+              <div class="c-card-price">10 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="ex-backup" data-price="4000" data-group="extra">
+              <div class="c-card-name">Резервное копирование</div>
+              <div class="c-card-desc">Автобэкапы на S3 / Backblaze / SFTP</div>
+              <div class="c-card-price">4 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="ex-antispam" data-price="5000" data-group="extra">
+              <div class="c-card-name">Настройка антиспама</div>
+              <div class="c-card-desc">Тонкая настройка Rspamd — меньше ложных срабатываний</div>
+              <div class="c-card-price">5 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="ex-crm" data-price="8000" data-group="extra">
+              <div class="c-card-name">Интеграция с CRM</div>
+              <div class="c-card-desc">AmoCRM, Bitrix24 — синхронизация контактов и триггеры</div>
+              <div class="c-card-price">8 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="ex-webhook" data-price="6000" data-group="extra">
+              <div class="c-card-name">Webhook → письмо</div>
+              <div class="c-card-desc">Регистрация, оплата, брошенная корзина → автописьмо</div>
+              <div class="c-card-price">6 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="ex-tg-notify" data-price="4000" data-group="extra">
+              <div class="c-card-name">Email → Telegram</div>
+              <div class="c-card-desc">Важные входящие письма пересылаются в Telegram-бот</div>
+              <div class="c-card-price">4 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="ex-monitor" data-price="5000" data-group="extra">
+              <div class="c-card-name">Мониторинг</div>
+              <div class="c-card-desc">UptimeKuma / Grafana + алёрты при сбоях</div>
+              <div class="c-card-price">5 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="ex-docs" data-price="5000" data-group="extra">
+              <div class="c-card-name">Документация</div>
+              <div class="c-card-desc">Инструкции по управлению и обучение команды</div>
+              <div class="c-card-price">5 000 ₽</div>
+            </div>
+          </div>
+          <div class="c-cat-note">Можно выбрать несколько</div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: summary -->
+      <div class="constructor-right">
+        <div class="c-summary">
+          <div class="c-summary-title">Ваш стек</div>
+          <div class="c-summary-list" id="summaryList">
+            <div class="c-empty">← Выберите компоненты</div>
+          </div>
+          <div class="c-divider"></div>
+
+          <div id="tariffSuggest" style="display:none;margin-bottom:16px;padding:12px;background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.2);font-size:13px">
+            <div style="color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Похожий тариф</div>
+            <div id="tariffName" style="color:var(--heading);font-weight:600;margin-bottom:2px"></div>
+            <div id="tariffPrice" style="color:var(--accent);font-size:12px"></div>
+          </div>
+
+          <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:20px">
+            Стоимость зависит от состава и объёмов — обсудим индивидуально.
+          </div>
+          <a href="#cta" class="btn-primary" style="display:block;text-align:center" id="ctaBtn">Обсудить проект</a>
+          <a href="#pricing" class="btn-ghost" style="display:block;text-align:center;margin-top:10px">Смотреть тарифы</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <!-- SERVICES LIST -->
 <section style="padding: 0; background: var(--bg);">
 
@@ -231,7 +535,7 @@
       </ul>
       <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
         <a href="index.html#cta" class="btn-primary">Заказать</a>
-        <a href="index.html#constructor" class="btn-ghost">Конструктор</a>
+        <a href="#constructor" class="btn-ghost">Конструктор</a>
       </div>
     </div>
     <div class="service-full-visual">
@@ -764,5 +1068,96 @@
 </footer>
 
 <script src="js/main.js"></script>
+<script>
+  // ── CONSTRUCTOR TABS ──
+  document.querySelectorAll('.c-cat-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.c-cat-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.c-cat-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelector(`.c-cat-panel[data-panel="${tab.dataset.ccat}"]`)?.classList.add('active');
+    });
+  });
+
+  // ── CONSTRUCTOR CARDS ──
+  const summaryList = document.getElementById('summaryList');
+  const ctaBtn = document.getElementById('ctaBtn');
+  const selected = {};
+
+  function updateSummary() {
+    const items = Object.values(selected);
+    if (items.length === 0) {
+      summaryList.innerHTML = '<div class="c-empty">← Выберите компоненты</div>';
+    } else {
+      summaryList.innerHTML = items.map(i =>
+        `<div class="c-summary-item"><span class="name">${i.name}</span></div>`
+      ).join('');
+    }
+
+    const keys = Object.keys(selected);
+    const hasMTA        = keys.some(k => k.startsWith('mta-'));
+    const hasMailwizz   = keys.some(k => k === 'mk-mailwizz');
+    const hasChatwoot   = keys.some(k => k === 'sup-chatwoot');
+    const hasWarmupAny  = keys.some(k => k.includes('warmup'));
+    const hasWarmupBoth = keys.some(k => k === 'ex-warmup-manual') && keys.some(k => k === 'ex-warmup-auto');
+    const hasDmarc      = keys.some(k => k === 'ex-dmarc');
+    const hasMonitor    = keys.some(k => k === 'ex-monitor');
+
+    const suggestEl = document.getElementById('tariffSuggest');
+    const nameEl    = document.getElementById('tariffName');
+    const priceEl   = document.getElementById('tariffPrice');
+
+    if (!suggestEl || !hasMTA) { if (suggestEl) suggestEl.style.display = 'none'; return; }
+
+    let tariff = null;
+
+    if (hasMTA && hasMailwizz && hasChatwoot && hasWarmupBoth) {
+      tariff = { name: '🔥 Профи — 69 900 ₽/мес', desc: 'Mailcow + Postal + MailWizz + Chatwoot · ручной + авто прогрев · до 200 доменов', color: 'var(--accent)' };
+    } else if (hasMTA && (hasMailwizz || hasChatwoot) && hasWarmupAny && hasDmarc) {
+      tariff = { name: '⭐ Стандарт — 39 900 ₽/мес', desc: 'Полный стек + прогрев до рабочего объёма · до 50 доменов', color: 'var(--accent3)' };
+    } else if (hasMTA && hasMailwizz && hasChatwoot) {
+      tariff = { name: '✦ Базовый — 24 900 ₽', desc: 'Mailcow + Postal + MailWizz + Chatwoot · до 10 доменов · разовая настройка', color: 'rgba(255,255,255,.7)' };
+    } else if (hasMTA && (hasMailwizz || hasChatwoot)) {
+      tariff = { name: '✦ Близко к Базовому — от 24 900 ₽', desc: 'Добавь MailWizz + Chatwoot чтобы попасть в тариф Базовый', color: 'rgba(255,255,255,.5)' };
+    }
+
+    if (tariff) {
+      suggestEl.style.display = 'block';
+      nameEl.textContent  = tariff.name;
+      nameEl.style.color  = tariff.color;
+      priceEl.textContent = tariff.desc;
+    } else {
+      suggestEl.style.display = 'none';
+    }
+  }
+
+  document.querySelectorAll('.c-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const key   = card.dataset.key;
+      const price = parseInt(card.dataset.price);
+      const name  = card.querySelector('.c-card-name').textContent;
+      const group = card.dataset.group;
+      const isRadio = card.dataset.radio === '1';
+
+      if (isRadio) {
+        document.querySelectorAll(`.c-card[data-group="${group}"]`).forEach(c => c.classList.remove('selected'));
+        for (const k in selected) {
+          if (selected[k]._group === group) delete selected[k];
+        }
+        card.classList.add('selected');
+        selected[key] = { name, price, _group: group };
+      } else {
+        if (card.classList.contains('selected')) {
+          card.classList.remove('selected');
+          delete selected[key];
+        } else {
+          card.classList.add('selected');
+          selected[key] = { name, price, _group: group };
+        }
+      }
+      updateSummary();
+    });
+  });
+</script>
 </body>
 </html>
