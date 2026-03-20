@@ -1966,48 +1966,53 @@
 </section>
 
 <!-- FOOTER -->
-<footer>
-  <div class="footer-main">
+<footer style="background:var(--bg2);border-top:1px solid var(--border)">
+  <div style="max-width:1200px;margin:0 auto;padding:60px 60px 40px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px">
+
     <div>
-      <svg width="230" height="24" viewBox="0 0 270 28" fill="none" style="margin-bottom:4px">
+      <svg width="200" height="24" viewBox="0 0 270 28" fill="none" style="margin-bottom:16px">
         <rect x="1" y="1" width="40" height="26" rx="3" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1"/>
         <polyline points="1,1 21,14 41,1" fill="none" stroke="#00e5ff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
         <text x="5" y="24" fill="#00e5ff" font-family="'JetBrains Mono', monospace" font-size="12">›_</text>
         <text x="50" y="21" fill="#ffffff" font-family="'Syne', sans-serif" font-size="20" font-weight="800" letter-spacing="-1">MAIL<tspan fill="#00e5ff">STACK</tspan></text>
       </svg>
-      <p class="footer-brand-desc">Email-инфраструктура под ключ. Mailcow, Postal, MailWizz, Chatwoot и интеграции.</p>
+      <p style="font-size:13px;color:var(--muted);line-height:1.7;max-width:280px">Email-инфраструктура под ключ. Настройка, прогрев, интеграции. 24 курса для самостоятельного обучения.</p>
     </div>
+
     <div>
-      <div class="footer-col-title">Страницы</div>
-      <ul class="footer-links-list">
-        <li><a href="services.html">Услуги</a></li>
-        <li><a href="compare.html">Сравнение</a></li>
-        <li><a href="servers.html">Серверы</a></li>
-        <li><a href="courses.html">Курсы</a></li>
-        <li><a href="portfolio.html">Кейсы</a></li>
+      <div style="font-family:var(--font-head);font-size:12px;font-weight:700;color:var(--heading);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px">Навигация</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:10px">
+        <li><a href="services.html" style="font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">Услуги</a></li>
+        <li><a href="compare.html" style="font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">Сравнение</a></li>
+        <li><a href="servers.html" style="font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">Серверы</a></li>
+        <li><a href="courses.html" style="font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">Курсы</a></li>
+        <li><a href="portfolio.html" style="font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">Кейсы</a></li>
       </ul>
     </div>
+
     <div>
-      <div class="footer-col-title">Услуги</div>
-      <ul class="footer-links-list">
-        <li><a href="services.html">Mailcow + Postal</a></li>
-        <li><a href="services.html">Платформы рассылок</a></li>
-        <li><a href="services.html">Chatwoot</a></li>
-        <li><a href="services.html">Интеграции</a></li>
-        <li><a href="services.html">Прогрев домена</a></li>
+      <div style="font-family:var(--font-head);font-size:12px;font-weight:700;color:var(--heading);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px">Услуги</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:10px">
+        <li><a href="services.html" style="font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">Mailcow + Postal</a></li>
+        <li><a href="services.html" style="font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">Платформы рассылок</a></li>
+        <li><a href="services.html" style="font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">Chatwoot</a></li>
+        <li><a href="services.html" style="font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">Прогрев домена</a></li>
       </ul>
     </div>
+
     <div>
-      <div class="footer-col-title">Контакты</div>
-      <ul class="footer-links-list">
-        <li><a href="https://t.me/yourusername">Telegram</a></li>
-        <li><a href="mailto:hello@mailstack.dev">hello@mailstack.dev</a></li>
+      <div style="font-family:var(--font-head);font-size:12px;font-weight:700;color:var(--heading);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px">Контакты</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:10px">
+        <li><a href="https://t.me/yourusername" style="font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s;display:flex;align-items:center;gap:8px" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.46 14.06l-2.95-.924c-.64-.203-.654-.64.136-.954l11.57-4.461c.532-.194.998.13.678.5z"/></svg>Telegram</a></li>
+        <li><a href="mailto:hello@mailstack.dev" style="font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s;display:flex;align-items:center;gap:8px" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>Email</a></li>
       </ul>
     </div>
+
   </div>
-  <div class="footer-bottom">
-    <span>© 2026 MAILSTACK</span>
-    <span>Все цены в рублях, НДС не облагается</span>
+
+  <div style="border-top:1px solid var(--border);padding:20px 60px;display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto">
+    <span style="font-size:12px;color:var(--muted)">© 2026 MAILSTACK</span>
+    <span style="font-size:11px;color:rgba(90,98,120,.6)">Все цены в рублях, НДС не облагается</span>
   </div>
 </footer>
 
