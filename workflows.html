@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Воркфлоу по нишам — MAILSTACK</title>
+<meta name="description" content="Готовые воркфлоу email-инфраструктуры для 19 ниш: E-commerce, SaaS, iGaming, Финтех, Cold outreach и другие. Стек, шаги, результат.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23080a0f'/><rect x='4' y='8' width='24' height='16' rx='2' fill='none' stroke='rgba(255,255,255,.22)' stroke-width='1.2'/><polyline points='4,8 16,18 28,8' fill='none' stroke='%2300e5ff' stroke-width='2' stroke-linejoin='round'/><text x='7' y='26' fill='%2300e5ff' font-family='monospace' font-size='8' font-weight='bold'>›_</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+<style>
+/* Filter tabs */
+.wf-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-top:32px;margin-bottom:40px}
+.wf-tab{background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:6px 14px;font-family:var(--font-mono);font-size:11px;cursor:pointer;transition:all .2s;letter-spacing:.02em}
+.wf-tab:hover{border-color:var(--accent);color:var(--text)}
+.wf-tab.active{background:rgba(0,229,255,.1);border-color:var(--accent);color:var(--accent)}
+
+/* Workflow cards */
+.wf-grid{display:grid;grid-template-columns:1fr;gap:2px;background:var(--border)}
+.wf-card{background:var(--bg);padding:40px 36px;position:relative;overflow:hidden;transition:background .25s}
+.wf-card:hover{background:var(--surface)}
+.wf-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transform-origin:left;transition:transform .35s}
+.wf-card:hover::after{transform:scaleX(1)}
+.wf-card[data-color="green"]::after{background:var(--accent3)}
+.wf-card[data-color="purple"]::after{background:var(--accent2)}
+.wf-card[data-color="cyan"]::after{background:var(--accent)}
+.wf-card[data-color="red"]::after{background:#ff6b6b}
+.wf-card[data-color="orange"]::after{background:#f97316}
+
+.wf-header{display:flex;align-items:flex-start;gap:20px;margin-bottom:24px}
+.wf-icon{font-size:32px;flex-shrink:0;margin-top:2px}
+.wf-meta{flex:1}
+.wf-niche{font-size:10px;text-transform:uppercase;letter-spacing:.12em;font-family:var(--font-mono);margin-bottom:6px}
+.wf-title{font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--heading);letter-spacing:-.5px;line-height:1.3}
+.wf-pain{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:24px;padding-left:12px;border-left:2px solid var(--border)}
+
+/* Steps */
+.wf-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:24px}
+.wf-step{background:var(--bg2);padding:14px 16px;position:relative}
+.wf-step-num{font-family:var(--font-head);font-size:10px;font-weight:800;letter-spacing:.1em;margin-bottom:6px}
+.wf-step-text{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* Stack + Result */
+.wf-bottom{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.wf-stack{display:flex;flex-wrap:wrap;gap:6px}
+.wf-stack span{font-size:10px;padding:3px 10px;border:1px solid var(--border);color:var(--muted);font-family:var(--font-mono)}
+.wf-result{text-align:right}
+.wf-result-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+.wf-result-val{font-family:var(--font-head);font-size:18px;font-weight:800;letter-spacing:-.5px}
+
+@media(max-width:768px){
+  .wf-card{padding:28px 20px}
+  .wf-steps{grid-template-columns:1fr 1fr}
+  .wf-bottom{flex-direction:column;align-items:flex-start}
+  .wf-result{text-align:left}
+}
+</style>
+</head>
+<body>
+
+<nav id="mainNav">
+  <a href="index.html" class="logo">
+    <svg width="270" height="28" viewBox="0 0 270 28" fill="none">
+      <rect x="1" y="1" width="40" height="26" rx="3" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1"/>
+      <polyline points="1,1 21,14 41,1" fill="none" stroke="#00e5ff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      <text x="5" y="24" fill="#00e5ff" font-family="'JetBrains Mono', monospace" font-size="12">›_</text>
+      <text x="50" y="21" fill="#ffffff" font-family="'Syne', sans-serif" font-size="20" font-weight="800" letter-spacing="-1">MAIL<tspan fill="#00e5ff">STACK</tspan></text>
+    </svg>
+  </a>
+  <ul class="nav-links">
+    <li><a href="services.html">Услуги</a></li>
+    <li><a href="compare.html">Сравнение</a></li>
+    <li><a href="servers.html">Серверы</a></li>
+    <li><a href="courses.html">Курсы</a></li>
+    <li><a href="workflows.html" class="active" style="color:var(--accent3)">Воркфлоу <span style="font-size:9px;background:var(--accent3);color:var(--bg);padding:1px 6px;margin-left:4px;font-weight:600;letter-spacing:.05em">NEW</span></a></li>
+  </ul>
+  <a href="index.html#cta" class="nav-cta">Написать</a>
+  <button class="nav-burger" id="navBurger"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-grid"></div>
+  <div class="page-header-glow"></div>
+  <div class="page-header-content">
+    <div class="section-label">Воркфлоу</div>
+    <h1>Найди свою<br><em>нишу</em></h1>
+    <p style="color:var(--muted);font-size:16px;line-height:1.8;max-width:560px">19 готовых воркфлоу — от проблемы до результата. Находите свой сегмент, смотрите стек и шаги.</p>
+  </div>
+</div>
+
+<!-- FILTER TABS -->
+<section style="background:var(--bg2);padding:40px 60px 0">
+  <div class="wf-tabs" id="wfTabs">
+    <button class="wf-tab active" data-filter="all">Все ниши</button>
+    <button class="wf-tab" data-filter="money" style="border-color:rgba(0,255,136,.2);color:#00ff88">💸 Переплата</button>
+    <button class="wf-tab" data-filter="blocked" style="border-color:rgba(255,107,107,.2);color:#ff6b6b">🚫 Блокировка</button>
+    <button class="wf-tab" data-filter="spam" style="border-color:rgba(249,115,22,.2);color:#f97316">📬 Спам</button>
+    <button class="wf-tab" data-filter="compliance" style="border-color:rgba(123,97,255,.2);color:#7b61ff">🔒 Compliance</button>
+    <button class="wf-tab" data-filter="chaos" style="border-color:rgba(0,229,255,.2);color:#00e5ff">📊 Хаос</button>
+    <button class="wf-tab" data-filter="scratch" style="border-color:rgba(0,229,255,.2);color:#00e5ff">🚀 С нуля</button>
+  </div>
+</section>
+
+<!-- WORKFLOWS -->
+<section style="background:var(--bg2);padding:0 60px 60px">
+
+<div class="wf-grid reveal" id="wfGrid">
+
+<!-- ═══════════ 1. E-COMMERCE ═══════════ -->
+<div class="wf-card" data-color="green" data-tags="money">
+  <div class="wf-header">
+    <div class="wf-icon">🛒</div>
+    <div class="wf-meta">
+      <div class="wf-niche" style="color:#00ff88">E-commerce</div>
+      <div class="wf-title">Интернет-магазин → своя рассылка без лимитов</div>
+    </div>
+  </div>
+  <div class="wf-pain">База растёт, Unisender/SendPulse берут 40–150К/мес. Лимиты на контакты, доплата за каждый домен. Переезд кажется сложным — а если deliverability упадёт?</div>
+  <div class="wf-steps">
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">01</div><div class="wf-step-text">Аудит текущей рассылки: домены, репутация, сегменты</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">02</div><div class="wf-step-text">Mailcow + Postal на VPS, DNS, SPF/DKIM/DMARC</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">03</div><div class="wf-step-text">MailWizz: перенос базы, шаблонов, сегментов</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">04</div><div class="wf-step-text">Прогрев IP + тест до inbox (Gmail, Mail.ru, Яндекс)</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">05</div><div class="wf-step-text">Запуск рассылки, мониторинг, передача доступов</div></div>
+  </div>
+  <div class="wf-bottom">
+    <div class="wf-stack"><span>Mailcow</span><span>Postal</span><span>MailWizz</span><span>3-5 IP</span></div>
+    <div class="wf-result"><div class="wf-result-label">Экономия</div><div class="wf-result-val" style="color:var(--accent3)">до 90% в месяц</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ 2. ИНФОБИЗНЕС ═══════════ -->
+<div class="wf-card" data-color="purple" data-tags="money">
+  <div class="wf-header">
+    <div class="wf-icon">🎓</div>
+    <div class="wf-meta">
+      <div class="wf-niche" style="color:#7b61ff">Инфобизнес</div>
+      <div class="wf-title">Курсы и вебинары → автоворонки на своём сервере</div>
+    </div>
+  </div>
+  <div class="wf-pain">Цена растёт с базой, автоцепочки ограничены тарифом SaaS. Нужна свобода: триггеры, сегментация по поведению, A/B тесты без доплат.</div>
+  <div class="wf-steps">
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">01</div><div class="wf-step-text">Развёртывание Mailcow + Postal + Mautic</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">02</div><div class="wf-step-text">Импорт базы, настройка автоцепочек и лид-скоринга</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">03</div><div class="wf-step-text">Вебхуки: регистрация → welcome-серия → апсейл</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">04</div><div class="wf-step-text">Прогрев домена, тест inbox, запуск</div></div>
+  </div>
+  <div class="wf-bottom">
+    <div class="wf-stack"><span>Mautic</span><span>Postal</span><span>n8n</span><span>Лид-скоринг</span></div>
+    <div class="wf-result"><div class="wf-result-label">Результат</div><div class="wf-result-val" style="color:var(--accent3)">автоворонки без лимитов</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ 3. EDTECH ═══════════ -->
+<div class="wf-card" data-color="purple" data-tags="money spam">
+  <div class="wf-header">
+    <div class="wf-icon">📚</div>
+    <div class="wf-meta">
+      <div class="wf-niche" style="color:#7b61ff">EdTech</div>
+      <div class="wf-title">Онлайн-школа → прогрев домена и inbox с нуля</div>
+    </div>
+  </div>
+  <div class="wf-pain">Новый домен сразу попадает в промо или спам Gmail. База 50–200К, нужен контролируемый прогрев. SaaS-платформа не даёт управлять репутацией IP.</div>
+  <div class="wf-steps">
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">01</div><div class="wf-step-text">Mailcow + Postal, выделенные IP для EdTech-домена</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">02</div><div class="wf-step-text">8-недельный план прогрева: 300 → 15 000 писем/день</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">03</div><div class="wf-step-text">DMARC-мониторинг через Google Postmaster</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">04</div><div class="wf-step-text">MailWizz: сегментация по курсам, автоцепочки</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">05</div><div class="wf-step-text">Выход на целевой объём, передача управления</div></div>
+  </div>
+  <div class="wf-bottom">
+    <div class="wf-stack"><span>Mailcow</span><span>Postal</span><span>MailWizz</span><span>DMARC</span></div>
+    <div class="wf-result"><div class="wf-result-label">Результат</div><div class="wf-result-val" style="color:var(--accent3)">97%+ inbox Gmail</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ 4. МАРКЕТПЛЕЙСЫ ═══════════ -->
+<div class="wf-card" data-color="green" data-tags="money">
+  <div class="wf-header">
+    <div class="wf-icon">🏬</div>
+    <div class="wf-meta">
+      <div class="wf-niche" style="color:#00ff88">Маркетплейсы</div>
+      <div class="wf-title">Маркетплейс → транзакционные + маркетинг на одном стеке</div>
+    </div>
+  </div>
+  <div class="wf-pain">Тысячи транзакционных писем (заказы, оплаты, доставка) + маркетинговые рассылки. SaaS берёт за каждое, при масштабе — сотни тысяч в месяц.</div>
+  <div class="wf-steps">
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">01</div><div class="wf-step-text">Postal API для транзакционных + MailWizz для маркетинга</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">02</div><div class="wf-step-text">Разделение IP-пулов: транзакции отдельно от рассылок</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">03</div><div class="wf-step-text">Вебхуки: статус каждого письма в реальном времени</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">04</div><div class="wf-step-text">Миграция базы без потери репутации домена</div></div>
+  </div>
+  <div class="wf-bottom">
+    <div class="wf-stack"><span>Postal API</span><span>MailWizz</span><span>n8n</span><span>10+ IP</span></div>
+    <div class="wf-result"><div class="wf-result-label">Масштаб</div><div class="wf-result-val" style="color:var(--accent3)">500K+ писем/день</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ 5. SaaS / IT ═══════════ -->
+<div class="wf-card" data-color="cyan" data-tags="blocked">
+  <div class="wf-header">
+    <div class="wf-icon">💻</div>
+    <div class="wf-meta">
+      <div class="wf-niche" style="color:#00e5ff">SaaS / IT</div>
+      <div class="wf-title">SaaS-продукт → транзакционные письма через свой API</div>
+    </div>
+  </div>
+  <div class="wf-pain">SendGrid/Mailgun заблокировал без предупреждения — пользователи не получают письма регистрации и уведомлений. Downtime стоит клиентов и денег.</div>
+  <div class="wf-steps">
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">01</div><div class="wf-step-text">Экстренный запуск Postal с REST API (от 6 часов)</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">02</div><div class="wf-step-text">Переключение DNS, настройка retry-логики</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">03</div><div class="wf-step-text">Вебхуки: delivery/bounce/open tracking</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">04</div><div class="wf-step-text">Мониторинг: Grafana + алёрты при сбоях</div></div>
+  </div>
+  <div class="wf-bottom">
+    <div class="wf-stack"><span>Postal API</span><span>n8n</span><span>Grafana</span><span>Docker</span></div>
+    <div class="wf-result"><div class="wf-result-label">Uptime</div><div class="wf-result-val" style="color:var(--accent3)">99.95%</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ 6. iGAMING ═══════════ -->
+<div class="wf-card" data-color="red" data-tags="blocked">
+  <div class="wf-header">
+    <div class="wf-icon">🎰</div>
+    <div class="wf-meta">
+      <div class="wf-niche" style="color:#ff6b6b">iGaming</div>
+      <div class="wf-title">iGaming → инфраструктура без рисков блокировки</div>
+    </div>
+  </div>
+  <div class="wf-pain">SaaS-сервисы отказывают в обслуживании или блокируют без предупреждения. Нужна своя инфра с ротацией IP и изоляцией доменов — чтобы один бан не положил всё.</div>
+  <div class="wf-steps">
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">01</div><div class="wf-step-text">Абузоустойчивый хостинг + пул выделенных IP</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">02</div><div class="wf-step-text">Postal с изоляцией: каждый домен на своём IP</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">03</div><div class="wf-step-text">Ротация IP round-robin, spintax-шаблоны</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">04</div><div class="wf-step-text">Прогрев каждого IP отдельно, blacklist-мониторинг</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">05</div><div class="wf-step-text">Алёрты в Telegram при проблемах с репутацией</div></div>
+  </div>
+  <div class="wf-bottom">
+    <div class="wf-stack"><span>Postal</span><span>MailWizz</span><span>20+ IP</span><span>Spintax</span><span>Мониторинг</span></div>
+    <div class="wf-result"><div class="wf-result-label">Защита</div><div class="wf-result-val" style="color:var(--accent3)">полная изоляция доменов</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ 7. КРИПТО ═══════════ -->
+<div class="wf-card" data-color="orange" data-tags="blocked">
+  <div class="wf-header">
+    <div class="wf-icon">🪙</div>
+    <div class="wf-meta">
+      <div class="wf-niche" style="color:#f97316">Крипто</div>
+      <div class="wf-title">Крипто-проект → email без зависимости от чужих правил</div>
+    </div>
+  </div>
+  <div class="wf-pain">Mailchimp, SendGrid, даже Amazon SES закрывают аккаунты крипто-проектов. Нужна инфраструктура, которую никто не отключит.</div>
+  <div class="wf-steps">
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">01</div><div class="wf-step-text">Оффшорный или абузоустойчивый хостинг</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">02</div><div class="wf-step-text">Postal + Mailcow с шифрованием и изоляцией</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">03</div><div class="wf-step-text">Ротация доменов и IP-пулов</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">04</div><div class="wf-step-text">Прогрев, мониторинг репутации, антиспам-тюнинг</div></div>
+  </div>
+  <div class="wf-bottom">
+    <div class="wf-stack"><span>Postal</span><span>Mailcow</span><span>WireGuard</span><span>10+ IP</span></div>
+    <div class="wf-result"><div class="wf-result-label">Контроль</div><div class="wf-result-val" style="color:var(--accent3)">100% свой сервер</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ 8. ДЕЙТИНГ ═══════════ -->
+<div class="wf-card" data-color="red" data-tags="blocked">
+  <div class="wf-header">
+    <div class="wf-icon">💕</div>
+    <div class="wf-meta">
+      <div class="wf-niche" style="color:#ff6b6b">Дейтинг</div>
+      <div class="wf-title">Дейтинг-платформа → массовые уведомления на своей инфре</div>
+    </div>
+  </div>
+  <div class="wf-pain">SaaS считает дейтинг «high risk» — бан без предупреждения. Нужна отправка сотен тысяч уведомлений (матчи, сообщения) с высоким inbox rate.</div>
+  <div class="wf-steps">
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">01</div><div class="wf-step-text">Абузоустойчивый хостинг, пул IP</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">02</div><div class="wf-step-text">Postal API + триггерные письма через вебхуки</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">03</div><div class="wf-step-text">Изоляция по типу писем: транзакции / маркетинг</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">04</div><div class="wf-step-text">Прогрев, ротация, мониторинг blacklists</div></div>
+  </div>
+  <div class="wf-bottom">
+    <div class="wf-stack"><span>Postal</span><span>MailWizz</span><span>n8n</span><span>15+ IP</span></div>
+    <div class="wf-result"><div class="wf-result-label">Масштаб</div><div class="wf-result-val" style="color:var(--accent3)">200K+ писем/день</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ 9. COLD OUTREACH ═══════════ -->
+<div class="wf-card" data-color="orange" data-tags="spam">
+  <div class="wf-header">
+    <div class="wf-icon">🎯</div>
+    <div class="wf-meta">
+      <div class="wf-niche" style="color:#f97316">Cold outreach</div>
+      <div class="wf-title">Cold email → мульти-домен инфраструктура с ротацией</div>
+    </div>
+  </div>
+  <div class="wf-pain">Домены быстро попадают в блэклисты, нужна ротация IP и доменов. Один бан не должен положить всю кампанию. Нужен spintax и контроль объёмов.</div>
+  <div class="wf-steps">
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">01</div><div class="wf-step-text">20-50 доменов + выделенные IP на каждый</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">02</div><div class="wf-step-text">Postal с ротацией round-robin</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">03</div><div class="wf-step-text">MailWizz + spintax-шаблоны для уникализации</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">04</div><div class="wf-step-text">Автопрогрев каждого домена (Coldy/Warmup Inbox)</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">05</div><div class="wf-step-text">Blacklist-мониторинг + алёрты 24/7</div></div>
+  </div>
+  <div class="wf-bottom">
+    <div class="wf-stack"><span>Postal</span><span>MailWizz</span><span>Spintax</span><span>40+ IP</span><span>50 доменов</span></div>
+    <div class="wf-result"><div class="wf-result-label">Результат</div><div class="wf-result-val" style="color:var(--accent3)">0 блэклистов за 3 мес</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ 10. РЕКРУТИНГ ═══════════ -->
+<div class="wf-card" data-color="cyan" data-tags="spam">
+  <div class="wf-header">
+    <div class="wf-icon">👥</div>
+    <div class="wf-meta">
+      <div class="wf-niche" style="color:#00e5ff">Рекрутинг</div>
+      <div class="wf-title">HR / Рекрутинг → аутрич кандидатам без бана почты</div>
+    </div>
+  </div>
+  <div class="wf-pain">Массовая рассылка кандидатам с корпоративной почты = бан домена. Gmail начинает фильтровать, письма HR не доходят.</div>
+  <div class="wf-steps">
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">01</div><div class="wf-step-text">Отдельные домены для аутрича (не корпоративный)</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">02</div><div class="wf-step-text">Postal + прогрев каждого домена</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">03</div><div class="wf-step-text">Персонализация: spintax + merge tags</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">04</div><div class="wf-step-text">Лимиты отправки по домену/день, мониторинг</div></div>
+  </div>
+  <div class="wf-bottom">
+    <div class="wf-stack"><span>Postal</span><span>MailWizz</span><span>5-10 доменов</span><span>Spintax</span></div>
+    <div class="wf-result"><div class="wf-result-label">Защита</div><div class="wf-result-val" style="color:var(--accent3)">корпоративный домен в безопасности</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ 11. AFFILIATE ═══════════ -->
+<div class="wf-card" data-color="orange" data-tags="spam">
+  <div class="wf-header">
+    <div class="wf-icon">🔗</div>
+    <div class="wf-meta">
+      <div class="wf-niche" style="color:#f97316">Affiliate</div>
+      <div class="wf-title">CPA / Affiliate → массовая отправка с высоким inbox rate</div>
+    </div>
+  </div>
+  <div class="wf-pain">Большие объёмы, много доменов, нужна ротация и изоляция. Один блэклист не должен задевать другие кампании.</div>
+  <div class="wf-steps">
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">01</div><div class="wf-step-text">Мульти-IP инфра: Postal + 40+ выделенных IP</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">02</div><div class="wf-step-text">Изоляция по кампаниям: каждый оффер на своём IP</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">03</div><div class="wf-step-text">MailWizz + spintax + динамический контент</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">04</div><div class="wf-step-text">Автоматический мониторинг + ротация при блэклисте</div></div>
+  </div>
+  <div class="wf-bottom">
+    <div class="wf-stack"><span>Postal</span><span>MailWizz</span><span>40+ IP</span><span>50+ доменов</span></div>
+    <div class="wf-result"><div class="wf-result-label">Масштаб</div><div class="wf-result-val" style="color:var(--accent3)">500K+ писем/день</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ 12. ФИНТЕХ ═══════════ -->
+<div class="wf-card" data-color="purple" data-tags="compliance">
+  <div class="wf-header">
+    <div class="wf-icon">🏦</div>
+    <div class="wf-meta">
+      <div class="wf-niche" style="color:#7b61ff">Финтех</div>
+      <div class="wf-title">Финтех → защита от фишинга + compliance</div>
+    </div>
+  </div>
+  <div class="wf-pain">Мошенники рассылают от имени компании, клиенты жалуются. 152-ФЗ требует хранить данные в РФ, а SaaS-сервисы — за рубежом. DMARC не настроен.</div>
+  <div class="wf-steps">
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">01</div><div class="wf-step-text">Аудит DNS: SPF, DKIM, текущий DMARC</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">02</div><div class="wf-step-text">DMARC p=reject + SPF strict + DKIM 2048-бит</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">03</div><div class="wf-step-text">MTA-STS + BIMI (логотип в инбоксе)</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">04</div><div class="wf-step-text">Mailcow на сервере в РФ — соответствие 152-ФЗ</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">05</div><div class="wf-step-text">Мониторинг DMARC-отчётов, алёрты при spoofing</div></div>
+  </div>
+  <div class="wf-bottom">
+    <div class="wf-stack"><span>DMARC reject</span><span>BIMI</span><span>MTA-STS</span><span>Mailcow</span><span>152-ФЗ</span></div>
+    <div class="wf-result"><div class="wf-result-label">Защита</div><div class="wf-result-val" style="color:var(--accent3)">0 фишинг-писем</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ 13. МЕДИЦИНА ═══════════ -->
+<div class="wf-card" data-color="red" data-tags="compliance">
+  <div class="wf-header">
+    <div class="wf-icon">🏥</div>
+    <div class="wf-meta">
+      <div class="wf-niche" style="color:#ff6b6b">Медицина</div>
+      <div class="wf-title">Клиника → уведомления пациентам с защитой данных</div>
+    </div>
+  </div>
+  <div class="wf-pain">Данные пациентов нельзя хранить на серверах SaaS — 152-ФЗ и медицинская тайна. Нужна своя инфра в РФ для напоминаний о записях и результатах анализов.</div>
+  <div class="wf-steps">
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">01</div><div class="wf-step-text">Mailcow + Postal на сервере в РФ</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">02</div><div class="wf-step-text">n8n: МИС → триггерные уведомления пациентам</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">03</div><div class="wf-step-text">DMARC + DKIM: защита от фишинга от имени клиники</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">04</div><div class="wf-step-text">Шифрование, бэкапы, соответствие 152-ФЗ</div></div>
+  </div>
+  <div class="wf-bottom">
+    <div class="wf-stack"><span>Mailcow</span><span>Postal</span><span>n8n</span><span>152-ФЗ</span><span>Шифрование</span></div>
+    <div class="wf-result"><div class="wf-result-label">Compliance</div><div class="wf-result-val" style="color:var(--accent3)">100% 152-ФЗ</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ 14. ЮРИДИЧЕСКИЕ ═══════════ -->
+<div class="wf-card" data-color="purple" data-tags="compliance">
+  <div class="wf-header">
+    <div class="wf-icon">⚖️</div>
+    <div class="wf-meta">
+      <div class="wf-niche" style="color:#7b61ff">Юридические</div>
+      <div class="wf-title">Юрфирма → конфиденциальная переписка на своём сервере</div>
+    </div>
+  </div>
+  <div class="wf-pain">Адвокатская тайна не совместима с хранением почты на серверах Google или Mail.ru. Нужен свой почтовый сервер с шифрованием и контролем доступа.</div>
+  <div class="wf-steps">
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">01</div><div class="wf-step-text">Mailcow: собственный почтовый сервер с веб-интерфейсом</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">02</div><div class="wf-step-text">TLS обязательный, шифрование at rest</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">03</div><div class="wf-step-text">SPF/DKIM/DMARC — защита от spoofing</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">04</div><div class="wf-step-text">Бэкапы на S3, Fail2ban, 2FA для пользователей</div></div>
+  </div>
+  <div class="wf-bottom">
+    <div class="wf-stack"><span>Mailcow</span><span>WireGuard</span><span>Fail2ban</span><span>2FA</span><span>Бэкапы</span></div>
+    <div class="wf-result"><div class="wf-result-label">Безопасность</div><div class="wf-result-val" style="color:var(--accent3)">полный контроль данных</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ 15. ГОССЕКТОР ═══════════ -->
+<div class="wf-card" data-color="cyan" data-tags="compliance">
+  <div class="wf-header">
+    <div class="wf-icon">🏛️</div>
+    <div class="wf-meta">
+      <div class="wf-niche" style="color:#00e5ff">Госсектор</div>
+      <div class="wf-title">Госорганизация → почта на территории РФ по требованиям</div>
+    </div>
+  </div>
+  <div class="wf-pain">Требования регуляторов: данные только в РФ, отечественное ПО или open-source, аудит безопасности. Нельзя использовать зарубежные SaaS.</div>
+  <div class="wf-steps">
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">01</div><div class="wf-step-text">Сервер в сертифицированном ЦОД РФ</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">02</div><div class="wf-step-text">Mailcow (open-source): почта, календарь, контакты</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">03</div><div class="wf-step-text">Hardening: CrowdSec, Fail2ban, WireGuard для доступа</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">04</div><div class="wf-step-text">Документация для аудита, бэкапы, SLA-мониторинг</div></div>
+  </div>
+  <div class="wf-bottom">
+    <div class="wf-stack"><span>Mailcow</span><span>Open-source</span><span>ЦОД РФ</span><span>CrowdSec</span></div>
+    <div class="wf-result"><div class="wf-result-label">Соответствие</div><div class="wf-result-val" style="color:var(--accent3)">152-ФЗ + открытый код</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ 16. EMAIL-АГЕНТСТВА ═══════════ -->
+<div class="wf-card" data-color="cyan" data-tags="chaos">
+  <div class="wf-header">
+    <div class="wf-icon">📧</div>
+    <div class="wf-meta">
+      <div class="wf-niche" style="color:#00e5ff">Email-агентства</div>
+      <div class="wf-title">Email-агентство → единая инфра для всех клиентов</div>
+    </div>
+  </div>
+  <div class="wf-pain">10 клиентов — 10 разных платформ, хаос с паролями и отчётами. Нет изоляции: проблемы одного клиента влияют на других. Невозможно масштабироваться.</div>
+  <div class="wf-steps">
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">01</div><div class="wf-step-text">Postal: изолированные организации по клиентам</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">02</div><div class="wf-step-text">Каждый клиент на своём IP-пуле</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">03</div><div class="wf-step-text">Chatwoot: единый инбокс для переписки</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">04</div><div class="wf-step-text">n8n: автоматические отчёты по клиентам</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">05</div><div class="wf-step-text">Общий дашборд: Grafana с метриками по каждому</div></div>
+  </div>
+  <div class="wf-bottom">
+    <div class="wf-stack"><span>Postal</span><span>Chatwoot</span><span>n8n</span><span>Grafana</span><span>12+ IP</span></div>
+    <div class="wf-result"><div class="wf-result-label">Масштаб</div><div class="wf-result-val" style="color:var(--accent3)">10-50 клиентов на одном стеке</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ 17. МАРКЕТИНГ-АГЕНТСТВА ═══════════ -->
+<div class="wf-card" data-color="orange" data-tags="chaos">
+  <div class="wf-header">
+    <div class="wf-icon">📢</div>
+    <div class="wf-meta">
+      <div class="wf-niche" style="color:#f97316">Маркетинг-агентства</div>
+      <div class="wf-title">Маркетинг-агентство → email как доп. услуга клиентам</div>
+    </div>
+  </div>
+  <div class="wf-pain">Клиенты просят email-рассылки, но настраивать каждому отдельный сервис — долго и дорого. Нужна белая инфра, которую можно перепродавать.</div>
+  <div class="wf-steps">
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">01</div><div class="wf-step-text">Postal + MailWizz: мультитенантная платформа</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">02</div><div class="wf-step-text">Подключение клиентских доменов за 15 минут</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">03</div><div class="wf-step-text">Шаблоны, A/B тесты, аналитика для каждого</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">04</div><div class="wf-step-text">Брендированные отчёты через n8n</div></div>
+  </div>
+  <div class="wf-bottom">
+    <div class="wf-stack"><span>Postal</span><span>MailWizz</span><span>n8n</span><span>Мультитенант</span></div>
+    <div class="wf-result"><div class="wf-result-label">Для клиентов</div><div class="wf-result-val" style="color:var(--accent3)">email как допуслуга</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ 18. ФРАНШИЗЫ ═══════════ -->
+<div class="wf-card" data-color="green" data-tags="chaos">
+  <div class="wf-header">
+    <div class="wf-icon">🏪</div>
+    <div class="wf-meta">
+      <div class="wf-niche" style="color:#00ff88">Франшизы</div>
+      <div class="wf-title">Франшиза → единый email-стандарт для всех точек</div>
+    </div>
+  </div>
+  <div class="wf-pain">У каждого франчайзи свой email — хаос, нет единого стиля, невозможно контролировать коммуникации. Нужна централизованная инфра с разграничением доступа.</div>
+  <div class="wf-steps">
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">01</div><div class="wf-step-text">Mailcow: единый почтовый сервер для всех точек</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">02</div><div class="wf-step-text">Postal: рассылки по регионам с изоляцией</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">03</div><div class="wf-step-text">Шаблоны писем: единый бренд, локальные адаптации</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">04</div><div class="wf-step-text">Дашборд управляющей компании: статистика по точкам</div></div>
+  </div>
+  <div class="wf-bottom">
+    <div class="wf-stack"><span>Mailcow</span><span>Postal</span><span>MailWizz</span><span>Grafana</span></div>
+    <div class="wf-result"><div class="wf-result-label">Контроль</div><div class="wf-result-val" style="color:var(--accent3)">единый стандарт</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ 19. СТАРТАПЫ / MVP ═══════════ -->
+<div class="wf-card" data-color="cyan" data-tags="scratch">
+  <div class="wf-header">
+    <div class="wf-icon">🚀</div>
+    <div class="wf-meta">
+      <div class="wf-niche" style="color:#00e5ff">Стартапы / MVP</div>
+      <div class="wf-title">Стартап → полный email-стек с нуля за 3 дня</div>
+    </div>
+  </div>
+  <div class="wf-pain">Продукт запускается, email-инфраструктуры нет. Нужно быстро: транзакционные (регистрация, подтверждение) + маркетинговые (onboarding-цепочка). Бюджет ограничен.</div>
+  <div class="wf-steps">
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">01</div><div class="wf-step-text">VPS + Mailcow + Postal за 1 день</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">02</div><div class="wf-step-text">DNS, SPF/DKIM/DMARC, SSL — всё сразу</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">03</div><div class="wf-step-text">Postal API для транзакционных из приложения</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">04</div><div class="wf-step-text">MailWizz: welcome-серия, onboarding-цепочка</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">05</div><div class="wf-step-text">Прогрев параллельно с разработкой, inbox к запуску</div></div>
+  </div>
+  <div class="wf-bottom">
+    <div class="wf-stack"><span>Mailcow</span><span>Postal</span><span>MailWizz</span><span>1-2 IP</span></div>
+    <div class="wf-result"><div class="wf-result-label">Старт</div><div class="wf-result-val" style="color:var(--accent3)">от 12 000 ₽ разово</div></div>
+  </div>
+</div>
+
+</div><!-- /wf-grid -->
+</section>
+
+<!-- CTA -->
+<section style="text-align:center;position:relative;overflow:hidden">
+  <div style="position:absolute;width:600px;height:300px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,229,255,0.07) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none"></div>
+  <div style="position:relative">
+    <div class="section-label" style="justify-content:center">Не нашли свою нишу?</div>
+    <h2>Обсудим<br><em>ваш кейс</em></h2>
+    <p style="color:var(--muted);margin-bottom:32px;font-size:15px">Каждый проект уникален — напишите, и я подберу оптимальный стек под вашу задачу.</p>
+    <a href="index.html#cta" class="btn-primary">Обсудить проект</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-main">
+    <div>
+      <svg width="230" height="24" viewBox="0 0 270 28" fill="none" style="margin-bottom:4px">
+        <rect x="1" y="1" width="40" height="26" rx="3" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1"/>
+        <polyline points="1,1 21,14 41,1" fill="none" stroke="#00e5ff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+        <text x="5" y="24" fill="#00e5ff" font-family="'JetBrains Mono', monospace" font-size="12">›_</text>
+        <text x="50" y="21" fill="#ffffff" font-family="'Syne', sans-serif" font-size="20" font-weight="800" letter-spacing="-1">MAIL<tspan fill="#00e5ff">STACK</tspan></text>
+      </svg>
+      <p class="footer-brand-desc">Email-инфраструктура под ключ. Mailcow, Postal, MailWizz, Chatwoot и интеграции.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Страницы</div>
+      <ul class="footer-links-list">
+        <li><a href="index.html">Главная</a></li>
+        <li><a href="services.html">Услуги</a></li>
+        <li><a href="workflows.html">Воркфлоу</a></li>
+        <li><a href="compare.html">Сравнение</a></li>
+        <li><a href="servers.html">Серверы</a></li>
+        <li><a href="courses.html">Курсы</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Услуги</div>
+      <ul class="footer-links-list">
+        <li><a href="services.html">Mailcow + Postal</a></li>
+        <li><a href="services.html">Платформы рассылок</a></li>
+        <li><a href="services.html">Chatwoot</a></li>
+        <li><a href="services.html">Интеграции</a></li>
+        <li><a href="services.html">Прогрев домена</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Контакты</div>
+      <ul class="footer-links-list">
+        <li><a href="https://t.me/yourusername">Telegram</a></li>
+        <li><a href="mailto:hello@mailstack.dev">hello@mailstack.dev</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2025 MAILSTACK</span>
+    <span>Все цены в рублях, НДС не облагается</span>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+// Filter tabs
+document.querySelectorAll('.wf-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.wf-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    const f=tab.dataset.filter;
+    document.querySelectorAll('.wf-card').forEach(card=>{
+      if(f==='all'||card.dataset.tags.includes(f)){
+        card.style.display='';
+      }else{
+        card.style.display='none';
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>
