@@ -871,6 +871,76 @@
     </div>
   </div>
 
+  <!-- 07: Мониторинг и логи -->
+  <div class="service-full reveal">
+    <div class="service-full-content">
+      <div class="service-num">07</div>
+      <span class="service-icon-big">📈</span>
+      <h3>Мониторинг и логи</h3>
+      <p style="color:var(--muted);font-size:14px;line-height:1.8;margin-bottom:16px">
+        Без мониторинга вы узнаёте о проблемах от клиентов. Настраиваю полный цикл наблюдения: <strong style="color:var(--accent)">Grafana</strong> для дашбордов, <strong style="color:var(--accent)">UptimeKuma</strong> для алёртов, <strong style="color:var(--accent)">Graylog</strong> для логов, <strong style="color:var(--accent)">Parsedmarc</strong> для DMARC-отчётов. Плюс мониторинг blacklists, очередей Postal и репутации через Google Postmaster.
+      </p>
+      <div class="service-price">от 3 000 ₽ — за компонент</div>
+      <ul class="service-includes">
+        <li>Grafana + Prometheus — трафик, очереди, bounce rate</li>
+        <li>UptimeKuma — доступность серверов + алёрты в Telegram</li>
+        <li>Graylog — централизованные логи почтовых серверов</li>
+        <li>Blacklist-мониторинг — автопроверка IP по 80+ DNSBL</li>
+        <li>Google Postmaster + Microsoft SNDS — репутация домена</li>
+        <li>Parsedmarc — агрегация DMARC rua/ruf отчётов</li>
+        <li>Мониторинг очередей Postal — алёрт при аномалиях</li>
+      </ul>
+      <div style="margin-top:28px">
+        <a href="#cta" class="btn-primary">Заказать</a>
+      </div>
+    </div>
+    <div class="service-full-visual">
+      <div style="font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px">Что мониторим</div>
+      <div class="service-stack-item"><span class="service-stack-dot"></span>Grafana<span class="service-stack-label">Дашборды</span></div>
+      <div class="service-stack-item"><span class="service-stack-dot green"></span>UptimeKuma<span class="service-stack-label">Доступность</span></div>
+      <div class="service-stack-item"><span class="service-stack-dot"></span>Graylog<span class="service-stack-label">Логи</span></div>
+      <div class="service-stack-item"><span class="service-stack-dot green"></span>Blacklists<span class="service-stack-label">IP-репутация</span></div>
+      <div class="service-stack-item"><span class="service-stack-dot purple"></span>Postmaster Tools<span class="service-stack-label">Gmail / Outlook</span></div>
+      <div class="service-stack-item"><span class="service-stack-dot"></span>Parsedmarc<span class="service-stack-label">DMARC-отчёты</span></div>
+      <div class="service-stack-item"><span class="service-stack-dot green"></span>Очереди Postal<span class="service-stack-label">Bounce / Complaints</span></div>
+    </div>
+  </div>
+
+  <!-- 08: Безопасность -->
+  <div class="service-full reveal">
+    <div class="service-full-content">
+      <div class="service-num">08</div>
+      <span class="service-icon-big">🛡</span>
+      <h3>Безопасность инфраструктуры</h3>
+      <p style="color:var(--muted);font-size:14px;line-height:1.8;margin-bottom:16px">
+        Email-сервер без защиты — открытая дверь. Настраиваю многослойную безопасность: <strong style="color:var(--accent)">Firewall</strong> + <strong style="color:var(--accent)">Fail2ban</strong> + <strong style="color:var(--accent)">CrowdSec</strong> от брутфорса, <strong style="color:var(--accent)">WireGuard</strong> для VPN между серверами, <strong style="color:var(--accent)">SSH hardening</strong>, TLS 1.3, 2FA для панелей и тонкая настройка <strong style="color:var(--accent)">Rspamd</strong>.
+      </p>
+      <div class="service-price">от 2 000 ₽ — за компонент</div>
+      <ul class="service-includes">
+        <li>Firewall (UFW) — закрытие лишних портов, rate limiting</li>
+        <li>Fail2ban + CrowdSec — блокировка брутфорса и ботов</li>
+        <li>WireGuard — VPN-туннель между серверами</li>
+        <li>SSH hardening — ключи, смена порта, отключение root</li>
+        <li>SSL/TLS hardening — Let's Encrypt, TLS 1.3, HSTS</li>
+        <li>2FA для панелей — Mailcow, SOGo, MailWizz</li>
+        <li>Настройка Rspamd — антиспам без ложных срабатываний</li>
+      </ul>
+      <div style="margin-top:28px">
+        <a href="#cta" class="btn-primary">Заказать</a>
+      </div>
+    </div>
+    <div class="service-full-visual">
+      <div style="font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px">Защита</div>
+      <div class="service-stack-item"><span class="service-stack-dot green"></span>UFW Firewall<span class="service-stack-label">Порты / Rate limit</span></div>
+      <div class="service-stack-item"><span class="service-stack-dot green"></span>Fail2ban<span class="service-stack-label">Блокировка IP</span></div>
+      <div class="service-stack-item"><span class="service-stack-dot"></span>CrowdSec<span class="service-stack-label">Коллективная защита</span></div>
+      <div class="service-stack-item"><span class="service-stack-dot purple"></span>WireGuard VPN<span class="service-stack-label">Туннель</span></div>
+      <div class="service-stack-item"><span class="service-stack-dot"></span>SSH + TLS 1.3<span class="service-stack-label">Шифрование</span></div>
+      <div class="service-stack-item"><span class="service-stack-dot"></span>2FA<span class="service-stack-label">Двухфакторная</span></div>
+      <div class="service-stack-item"><span class="service-stack-dot green"></span>Rspamd<span class="service-stack-label">Антиспам</span></div>
+    </div>
+  </div>
+
 </section>
 
 <!-- PROCESS -->
