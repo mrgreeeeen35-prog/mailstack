@@ -922,17 +922,31 @@
 
 <script src="js/main.js"></script>
 <script>
-// Filter tabs
-document.querySelectorAll('.wf-tab').forEach(tab=>{
-  tab.addEventListener('click',()=>{
-    document.querySelectorAll('.wf-tab').forEach(t=>t.classList.remove('active'));
-    tab.classList.add('active');
-    const f=tab.dataset.filter;
-    document.querySelectorAll('.wf-card').forEach(card=>{
-      card.style.display=(f==='all'||card.dataset.tags.includes(f))?'block':'none';
-    });
+// Filter logic
+function applyFilter(f){
+  document.querySelectorAll('.wf-tab').forEach(t=>{
+    t.classList.toggle('active',t.dataset.filter===f||(f==='all'&&t.dataset.filter==='all'));
   });
+  document.querySelectorAll('.wf-card').forEach(card=>{
+    card.style.display=(f==='all'||card.dataset.tags.includes(f))?'block':'none';
+  });
+}
+
+// Tab clicks
+document.querySelectorAll('.wf-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>applyFilter(tab.dataset.filter));
 });
+
+// Auto-filter from URL ?filter=xxx
+const urlFilter=new URLSearchParams(window.location.search).get('filter');
+if(urlFilter){
+  applyFilter(urlFilter);
+  // Scroll to grid after short delay
+  setTimeout(()=>{
+    const grid=document.getElementById('wfGrid');
+    if(grid) grid.scrollIntoView({behavior:'smooth',block:'start'});
+  },300);
+}
 </script>
 </body>
 </html>
