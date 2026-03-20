@@ -1278,6 +1278,7 @@
     <div class="hero-actions">
       <a href="#cta" class="btn-primary">Обсудить проект</a>
       <a href="#services" class="btn-ghost">Что входит</a>
+      <a href="#cta" class="btn-ghost" style="border-color:#ff6b6b;color:#ff6b6b" onclick="setTimeout(()=>{const m=document.getElementById('ctaMessage');if(m){m.value='СРОЧНО: ';m.focus()}},300)">Срочная помощь</a>
     </div>
     <div class="hero-stats">
       <div>
@@ -1331,7 +1332,7 @@
         <span style="font-size:24px">📧</span>
         <span style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--heading)">Email-агентство</span>
       </div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.7">10+ клиентов через разные сервисы — хаос. Нужна единая инфра с изоляцией.</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7">10+ клиентов через разные сервисы — хаос. Нужна единая инфра с изоляцией доменов и IP по клиентам.</div>
     </div>
 
     <div style="background:var(--bg);padding:28px 24px;border-left:1px solid var(--border);transition:background .25s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
@@ -1363,7 +1364,7 @@
         <span style="font-size:24px">🚀</span>
         <span style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--heading)">Стартап</span>
       </div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.7">Запускаете продукт — нужны транзакционные письма с первого дня без SendGrid.</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7">Запускаете продукт — нужен 1 домен + Postal для транзакционных писем. Быстро и без переплат.</div>
     </div>
 
   </div>
@@ -1382,7 +1383,7 @@
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent)"></div>
       <div style="font-size:24px;margin-bottom:10px">🖥️</div>
       <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--heading);margin-bottom:6px">Почтовый сервер</div>
-      <div style="font-size:12px;color:var(--muted);line-height:1.7">Mailcow, Postal, iRedMail — приём, хранение, отправка с ротацией IP</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7">Mailcow, Postal, iRedMail — приём, хранение, отправка. Ротация IP, изоляция по клиентам</div>
     </div>
 
     <div style="background:var(--bg);padding:24px 20px;border-left:1px solid var(--border);position:relative;overflow:hidden;transition:background .25s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
@@ -1768,7 +1769,14 @@
     </table>
   </div>
 
-  <!-- ДОП. УСЛУГИ убраны — включены в таблицу выше -->
+  <div style="margin-top:32px;padding:20px 24px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;gap:16px;flex-wrap:wrap" class="reveal">
+    <div style="font-size:24px">🚀</div>
+    <div style="flex:1;min-width:200px">
+      <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--heading);margin-bottom:4px">Стартап? Нужен только 1 домен?</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.6">Не обязательно брать пакет. Соберите только нужное в <a href="services.html#constructor" style="color:var(--accent);text-decoration:none">конструкторе</a> — Postal + DNS от 12 000 ₽ разово.</div>
+    </div>
+    <a href="services.html#constructor" class="btn-ghost" style="font-size:12px;padding:8px 16px;white-space:nowrap">Открыть конструктор</a>
+  </div>
 </section>
 
 
@@ -2143,7 +2151,7 @@
 
     <div class="faq-item">
       <button class="faq-q">Есть ли поддержка после запуска?<span class="icon">+</span></button>
-      <div class="faq-a">В тарифе Базовый — 30 дней после запуска. В тарифах Стандарт и Профи поддержка включена в абонентскую плату на всё время подписки. Отвечаю в Telegram обычно в течение нескольких часов.</div>
+      <div class="faq-a">Гарантийная поддержка включена: Базовый — 14 дней, Стандарт — 30 дней, Профи — 60 дней. После этого техподдержка, мониторинг и ведение кампаний — отдельные услуги с помесячной оплатой. Отвечаю в Telegram обычно в течение нескольких часов.</div>
     </div>
 
     <div class="faq-item">
@@ -2152,8 +2160,18 @@
     </div>
 
     <div class="faq-item">
-      <button class="faq-q">Можно ли перенести существующую почту на новый сервер?<span class="icon">+</span></button>
-      <div class="faq-a">Да. Переносим почтовые ящики, историю писем, контакты и настройки. Переезд проходит без даунтайма — сначала настраиваем новый сервер параллельно, затем переключаем DNS. Миграция входит в тариф Стандарт и выше.</div>
+      <button class="faq-q">Можно ли перенести существующую почту и базу подписчиков?<span class="icon">+</span></button>
+      <div class="faq-a">Да. Переносим почтовые ящики, историю писем и базу подписчиков (контакты, сегменты, шаблоны). Миграция с Unisender, SendGrid, Mailchimp — проверенный процесс. Переезд проходит без даунтайма: сначала настраиваем новый сервер параллельно, затем переключаем DNS.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">Можно ли заказать только часть услуг?<span class="icon">+</span></button>
+      <div class="faq-a">Конечно. Каждая услуга доступна отдельно — только аудит доставляемости, только прогрев, только настройка DNS. Если у вас уже есть Mailcow — могу настроить только Postal и прогрев. Используйте <a href="services.html#constructor" style="color:var(--accent)">конструктор на странице услуг</a> для расчёта стоимости.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">У меня горит — SendGrid/Unisender заблокировал аккаунт. Как быстро поможете?<span class="icon">+</span></button>
+      <div class="faq-a">Срочный запуск — от 1 дня. Разворачиваю Postal, переключаю DNS, настраиваю аутентификацию. Транзакционные письма начнут уходить в тот же день. Стоимость: тариф + 30% за срочность. Пишите в Telegram с пометкой «срочно».</div>
     </div>
 
   </div>
