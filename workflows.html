@@ -34,24 +34,38 @@
 .wf-pain{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:24px;padding-left:12px;border-left:2px solid var(--border)}
 
 /* Steps */
-.wf-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:24px}
-.wf-step{background:var(--bg2);padding:14px 16px;position:relative}
-.wf-step-num{font-family:var(--font-head);font-size:10px;font-weight:800;letter-spacing:.1em;margin-bottom:6px}
-.wf-step-text{font-size:12px;color:var(--muted);line-height:1.6}
+.wf-steps{display:flex;flex-direction:column;gap:0;margin-bottom:28px;border:1px solid var(--border)}
+.wf-step{background:var(--bg2);padding:18px 20px;display:grid;grid-template-columns:36px 1fr;gap:14px;align-items:start;border-bottom:1px solid var(--border)}
+.wf-step:last-child{border-bottom:none}
+.wf-step-num{font-family:var(--font-head);font-size:12px;font-weight:800;letter-spacing:.05em;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);background:var(--bg);flex-shrink:0}
+.wf-step-title{font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--heading);margin-bottom:4px}
+.wf-step-desc{font-size:12px;color:var(--muted);line-height:1.7}
 
-/* Stack + Result */
-.wf-bottom{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap}
+/* Deliverables */
+.wf-deliver{margin-bottom:28px;padding:20px 24px;background:var(--bg2);border:1px solid var(--border)}
+.wf-deliver-title{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px;font-family:var(--font-mono)}
+.wf-deliver-list{display:grid;grid-template-columns:1fr 1fr;gap:8px 24px}
+.wf-deliver-item{font-size:12px;color:var(--text);line-height:1.6;padding-left:16px;position:relative}
+.wf-deliver-item::before{content:'✓';position:absolute;left:0;font-size:11px;font-weight:700}
+
+/* Metrics */
+.wf-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:28px}
+.wf-metric{background:var(--bg2);padding:16px;text-align:center}
+.wf-metric-val{font-family:var(--font-head);font-size:20px;font-weight:800;letter-spacing:-.5px;line-height:1}
+.wf-metric-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-top:6px;line-height:1.3}
+
+/* Stack + CTA */
+.wf-bottom{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
 .wf-stack{display:flex;flex-wrap:wrap;gap:6px}
 .wf-stack span{font-size:10px;padding:3px 10px;border:1px solid var(--border);color:var(--muted);font-family:var(--font-mono)}
-.wf-result{text-align:right}
-.wf-result-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
-.wf-result-val{font-family:var(--font-head);font-size:18px;font-weight:800;letter-spacing:-.5px}
+.wf-cta{font-size:12px;padding:8px 20px}
 
 @media(max-width:768px){
   .wf-card{padding:28px 20px}
-  .wf-steps{grid-template-columns:1fr 1fr}
+  .wf-step{grid-template-columns:28px 1fr}
+  .wf-metrics{grid-template-columns:1fr 1fr}
+  .wf-deliver-list{grid-template-columns:1fr}
   .wf-bottom{flex-direction:column;align-items:flex-start}
-  .wf-result{text-align:left}
 }
 </style>
 </head>
@@ -111,20 +125,37 @@
     <div class="wf-icon">🛒</div>
     <div class="wf-meta">
       <div class="wf-niche" style="color:#00ff88">E-commerce</div>
-      <div class="wf-title">Интернет-магазин → своя рассылка без лимитов</div>
+      <div class="wf-title">Интернет-магазин → своя рассылка без лимитов и переплат</div>
     </div>
   </div>
-  <div class="wf-pain">База растёт, Unisender/SendPulse берут 40–150К/мес. Лимиты на контакты, доплата за каждый домен. Переезд кажется сложным — а если deliverability упадёт?</div>
+  <div class="wf-pain">База подписчиков перевалила за 100К, и Unisender/SendPulse выставляют счёт 40–150К/мес. Каждый новый домен — отдельная оплата. Лимит на количество контактов растёт с каждым месяцем. При этом вы не контролируете ни IP-репутацию, ни DNS-записи, ни поведение shared-IP. Переезд пугает — а что если deliverability просядет и продажи упадут?</div>
   <div class="wf-steps">
-    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">01</div><div class="wf-step-text">Аудит текущей рассылки: домены, репутация, сегменты</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">02</div><div class="wf-step-text">Mailcow + Postal на VPS, DNS, SPF/DKIM/DMARC</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">03</div><div class="wf-step-text">MailWizz: перенос базы, шаблонов, сегментов</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">04</div><div class="wf-step-text">Прогрев IP + тест до inbox (Gmail, Mail.ru, Яндекс)</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">05</div><div class="wf-step-text">Запуск рассылки, мониторинг, передача доступов</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">01</div><div><div class="wf-step-title">Аудит текущей рассылки</div><div class="wf-step-desc">Анализируем домены, репутацию IP, blacklist-статус, текущие сегменты и шаблоны. Оцениваем объёмы и частоту отправки. Определяем, какие сервисы заменяем и что мигрируем.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">02</div><div><div class="wf-step-title">Развёртывание почтового стека</div><div class="wf-step-desc">Ставим Mailcow (приём + хранение) и Postal (отправка) на VPS. Настраиваем DNS: SPF, DKIM 2048-бит, DMARC, MTA-STS. Выделяем 3-5 IP и распределяем по типам писем.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">03</div><div><div class="wf-step-title">Миграция базы и шаблонов</div><div class="wf-step-desc">Импортируем базу подписчиков в MailWizz с сохранением сегментов, тегов и истории. Переносим HTML-шаблоны, настраиваем автоцепочки (брошенная корзина, welcome-серия, реактивация).</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">04</div><div><div class="wf-step-title">Прогрев IP и тестирование</div><div class="wf-step-desc">Запускаем контролируемый прогрев каждого IP: 500 → 5000 → 20000 писем/день. Тестируем inbox placement в Gmail, Mail.ru, Яндекс, Outlook. Не переходим к следующему этапу, пока не получим стабильный inbox.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">05</div><div><div class="wf-step-title">Запуск и передача</div><div class="wf-step-desc">Первая рассылка на полный объём. Настраиваем мониторинг (Grafana + UptimeKuma), алёрты в Telegram при проблемах. Передаём доступы и документацию. Обучаем команду работе с MailWizz.</div></div></div>
+  </div>
+  <div class="wf-deliver">
+    <div class="wf-deliver-title">Что получаете</div>
+    <div class="wf-deliver-list">
+      <div class="wf-deliver-item" style="color:var(--accent3)">Собственный почтовый сервер с безлимитными контактами</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Выделенные IP — репутация только ваша</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">MailWizz с автоцепочками, A/B тестами, аналитикой</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Мониторинг доставляемости 24/7</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Документация и обучение команды</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Гарантийная поддержка 14-60 дней</div>
+    </div>
+  </div>
+  <div class="wf-metrics">
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">-91%</div><div class="wf-metric-label">Стоимость/мес</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">98%+</div><div class="wf-metric-label">Deliverability</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">3-5 дн</div><div class="wf-metric-label">Время запуска</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">∞</div><div class="wf-metric-label">Контактов</div></div>
   </div>
   <div class="wf-bottom">
-    <div class="wf-stack"><span>Mailcow</span><span>Postal</span><span>MailWizz</span><span>3-5 IP</span></div>
-    <div class="wf-result"><div class="wf-result-label">Экономия</div><div class="wf-result-val" style="color:var(--accent3)">до 90% в месяц</div></div>
+    <div class="wf-stack"><span>Mailcow</span><span>Postal</span><span>MailWizz</span><span>3-5 IP</span><span>Grafana</span></div>
+    <a href="index.html#cta" class="btn-primary wf-cta">Обсудить проект</a>
   </div>
 </div>
 
@@ -134,19 +165,37 @@
     <div class="wf-icon">🎓</div>
     <div class="wf-meta">
       <div class="wf-niche" style="color:#7b61ff">Инфобизнес</div>
-      <div class="wf-title">Курсы и вебинары → автоворонки на своём сервере</div>
+      <div class="wf-title">Курсы и вебинары → автоворонки на своём сервере без ограничений</div>
     </div>
   </div>
-  <div class="wf-pain">Цена растёт с базой, автоцепочки ограничены тарифом SaaS. Нужна свобода: триггеры, сегментация по поведению, A/B тесты без доплат.</div>
+  <div class="wf-pain">Вы платите SaaS за каждый контакт, а база растёт после каждого запуска. Автоцепочки ограничены тарифом — хотите 10 сегментов, а доступно 3. A/B тесты, лид-скоринг, динамический контент — всё за отдельные деньги. При этом SaaS может заблокировать за «агрессивный маркетинг», и вся воронка встанет в день запуска.</div>
   <div class="wf-steps">
-    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">01</div><div class="wf-step-text">Развёртывание Mailcow + Postal + Mautic</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">02</div><div class="wf-step-text">Импорт базы, настройка автоцепочек и лид-скоринга</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">03</div><div class="wf-step-text">Вебхуки: регистрация → welcome-серия → апсейл</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">04</div><div class="wf-step-text">Прогрев домена, тест inbox, запуск</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">01</div><div><div class="wf-step-title">Развёртывание стека</div><div class="wf-step-desc">Ставим Mailcow + Postal на VPS. Устанавливаем Mautic — полноценный маркетинг-автомейшн с открытым кодом. DNS, SSL, аутентификация.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">02</div><div><div class="wf-step-title">Импорт базы и настройка воронок</div><div class="wf-step-desc">Переносим контакты с сохранением тегов и сегментов. Строим автоцепочки: вебинар → welcome-серия → оффер → апсейл → реактивация. Настраиваем лид-скоринг по поведению (открытия, клики, просмотр страниц).</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">03</div><div><div class="wf-step-title">Интеграции и триггеры</div><div class="wf-step-desc">Через n8n подключаем вебхуки: регистрация на сайте → попадание в нужный сегмент → welcome-письмо через 2 минуты. Оплата → серия писем с доступом. Интеграция с GetCourse, Tilda, платёжными системами.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">04</div><div><div class="wf-step-title">Прогрев и тестирование</div><div class="wf-step-desc">Прогреваем домен и IP. Тестируем каждую цепочку: проверяем inbox в Gmail, Mail.ru, Яндекс. Проверяем, что триггеры срабатывают корректно. Запускаем A/B тест тем и контента.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">05</div><div><div class="wf-step-title">Запуск и обучение</div><div class="wf-step-desc">Запускаем воронки на рабочем объёме. Обучаем вашу команду работе с Mautic: создание рассылок, управление сегментами, чтение отчётов. Передаём документацию.</div></div></div>
+  </div>
+  <div class="wf-deliver">
+    <div class="wf-deliver-title">Что получаете</div>
+    <div class="wf-deliver-list">
+      <div class="wf-deliver-item" style="color:var(--accent3)">Безлимитные автоцепочки и сегменты</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Лид-скоринг: автоматическая квалификация</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">A/B тесты без ограничений</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Интеграция с GetCourse, Tilda, платёжками</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Полный контроль над данными подписчиков</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Никто не заблокирует в день запуска</div>
+    </div>
+  </div>
+  <div class="wf-metrics">
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">∞</div><div class="wf-metric-label">Автоцепочек</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">+34%</div><div class="wf-metric-label">Конверсия</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">5-7 дн</div><div class="wf-metric-label">Время запуска</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">0 ₽</div><div class="wf-metric-label">За контакт</div></div>
   </div>
   <div class="wf-bottom">
-    <div class="wf-stack"><span>Mautic</span><span>Postal</span><span>n8n</span><span>Лид-скоринг</span></div>
-    <div class="wf-result"><div class="wf-result-label">Результат</div><div class="wf-result-val" style="color:var(--accent3)">автоворонки без лимитов</div></div>
+    <div class="wf-stack"><span>Mautic</span><span>Postal</span><span>n8n</span><span>Лид-скоринг</span><span>GetCourse</span></div>
+    <a href="index.html#cta" class="btn-primary wf-cta">Обсудить проект</a>
   </div>
 </div>
 
@@ -156,20 +205,37 @@
     <div class="wf-icon">📚</div>
     <div class="wf-meta">
       <div class="wf-niche" style="color:#7b61ff">EdTech</div>
-      <div class="wf-title">Онлайн-школа → прогрев домена и inbox с нуля</div>
+      <div class="wf-title">Онлайн-школа → прогрев домена и стабильный inbox на 50-200К базу</div>
     </div>
   </div>
-  <div class="wf-pain">Новый домен сразу попадает в промо или спам Gmail. База 50–200К, нужен контролируемый прогрев. SaaS-платформа не даёт управлять репутацией IP.</div>
+  <div class="wf-pain">Новый домен сразу летит в промо-вкладку или спам Gmail. У вас 50–200К подписчиков, но open rate падает каждый месяц. SaaS-платформа отправляет с shared IP — репутация чужих рассылок тянет вниз вашу. Google Postmaster показывает жёлтую/красную репутацию, а вы не можете ничего исправить.</div>
   <div class="wf-steps">
-    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">01</div><div class="wf-step-text">Mailcow + Postal, выделенные IP для EdTech-домена</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">02</div><div class="wf-step-text">8-недельный план прогрева: 300 → 15 000 писем/день</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">03</div><div class="wf-step-text">DMARC-мониторинг через Google Postmaster</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">04</div><div class="wf-step-text">MailWizz: сегментация по курсам, автоцепочки</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">05</div><div class="wf-step-text">Выход на целевой объём, передача управления</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">01</div><div><div class="wf-step-title">Инфраструктура и выделенные IP</div><div class="wf-step-desc">Разворачиваем Mailcow + Postal на VPS. Выделяем отдельные IP для EdTech-домена — теперь репутация зависит только от ваших рассылок. DNS, SPF, DKIM 2048-бит, DMARC.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">02</div><div><div class="wf-step-title">8-недельный план прогрева</div><div class="wf-step-desc">Начинаем с 300 писем/день самым активным подписчикам (те, кто открывал за последний месяц). Каждую неделю увеличиваем объём: 300 → 1000 → 3000 → 7000 → 15000. Параллельно мониторим Google Postmaster и blacklists.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">03</div><div><div class="wf-step-title">DMARC-мониторинг и аналитика</div><div class="wf-step-desc">Настраиваем DMARC rua-отчёты — видим, кто отправляет от вашего имени. Подключаем Google Postmaster для мониторинга репутации домена и IP в реальном времени. Алёрты при ухудшении метрик.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">04</div><div><div class="wf-step-title">MailWizz: сегментация по курсам</div><div class="wf-step-desc">Настраиваем MailWizz с сегментами по курсам, уровню прохождения, активности. Автоцепочки: запись на курс → welcome → напоминания → сертификат → следующий курс. A/B тесты тем и времени отправки.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">05</div><div><div class="wf-step-title">Выход на целевой объём</div><div class="wf-step-desc">К 8-й неделе выходим на полный объём. Inbox rate 97%+ на Gmail. Передаём управление вашей команде с полной документацией: как отправлять, как читать отчёты, что делать при проблемах.</div></div></div>
+  </div>
+  <div class="wf-deliver">
+    <div class="wf-deliver-title">Что получаете</div>
+    <div class="wf-deliver-list">
+      <div class="wf-deliver-item" style="color:var(--accent3)">Выделенный IP с чистой репутацией</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">97%+ inbox rate на Gmail</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Автоцепочки по курсам и уровням</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">DMARC-мониторинг и Google Postmaster</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Рост open rate на 30-50%</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Документация для команды</div>
+    </div>
+  </div>
+  <div class="wf-metrics">
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">97%+</div><div class="wf-metric-label">Inbox Gmail</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">+40%</div><div class="wf-metric-label">Open rate</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">8 нед</div><div class="wf-metric-label">Прогрев</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">200К</div><div class="wf-metric-label">База</div></div>
   </div>
   <div class="wf-bottom">
-    <div class="wf-stack"><span>Mailcow</span><span>Postal</span><span>MailWizz</span><span>DMARC</span></div>
-    <div class="wf-result"><div class="wf-result-label">Результат</div><div class="wf-result-val" style="color:var(--accent3)">97%+ inbox Gmail</div></div>
+    <div class="wf-stack"><span>Mailcow</span><span>Postal</span><span>MailWizz</span><span>DMARC</span><span>Postmaster</span></div>
+    <a href="index.html#cta" class="btn-primary wf-cta">Обсудить проект</a>
   </div>
 </div>
 
@@ -179,19 +245,34 @@
     <div class="wf-icon">🏬</div>
     <div class="wf-meta">
       <div class="wf-niche" style="color:#00ff88">Маркетплейсы</div>
-      <div class="wf-title">Маркетплейс → транзакционные + маркетинг на одном стеке</div>
+      <div class="wf-title">Маркетплейс → транзакционные + маркетинговые письма на одном стеке</div>
     </div>
   </div>
-  <div class="wf-pain">Тысячи транзакционных писем (заказы, оплаты, доставка) + маркетинговые рассылки. SaaS берёт за каждое, при масштабе — сотни тысяч в месяц.</div>
+  <div class="wf-pain">Тысячи транзакционных писем каждый день: подтверждение заказа, оплата, статус доставки, возврат. Плюс маркетинговые рассылки: акции, рекомендации, реактивация. SaaS считает каждое письмо — при 100К+ писем/день счёт уходит за сотни тысяч. А если транзакционные и маркетинговые идут с одного IP, бан маркетинга тянет за собой транзакции.</div>
   <div class="wf-steps">
-    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">01</div><div class="wf-step-text">Postal API для транзакционных + MailWizz для маркетинга</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">02</div><div class="wf-step-text">Разделение IP-пулов: транзакции отдельно от рассылок</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">03</div><div class="wf-step-text">Вебхуки: статус каждого письма в реальном времени</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">04</div><div class="wf-step-text">Миграция базы без потери репутации домена</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">01</div><div><div class="wf-step-title">Архитектура с разделением потоков</div><div class="wf-step-desc">Разворачиваем Postal с двумя пулами IP: один для транзакционных (заказы, оплаты), второй для маркетинга (акции, рекомендации). Если маркетинговый IP попал в blacklist — транзакции продолжают идти.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">02</div><div><div class="wf-step-title">Postal API для транзакционных</div><div class="wf-step-desc">Подключаем REST API к вашему бэкенду. Вебхуки: статус каждого письма в реальном времени (delivered, bounced, opened). Retry-логика через n8n — если письмо не доставлено, пробуем повторно с другого IP.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">03</div><div><div class="wf-step-title">MailWizz для маркетинга</div><div class="wf-step-desc">Настраиваем MailWizz с сегментацией: по категории покупок, среднему чеку, давности последнего заказа. Автоцепочки: брошенная корзина, рекомендации на основе покупок, реактивация неактивных.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">04</div><div><div class="wf-step-title">Миграция без потери репутации</div><div class="wf-step-desc">Прогреваем новые IP параллельно со старым сервисом. Переключаем DNS только когда новый IP достиг нужного объёма. Ноль даунтайма для пользователей, репутация домена сохранена.</div></div></div>
+  </div>
+  <div class="wf-deliver">
+    <div class="wf-deliver-title">Что получаете</div>
+    <div class="wf-deliver-list">
+      <div class="wf-deliver-item" style="color:var(--accent3)">Разделение транзакционных и маркетинговых потоков</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">REST API + вебхуки для интеграции с бэкендом</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Масштабирование до 500К+ писем/день</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Автоцепочки: корзина, рекомендации, реактивация</div>
+    </div>
+  </div>
+  <div class="wf-metrics">
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">500K+</div><div class="wf-metric-label">Писем/день</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">99.8%</div><div class="wf-metric-label">Доставляемость</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">10+ IP</div><div class="wf-metric-label">В пуле</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">0 ₽</div><div class="wf-metric-label">За письмо</div></div>
   </div>
   <div class="wf-bottom">
-    <div class="wf-stack"><span>Postal API</span><span>MailWizz</span><span>n8n</span><span>10+ IP</span></div>
-    <div class="wf-result"><div class="wf-result-label">Масштаб</div><div class="wf-result-val" style="color:var(--accent3)">500K+ писем/день</div></div>
+    <div class="wf-stack"><span>Postal API</span><span>MailWizz</span><span>n8n</span><span>Webhooks</span><span>10+ IP</span></div>
+    <a href="index.html#cta" class="btn-primary wf-cta">Обсудить проект</a>
   </div>
 </div>
 
@@ -201,19 +282,34 @@
     <div class="wf-icon">💻</div>
     <div class="wf-meta">
       <div class="wf-niche" style="color:#00e5ff">SaaS / IT</div>
-      <div class="wf-title">SaaS-продукт → транзакционные письма через свой API</div>
+      <div class="wf-title">SaaS-продукт → транзакционные письма через свой API без рисков блокировки</div>
     </div>
   </div>
-  <div class="wf-pain">SendGrid/Mailgun заблокировал без предупреждения — пользователи не получают письма регистрации и уведомлений. Downtime стоит клиентов и денег.</div>
+  <div class="wf-pain">SendGrid/Mailgun заблокировал аккаунт без предупреждения — 3 000+ пользователей не получают письма регистрации, подтверждения оплаты и уведомлений. Каждый час простоя = потерянные клиенты и отток. Зависимость от одного провайдера — критическая уязвимость для SaaS-бизнеса. А письма отправляются через API — просто переключить DNS недостаточно.</div>
   <div class="wf-steps">
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">01</div><div class="wf-step-text">Экстренный запуск Postal с REST API (от 6 часов)</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">02</div><div class="wf-step-text">Переключение DNS, настройка retry-логики</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">03</div><div class="wf-step-text">Вебхуки: delivery/bounce/open tracking</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">04</div><div class="wf-step-text">Мониторинг: Grafana + алёрты при сбоях</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">01</div><div><div class="wf-step-title">Экстренный запуск (от 6 часов)</div><div class="wf-step-desc">Разворачиваем Postal на VPS, настраиваем DNS и аутентификацию. Postal предоставляет REST API, совместимый с вашим бэкендом — замена SendGrid API на Postal API минимальна (изменение endpoint и ключа).</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">02</div><div><div class="wf-step-title">Переключение и retry-логика</div><div class="wf-step-desc">Переключаем MX и DNS-записи. Настраиваем retry-логику через n8n: если письмо bounced — повтор через 5 минут с другого IP. Очередь сообщений гарантирует, что ни одно письмо не потеряется при пиковой нагрузке.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">03</div><div><div class="wf-step-title">Вебхуки и трекинг</div><div class="wf-step-desc">Настраиваем вебхуки Postal: delivery, bounce, open, click — всё пушится в ваш бэкенд в реальном времени. Дашборд статусов писем: какие доставлены, какие bounced, open rate по шаблону.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">04</div><div><div class="wf-step-title">Мониторинг и алёрты</div><div class="wf-step-desc">Grafana: графики отправки, bounce rate, latency в реальном времени. UptimeKuma: мониторинг доступности SMTP. Алёрты в Telegram/Slack при: bounce rate > 3%, downtime > 1 мин, blacklist detection.</div></div></div>
+  </div>
+  <div class="wf-deliver">
+    <div class="wf-deliver-title">Что получаете</div>
+    <div class="wf-deliver-list">
+      <div class="wf-deliver-item" style="color:var(--accent3)">REST API совместимый с SendGrid/Mailgun</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">99.95% uptime с мониторингом</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Вебхуки: delivery, bounce, open, click</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Никто не отключит ваш аккаунт</div>
+    </div>
+  </div>
+  <div class="wf-metrics">
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">6 ч</div><div class="wf-metric-label">Аварийный запуск</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">99.95%</div><div class="wf-metric-label">Uptime</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">-88%</div><div class="wf-metric-label">Стоимость</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">5 IP</div><div class="wf-metric-label">В пуле</div></div>
   </div>
   <div class="wf-bottom">
-    <div class="wf-stack"><span>Postal API</span><span>n8n</span><span>Grafana</span><span>Docker</span></div>
-    <div class="wf-result"><div class="wf-result-label">Uptime</div><div class="wf-result-val" style="color:var(--accent3)">99.95%</div></div>
+    <div class="wf-stack"><span>Postal API</span><span>n8n</span><span>Grafana</span><span>UptimeKuma</span><span>Docker</span></div>
+    <a href="index.html#cta" class="btn-primary wf-cta">Обсудить проект</a>
   </div>
 </div>
 
@@ -223,20 +319,36 @@
     <div class="wf-icon">🎰</div>
     <div class="wf-meta">
       <div class="wf-niche" style="color:#ff6b6b">iGaming</div>
-      <div class="wf-title">iGaming → инфраструктура без рисков блокировки</div>
+      <div class="wf-title">iGaming → полная изоляция, ротация IP, без рисков блокировки SaaS</div>
     </div>
   </div>
-  <div class="wf-pain">SaaS-сервисы отказывают в обслуживании или блокируют без предупреждения. Нужна своя инфра с ротацией IP и изоляцией доменов — чтобы один бан не положил всё.</div>
+  <div class="wf-pain">Ни один SaaS-сервис не будет работать с iGaming долго — рано или поздно заблокируют. Даже если не заблокируют сразу, shared IP с другими «рисковыми» отправителями убивают deliverability. Нужна своя инфраструктура с полной изоляцией доменов: если один попал в blacklist — остальные продолжают работать.</div>
   <div class="wf-steps">
-    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">01</div><div class="wf-step-text">Абузоустойчивый хостинг + пул выделенных IP</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">02</div><div class="wf-step-text">Postal с изоляцией: каждый домен на своём IP</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">03</div><div class="wf-step-text">Ротация IP round-robin, spintax-шаблоны</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">04</div><div class="wf-step-text">Прогрев каждого IP отдельно, blacklist-мониторинг</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">05</div><div class="wf-step-text">Алёрты в Telegram при проблемах с репутацией</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">01</div><div><div class="wf-step-title">Абузоустойчивый хостинг</div><div class="wf-step-desc">Подбираем хостера, который не отключит при первой жалобе: оффшорные или лояльные к iGaming провайдеры. Пул 20+ выделенных IP — каждый домен на своём адресе.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">02</div><div><div class="wf-step-title">Postal с полной изоляцией</div><div class="wf-step-desc">Каждый домен в отдельной организации Postal со своим IP. Если один IP попал в blacklist — остальные 19 продолжают отправлять. Spintax-шаблоны для уникализации контента каждого письма.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">03</div><div><div class="wf-step-title">Ротация и прогрев</div><div class="wf-step-desc">Round-robin ротация IP: нагрузка распределяется равномерно. Каждый IP прогреваем отдельно: 200 → 1000 → 5000 писем/день. Контроль объёмов по домену/час — чтобы не вызвать подозрения у Gmail.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">04</div><div><div class="wf-step-title">Мониторинг 24/7</div><div class="wf-step-desc">Автоматическая проверка всех IP на blacklists каждые 15 минут. При обнаружении — алёрт в Telegram + автоматическое переключение на резервный IP. Grafana-дашборд: bounce rate, complaints, delivery rate по каждому домену.</div></div></div>
+  </div>
+  <div class="wf-deliver">
+    <div class="wf-deliver-title">Что получаете</div>
+    <div class="wf-deliver-list">
+      <div class="wf-deliver-item" style="color:var(--accent3)">Полная изоляция: 1 домен = 1 IP</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Автоматическая ротация при blacklist</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Spintax для уникализации контента</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Blacklist-мониторинг каждые 15 минут</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Никто не заблокирует аккаунт</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Алёрты в Telegram при любых проблемах</div>
+    </div>
+  </div>
+  <div class="wf-metrics">
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">20+</div><div class="wf-metric-label">IP в пуле</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">96%+</div><div class="wf-metric-label">Deliverability</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">5-7 дн</div><div class="wf-metric-label">Запуск</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">15 мин</div><div class="wf-metric-label">Blacklist check</div></div>
   </div>
   <div class="wf-bottom">
-    <div class="wf-stack"><span>Postal</span><span>MailWizz</span><span>20+ IP</span><span>Spintax</span><span>Мониторинг</span></div>
-    <div class="wf-result"><div class="wf-result-label">Защита</div><div class="wf-result-val" style="color:var(--accent3)">полная изоляция доменов</div></div>
+    <div class="wf-stack"><span>Postal</span><span>MailWizz</span><span>Spintax</span><span>20+ IP</span><span>Мониторинг</span></div>
+    <a href="index.html#cta" class="btn-primary wf-cta">Обсудить проект</a>
   </div>
 </div>
 
@@ -246,19 +358,34 @@
     <div class="wf-icon">🪙</div>
     <div class="wf-meta">
       <div class="wf-niche" style="color:#f97316">Крипто</div>
-      <div class="wf-title">Крипто-проект → email без зависимости от чужих правил</div>
+      <div class="wf-title">Крипто-проект → email-инфраструктура, которую невозможно отключить</div>
     </div>
   </div>
-  <div class="wf-pain">Mailchimp, SendGrid, даже Amazon SES закрывают аккаунты крипто-проектов. Нужна инфраструктура, которую никто не отключит.</div>
+  <div class="wf-pain">Mailchimp, SendGrid, Amazon SES, даже Brevo — закрывают аккаунты крипто-проектов по первому complaint. Вы вкладываете в ICO/IDO/продукт, привлекаете пользователей — а email не работает. Транзакционные письма (верификация, вывод средств) не доходят. Маркетинговые рассылки невозможны через SaaS.</div>
   <div class="wf-steps">
-    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">01</div><div class="wf-step-text">Оффшорный или абузоустойчивый хостинг</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">02</div><div class="wf-step-text">Postal + Mailcow с шифрованием и изоляцией</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">03</div><div class="wf-step-text">Ротация доменов и IP-пулов</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">04</div><div class="wf-step-text">Прогрев, мониторинг репутации, антиспам-тюнинг</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">01</div><div><div class="wf-step-title">Подбор хостинга</div><div class="wf-step-desc">Оффшорный или лояльный к крипто-проектам хостер. Выделенный сервер с пулом IP. Шифрование данных at rest и in transit. WireGuard для доступа к серверу.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">02</div><div><div class="wf-step-title">Почтовый стек с изоляцией</div><div class="wf-step-desc">Postal для отправки + Mailcow для приёма. Каждый домен изолирован: свой IP, свой DKIM-ключ. Ротация доменов и IP-пулов для маркетинговых рассылок.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">03</div><div><div class="wf-step-title">Транзакционные через API</div><div class="wf-step-desc">Postal REST API для интеграции с вашей платформой: верификация email, 2FA, уведомления о транзакциях. Отдельный IP-пул для транзакционных — чтобы маркетинг не влиял на критичные письма.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">04</div><div><div class="wf-step-title">Прогрев и антиспам</div><div class="wf-step-desc">Прогреваем каждый IP отдельно. Тонкая настройка антиспама: контент-анализ перед отправкой, автоматическое удаление спам-триггеров. Мониторинг репутации и blacklists 24/7.</div></div></div>
+  </div>
+  <div class="wf-deliver">
+    <div class="wf-deliver-title">Что получаете</div>
+    <div class="wf-deliver-list">
+      <div class="wf-deliver-item" style="color:var(--accent3)">Сервер, который не отключат за «крипто»</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Изоляция транзакционных и маркетинговых</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Шифрование и WireGuard-доступ</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">API для интеграции с платформой</div>
+    </div>
+  </div>
+  <div class="wf-metrics">
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">100%</div><div class="wf-metric-label">Свой сервер</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">10+</div><div class="wf-metric-label">IP в пуле</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">3-5 дн</div><div class="wf-metric-label">Запуск</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">E2E</div><div class="wf-metric-label">Шифрование</div></div>
   </div>
   <div class="wf-bottom">
-    <div class="wf-stack"><span>Postal</span><span>Mailcow</span><span>WireGuard</span><span>10+ IP</span></div>
-    <div class="wf-result"><div class="wf-result-label">Контроль</div><div class="wf-result-val" style="color:var(--accent3)">100% свой сервер</div></div>
+    <div class="wf-stack"><span>Postal</span><span>Mailcow</span><span>WireGuard</span><span>10+ IP</span><span>Шифрование</span></div>
+    <a href="index.html#cta" class="btn-primary wf-cta">Обсудить проект</a>
   </div>
 </div>
 
@@ -268,19 +395,34 @@
     <div class="wf-icon">💕</div>
     <div class="wf-meta">
       <div class="wf-niche" style="color:#ff6b6b">Дейтинг</div>
-      <div class="wf-title">Дейтинг-платформа → массовые уведомления на своей инфре</div>
+      <div class="wf-title">Дейтинг-платформа → сотни тысяч уведомлений без блокировок SaaS</div>
     </div>
   </div>
-  <div class="wf-pain">SaaS считает дейтинг «high risk» — бан без предупреждения. Нужна отправка сотен тысяч уведомлений (матчи, сообщения) с высоким inbox rate.</div>
+  <div class="wf-pain">SaaS классифицирует дейтинг как «high risk» — бан аккаунта в любой момент. При этом уведомления критичны: «новый матч», «новое сообщение», «кто-то просмотрел профиль» — это ядро retention. Без этих писем пользователи уходят. Объёмы 100-500К уведомлений/день — ни один SaaS не потянет без космических счетов.</div>
   <div class="wf-steps">
-    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">01</div><div class="wf-step-text">Абузоустойчивый хостинг, пул IP</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">02</div><div class="wf-step-text">Postal API + триггерные письма через вебхуки</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">03</div><div class="wf-step-text">Изоляция по типу писем: транзакции / маркетинг</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">04</div><div class="wf-step-text">Прогрев, ротация, мониторинг blacklists</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">01</div><div><div class="wf-step-title">Инфраструктура для high-risk</div><div class="wf-step-desc">Абузоустойчивый хостинг + пул 15+ IP. Postal настроен на высокий throughput: до 200К+ писем/день. Каждый тип уведомлений на своём IP-пуле.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">02</div><div><div class="wf-step-title">Триггерные письма через API</div><div class="wf-step-desc">Postal API интегрируется с вашим бэкендом: событие (матч, сообщение, лайк) → вебхук → письмо через 30 секунд. Шаблоны с динамическим контентом: имя, фото, текст сообщения.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">03</div><div><div class="wf-step-title">Разделение потоков</div><div class="wf-step-desc">Транзакционные (регистрация, 2FA, оплата) на отдельном IP от уведомлений (матчи, сообщения). Маркетинговые (реактивация, акции) — на третьем. Один бан не затрагивает остальные.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">04</div><div><div class="wf-step-title">Прогрев и мониторинг</div><div class="wf-step-desc">Прогрев каждого IP. Ротация при blacklist. Мониторинг complaint rate — при превышении 0.1% автоматическое снижение объёма. Алёрты в Telegram.</div></div></div>
+  </div>
+  <div class="wf-deliver">
+    <div class="wf-deliver-title">Что получаете</div>
+    <div class="wf-deliver-list">
+      <div class="wf-deliver-item" style="color:var(--accent3)">Триггерные уведомления за &lt;30 секунд</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">3 изолированных IP-пула</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">200К+ писем/день</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Автоматический complaint-менеджмент</div>
+    </div>
+  </div>
+  <div class="wf-metrics">
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">200K+</div><div class="wf-metric-label">Писем/день</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">&lt;30с</div><div class="wf-metric-label">Доставка</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">15+ IP</div><div class="wf-metric-label">В пуле</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">3</div><div class="wf-metric-label">Потока</div></div>
   </div>
   <div class="wf-bottom">
-    <div class="wf-stack"><span>Postal</span><span>MailWizz</span><span>n8n</span><span>15+ IP</span></div>
-    <div class="wf-result"><div class="wf-result-label">Масштаб</div><div class="wf-result-val" style="color:var(--accent3)">200K+ писем/день</div></div>
+    <div class="wf-stack"><span>Postal API</span><span>MailWizz</span><span>n8n</span><span>15+ IP</span><span>Spintax</span></div>
+    <a href="index.html#cta" class="btn-primary wf-cta">Обсудить проект</a>
   </div>
 </div>
 
@@ -290,20 +432,37 @@
     <div class="wf-icon">🎯</div>
     <div class="wf-meta">
       <div class="wf-niche" style="color:#f97316">Cold outreach</div>
-      <div class="wf-title">Cold email → мульти-домен инфраструктура с ротацией</div>
+      <div class="wf-title">Cold email → мульти-домен инфраструктура с ротацией и spintax</div>
     </div>
   </div>
-  <div class="wf-pain">Домены быстро попадают в блэклисты, нужна ротация IP и доменов. Один бан не должен положить всю кампанию. Нужен spintax и контроль объёмов.</div>
+  <div class="wf-pain">Один домен — максимум 50-100 писем/день, потом blacklist. Нужно 20-50 доменов с отдельными IP, прогрев каждого, ротация, spintax. Один заблокированный домен не должен тянуть за собой остальные. При этом — всё должно управляться из одной панели, а не из 50 разных аккаунтов.</div>
   <div class="wf-steps">
-    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">01</div><div class="wf-step-text">20-50 доменов + выделенные IP на каждый</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">02</div><div class="wf-step-text">Postal с ротацией round-robin</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">03</div><div class="wf-step-text">MailWizz + spintax-шаблоны для уникализации</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">04</div><div class="wf-step-text">Автопрогрев каждого домена (Coldy/Warmup Inbox)</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">05</div><div class="wf-step-text">Blacklist-мониторинг + алёрты 24/7</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">01</div><div><div class="wf-step-title">Регистрация доменов и IP</div><div class="wf-step-desc">Регистрируем 20-50 доменов (можем помочь с подбором). Покупаем выделенные IP на каждый домен. DNS: SPF, DKIM, DMARC для каждого. Все домены в Postal — одна панель управления.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">02</div><div><div class="wf-step-title">Postal с ротацией</div><div class="wf-step-desc">Каждый домен в изолированной организации Postal. Round-robin ротация: письма распределяются по доменам равномерно. Лимиты: не более 50 писем/домен/час. Если домен попал в blacklist — автоматически исключается из ротации.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">03</div><div><div class="wf-step-title">MailWizz + spintax</div><div class="wf-step-desc">MailWizz для управления кампаниями. Spintax-шаблоны: каждое письмо уникально ({Привет|Здравствуйте|Добрый день}, {Имя}). Merge tags с данными из CSV/API. A/B тесты тем и контента.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">04</div><div><div class="wf-step-title">Автопрогрев</div><div class="wf-step-desc">Подключаем Coldy.ai или Warmup Inbox для автопрогрева каждого домена. Ящики прогреваются автоматически: входящие/исходящие, ответы, перемещение из спама. 2-4 недели до рабочего объёма.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">05</div><div><div class="wf-step-title">Мониторинг и алёрты</div><div class="wf-step-desc">Автоматическая проверка всех доменов и IP на 50+ blacklists каждые 15 минут. Дашборд: статус каждого домена (зелёный/жёлтый/красный). Алёрты в Telegram при blacklist, bounce rate > 5%, или снижении inbox rate.</div></div></div>
+  </div>
+  <div class="wf-deliver">
+    <div class="wf-deliver-title">Что получаете</div>
+    <div class="wf-deliver-list">
+      <div class="wf-deliver-item" style="color:var(--accent3)">20-50 прогретых доменов с выделенными IP</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Автоматическая ротация и изоляция</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Spintax: каждое письмо уникально</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Blacklist-мониторинг каждые 15 минут</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Автопрогрев через Coldy/Warmup Inbox</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Одна панель для всех доменов</div>
+    </div>
+  </div>
+  <div class="wf-metrics">
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">50</div><div class="wf-metric-label">Доменов</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">0</div><div class="wf-metric-label">Блэклистов/3мес</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">40+ IP</div><div class="wf-metric-label">В пуле</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">2K+</div><div class="wf-metric-label">Писем/день</div></div>
   </div>
   <div class="wf-bottom">
-    <div class="wf-stack"><span>Postal</span><span>MailWizz</span><span>Spintax</span><span>40+ IP</span><span>50 доменов</span></div>
-    <div class="wf-result"><div class="wf-result-label">Результат</div><div class="wf-result-val" style="color:var(--accent3)">0 блэклистов за 3 мес</div></div>
+    <div class="wf-stack"><span>Postal</span><span>MailWizz</span><span>Spintax</span><span>Coldy</span><span>40+ IP</span><span>50 доменов</span></div>
+    <a href="index.html#cta" class="btn-primary wf-cta">Обсудить проект</a>
   </div>
 </div>
 
@@ -313,19 +472,34 @@
     <div class="wf-icon">👥</div>
     <div class="wf-meta">
       <div class="wf-niche" style="color:#00e5ff">Рекрутинг</div>
-      <div class="wf-title">HR / Рекрутинг → аутрич кандидатам без бана почты</div>
+      <div class="wf-title">HR / Рекрутинг → аутрич кандидатам без бана корпоративной почты</div>
     </div>
   </div>
-  <div class="wf-pain">Массовая рассылка кандидатам с корпоративной почты = бан домена. Gmail начинает фильтровать, письма HR не доходят.</div>
+  <div class="wf-pain">HR-отдел шлёт 500+ писем кандидатам в неделю с корпоративного домена. Gmail начинает фильтровать — и вот уже обычные деловые письма CEO попадают в спам. Корпоративная почта под угрозой из-за mass-outreach рекрутеров.</div>
   <div class="wf-steps">
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">01</div><div class="wf-step-text">Отдельные домены для аутрича (не корпоративный)</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">02</div><div class="wf-step-text">Postal + прогрев каждого домена</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">03</div><div class="wf-step-text">Персонализация: spintax + merge tags</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">04</div><div class="wf-step-text">Лимиты отправки по домену/день, мониторинг</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">01</div><div><div class="wf-step-title">Отдельные домены для HR</div><div class="wf-step-desc">Регистрируем 5-10 доменов специально для рекрутинга (jobs-company.com, careers-company.com). Корпоративный домен больше не используется для mass-outreach — его репутация защищена.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">02</div><div><div class="wf-step-title">Postal + прогрев</div><div class="wf-step-desc">Каждый HR-домен на своём IP в Postal. Прогрев 2-3 недели. Лимиты: 50-80 писем/домен/день — оптимально для рекрутинга. Spintax для персонализации (имя, компания, позиция).</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">03</div><div><div class="wf-step-title">MailWizz для управления</div><div class="wf-step-desc">Рекрутеры работают в MailWizz: загружают списки кандидатов, выбирают шаблон, запускают. Merge tags: {Имя}, {Компания}, {Позиция}. Трекинг: кто открыл, кто ответил.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">04</div><div><div class="wf-step-title">Мониторинг и лимиты</div><div class="wf-step-desc">Автоматические лимиты по домену/день. Если bounce rate > 5% — домен останавливается до выяснения. Алёрты в Telegram при проблемах. Еженедельный отчёт: сколько отправлено, open rate, reply rate.</div></div></div>
+  </div>
+  <div class="wf-deliver">
+    <div class="wf-deliver-title">Что получаете</div>
+    <div class="wf-deliver-list">
+      <div class="wf-deliver-item" style="color:var(--accent3)">Корпоративный домен защищён от бана</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">5-10 прогретых HR-доменов</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Персонализация с merge tags и spintax</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Трекинг open/reply rate по кампаниям</div>
+    </div>
+  </div>
+  <div class="wf-metrics">
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">10</div><div class="wf-metric-label">HR-доменов</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">500+</div><div class="wf-metric-label">Писем/день</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">2-3 нед</div><div class="wf-metric-label">Прогрев</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">0%</div><div class="wf-metric-label">Риск для компании</div></div>
   </div>
   <div class="wf-bottom">
-    <div class="wf-stack"><span>Postal</span><span>MailWizz</span><span>5-10 доменов</span><span>Spintax</span></div>
-    <div class="wf-result"><div class="wf-result-label">Защита</div><div class="wf-result-val" style="color:var(--accent3)">корпоративный домен в безопасности</div></div>
+    <div class="wf-stack"><span>Postal</span><span>MailWizz</span><span>5-10 доменов</span><span>Spintax</span><span>Мониторинг</span></div>
+    <a href="index.html#cta" class="btn-primary wf-cta">Обсудить проект</a>
   </div>
 </div>
 
@@ -334,20 +508,35 @@
   <div class="wf-header">
     <div class="wf-icon">🔗</div>
     <div class="wf-meta">
-      <div class="wf-niche" style="color:#f97316">Affiliate</div>
-      <div class="wf-title">CPA / Affiliate → массовая отправка с высоким inbox rate</div>
+      <div class="wf-niche" style="color:#f97316">Affiliate / CPA</div>
+      <div class="wf-title">CPA-сеть → массовая инфраструктура на 500K+ писем/день с изоляцией по офферам</div>
     </div>
   </div>
-  <div class="wf-pain">Большие объёмы, много доменов, нужна ротация и изоляция. Один блэклист не должен задевать другие кампании.</div>
+  <div class="wf-pain">Большие объёмы, много офферов, каждый на своём домене. Один blacklist не должен задевать другие кампании. Нужна ротация IP, динамический контент, автоматическое переключение при проблемах — и всё это из одной панели.</div>
   <div class="wf-steps">
-    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">01</div><div class="wf-step-text">Мульти-IP инфра: Postal + 40+ выделенных IP</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">02</div><div class="wf-step-text">Изоляция по кампаниям: каждый оффер на своём IP</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">03</div><div class="wf-step-text">MailWizz + spintax + динамический контент</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">04</div><div class="wf-step-text">Автоматический мониторинг + ротация при блэклисте</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">01</div><div><div class="wf-step-title">Мульти-IP инфраструктура</div><div class="wf-step-desc">Postal с пулом 40+ выделенных IP. Каждый оффер в отдельной организации: свой домен, свой IP, свой DKIM. Blacklist одного оффера не затрагивает остальные.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">02</div><div><div class="wf-step-title">MailWizz + динамический контент</div><div class="wf-step-desc">Spintax-шаблоны: subject, preheader, body — всё уникализируется. Динамические блоки: разный контент в зависимости от сегмента. Автоматическая подстановка данных из API.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">03</div><div><div class="wf-step-title">Прогрев и запуск</div><div class="wf-step-desc">Массовый прогрев всех IP параллельно. Автопрогрев через сервис + ручной контроль. Выход на рабочие объёмы за 3-4 недели. Контроль bounce rate и complaint rate на каждом этапе.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">04</div><div><div class="wf-step-title">Автоматизация и мониторинг</div><div class="wf-step-desc">При blacklist: автоматическое переключение на резервный IP. Дашборд со статусом каждого домена/IP. Алёрты при: bounce > 5%, complaint > 0.1%, blacklist, снижение delivery rate.</div></div></div>
+  </div>
+  <div class="wf-deliver">
+    <div class="wf-deliver-title">Что получаете</div>
+    <div class="wf-deliver-list">
+      <div class="wf-deliver-item" style="color:var(--accent3)">40+ выделенных IP с изоляцией по офферам</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Spintax + динамический контент</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Автоматическая ротация при blacklist</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">500K+ писем/день</div>
+    </div>
+  </div>
+  <div class="wf-metrics">
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">500K+</div><div class="wf-metric-label">Писем/день</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">40+</div><div class="wf-metric-label">IP в пуле</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">96%+</div><div class="wf-metric-label">Deliverability</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">50+</div><div class="wf-metric-label">Доменов</div></div>
   </div>
   <div class="wf-bottom">
-    <div class="wf-stack"><span>Postal</span><span>MailWizz</span><span>40+ IP</span><span>50+ доменов</span></div>
-    <div class="wf-result"><div class="wf-result-label">Масштаб</div><div class="wf-result-val" style="color:var(--accent3)">500K+ писем/день</div></div>
+    <div class="wf-stack"><span>Postal</span><span>MailWizz</span><span>Spintax</span><span>40+ IP</span><span>50+ доменов</span><span>Авторотация</span></div>
+    <a href="index.html#cta" class="btn-primary wf-cta">Обсудить проект</a>
   </div>
 </div>
 
@@ -357,20 +546,37 @@
     <div class="wf-icon">🏦</div>
     <div class="wf-meta">
       <div class="wf-niche" style="color:#7b61ff">Финтех</div>
-      <div class="wf-title">Финтех → защита от фишинга + compliance</div>
+      <div class="wf-title">Финтех → защита от фишинга, DMARC p=reject, compliance 152-ФЗ</div>
     </div>
   </div>
-  <div class="wf-pain">Мошенники рассылают от имени компании, клиенты жалуются. 152-ФЗ требует хранить данные в РФ, а SaaS-сервисы — за рубежом. DMARC не настроен.</div>
+  <div class="wf-pain">Мошенники рассылают фишинг от вашего имени — клиенты переходят по ссылкам и теряют деньги. Жалобы идут к вам. DMARC не настроен или стоит p=none (ничего не блокирует). 152-ФЗ требует хранить данные в РФ, а ваш email-провайдер — за рубежом. Регулятор может предъявить претензии.</div>
   <div class="wf-steps">
-    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">01</div><div class="wf-step-text">Аудит DNS: SPF, DKIM, текущий DMARC</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">02</div><div class="wf-step-text">DMARC p=reject + SPF strict + DKIM 2048-бит</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">03</div><div class="wf-step-text">MTA-STS + BIMI (логотип в инбоксе)</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">04</div><div class="wf-step-text">Mailcow на сервере в РФ — соответствие 152-ФЗ</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">05</div><div class="wf-step-text">Мониторинг DMARC-отчётов, алёрты при spoofing</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">01</div><div><div class="wf-step-title">Аудит текущей аутентификации</div><div class="wf-step-desc">Проверяем SPF (часто стоит ~all вместо -all), DKIM (отсутствует или 1024-бит), DMARC (p=none или отсутствует). Анализируем, кто сейчас отправляет от вашего домена — часто находим десятки несанкционированных отправителей.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">02</div><div><div class="wf-step-title">Настройка аутентификации</div><div class="wf-step-desc">SPF strict (-all): только авторизованные серверы. DKIM 2048-бит: криптографическая подпись каждого письма. DMARC p=reject: фишинговые письма не доходят до получателей. Переход от p=none к p=reject — поэтапно, чтобы не заблокировать легитимные письма.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">03</div><div><div class="wf-step-title">MTA-STS + BIMI</div><div class="wf-step-desc">MTA-STS: принудительное TLS-шифрование при доставке. BIMI: ваш логотип отображается рядом с письмом в Gmail и Apple Mail — клиенты сразу видят, что письмо настоящее. VMC-сертификат для верификации бренда.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">04</div><div><div class="wf-step-title">Почтовый сервер в РФ</div><div class="wf-step-desc">Mailcow на сервере в российском ЦОД — все данные хранятся на территории РФ. Соответствие 152-ФЗ и требованиям ЦБ. Шифрование at rest, бэкапы, аудит-лог всех действий.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">05</div><div><div class="wf-step-title">Мониторинг DMARC-отчётов</div><div class="wf-step-desc">Настраиваем автоматический парсинг DMARC rua/ruf отчётов. Дашборд: кто отправляет от вашего домена, сколько писем заблокировано. Алёрты при обнаружении spoofing-попыток.</div></div></div>
+  </div>
+  <div class="wf-deliver">
+    <div class="wf-deliver-title">Что получаете</div>
+    <div class="wf-deliver-list">
+      <div class="wf-deliver-item" style="color:var(--accent3)">DMARC p=reject — фишинг заблокирован</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">BIMI: логотип в Gmail и Apple Mail</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">MTA-STS: обязательное шифрование</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Сервер в РФ — 152-ФЗ и ЦБ</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Мониторинг spoofing-попыток 24/7</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">10/10 на mail-tester.com</div>
+    </div>
+  </div>
+  <div class="wf-metrics">
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">0</div><div class="wf-metric-label">Фишинг-писем</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">10/10</div><div class="wf-metric-label">Mail-tester</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">3 дня</div><div class="wf-metric-label">Внедрение</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">100%</div><div class="wf-metric-label">152-ФЗ</div></div>
   </div>
   <div class="wf-bottom">
-    <div class="wf-stack"><span>DMARC reject</span><span>BIMI</span><span>MTA-STS</span><span>Mailcow</span><span>152-ФЗ</span></div>
-    <div class="wf-result"><div class="wf-result-label">Защита</div><div class="wf-result-val" style="color:var(--accent3)">0 фишинг-писем</div></div>
+    <div class="wf-stack"><span>DMARC reject</span><span>BIMI</span><span>MTA-STS</span><span>Mailcow</span><span>152-ФЗ</span><span>ЦОД РФ</span></div>
+    <a href="index.html#cta" class="btn-primary wf-cta">Обсудить проект</a>
   </div>
 </div>
 
@@ -380,19 +586,34 @@
     <div class="wf-icon">🏥</div>
     <div class="wf-meta">
       <div class="wf-niche" style="color:#ff6b6b">Медицина</div>
-      <div class="wf-title">Клиника → уведомления пациентам с защитой данных</div>
+      <div class="wf-title">Клиника → уведомления пациентам с полной защитой персональных данных</div>
     </div>
   </div>
-  <div class="wf-pain">Данные пациентов нельзя хранить на серверах SaaS — 152-ФЗ и медицинская тайна. Нужна своя инфра в РФ для напоминаний о записях и результатах анализов.</div>
+  <div class="wf-pain">Клиника отправляет напоминания о записях, результаты анализов, рекомендации — через Unisender или другой SaaS. Данные пациентов (ФИО, диагнозы, контакты) хранятся на чужих серверах за рубежом. Это нарушение 152-ФЗ и врачебной тайны. Один инцидент — и Роскомнадзор может оштрафовать.</div>
   <div class="wf-steps">
-    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">01</div><div class="wf-step-text">Mailcow + Postal на сервере в РФ</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">02</div><div class="wf-step-text">n8n: МИС → триггерные уведомления пациентам</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">03</div><div class="wf-step-text">DMARC + DKIM: защита от фишинга от имени клиники</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">04</div><div class="wf-step-text">Шифрование, бэкапы, соответствие 152-ФЗ</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">01</div><div><div class="wf-step-title">Сервер в РФ</div><div class="wf-step-desc">Разворачиваем Mailcow + Postal на VPS в российском ЦОД. Все данные пациентов хранятся на территории РФ. Шифрование at rest + TLS для всех соединений.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">02</div><div><div class="wf-step-title">Интеграция с МИС</div><div class="wf-step-desc">Через n8n подключаем вашу медицинскую информационную систему: запись создана → напоминание пациенту за 24 часа. Результаты анализов готовы → уведомление. Всё автоматически, без ручной работы администраторов.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">03</div><div><div class="wf-step-title">Защита от фишинга</div><div class="wf-step-desc">SPF/DKIM/DMARC p=reject — никто не сможет отправить письмо от имени клиники. Пациенты получают только настоящие письма. MTA-STS для обязательного шифрования при передаче.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#ff6b6b">04</div><div><div class="wf-step-title">Бэкапы и безопасность</div><div class="wf-step-desc">Автоматические бэкапы на S3-совместимое хранилище в РФ. Fail2ban + CrowdSec от brute-force. 2FA для всех сотрудников. Аудит-лог: кто, когда, откуда получал доступ к почте.</div></div></div>
+  </div>
+  <div class="wf-deliver">
+    <div class="wf-deliver-title">Что получаете</div>
+    <div class="wf-deliver-list">
+      <div class="wf-deliver-item" style="color:var(--accent3)">Данные пациентов в РФ — 152-ФЗ</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Автоуведомления из МИС через n8n</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Защита от фишинга (DMARC reject)</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Шифрование, 2FA, аудит-логи</div>
+    </div>
+  </div>
+  <div class="wf-metrics">
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">100%</div><div class="wf-metric-label">152-ФЗ</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">-82%</div><div class="wf-metric-label">Стоимость/мес</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">2 дня</div><div class="wf-metric-label">Запуск</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">2FA</div><div class="wf-metric-label">Для всех</div></div>
   </div>
   <div class="wf-bottom">
-    <div class="wf-stack"><span>Mailcow</span><span>Postal</span><span>n8n</span><span>152-ФЗ</span><span>Шифрование</span></div>
-    <div class="wf-result"><div class="wf-result-label">Compliance</div><div class="wf-result-val" style="color:var(--accent3)">100% 152-ФЗ</div></div>
+    <div class="wf-stack"><span>Mailcow</span><span>Postal</span><span>n8n</span><span>152-ФЗ</span><span>2FA</span><span>ЦОД РФ</span></div>
+    <a href="index.html#cta" class="btn-primary wf-cta">Обсудить проект</a>
   </div>
 </div>
 
@@ -402,19 +623,34 @@
     <div class="wf-icon">⚖️</div>
     <div class="wf-meta">
       <div class="wf-niche" style="color:#7b61ff">Юридические</div>
-      <div class="wf-title">Юрфирма → конфиденциальная переписка на своём сервере</div>
+      <div class="wf-title">Юрфирма → конфиденциальная переписка на полностью контролируемом сервере</div>
     </div>
   </div>
-  <div class="wf-pain">Адвокатская тайна не совместима с хранением почты на серверах Google или Mail.ru. Нужен свой почтовый сервер с шифрованием и контролем доступа.</div>
+  <div class="wf-pain">Адвокатская тайна. Переписка с клиентами содержит конфиденциальные данные: договоры, стратегии, персональные данные. Хранить это на серверах Google Workspace или Mail.ru — риск. Утечка = репутационный удар и ответственность. Нужен свой сервер с шифрованием и контролем доступа.</div>
   <div class="wf-steps">
-    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">01</div><div class="wf-step-text">Mailcow: собственный почтовый сервер с веб-интерфейсом</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">02</div><div class="wf-step-text">TLS обязательный, шифрование at rest</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">03</div><div class="wf-step-text">SPF/DKIM/DMARC — защита от spoofing</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">04</div><div class="wf-step-text">Бэкапы на S3, Fail2ban, 2FA для пользователей</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">01</div><div><div class="wf-step-title">Собственный почтовый сервер</div><div class="wf-step-desc">Mailcow на VPS в РФ: полнофункциональный почтовый сервер с веб-интерфейсом (SOGo). Почта, календарь, контакты — всё своё. Клиенты подключаются через IMAP/SMTP или веб-интерфейс.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">02</div><div><div class="wf-step-title">Шифрование на всех уровнях</div><div class="wf-step-desc">TLS обязательный для всех соединений. Шифрование at rest: даже при физическом доступе к серверу данные не прочитать. WireGuard VPN: доступ к почтовому серверу только через VPN — невозможно подключиться извне.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">03</div><div><div class="wf-step-title">Аутентификация и защита</div><div class="wf-step-desc">SPF/DKIM/DMARC p=reject: никто не отправит письмо от имени фирмы. 2FA для всех пользователей. Fail2ban: блокировка после 5 неудачных попыток входа. Политики паролей.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#7b61ff">04</div><div><div class="wf-step-title">Бэкапы и аудит</div><div class="wf-step-desc">Ежедневные бэкапы на S3 с шифрованием. Аудит-лог: кто входил, откуда, когда. Хранение логов 12 месяцев. Документация для внутреннего аудита безопасности.</div></div></div>
+  </div>
+  <div class="wf-deliver">
+    <div class="wf-deliver-title">Что получаете</div>
+    <div class="wf-deliver-list">
+      <div class="wf-deliver-item" style="color:var(--accent3)">Полный контроль над перепиской</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Шифрование at rest + TLS + VPN</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">2FA, Fail2ban, аудит-логи</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Документация для аудита безопасности</div>
+    </div>
+  </div>
+  <div class="wf-metrics">
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">E2E</div><div class="wf-metric-label">Шифрование</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">2FA</div><div class="wf-metric-label">Для всех</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">2-3 дня</div><div class="wf-metric-label">Запуск</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">VPN</div><div class="wf-metric-label">Доступ</div></div>
   </div>
   <div class="wf-bottom">
-    <div class="wf-stack"><span>Mailcow</span><span>WireGuard</span><span>Fail2ban</span><span>2FA</span><span>Бэкапы</span></div>
-    <div class="wf-result"><div class="wf-result-label">Безопасность</div><div class="wf-result-val" style="color:var(--accent3)">полный контроль данных</div></div>
+    <div class="wf-stack"><span>Mailcow</span><span>WireGuard</span><span>Fail2ban</span><span>2FA</span><span>Шифрование</span><span>S3 бэкапы</span></div>
+    <a href="index.html#cta" class="btn-primary wf-cta">Обсудить проект</a>
   </div>
 </div>
 
@@ -424,19 +660,36 @@
     <div class="wf-icon">🏛️</div>
     <div class="wf-meta">
       <div class="wf-niche" style="color:#00e5ff">Госсектор</div>
-      <div class="wf-title">Госорганизация → почта на территории РФ по требованиям</div>
+      <div class="wf-title">Госорганизация → почтовый сервер на территории РФ, open-source, аудит-ready</div>
     </div>
   </div>
-  <div class="wf-pain">Требования регуляторов: данные только в РФ, отечественное ПО или open-source, аудит безопасности. Нельзя использовать зарубежные SaaS.</div>
+  <div class="wf-pain">Требования регуляторов: персональные данные — только в РФ. Зарубежные SaaS (Google Workspace, Microsoft 365) — запрещены или нежелательны. Нужно отечественное или open-source ПО. Сервер должен пройти аудит безопасности. Документация обязательна.</div>
   <div class="wf-steps">
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">01</div><div class="wf-step-text">Сервер в сертифицированном ЦОД РФ</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">02</div><div class="wf-step-text">Mailcow (open-source): почта, календарь, контакты</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">03</div><div class="wf-step-text">Hardening: CrowdSec, Fail2ban, WireGuard для доступа</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">04</div><div class="wf-step-text">Документация для аудита, бэкапы, SLA-мониторинг</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">01</div><div><div class="wf-step-title">Сервер в сертифицированном ЦОД</div><div class="wf-step-desc">Размещаем в российском ЦОД с сертификатами соответствия. Можем работать с конкретным ЦОД по вашему требованию. Все данные физически на территории РФ.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">02</div><div><div class="wf-step-title">Mailcow: open-source</div><div class="wf-step-desc">Mailcow — полностью открытый код на GitHub. Почта, календарь, контакты, веб-интерфейс. Поддержка ActiveSync для мобильных устройств. Можно провести аудит исходного кода.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">03</div><div><div class="wf-step-title">Hardening и безопасность</div><div class="wf-step-desc">CrowdSec: защита от DDoS и brute-force на уровне сообщества. Fail2ban: блокировка IP при подозрительной активности. WireGuard VPN: административный доступ только через VPN. Шифрование дисков.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">04</div><div><div class="wf-step-title">Документация и SLA</div><div class="wf-step-desc">Полная документация: архитектура, конфигурация, процедуры восстановления. Подготовка к аудиту безопасности. UptimeKuma + Grafana: SLA-мониторинг с историей и отчётами. Ежедневные бэкапы с тестированием восстановления.</div></div></div>
+  </div>
+  <div class="wf-deliver">
+    <div class="wf-deliver-title">Что получаете</div>
+    <div class="wf-deliver-list">
+      <div class="wf-deliver-item" style="color:var(--accent3)">Open-source: код доступен для аудита</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Сервер в сертифицированном ЦОД РФ</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Hardening: CrowdSec, Fail2ban, VPN</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Документация для аудита безопасности</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">SLA-мониторинг с историей</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Бэкапы с тестированием восстановления</div>
+    </div>
+  </div>
+  <div class="wf-metrics">
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">100%</div><div class="wf-metric-label">Open-source</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">ЦОД РФ</div><div class="wf-metric-label">Размещение</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">3-5 дн</div><div class="wf-metric-label">Запуск</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">152-ФЗ</div><div class="wf-metric-label">Соответствие</div></div>
   </div>
   <div class="wf-bottom">
-    <div class="wf-stack"><span>Mailcow</span><span>Open-source</span><span>ЦОД РФ</span><span>CrowdSec</span></div>
-    <div class="wf-result"><div class="wf-result-label">Соответствие</div><div class="wf-result-val" style="color:var(--accent3)">152-ФЗ + открытый код</div></div>
+    <div class="wf-stack"><span>Mailcow</span><span>Open-source</span><span>ЦОД РФ</span><span>CrowdSec</span><span>WireGuard</span><span>Grafana</span></div>
+    <a href="index.html#cta" class="btn-primary wf-cta">Обсудить проект</a>
   </div>
 </div>
 
@@ -446,20 +699,37 @@
     <div class="wf-icon">📧</div>
     <div class="wf-meta">
       <div class="wf-niche" style="color:#00e5ff">Email-агентства</div>
-      <div class="wf-title">Email-агентство → единая инфра для всех клиентов</div>
+      <div class="wf-title">Email-агентство → единая инфра на 10-50 клиентов с полной изоляцией и отчётностью</div>
     </div>
   </div>
-  <div class="wf-pain">10 клиентов — 10 разных платформ, хаос с паролями и отчётами. Нет изоляции: проблемы одного клиента влияют на других. Невозможно масштабироваться.</div>
+  <div class="wf-pain">10 клиентов — 10 разных платформ. Хаос: десятки паролей, разные интерфейсы, ручная сборка отчётов. Нет изоляции: если домен клиента A попал в blacklist — страдают рассылки клиента B (shared IP). Невозможно масштабироваться: каждый новый клиент = новый сервис, новая оплата, новые ограничения.</div>
   <div class="wf-steps">
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">01</div><div class="wf-step-text">Postal: изолированные организации по клиентам</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">02</div><div class="wf-step-text">Каждый клиент на своём IP-пуле</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">03</div><div class="wf-step-text">Chatwoot: единый инбокс для переписки</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">04</div><div class="wf-step-text">n8n: автоматические отчёты по клиентам</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">05</div><div class="wf-step-text">Общий дашборд: Grafana с метриками по каждому</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">01</div><div><div class="wf-step-title">Postal: организации по клиентам</div><div class="wf-step-desc">Каждый клиент — отдельная организация в Postal с собственным IP-пулом. Blacklist одного клиента не затрагивает других. Все клиенты управляются из одной панели. Подключение нового клиента — 15 минут.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">02</div><div><div class="wf-step-title">MailWizz для кампаний</div><div class="wf-step-desc">Один MailWizz для всех клиентов: отдельные списки, шаблоны, домены отправки. Каждый клиент привязан к своему Postal delivery server. A/B тесты, автоцепочки, сегментация — всё из одного интерфейса.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">03</div><div><div class="wf-step-title">Chatwoot для переписки</div><div class="wf-step-desc">Единый инбокс для всех клиентов: email, Telegram, WhatsApp. Менеджеры видят переписку по всем каналам. Автоматическое тегирование по клиенту, автоответы на частые вопросы.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">04</div><div><div class="wf-step-title">Автоматические отчёты</div><div class="wf-step-desc">n8n собирает метрики из Postal и MailWizz: delivery rate, open rate, click rate, bounces — по каждому клиенту. Еженедельный отчёт генерируется автоматически и отправляется клиенту на email или в Telegram.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">05</div><div><div class="wf-step-title">Дашборд агентства</div><div class="wf-step-desc">Grafana: общий дашборд со статусом каждого клиента. Красный/жёлтый/зелёный по bounce rate, complaint rate, blacklist status. Алёрты при проблемах у любого клиента.</div></div></div>
+  </div>
+  <div class="wf-deliver">
+    <div class="wf-deliver-title">Что получаете</div>
+    <div class="wf-deliver-list">
+      <div class="wf-deliver-item" style="color:var(--accent3)">Одна панель для 10-50 клиентов</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Полная изоляция по IP-пулам</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Автоматические еженедельные отчёты</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Grafana-дашборд агентства</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Подключение нового клиента за 15 мин</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Chatwoot: единый инбокс для переписки</div>
+    </div>
+  </div>
+  <div class="wf-metrics">
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">50</div><div class="wf-metric-label">Клиентов</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">-70%</div><div class="wf-metric-label">Операционные</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">800K+</div><div class="wf-metric-label">Писем/мес</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">15 мин</div><div class="wf-metric-label">Новый клиент</div></div>
   </div>
   <div class="wf-bottom">
-    <div class="wf-stack"><span>Postal</span><span>Chatwoot</span><span>n8n</span><span>Grafana</span><span>12+ IP</span></div>
-    <div class="wf-result"><div class="wf-result-label">Масштаб</div><div class="wf-result-val" style="color:var(--accent3)">10-50 клиентов на одном стеке</div></div>
+    <div class="wf-stack"><span>Postal</span><span>MailWizz</span><span>Chatwoot</span><span>n8n</span><span>Grafana</span><span>12+ IP</span></div>
+    <a href="index.html#cta" class="btn-primary wf-cta">Обсудить проект</a>
   </div>
 </div>
 
@@ -469,19 +739,34 @@
     <div class="wf-icon">📢</div>
     <div class="wf-meta">
       <div class="wf-niche" style="color:#f97316">Маркетинг-агентства</div>
-      <div class="wf-title">Маркетинг-агентство → email как доп. услуга клиентам</div>
+      <div class="wf-title">Маркетинг-агентство → email как дополнительная услуга для клиентов</div>
     </div>
   </div>
-  <div class="wf-pain">Клиенты просят email-рассылки, но настраивать каждому отдельный сервис — долго и дорого. Нужна белая инфра, которую можно перепродавать.</div>
+  <div class="wf-pain">Клиенты просят email-рассылки, но вы не email-агентство. Настраивать каждому отдельный Mailchimp — долго, дорого и неуправляемо. Нужна белая инфра, где подключение нового клиента — 15 минут, а не 2 дня. И чтобы можно было выставлять клиентам свой прайс за «email-маркетинг как услугу».</div>
   <div class="wf-steps">
-    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">01</div><div class="wf-step-text">Postal + MailWizz: мультитенантная платформа</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">02</div><div class="wf-step-text">Подключение клиентских доменов за 15 минут</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">03</div><div class="wf-step-text">Шаблоны, A/B тесты, аналитика для каждого</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">04</div><div class="wf-step-text">Брендированные отчёты через n8n</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">01</div><div><div class="wf-step-title">Мультитенантная платформа</div><div class="wf-step-desc">Postal + MailWizz настроены для мультитенантности: каждый клиент — отдельный delivery server, отдельный список, отдельный домен. Вы управляете всем из одного интерфейса.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">02</div><div><div class="wf-step-title">Подключение клиента за 15 минут</div><div class="wf-step-desc">Новый клиент: добавляете домен в Postal, настраиваете DNS (по инструкции или сами), создаёте delivery server в MailWizz — готово. Клиент может отправлять рассылки. Вы настроили — клиент платит вам.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">03</div><div><div class="wf-step-title">Инструменты для клиентов</div><div class="wf-step-desc">MailWizz: drag&drop шаблоны, A/B тесты тем, аналитика по кампаниям. Можете давать клиентам ограниченный доступ к MailWizz или делать рассылки за них.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#f97316">04</div><div><div class="wf-step-title">Брендированные отчёты</div><div class="wf-step-desc">n8n автоматически собирает метрики и генерирует отчёт с вашим логотипом: open rate, click rate, deliverability, рост базы. Отправляется клиенту еженедельно или ежемесячно.</div></div></div>
+  </div>
+  <div class="wf-deliver">
+    <div class="wf-deliver-title">Что получаете</div>
+    <div class="wf-deliver-list">
+      <div class="wf-deliver-item" style="color:var(--accent3)">Email как допуслуга с маржой</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Подключение клиента за 15 минут</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Брендированные отчёты</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Управление всеми клиентами из одной панели</div>
+    </div>
+  </div>
+  <div class="wf-metrics">
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">15 мин</div><div class="wf-metric-label">Новый клиент</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">∞</div><div class="wf-metric-label">Клиентов</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">5-7 дн</div><div class="wf-metric-label">Запуск платформы</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">0 ₽</div><div class="wf-metric-label">За письмо</div></div>
   </div>
   <div class="wf-bottom">
-    <div class="wf-stack"><span>Postal</span><span>MailWizz</span><span>n8n</span><span>Мультитенант</span></div>
-    <div class="wf-result"><div class="wf-result-label">Для клиентов</div><div class="wf-result-val" style="color:var(--accent3)">email как допуслуга</div></div>
+    <div class="wf-stack"><span>Postal</span><span>MailWizz</span><span>n8n</span><span>Мультитенант</span><span>Отчёты</span></div>
+    <a href="index.html#cta" class="btn-primary wf-cta">Обсудить проект</a>
   </div>
 </div>
 
@@ -491,19 +776,34 @@
     <div class="wf-icon">🏪</div>
     <div class="wf-meta">
       <div class="wf-niche" style="color:#00ff88">Франшизы</div>
-      <div class="wf-title">Франшиза → единый email-стандарт для всех точек</div>
+      <div class="wf-title">Франшиза → единый email-стандарт для всех точек с централизованным контролем</div>
     </div>
   </div>
-  <div class="wf-pain">У каждого франчайзи свой email — хаос, нет единого стиля, невозможно контролировать коммуникации. Нужна централизованная инфра с разграничением доступа.</div>
+  <div class="wf-pain">30 точек — 30 разных email-адресов на бесплатных почтовиках. У кого-то mail.ru, у кого-то gmail. Единого стиля нет, бренд не узнаётся. Управляющая компания не может контролировать коммуникации: что пишут клиентам, какие акции анонсируют, соблюдают ли tone of voice. Нужна централизация с сохранением автономии точек.</div>
   <div class="wf-steps">
-    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">01</div><div class="wf-step-text">Mailcow: единый почтовый сервер для всех точек</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">02</div><div class="wf-step-text">Postal: рассылки по регионам с изоляцией</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">03</div><div class="wf-step-text">Шаблоны писем: единый бренд, локальные адаптации</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">04</div><div class="wf-step-text">Дашборд управляющей компании: статистика по точкам</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">01</div><div><div class="wf-step-title">Единый почтовый сервер</div><div class="wf-step-desc">Mailcow: все точки на одном домене (moscow@franchise.ru, spb@franchise.ru). Или поддомены (mail.moscow.franchise.ru). Управляющая компания контролирует все ящики, каждая точка видит только свою почту.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">02</div><div><div class="wf-step-title">Рассылки по регионам</div><div class="wf-step-desc">Postal + MailWizz: каждая точка может отправлять рассылки своим клиентам. Изоляция по регионам: проблемы одной точки не влияют на другие. Общие шаблоны с единым брендом, но возможность локальной адаптации (адрес, время работы, акции).</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">03</div><div><div class="wf-step-title">Шаблоны и бренд-бук</div><div class="wf-step-desc">Создаём набор HTML-шаблонов в стиле бренда: welcome, акция, напоминание, уведомление. Точки выбирают шаблон и заполняют переменные поля. Невозможно отправить письмо не в стиле бренда.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00ff88">04</div><div><div class="wf-step-title">Дашборд управляющей компании</div><div class="wf-step-desc">Grafana: сводная статистика по всем точкам. Сколько писем отправлено, open rate, bounce rate — по каждой точке. Алёрты при проблемах. Еженедельный отчёт руководству.</div></div></div>
+  </div>
+  <div class="wf-deliver">
+    <div class="wf-deliver-title">Что получаете</div>
+    <div class="wf-deliver-list">
+      <div class="wf-deliver-item" style="color:var(--accent3)">Единый домен и бренд для всех точек</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Централизованный контроль коммуникаций</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Брендированные шаблоны</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Дашборд со статистикой по точкам</div>
+    </div>
+  </div>
+  <div class="wf-metrics">
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">30+</div><div class="wf-metric-label">Точек</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">1</div><div class="wf-metric-label">Панель</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">5-7 дн</div><div class="wf-metric-label">Запуск</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">100%</div><div class="wf-metric-label">Бренд</div></div>
   </div>
   <div class="wf-bottom">
-    <div class="wf-stack"><span>Mailcow</span><span>Postal</span><span>MailWizz</span><span>Grafana</span></div>
-    <div class="wf-result"><div class="wf-result-label">Контроль</div><div class="wf-result-val" style="color:var(--accent3)">единый стандарт</div></div>
+    <div class="wf-stack"><span>Mailcow</span><span>Postal</span><span>MailWizz</span><span>Grafana</span><span>Шаблоны</span></div>
+    <a href="index.html#cta" class="btn-primary wf-cta">Обсудить проект</a>
   </div>
 </div>
 
@@ -513,20 +813,37 @@
     <div class="wf-icon">🚀</div>
     <div class="wf-meta">
       <div class="wf-niche" style="color:#00e5ff">Стартапы / MVP</div>
-      <div class="wf-title">Стартап → полный email-стек с нуля за 3 дня</div>
+      <div class="wf-title">Стартап → полный email-стек с нуля за 3 дня, от 12 000 ₽</div>
     </div>
   </div>
-  <div class="wf-pain">Продукт запускается, email-инфраструктуры нет. Нужно быстро: транзакционные (регистрация, подтверждение) + маркетинговые (onboarding-цепочка). Бюджет ограничен.</div>
+  <div class="wf-pain">Продукт запускается через неделю, а email-инфраструктуры нет вообще. Нужно всё: транзакционные письма (регистрация, подтверждение email, сброс пароля), onboarding-цепочка для новых пользователей, уведомления о событиях. Бюджет ограничен — платить $100+/мес за SendGrid на старте нерационально. Но и собирать всё самому — некогда, у вас запуск.</div>
   <div class="wf-steps">
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">01</div><div class="wf-step-text">VPS + Mailcow + Postal за 1 день</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">02</div><div class="wf-step-text">DNS, SPF/DKIM/DMARC, SSL — всё сразу</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">03</div><div class="wf-step-text">Postal API для транзакционных из приложения</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">04</div><div class="wf-step-text">MailWizz: welcome-серия, onboarding-цепочка</div></div>
-    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">05</div><div class="wf-step-text">Прогрев параллельно с разработкой, inbox к запуску</div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">01</div><div><div class="wf-step-title">VPS + стек за 1 день</div><div class="wf-step-desc">Помогаем выбрать VPS (от 1 500 ₽/мес). За 1 день: Mailcow + Postal в Docker. DNS: SPF, DKIM, DMARC, SSL. Всё работает, можно отправлять.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">02</div><div><div class="wf-step-title">Postal API для приложения</div><div class="wf-step-desc">Подключаем Postal REST API к вашему бэкенду. Один POST-запрос = одно письмо. Документация с примерами для Python, Node.js, PHP, Go. Вебхуки: delivery, bounce — всё пушится обратно в ваше приложение.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">03</div><div><div class="wf-step-title">Onboarding-цепочка</div><div class="wf-step-desc">MailWizz: welcome-серия для новых пользователей. Регистрация → welcome (сразу) → обучение (день 2) → первая ценность (день 5) → обратная связь (день 14). Шаблоны в стиле вашего продукта.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">04</div><div><div class="wf-step-title">Прогрев параллельно</div><div class="wf-step-desc">Пока вы допиливаете продукт — домен прогревается. К дню запуска IP уже имеет базовую репутацию. Первые 5 000 писем пользователям уйдут в inbox, не в спам.</div></div></div>
+    <div class="wf-step"><div class="wf-step-num" style="color:#00e5ff">05</div><div><div class="wf-step-title">Масштабирование по мере роста</div><div class="wf-step-desc">Начинаете с 1 IP и 1 домена. Растёт база — добавляем IP. Нужны новые возможности (автоцепочки, CRM, мониторинг) — достраиваем. Платите только за VPS, всё остальное бесплатное ПО.</div></div></div>
+  </div>
+  <div class="wf-deliver">
+    <div class="wf-deliver-title">Что получаете</div>
+    <div class="wf-deliver-list">
+      <div class="wf-deliver-item" style="color:var(--accent3)">Полный email-стек за 3 дня</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">REST API с документацией для вашего стека</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Onboarding-цепочка из 4-5 писем</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Прогретый домен к дню запуска</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">Масштабирование без переезда</div>
+      <div class="wf-deliver-item" style="color:var(--accent3)">VPS от 1 500 ₽/мес — единственный расход</div>
+    </div>
+  </div>
+  <div class="wf-metrics">
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">12K ₽</div><div class="wf-metric-label">От (разово)</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--accent3)">3 дня</div><div class="wf-metric-label">До запуска</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">1.5K ₽</div><div class="wf-metric-label">VPS/мес</div></div>
+    <div class="wf-metric"><div class="wf-metric-val" style="color:var(--heading)">0 ₽</div><div class="wf-metric-label">За контакт</div></div>
   </div>
   <div class="wf-bottom">
-    <div class="wf-stack"><span>Mailcow</span><span>Postal</span><span>MailWizz</span><span>1-2 IP</span></div>
-    <div class="wf-result"><div class="wf-result-label">Старт</div><div class="wf-result-val" style="color:var(--accent3)">от 12 000 ₽ разово</div></div>
+    <div class="wf-stack"><span>Mailcow</span><span>Postal</span><span>MailWizz</span><span>REST API</span><span>Docker</span></div>
+    <a href="index.html#cta" class="btn-primary wf-cta">Обсудить проект</a>
   </div>
 </div>
 
