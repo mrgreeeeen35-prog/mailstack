@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<script>
+window._GATE_TOKENS=["postmaster2025","yC8vZ4XfF9Zp!yu"];
+window._GATE_KEY="postmaster";
+window.currentLesson = 1;
+try { window.completed = new Set(JSON.parse(localStorage.getItem('postmaster_done') || '[]')); } catch(e) { window.completed = new Set(); }
+var completed = window.completed;
+var currentLesson = window.currentLesson;
+(function(){
+  function _ls(op,k,v){try{if(op==="g")return localStorage.getItem(k);if(op==="s")localStorage.setItem(k,v);if(op==="r")localStorage.removeItem(k);}catch(e){}}
+  function _err(el,msg){if(el){el.textContent=msg;el.style.display="block";}}
+  function _checkPwd(){
+    var gi=document.getElementById("gateInput");
+    if(!gi)return;
+    var val=gi.value.trim();
+    var err=document.getElementById("gateError");
+    var tokens=window._GATE_TOKENS||[];
+    var K=window._GATE_KEY||"course";
+    var att=parseInt(_ls("g",K+"_attempts")||"0");
+    var lk=parseInt(_ls("g",K+"_lock")||"0");
+    if(lk&&Date.now()<lk){_err(err,"Подождите "+Math.ceil((lk-Date.now())/60000)+" мин.");return;}
+    if(tokens.includes(val)){
+      _ls("s",K+"_access",val);_ls("r",K+"_attempts");_ls("r",K+"_lock");
+      if(typeof openCourse==="function"){openCourse();}
+      else{var pg=document.getElementById("passwordGate");var cl=document.getElementById("courseLayout");if(pg)pg.style.display="none";if(cl)cl.style.display="grid";}
+    }else{
+      var n=att+1;_ls("s",K+"_attempts",String(n));
+      if(n>=5){_ls("s",K+"_lock",String(Date.now()+15*60*1000));_ls("s",K+"_attempts","0");_err(err,"Слишком много попыток. Подождите 15 минут.");}
+      else{_err(err,"Неверный токен. Попыток осталось: "+(5-n));if(gi)gi.style.borderColor="#ff6b6b";}
+    }
+  }
+  window.checkPassword=_checkPwd;
+  document.addEventListener("DOMContentLoaded",function(){
+    var K=window._GATE_KEY||"postmaster";
+    var tokens=window._GATE_TOKENS||[];
+    try{var s=localStorage.getItem(K+"_access");if(s&&tokens.includes(s)){if(typeof openCourse==="function")openCourse();return;}}catch(e){}
+    try{var u=new URLSearchParams(location.search).get("token");if(u&&tokens.includes(u)){try{localStorage.setItem(K+"_access",u);}catch(e){}if(typeof openCourse==="function")openCourse();}}catch(e){}
+  });
+})();
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Курс: Постмастеры: Google + Mail.ru — MAILSTACK</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23080a0f'/><rect x='4' y='8' width='24' height='16' rx='2' fill='none' stroke='rgba(255,255,255,.22)' stroke-width='1.2'/><polyline points='4,8 16,18 28,8' fill='none' stroke='%2300e5ff' stroke-width='2' stroke-linejoin='round'/><text x='7' y='26' fill='%2300e5ff' font-family='monospace' font-size='8' font-weight='bold'>›_</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+<style>
+/* ── COURSE LAYOUT ── */
+.course-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 0;
+  min-height: 100vh;
+  padding-top: 61px;
+}
+
+/* Sidebar */
+.course-sidebar {
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  position: sticky;
+  top: 61px;
+  height: calc(100vh - 61px);
+  overflow-y: auto;
+  padding: 32px 0;
+}
+.sidebar-title {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  padding: 0 24px;
+  margin-bottom: 16px;
+}
+.sidebar-module {
+  margin-bottom: 8px;
+}
+.sidebar-module-title {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  padding: 8px 24px;
+  margin-top: 8px;
+}
+.sidebar-lesson {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 24px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .2s;
+  border-left: 2px solid transparent;
+  text-decoration: none;
+}
+.sidebar-lesson:hover { color: var(--text); background: rgba(255,255,255,.03); }
+.sidebar-lesson.active { color: var(--accent); border-left-color: var(--accent); background: rgba(0,229,255,.05); }
+.sidebar-lesson.done { color: var(--accent3); }
+.lesson-num {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+}
+.sidebar-lesson.active .lesson-num { border-color: var(--accent); color: var(--accent); }
+.sidebar-lesson.done .lesson-num { border-color: var(--accent3); background: var(--accent3); color: var(--bg); }
+.sidebar-progress {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  margin-top: 16px;
+}
+.progress-bar-wrap {
+  background: var(--surface);
+  height: 4px;
+  border-radius: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: var(--accent3);
+  border-radius: 2px;
+  transition: width .5s ease;
+}
+
+/* Lesson content */
+.course-content {
+  padding: 48px 64px;
+  max-width: 860px;
+}
+.lesson-header {
+  margin-bottom: 40px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+}
+.lesson-module-tag {
+  font-size: 11px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 12px;
+}
+.lesson-title {
+  font-family: var(--font-head);
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 800;
+  color: var(--heading);
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+  line-height: 1.1;
+}
+.lesson-meta {
+  display: flex;
+  gap: 20px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Content blocks */
+.lesson-body h2 {
+  font-family: var(--font-head);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--heading);
+  margin: 40px 0 16px;
+  letter-spacing: -.5px;
+}
+.lesson-body h3 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--heading);
+  margin: 28px 0 12px;
+}
+.lesson-body p {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+.lesson-body ul, .lesson-body ol {
+  padding-left: 20px;
+  margin-bottom: 16px;
+}
+.lesson-body li {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.8;
+  margin-bottom: 6px;
+}
+
+/* Code blocks */
+.code-block {
+  background: #0a0e18;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  padding: 20px 24px;
+  margin: 20px 0;
+  border-radius: 0;
+  position: relative;
+  overflow-x: auto;
+}
+.code-block pre {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: #c9d1d9;
+  line-height: 1.7;
+  margin: 0;
+  white-space: pre;
+}
+.code-block .comment { color: #6e7681; }
+.code-block .cmd { color: var(--accent); }
+.code-block .str { color: var(--accent3); }
+.code-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+}
+.copy-btn {
+  position: absolute;
+  top: 12px; right: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 11px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  transition: all .2s;
+}
+.copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+/* Note / Warning / Tip blocks */
+.note-block {
+  padding: 16px 20px;
+  margin: 20px 0;
+  border-left: 3px solid;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.note-block.info { border-color: var(--accent); background: rgba(0,229,255,.05); color: var(--text); }
+.note-block.warn { border-color: #f0a500; background: rgba(240,165,0,.05); color: var(--text); }
+.note-block.tip  { border-color: var(--accent3); background: rgba(0,255,136,.05); color: var(--text); }
+.note-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 6px; }
+.note-block.info .note-label { color: var(--accent); }
+.note-block.warn .note-label { color: #f0a500; }
+.note-block.tip  .note-label { color: var(--accent3); }
+
+/* Step counter */
+.steps-list { list-style: none; padding: 0; margin: 20px 0; }
+.steps-list li {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  align-items: flex-start;
+}
+.step-n {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+}
+.step-text { font-size: 14px; color: var(--text); line-height: 1.7; padding-top: 4px; }
+
+/* Nav between lessons */
+.lesson-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 56px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+  gap: 16px;
+}
+.lesson-nav-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 24px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  cursor: pointer;
+  transition: all .2s;
+  text-decoration: none;
+  max-width: 280px;
+}
+.lesson-nav-btn:hover { border-color: var(--accent); background: var(--surface); }
+.nav-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.nav-title { font-size: 14px; color: var(--heading); font-weight: 500; }
+
+/* Password gate */
+#passwordGate {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gate-box {
+  text-align: center;
+  max-width: 420px;
+  padding: 48px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+}
+.gate-logo { margin-bottom: 24px; }
+.gate-title { font-family: var(--font-head); font-size: 24px; font-weight: 800; color: var(--heading); margin-bottom: 8px; }
+.gate-desc { font-size: 13px; color: var(--muted); margin-bottom: 28px; line-height: 1.7; }
+.gate-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px 16px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  margin-bottom: 12px;
+  outline: none;
+  transition: border-color .2s;
+  box-sizing: border-box;
+}
+.gate-input:focus { border-color: var(--accent); }
+.gate-error { font-size: 12px; color: #ff6b6b; margin-bottom: 12px; display: none; }
+.gate-buy { font-size: 13px; color: var(--muted); margin-top: 20px; }
+.gate-buy a { color: var(--accent); text-decoration: none; }
+
+@media (max-width: 900px) {
+  .course-layout { grid-template-columns: 1fr; }
+  .course-sidebar { position: static; height: auto; }
+  .course-content { padding: 32px 24px; }
+}
+
+/* ── Прогресс курса v2 ─────────────────────────────────── */
+.progress-wrap { padding:14px 20px 12px; border-bottom:1px solid var(--border); }
+.progress-label { display:flex; justify-content:space-between; font-size:10px; color:var(--muted); font-family:var(--font-mono); margin-bottom:6px; text-transform:uppercase; letter-spacing:.08em; }
+.progress-fill  { height:3px; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:2px; transition:width .4s; }
+.sidebar-item-done::after { content:'✓'; position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:10px; color:var(--accent3); }
+.sidebar-lesson  { position:relative; }
+.complete-btn    { display:flex; align-items:center; gap:8px; padding:10px 16px; background:rgba(0,255,136,.05); border:1px solid rgba(0,255,136,.2); color:var(--accent3); font-size:11px; font-family:var(--font-mono); cursor:pointer; width:100%; margin-top:16px; transition:all .15s; }
+.complete-btn:hover { background:rgba(0,255,136,.12); }
+.complete-btn.done  { background:rgba(0,255,136,.1); border-color:var(--accent3); }
+
+/* ── Course Quiz ───────────────────────────────────────── */
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+#courseFinale { animation: fadeIn .5s ease; }
+
+/* ── Course Quiz ─────────────────────────────────────────── */
+.cquiz-wrap    { margin-top: 40px; }
+.cquiz-header  { padding: 20px 24px; background: rgba(123,97,255,.06); border: 1px solid rgba(123,97,255,.2); border-bottom: none; }
+.cquiz-title   { font-family: var(--font-head); font-size: 18px; font-weight: 800; color: var(--heading); margin-bottom: 4px; }
+.cquiz-sub     { font-size: 12px; color: var(--muted); font-family: var(--font-mono); }
+.cquiz-q       { background: var(--bg2); border: 1px solid var(--border); border-top: none; padding: 20px 24px; }
+.cquiz-qtext   { font-size: 15px; color: var(--heading); font-weight: 600; margin-bottom: 14px; line-height: 1.5; }
+.cquiz-qn      { font-size: 10px; color: var(--muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 8px; }
+.cquiz-opts    { display: flex; flex-direction: column; gap: 6px; margin-bottom: 0; }
+.cquiz-opt     { display: flex; gap: 10px; align-items: center; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); cursor: pointer; font-size: 13px; color: var(--text); transition: all .15s; }
+.cquiz-opt:hover    { border-color: var(--accent); }
+.cquiz-opt.correct  { border-color: var(--accent3); background: rgba(0,255,136,.06); color: var(--accent3); }
+.cquiz-opt.wrong    { border-color: #ff6b6b; background: rgba(255,107,107,.05); color: #ff6b6b; }
+.cquiz-opt-key { min-width: 22px; height: 22px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 10px; font-family: var(--font-mono); color: var(--muted); flex-shrink: 0; }
+.cquiz-opt.correct .cquiz-opt-key { border-color: var(--accent3); color: var(--accent3); }
+.cquiz-opt.wrong    .cquiz-opt-key { border-color: #ff6b6b; color: #ff6b6b; }
+.cquiz-explain { margin-top: 10px; padding: 10px 14px; background: var(--surface); border-left: 3px solid var(--accent); font-size: 12px; color: var(--muted); line-height: 1.7; display: none; }
+.cquiz-explain.show { display: block; }
+.cquiz-progress { padding: 14px 24px; background: var(--bg2); border: 1px solid var(--border); border-top: none; display: flex; align-items: center; gap: 14px; }
+.cquiz-bar     { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.cquiz-fill    { height: 100%; background: linear-gradient(90deg, var(--accent3), var(--accent)); border-radius: 2px; transition: width .4s; }
+.cquiz-result  { padding: 24px; background: var(--surface); border: 1px solid rgba(0,229,255,.2); border-top: none; text-align: center; display: none; }
+.cquiz-result.show { display: block; }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="passwordGate">
+  <div class="gate-box">
+    <div class="gate-logo">
+      <svg width="210" height="22" viewBox="0 0 270 28" fill="none">
+        <rect x="1" y="1" width="40" height="26" rx="3" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1"/>
+        <polyline points="1,1 21,14 41,1" fill="none" stroke="#00e5ff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+        <text x="5" y="24" fill="#00e5ff" font-family="'JetBrains Mono', monospace" font-size="12">›_</text>
+        <text x="50" y="21" fill="#ffffff" font-family="'Syne', sans-serif" font-size="20" font-weight="800" letter-spacing="-1">MAIL<tspan fill="#00e5ff">STACK</tspan></text>
+      </svg>
+    </div>
+    <div class="gate-title">Курс: Google Postmaster Tools</div>
+    <div class="gate-desc">Этот курс доступен после оплаты. Введите токен доступа который вы получили в Telegram после покупки.</div>
+    <input type="password" id="gateInput" class="gate-input" placeholder="Введите токен доступа" onkeydown="if(event.key==='Enter')checkPassword()">
+    <div class="gate-error" id="gateError">Неверный токен. Проверьте сообщение в Telegram или напишите нам.</div>
+    <button onclick="checkPassword()" id="pwBtn" class="btn-primary" style="width:100%">Войти в курс</button>
+    <div class="gate-buy">Нет доступа? <a href="courses.html">Купить курс →</a></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="index.html" class="logo">
+    <svg width="270" height="28" viewBox="0 0 270 28" fill="none">
+      <rect x="1" y="1" width="40" height="26" rx="3" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1"/>
+      <polyline points="1,1 21,14 41,1" fill="none" stroke="#00e5ff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      <text x="5" y="24" fill="#00e5ff" font-family="'JetBrains Mono', monospace" font-size="12">›_</text>
+      <text x="50" y="21" fill="#ffffff" font-family="'Syne', sans-serif" font-size="20" font-weight="800" letter-spacing="-1">MAIL<tspan fill="#00e5ff">STACK</tspan></text>
+    </svg>
+  </a>
+    <ul class="nav-links">
+    <li><a href="index.html">Главная</a></li>
+    <li><a href="services.html">Услуги</a></li>
+    <li><a href="courses.html" class="active">Курсы</a></li>
+    <li><a href="compare.html">Сравнение</a></li>
+    <li><a href="servers.html">Серверы</a></li>
+    <li><a href="portfolio.html">Кейсы</a></li>
+  </ul>
+  <a href="courses.html" class="nav-cta">Все курсы</a>
+  <button class="nav-burger" id="navBurger"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- COURSE LAYOUT -->
+<div class="course-layout" id="courseLayout" style="display:none">
+
+  <!-- SIDEBAR -->
+  <aside class="course-sidebar">
+    <div class="sidebar-title">Постмастеры: Google + Mail.ru</div>
+    <div class="progress-wrap"><span id="progressText" style="font-size:12px;color:var(--muted);font-family:var(--font-mono)">0 / 0 пройдено</span></div>
+
+    <div class="sidebar-module-title">Модуль 1 · Подключение</div>
+    <a class="sidebar-lesson" data-n="1" onclick="showLesson(1)" href="#">
+      <div class="lesson-num">1</div>Что такое Google Postmaster и зачем он нужен
+    </a>
+    <a class="sidebar-lesson" data-n="2" onclick="showLesson(2)" href="#">
+      <div class="lesson-num">2</div>Подключение домена
+    </a>
+    <a class="sidebar-lesson" data-n="3" onclick="showLesson(3)" href="#">
+      <div class="lesson-num">3</div>Обзор дашборда
+    </a>
+    <div class="sidebar-module-title">Модуль 2 · Метрики</div>
+    <a class="sidebar-lesson" data-n="4" onclick="showLesson(4)" href="#">
+      <div class="lesson-num">4</div>Domain Reputation — как читать
+    </a>
+    <a class="sidebar-lesson" data-n="5" onclick="showLesson(5)" href="#">
+      <div class="lesson-num">5</div>Spam Rate — норма и алёрты
+    </a>
+    <a class="sidebar-lesson" data-n="6" onclick="showLesson(6)" href="#">
+      <div class="lesson-num">6</div>Authentication — SPF, DKIM, DMARC в метриках
+    </a>
+    <a class="sidebar-lesson" data-n="7" onclick="showLesson(7)" href="#">
+      <div class="lesson-num">7</div>Delivery Errors — что означает
+    </a>
+    <div class="sidebar-module-title">Модуль 3 · Решение проблем</div>
+    <a class="sidebar-lesson" data-n="8" onclick="showLesson(8)" href="#">
+      <div class="lesson-num">8</div>Как выйти из спама если попали
+    </a>
+    <a class="sidebar-lesson" data-n="9" onclick="showLesson(9)" href="#">
+      <div class="lesson-num">9</div>Алёрты при падении репутации
+    </a>
+    <a class="sidebar-lesson" data-n="10" onclick="showLesson(10)" href="#">
+      <div class="lesson-num">10</div>Чеклист здоровой репутации
+    </a>
+    <div class="sidebar-module-title">Модуль 3 · Mail.ru Postmaster</div>
+    <a class="sidebar-lesson" data-n="11" onclick="showLesson(11)" href="#">
+      <div class="lesson-num">11</div>Mail.ru Postmaster — важнейший инструмент для России
+    </a>
+    <a class="sidebar-lesson" data-n="12" onclick="showLesson(12)" href="#">
+      <div class="lesson-num">12</div>Регистрация и подключение домена
+    </a>
+    <a class="sidebar-lesson" data-n="13" onclick="showLesson(13)" href="#">
+      <div class="lesson-num">13</div>Метрики и дашборд Mail.ru Postmaster
+    </a>
+    <a class="sidebar-lesson" data-n="14" onclick="showLesson(14)" href="#">
+      <div class="lesson-num">14</div>Решение проблем с доставкой на Mail.ru
+    </a>
+    <a class="sidebar-lesson" data-n="15" onclick="showLesson(15)" href="#">
+      <div class="lesson-num">15</div>Итог — мониторинг трёх провайдеров
+    </a>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="course-content" id="lessonContent">
+    <!-- Уроки рендерятся JS-ом -->
+  </main>
+
+</div>
+
+<script src="js/main.js"></script>
+<script>
+function openCourse() {
+  document.getElementById('passwordGate').style.display = 'none';
+  document.getElementById('courseLayout').style.display = 'grid';
+  window._courseOpen = true;
+  // showLesson вызовется из DOMContentLoaded когда lessons загружены
+  if (typeof showLesson === 'function') {
+    showLesson(window.currentLesson || 1);
+  }
+}
+
+// Проверяем сохранённый доступ
+
+
+
+// ── PROGRESS SYSTEM ──
+
+function getDone() {
+  try { return JSON.parse(localStorage.getItem(DONE_KEY) || '[]'); } catch(e) { return []; }
+}
+
+function saveDone(arr) {
+  try { localStorage.setItem(DONE_KEY, JSON.stringify(arr)); } catch(e) {}
+}
+
+function markDone(n) {
+  var done = getDone();
+  if (done.indexOf(n) < 0) done.push(n);
+  saveDone(done);
+  refreshProgress();
+}
+
+function refreshProgress() {
+  var done = getDone();
+  var total = Object.keys(lessons).length;
+  // Счётчик
+  var el = document.getElementById('progressText');
+  if (el) el.textContent = done.length + ' / ' + total + ' пройдено';
+  // Сайдбар — зелёный для пройденных
+  document.querySelectorAll('.sidebar-lesson').forEach(function(item) {
+    var attr = item.getAttribute('onclick') || '';
+    var match = attr.match(/showLesson.(\d+)./);
+    if (!match) return;
+    var num = parseInt(match[1]);
+    if (done.indexOf(num) >= 0) {
+      item.classList.add('done');
+    } else {
+      item.classList.remove('done');
+    }
+  });
+}
+
+function updateProgress() { refreshProgress(); }
+
+function showLesson(n) {
+  // Помечаем предыдущий урок как пройденный
+  if (typeof currentLesson !== 'undefined' && currentLesson !== n && currentLesson >= 1) {
+    markDone(currentLesson);
+  }
+  currentLesson = n;
+  window.currentLesson = n;
+  var lesson = lessons[n];
+  if (!lesson) return;
+
+  // Сайдбар — active + done
+  refreshProgress();
+  document.querySelectorAll('.sidebar-lesson').forEach(function(el) {
+    var attr = el.getAttribute('onclick') || '';
+    var m = attr.match(/showLesson.(\d+)./);
+    if (!m) return;
+    el.classList.toggle('active', parseInt(m[1]) === n);
+  });
+
+  // Рендерим контент
+  var total = Object.keys(lessons).length;
+  var prev = n > 1 ? lessons[n-1] : null;
+  var next = n < total ? lessons[n+1] : null;
+
+  var prevBtn = prev
+    ? '<a class="lesson-nav-btn" onclick="showLesson(' + (n-1) + ')" href="#"><div class="nav-label">← Назад</div><div class="nav-title">' + prev.title + '</div></a>'
+    : '<div></div>';
+  var nextBtn = next
+    ? '<a class="lesson-nav-btn" onclick="showLesson(' + (n+1) + ')" href="#" style="text-align:right"><div class="nav-label">Вперёд →</div><div class="nav-title">' + next.title + '</div></a>'
+    : '<div></div>';
+
+  document.getElementById('lessonContent').innerHTML =
+    '<div class="lesson-header">'
+    + '<div class="lesson-module-tag">' + lesson.module + '</div>'
+    + '<div class="lesson-title">' + lesson.title + '</div>'
+    + '<div class="lesson-meta"><span>⏱ ' + lesson.time + '</span><span>Урок ' + n + ' из ' + total + '</span></div>'
+    + '</div>'
+    + '<div class="lesson-body">' + lesson.content + '</div>'
+    + '<div class="lesson-nav">' + prevBtn + nextBtn + '</div>';
+
+  refreshProgress();
+  window.scrollTo(0, 0);
+  if (n === 15) {
+    var qb = document.getElementById("quizBlock");
+    if (qb && typeof quizInit_postmaster === "function") quizInit_postmaster();
+  }
+}
+
+// ── LESSONS DATA ──
+var lessons = {
+  1: {
+    module: 'Модуль 1 · Подключение',
+    title:  'Что такое Google Postmaster и зачем он нужен',
+    time:   '10 мин',
+    content: `
+
+      <div style="margin:0 0 28px;padding:20px 24px;background:var(--bg2);border:1px solid rgba(0,229,255,.15)">
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px">📍 Дорожная карта обучения</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <a href="course-mailcow-postal.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">Mailcow ✓</a>
+          <a href="course-spf-dkim-dmarc.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">SPF/DKIM ✓</a>
+          <span style="color:var(--muted);font-size:16px">→</span>
+          <span style="font-size:11px;padding:4px 10px;background:rgba(0,229,255,.08);border:1px solid var(--accent);color:var(--accent);font-family:var(--font-mono);font-weight:700">📖 Google Postmaster</span>
+          <span style="color:var(--muted);font-size:16px">→</span>
+          <a href="course-warmup.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">Прогрев домена</a>
+          <a href="course-mailwizz.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">MailWizz</a>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:10px">Этот курс открывает: Прогрев домена, MailWizz</div>
+      </div>      <div style="margin:0 0 32px;padding:20px 24px;background:var(--bg2);border:1px solid rgba(0,229,255,.15)">
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px">📍 Где вы находитесь</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <a href="course-spf-dkim-dmarc.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">SPF/DKIM/DMARC ✓</a>
+          <a href="course-warmup.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">Прогрев ✓</a>
+          <span style="color:var(--muted);font-size:16px">→</span>
+          <span style="font-size:11px;padding:4px 10px;background:rgba(0,229,255,.08);border:1px solid var(--accent);color:var(--accent);font-family:var(--font-mono);font-weight:700">📖 Google Postmaster</span>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:10px">Используйте этот инструмент постоянно — особенно активно во время прогрева</div>
+      </div>
+
+      <h2>Аналогия: медицинская карта вашего домена</h2>
+      <p>Представьте что у вашего домена есть медицинская карта в клинике Gmail. Там записано: пульс (spam rate), анализы (аутентификация), история болезней (репутация). Google Postmaster Tools — это доступ к этой карте. Без него вы лечите вслепую.</p>
+
+      <h2>Что показывает Postmaster</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin:20px 0">
+        <div style="background:var(--bg2);padding:20px">
+          <div style="font-size:28px;margin-bottom:10px">📊</div>
+          <div style="font-size:13px;font-weight:600;color:var(--heading);margin-bottom:6px">Domain Reputation</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.7">High / Medium / Low / Bad — общая оценка репутации вашего домена у Gmail. Главный показатель здоровья.</div>
+        </div>
+        <div style="background:var(--bg2);padding:20px;border-left:1px solid var(--border)">
+          <div style="font-size:28px;margin-bottom:10px">🚨</div>
+          <div style="font-size:13px;font-weight:600;color:var(--heading);margin-bottom:6px">Spam Rate</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.7">Процент получателей нажавших «Это спам». Норма < 0.1%. При > 0.3% Gmail начинает фильтровать ваши письма.</div>
+        </div>
+        <div style="background:var(--bg2);padding:20px;border-top:1px solid var(--border)">
+          <div style="font-size:28px;margin-bottom:10px">🔐</div>
+          <div style="font-size:13px;font-weight:600;color:var(--heading);margin-bottom:6px">Authentication</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.7">Процент писем прошедших SPF, DKIM, DMARC. Должно быть 100%.</div>
+        </div>
+        <div style="background:var(--bg2);padding:20px;border-left:1px solid var(--border);border-top:1px solid var(--border)">
+          <div style="font-size:28px;margin-bottom:10px">⚠️</div>
+          <div style="font-size:13px;font-weight:600;color:var(--heading);margin-bottom:6px">Delivery Errors</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.7">Ошибки при доставке на Gmail — коды ошибок и их причины.</div>
+        </div>
+      </div>
+
+      <h2>Почему это важно именно для Gmail</h2>
+      <p>Gmail — крупнейший почтовый провайдер в мире. Если ваши письма плохо доставляются на Gmail — это критическая проблема. Postmaster даёт прямой доступ к данным Gmail о вашем домене.</p>
+
+      <div class="note-block warn">
+        <div class="note-label">⚠ Postmaster работает только для Gmail</div>
+        Postmaster Tools показывает данные только по доставке на @gmail.com и G Suite аккаунты. Для Yandex и Mail.ru данные нужно смотреть в других инструментах или по косвенным признакам.
+      </div>
+    `
+  }
+  2: {
+    module: 'Модуль 1 · Подключение',
+    title:  'Подключение домена',
+    time:   '10 мин',
+    content: `
+      <h2>Пошаговое подключение</h2>
+      <ul class="steps-list">
+        <li><div class="step-n">1</div><div class="step-text">Откройте <strong>postmaster.google.com</strong> в браузере</div></li>
+        <li><div class="step-n">2</div><div class="step-text">Войдите через аккаунт Google (лучше рабочий, не личный)</div></li>
+        <li><div class="step-n">3</div><div class="step-text">Нажмите кнопку <strong>+</strong> или «Add domain»</div></li>
+        <li><div class="step-n">4</div><div class="step-text">Введите ваш домен: <code>yourdomain.com</code> (без www, без http)</div></li>
+        <li><div class="step-n">5</div><div class="step-text">Google покажет TXT-запись для верификации</div></li>
+        <li><div class="step-n">6</div><div class="step-text">Добавьте эту TXT-запись в DNS вашего домена</div></li>
+        <li><div class="step-n">7</div><div class="step-text">Нажмите <strong>Verify</strong></div></li>
+      </ul>
+
+      <h2>Верификационная TXT-запись</h2>
+      <p>Google даст запись вида:</p>
+      <div class="code-block">
+        <pre><span class="comment"># Тип: TXT
+# Имя: @ (корневой домен)
+# Значение:</span>
+google-site-verification=xxxxxxxxxxxxxxxxxxxxxxxxxxx</pre>
+      </div>
+      <p>Добавьте её в DNS у регистратора домена. После добавления подождите 5–15 минут и нажмите Verify.</p>
+
+      <div class="note-block info">
+        <div class="note-label">ℹ Уже есть верификация Google?</div>
+        Если вы уже верифицировали домен в Google Search Console — Postmaster Tools увидит это автоматически. Дополнительная верификация не нужна.
+      </div>
+
+      <h2>Что делать если Verify не проходит</h2>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:16px 0">
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:#f0a500;font-weight:600;margin-bottom:4px">DNS не распространился</div>
+          <div style="font-size:12px;color:var(--muted)">Подождите 15–30 минут. Проверьте через <code>dig TXT yourdomain.com +short</code></div>
+        </div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:#f0a500;font-weight:600;margin-bottom:4px">Неправильный формат</div>
+          <div style="font-size:12px;color:var(--muted)">Убедитесь что запись добавлена для корневого домена (@), а не для поддомена</div>
+        </div>
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">✓ Домен подключён</div>
+        После верификации вы попадёте в дашборд. Первые данные появятся через 24–48 часов после начала отправки писем на Gmail-адреса.
+      </div>
+    `
+  }
+  3: {
+    module: 'Модуль 1 · Подключение',
+    title:  'Обзор дашборда',
+    time:   '12 мин',
+    content: `
+      <h2>Навигация по дашборду</h2>
+      <p>В левом меню — список разделов. Каждый раздел показывает один аспект доставляемости. Разберём что где смотреть.</p>
+
+      <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0">
+        <div style="padding:14px 16px;background:var(--bg2);border:1px solid var(--border);display:grid;grid-template-columns:180px 1fr;gap:12px">
+          <div style="font-size:13px;color:var(--accent);font-family:var(--font-mono)">Spam Rate</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6">График процента жалоб на спам по дням. <strong>Смотрите каждый день.</strong> Любой скачок вверх — сигнал к действию.</div>
+        </div>
+        <div style="padding:14px 16px;background:var(--bg2);border:1px solid var(--border);display:grid;grid-template-columns:180px 1fr;gap:12px">
+          <div style="font-size:13px;color:var(--accent);font-family:var(--font-mono)">Domain Reputation</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6">Текущая репутация домена: High / Medium / Low / Bad. Цель — High. На Medium — внимательно следите за трендом.</div>
+        </div>
+        <div style="padding:14px 16px;background:var(--bg2);border:1px solid var(--border);display:grid;grid-template-columns:180px 1fr;gap:12px">
+          <div style="font-size:13px;color:var(--accent);font-family:var(--font-mono)">IP Reputation</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6">Репутация IP-адресов с которых вы шлёте. Если несколько IP — каждый показывается отдельно.</div>
+        </div>
+        <div style="padding:14px 16px;background:var(--bg2);border:1px solid var(--border);display:grid;grid-template-columns:180px 1fr;gap:12px">
+          <div style="font-size:13px;color:var(--accent);font-family:var(--font-mono)">Feedback Loop</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6">Доступен только для отправителей с большим объёмом. Уведомления о конкретных жалобах.</div>
+        </div>
+        <div style="padding:14px 16px;background:var(--bg2);border:1px solid var(--border);display:grid;grid-template-columns:180px 1fr;gap:12px">
+          <div style="font-size:13px;color:var(--accent);font-family:var(--font-mono)">Authentication</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6">Процент писем прошедших DKIM, SPF, DMARC. Должно быть 100% для всех трёх.</div>
+        </div>
+        <div style="padding:14px 16px;background:var(--bg2);border:1px solid var(--border);display:grid;grid-template-columns:180px 1fr;gap:12px">
+          <div style="font-size:13px;color:var(--accent);font-family:var(--font-mono)">Encryption</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6">Процент писем переданных с TLS-шифрованием. Должно быть 100%.</div>
+        </div>
+        <div style="padding:14px 16px;background:var(--bg2);border:1px solid var(--border);display:grid;grid-template-columns:180px 1fr;gap:12px">
+          <div style="font-size:13px;color:var(--accent);font-family:var(--font-mono)">Delivery Errors</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6">Коды ошибок при доставке. Если что-то отклоняется — здесь найдёте причину.</div>
+        </div>
+      </div>
+
+      <div class="note-block warn">
+        <div class="note-label">⚠ Данных нет — это нормально на старте</div>
+        Postmaster показывает данные только когда есть минимальный объём писем на Gmail. В первые дни прогрева графики могут быть пустыми. Начнут заполняться после 100–200 писем на Gmail.
+      </div>
+
+      <h2>Как правильно читать дашборд</h2>
+      <p>Не смотрите на один день — смотрите на тренд за 7-14 дней. Один плохой день может быть случайностью. Устойчивый тренд вниз — повод разбираться.</p>
+
+      <h2>Когда данных нет — это нормально</h2>
+      <div style="display:flex;flex-direction:column;gap=8px;margin:16px 0">
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border);margin-bottom:6px"><div style="font-size:12px;color:#f0a500;font-weight:600;margin-bottom:4px">«Not enough data»</div><div style="font-size:12px;color:var(--muted)">Мало писем на Gmail-адреса. Нужно минимум 100-200 писем за день чтобы появились данные. При прогреве первые 1-2 недели данных не будет.</div></div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)"><div style="font-size:12px;color:var(--accent3);font-weight:600;margin-bottom:4px">График прерывается</div><div style="font-size:12px;color:var(--muted)">В дни без рассылок — нет данных. Это нормально. Смотрите общий тренд.</div></div>
+      </div>
+
+      <h2>Частота проверки в зависимости от объёма</h2>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="font-size:12px;color:var(--text)">Прогрев нового домена</span><span style="font-size:12px;color:var(--accent);font-weight:600">Каждый день</span></div>
+        <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="font-size:12px;color:var(--text)">Активные рассылки (регулярные)</span><span style="font-size:12px;color:var(--accent)">2-3 раза в неделю</span></div>
+        <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="font-size:12px;color:var(--text)">Стабильный прогретый домен</span><span style="font-size:12px;color:var(--muted)">Раз в неделю</span></div>
+      </div>
+    `
+  }
+  4: {
+    module: 'Модуль 2 · Метрики',
+    title:  'Domain Reputation — как читать',
+    time:   '12 мин',
+    content: `
+      <h2>Четыре уровня репутации</h2>
+      <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0">
+        <div style="padding:16px;background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);display:flex;gap:16px;align-items:center">
+          <div style="font-size:24px;font-weight:800;color:var(--accent3);min-width:80px;font-family:var(--font-mono)">HIGH</div>
+          <div>
+            <div style="font-size:13px;color:var(--heading);font-weight:600;margin-bottom:4px">Отличная репутация</div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.6">Письма попадают в инбокс. Gmail доверяет вашему домену. Цель любого отправителя. Поддерживайте низкий spam rate и стабильный объём.</div>
+          </div>
+        </div>
+        <div style="padding:16px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.2);display:flex;gap:16px;align-items:center">
+          <div style="font-size:24px;font-weight:800;color:var(--accent);min-width:80px;font-family:var(--font-mono)">MEDIUM</div>
+          <div>
+            <div style="font-size:13px;color:var(--heading);font-weight:600;margin-bottom:4px">Средняя репутация</div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.6">Часть писем в инбоксе, часть в «Промоакциях» или спаме. Типично для прогреваемых доменов. Нужна работа над качеством.</div>
+          </div>
+        </div>
+        <div style="padding:16px;background:rgba(240,165,0,.04);border:1px solid rgba(240,165,0,.2);display:flex;gap:16px;align-items:center">
+          <div style="font-size:24px;font-weight:800;color:#f0a500;min-width:80px;font-family:var(--font-mono)">LOW</div>
+          <div>
+            <div style="font-size:13px;color:var(--heading);font-weight:600;margin-bottom:4px">Низкая репутация</div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.6">Большинство писем в спаме. Срочно нужно разобраться с причиной — высокий spam rate, плохая база или проблемы с аутентификацией.</div>
+          </div>
+        </div>
+        <div style="padding:16px;background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.2);display:flex;gap:16px;align-items:center">
+          <div style="font-size:24px;font-weight:800;color:#ff6b6b;min-width:80px;font-family:var(--font-mono)">BAD</div>
+          <div>
+            <div style="font-size:13px;color:var(--heading);font-weight:600;margin-bottom:4px">Плохая репутация</div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.6">Письма блокируются или отклоняются. Критическая ситуация. Нужно полностью останавливать рассылки и разбираться с проблемой.</div>
+          </div>
+        </div>
+      </div>
+
+      <h2>Как растёт репутация</h2>
+      <div style="display:flex;flex-direction:column;gap:0;margin:16px 0">
+        <div style="display:flex;gap:14px;margin-bottom:16px">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--bg);flex-shrink:0">1</div>
+          <div style="padding-top:8px">
+            <div style="font-size:13px;color:var(--heading);font-weight:600">Новый домен — нет данных</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:3px">Первые 1–2 недели. Gmail ещё не знает ваш домен. Данные в Postmaster могут отсутствовать.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;margin-bottom:16px">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--bg);flex-shrink:0">2</div>
+          <div style="padding-top:8px">
+            <div style="font-size:13px;color:var(--heading);font-weight:600">Low → Medium (2–4 недели прогрева)</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:3px">Gmail видит активность, высокие открытия, низкий spam rate. Репутация начинает расти.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--accent3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--bg);flex-shrink:0">3</div>
+          <div style="padding-top:8px">
+            <div style="font-size:13px;color:var(--heading);font-weight:600">Medium → High (4–8 недель)</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:3px">Стабильная работа, хорошие показатели. Репутация High — письма надёжно в инбоксе.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">💡 Репутация падает быстрее чем растёт</div>
+        Поднять репутацию с Low до High — месяц работы. Уронить с High до Low — одна неудачная рассылка по грязной базе. Берегите репутацию.
+      </div>
+
+      <h2>Четыре уровня репутации — что означает каждый</h2>
+      <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0">
+        <div style="padding:14px;background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);display:flex;gap:14px;align-items:center">
+          <div style="font-size:22px;font-weight:800;color:var(--accent3);min-width:70px;font-family:var(--font-mono)">HIGH</div>
+          <div><div style="font-size:12px;color:var(--heading);font-weight:600">Письма в инбокс. Gmail полностью доверяет.</div><div style="font-size:12px;color:var(--muted)">Поддерживайте: spam rate < 0.1%, стабильный объём, активная база.</div></div>
+        </div>
+        <div style="padding:14px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.15);display:flex;gap:14px;align-items:center">
+          <div style="font-size:22px;font-weight:800;color:var(--accent);min-width:70px;font-family:var(--font-mono)">MED</div>
+          <div><div style="font-size:12px;color:var(--heading);font-weight:600">Часть писем в Промоакциях или спаме.</div><div style="font-size:12px;color:var(--muted)">Типично при прогреве. Улучшайте качество базы и контента.</div></div>
+        </div>
+        <div style="padding:14px;background:rgba(240,165,0,.04);border:1px solid rgba(240,165,0,.2);display:flex;gap:14px;align-items:center">
+          <div style="font-size:22px;font-weight:800;color:#f0a500;min-width:70px;font-family:var(--font-mono)">LOW</div>
+          <div><div style="font-size:12px;color:var(--heading);font-weight:600">Большинство писем в спаме. Срочно разбираться.</div><div style="font-size:12px;color:var(--muted)">Остановите рассылки на 3-5 дней. Найдите и устраните причину.</div></div>
+        </div>
+        <div style="padding:14px;background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.2);display:flex;gap:14px;align-items:center">
+          <div style="font-size:22px;font-weight:800;color:#ff6b6b;min-width:70px;font-family:var(--font-mono)">BAD</div>
+          <div><div style="font-size:12px;color:var(--heading);font-weight:600">Письма блокируются. Критическая ситуация.</div><div style="font-size:12px;color:var(--muted)">Полная остановка. Анализ причин. Возможно нужен новый домен.</div></div>
+        </div>
+      </div>
+    `
+  }
+  5: {
+    module: 'Модуль 2 · Метрики',
+    title:  'Spam Rate — норма и алёрты',
+    time:   '12 мин',
+    content: `
+      <h2>Что такое Spam Rate в Postmaster</h2>
+      <p>Spam Rate — процент пользователей Gmail которые получили ваше письмо и нажали кнопку «Пожаловаться на спам» или «Это спам». Это не то же самое что процент писем попавших в папку Спам — это именно ручные жалобы.</p>
+
+      <h2>Пороговые значения</h2>
+      <div style="margin:16px 0;border:1px solid var(--border)">
+        <svg width="100%" viewBox="0 0 640 80" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono',monospace">
+          <rect width="640" height="80" fill="#080a0f"/>
+          <rect x="20" y="20" width="150" height="40" rx="3" fill="rgba(0,255,136,.1)" stroke="rgba(0,255,136,.3)" stroke-width="1"/>
+          <text x="95" y="38" text-anchor="middle" fill="#00ff88" font-size="12" font-weight="700">0 – 0.1%</text>
+          <text x="95" y="54" text-anchor="middle" fill="#5a6278" font-size="10">Норма ✓</text>
+          <rect x="180" y="20" width="150" height="40" rx="3" fill="rgba(240,165,0,.08)" stroke="rgba(240,165,0,.3)" stroke-width="1"/>
+          <text x="255" y="38" text-anchor="middle" fill="#f0a500" font-size="12" font-weight="700">0.1% – 0.3%</text>
+          <text x="255" y="54" text-anchor="middle" fill="#5a6278" font-size="10">Внимание ⚠</text>
+          <rect x="340" y="20" width="150" height="40" rx="3" fill="rgba(255,107,107,.08)" stroke="rgba(255,107,107,.3)" stroke-width="1"/>
+          <text x="415" y="38" text-anchor="middle" fill="#ff6b6b" font-size="12" font-weight="700">0.3% – 0.5%</text>
+          <text x="415" y="54" text-anchor="middle" fill="#5a6278" font-size="10">Тревога 🚨</text>
+          <rect x="500" y="20" width="120" height="40" rx="3" fill="rgba(255,50,50,.12)" stroke="rgba(255,50,50,.4)" stroke-width="1.5"/>
+          <text x="560" y="38" text-anchor="middle" fill="#ff3232" font-size="12" font-weight="700">&gt; 0.5%</text>
+          <text x="560" y="54" text-anchor="middle" fill="#5a6278" font-size="10">Стоп рассылки</text>
+        </svg>
+      </div>
+
+      <h2>Почему люди жалуются на спам</h2>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:16px 0">
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <span style="color:#ff6b6b;min-width:30px">1.</span>
+          <span style="font-size:12px;color:var(--text)">Не помнят что подписывались — давно было или неочевидная форма подписки</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <span style="color:#ff6b6b;min-width:30px">2.</span>
+          <span style="font-size:12px;color:var(--text)">Не нашли кнопку «Отписаться» — нажали «Спам» вместо отписки</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14pt;background:var(--bg2);border:1px solid var(--border)">
+          <span style="color:#ff6b6b;min-width:30px">3.</span>
+          <span style="font-size:12px;color:var(--text)">Слишком частые письма — надоели, проще нажать спам чем отписываться</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <span style="color:#ff6b6b;min-width:30px">4.</span>
+          <span style="font-size:12px;color:var(--text)">Нерелевантный контент — ожидали одно, получили другое</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <span style="color:#ff6b6b;min-width:30px">5.</span>
+          <span style="font-size:12px;color:var(--text)">Купленная база — люди не давали согласия на получение писем</span>
+        </div>
+      </div>
+
+      <h2>Как снизить Spam Rate</h2>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:16px 0">
+        <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.15)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Сделайте ссылку «Отписаться» заметной — вверху письма, крупным шрифтом</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.15)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Напоминайте в каждом письме откуда вы: «Вы получаете это письмо т.к. подписались на X»</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.15)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Реализуйте List-Unsubscribe заголовок — Gmail добавит кнопку отписки автоматически</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.15)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Не шлите слишком часто — найдите оптимальную частоту для вашей аудитории</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.15)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Регулярно чистите базу от неактивных подписчиков</span></div>
+      </div>
+
+      <h2>Как снизить spam rate — конкретные действия</h2>
+      <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0">
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:var(--accent);font-weight:600;margin-bottom:4px">Сделайте отписку очевидной</div>
+          <div style="font-size:12px;color:var(--muted)">Разместите ссылку «Отписаться» вверху письма крупным шрифтом. Люди нажимают «Спам» когда не могут найти отписку. Лучше отписавшийся чем пожаловавшийся.</div>
+        </div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:var(--accent);font-weight:600;margin-bottom:4px">List-Unsubscribe заголовок</div>
+          <div style="font-size:12px;color:var(--muted)">Gmail добавит кнопку «Отписаться» автоматически если в письме есть заголовок List-Unsubscribe. MailWizz добавляет его автоматически.</div>
+        </div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:var(--accent);font-weight:600;margin-bottom:4px">Напоминание об источнике подписки</div>
+          <div style="font-size:12px;color:var(--muted)">В каждом письме: «Вы получаете это письмо т.к. подписались на сайте example.com 15 января». Снижает жалобы на 30-50%.</div>
+        </div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:var(--accent);font-weight:600;margin-bottom:4px">Очистка неактивных</div>
+          <div style="font-size:12px;color:var(--muted)">Раз в квартал удаляйте подписчиков не открывавших письма 6+ месяцев. Меньше людей, которым письма уже неинтересны — меньше жалоб.</div>
+        </div>
+      </div>
+    `
+  }
+  6: {
+    module: 'Модуль 2 · Метрики',
+    title:  'Authentication — SPF, DKIM, DMARC в метриках',
+    time:   '10 мин',
+    content: `
+      <h2>Что показывает раздел Authentication</h2>
+      <p>Здесь видно какой процент писем прошёл каждую из трёх проверок. В идеале все три — 100%. Если какая-то ниже 100% — есть источник отправки который не настроен.</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin:16px 0">
+        <div style="background:var(--bg2);padding:16px;text-align:center">
+          <div style="font-size:32px;font-weight:800;color:var(--accent3);margin-bottom:6px">100%</div>
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">DKIM</div>
+          <div style="font-size:11px;color:var(--accent3);margin-top:4px">✓ Норма</div>
+        </div>
+        <div style="background:var(--bg2);padding:16px;text-align:center;border-left:1px solid var(--border)">
+          <div style="font-size:32px;font-weight:800;color:var(--accent3);margin-bottom:6px">100%</div>
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">SPF</div>
+          <div style="font-size:11px;color:var(--accent3);margin-top:4px">✓ Норма</div>
+        </div>
+        <div style="background:var(--bg2);padding:16px;text-align:center;border-left:1px solid var(--border)">
+          <div style="font-size:32px;font-weight:800;color:var(--accent3);margin-bottom:6px">100%</div>
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">DMARC</div>
+          <div style="font-size:11px;color:var(--accent3);margin-top:4px">✓ Норма</div>
+        </div>
+      </div>
+
+      <h2>Если показатель меньше 100%</h2>
+      <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0">
+        <div style="padding:14px 16px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:#f0a500;font-weight:600;margin-bottom:6px">DKIM < 100%</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.7">Часть писем отправляется без DKIM-подписи. Возможно какой-то сторонний сервис (CRM, helpdesk) отправляет от вашего домена без DKIM. Найдите этот источник и настройте DKIM для него.</div>
+        </div>
+        <div style="padding:14px 16px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:#f0a500;font-weight:600;margin-bottom:6px">SPF < 100%</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.7">Есть IP не включённые в SPF-запись. Добавьте их в SPF или включите через <code>include:</code>.</div>
+        </div>
+        <div style="padding:14px 16px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:#f0a500;font-weight:600;margin-bottom:6px">DMARC < 100%</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.7">Письма не выравниваются по DMARC. Обычно следствие проблем с SPF или DKIM. Смотрите DMARC-отчёты для детали.</div>
+        </div>
+      </div>
+
+      <div class="note-block info">
+        <div class="note-label">ℹ Encryption тоже важен</div>
+        В разделе Encryption смотрите процент писем переданных с TLS. Должно быть 100%. Если меньше — проблема с конфигурацией TLS на сервере. Подробнее в курсе <a href="course-spf-dkim-dmarc.html" style="color:var(--accent)">«SPF/DKIM/DMARC»</a>.
+      </div>
+
+      <h2>Authentication < 100% — как диагностировать</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Шаг 1: узнаём откуда идут неаутентифицированные письма</span>
+<span class="comment"># Postmaster → Authentication → кликаем на неудачный день</span>
+<span class="comment"># Видим IP-адреса с которых шли письма без DKIM/SPF</span>
+
+<span class="comment"># Шаг 2: определяем что это за система</span>
+dig -x IP_АДРЕС +short
+<span class="comment"># По reverse DNS понимаем: CRM, транзакционные письма, форвардинг</span>
+
+<span class="comment"># Шаг 3: добавляем аутентификацию для этого источника</span>
+<span class="comment"># IP в SPF: добавить ip4:АДРЕС в SPF запись</span>
+<span class="comment"># DKIM: настроить подпись в CRM или другом сервисе</span></pre></div>
+
+      <h2>Email forwarding — частая причина проблем</h2>
+      <p>Если подписчики пересылают ваши письма на другой ящик — SPF и DKIM могут сломаться. Это нормально и не страшно. Для protection от этого используется DMARC с <code>adkim=r aspf=r</code> (relaxed режим).</p>
+    `
+  }
+  7: {
+    module: 'Модуль 2 · Метрики',
+    title:  'Delivery Errors — что означает',
+    time:   '12 мин',
+    content: `
+      <h2>Коды ошибок Gmail</h2>
+      <p>В разделе Delivery Errors видны ошибки которые Gmail возвращает при доставке. У каждой ошибки есть код — понимая коды вы быстро найдёте причину.</p>
+
+      <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0">
+        <div style="padding:14px 16px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="display:flex;gap:12px;margin-bottom:6px">
+            <code style="color:var(--accent);font-size:13px">421</code>
+            <div style="font-size:13px;color:var(--heading);font-weight:600">Too many concurrent connections</div>
+          </div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6">Слишком много одновременных соединений с вашего IP. Снизьте скорость отправки — настройте throttle в MailWizz/Postal.</div>
+        </div>
+        <div style="padding:14px 16px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="display:flex;gap:12px;margin-bottom:6px">
+            <code style="color:#f0a500;font-size:13px">550-5.1.1</code>
+            <div style="font-size:13px;color:var(--heading);font-weight:600">The email account does not exist</div>
+          </div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6">Адрес получателя не существует. Высокий процент таких ошибок = грязная база. Почистите список от несуществующих адресов.</div>
+        </div>
+        <div style="padding:14px 16px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="display:flex;gap:12px;margin-bottom:6px">
+            <code style="color:#ff6b6b;font-size:13px">550-5.7.1</code>
+            <div style="font-size:13px;color:var(--heading);font-weight:600">Messages from IP blocked</div>
+          </div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6">Gmail заблокировал ваш IP из-за плохой репутации. Остановите рассылки, проверьте Spam Rate и blacklists, запросите разблокировку через postmaster.google.com.</div>
+        </div>
+        <div style="padding:14px 16px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="display:flex;gap:12px;margin-bottom:6px">
+            <code style="color:#ff6b6b;font-size:13px">550-5.7.26</code>
+            <div style="font-size:13px;color:var(--heading);font-weight:600">This mail is unauthenticated</div>
+          </div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6">Письмо не прошло аутентификацию (SPF или DKIM). Проверьте настройки SPF/DKIM — они настроены неправильно или не настроены вообще.</div>
+        </div>
+        <div style="padding:14px 16px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="display:flex;gap:12px;margin-bottom:6px">
+            <code style="color:#f0a500;font-size:13px">421-4.7.0</code>
+            <div style="font-size:13px;color:var(--heading);font-weight:600">Try again later</div>
+          </div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6">Временный отказ. Gmail перегружен или временно ограничил приём от вашего IP. Postal попробует ещё раз автоматически.</div>
+        </div>
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">💡 Как читать коды ошибок</div>
+        Первая цифра: 4xx = временная проблема (попробуем позже), 5xx = постоянная проблема (нужно исправить). Второй блок указывает на тип проблемы: 5.1.x = проблема с адресом, 5.7.x = проблема с безопасностью/аутентификацией.
+      </div>
+
+      <h2>Расшифровка кодов ошибок Gmail</h2>
+      <div style="display:flex;flex-direction:column;gap=8px;margin:16px 0">
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border);margin-bottom:6px"><div style="display:flex;gap:10px;margin-bottom:4px"><code style="color:var(--accent);font-size:13px">421-4.7.0</code><div style="font-size:13px;color:var(--heading);font-weight:600">Try again later</div></div><div style="font-size:12px;color:var(--muted)">Временная перегрузка. Postal повторит автоматически. Не беспокоиться.</div></div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border);margin-bottom:6px"><div style="display:flex;gap:10px;margin-bottom:4px"><code style="color:#ff6b6b;font-size:13px">550-5.7.1</code><div style="font-size:13px;color:var(--heading);font-weight:600">IP blocked</div></div><div style="font-size:12px;color:var(--muted)">Gmail заблокировал IP. Остановите рассылки. Исправьте показатели. Запросите разблокировку через Postmaster.</div></div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border);margin-bottom:6px"><div style="display:flex;gap:10px;margin-bottom:4px"><code style="color:#ff6b6b;font-size:13px">550-5.7.26</code><div style="font-size:13px;color:var(--heading);font-weight:600">Unauthenticated</div></div><div style="font-size:12px;color:var(--muted)">Нет DKIM или SPF. Проверьте настройки аутентификации через mail-tester.com.</div></div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)"><div style="display:flex;gap:10px;margin-bottom:4px"><code style="color:var(--accent);font-size:13px">550-5.1.1</code><div style="font-size:13px;color:var(--heading);font-weight:600">Address not found</div></div><div style="font-size:12px;color:var(--muted)">Адрес не существует. Высокий процент таких ошибок = грязная база. Почистите через ZeroBounce.</div></div>
+      </div>
+    `
+  }
+  8: {
+    module: 'Модуль 3 · Решение проблем',
+    title:  'Как выйти из спама если попали',
+    time:   '15 мин',
+    content: `
+      <h2>Диагностика: почему попали в спам</h2>
+      <p>Первый шаг — понять причину. Не начинайте «лечение» без диагноза.</p>
+
+      <ul class="steps-list">
+        <li><div class="step-n">1</div><div class="step-text">Откройте Postmaster → Spam Rate. Когда начался рост? Какая кампания шла в это время?</div></li>
+        <li><div class="step-n">2</div><div class="step-text">Проверьте Domain Reputation — насколько упала? High→Medium или сразу Low?</div></li>
+        <li><div class="step-n">3</div><div class="step-text">Посмотрите Delivery Errors — нет ли блокировки (550-5.7.1)?</div></li>
+        <li><div class="step-n">4</div><div class="step-text">Проверьте IP в blacklists: mxtoolbox.com → Blacklist Check</div></li>
+        <li><div class="step-n">5</div><div class="step-text">Проверьте Authentication — всё ли прошло?</div></li>
+      </ul>
+
+      <h2>Протокол восстановления</h2>
+      <div style="display:flex;flex-direction:column;gap:0;margin:16px 0">
+        <div style="display:flex;gap:14px;margin-bottom:16px">
+          <div style="width:32px;height:32px;border-radius:50%;background:#ff6b6b;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--bg);flex-shrink:0">1</div>
+          <div>
+            <div style="font-size:13px;color:var(--heading);font-weight:600">Остановите все рассылки на 3–7 дней</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:3px">Не пытайтесь «продавить» ситуацию объёмом — это усугубит проблему.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;margin-bottom:16px">
+          <div style="width:32px;height:32px;border-radius:50%;background:#f0a500;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--bg);flex-shrink:0">2</div>
+          <div>
+            <div style="font-size:13px;color:var(--heading);font-weight:600">Устраните причину</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:3px">Высокий spam rate → улучшите контент и сделайте отписку заметной. Блэклист → запросите делистинг. SPF/DKIM → исправьте конфигурацию.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;margin-bottom:16px">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--bg);flex-shrink:0">3</div>
+          <div>
+            <div style="font-size:13px;color:var(--heading);font-weight:600">Попросите друзей «спасти» письма</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:3px">Отправьте 10–20 знакомым тестовое письмо. Попросите найти его в спаме и нажать «Не спам». Это сильный положительный сигнал для Gmail.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;margin-bottom:16px">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--bg);flex-shrink:0">4</div>
+          <div>
+            <div style="font-size:13px;color:var(--heading);font-weight:600">Возобновите с малого объёма</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:3px">Откатитесь на 2 недели назад по плану прогрева. Шлите только самым активным подписчикам — тем кто точно откроет.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--accent3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--bg);flex-shrink:0">5</div>
+          <div>
+            <div style="font-size:13px;color:var(--heading);font-weight:600">Мониторьте каждый день</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:3px">После возобновления — Postmaster каждый день. Репутация должна расти. Если не растёт — снова пауза.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="note-block warn">
+        <div class="note-label">⚠ Быстрого решения нет</div>
+        Восстановление репутации занимает 2–6 недель зависимости от ситуации. Не ищите «волшебную кнопку» — только последовательная работа с качеством.
+      </div>
+
+      <h2>Когда запрашивать разблокировку IP у Gmail</h2>
+      <p>Если ошибка 550-5.7.1 (IP blocked) — нужно подать запрос через Google Postmaster Tools.</p>
+      <ul class="steps-list">
+        <li><div class="step-n">1</div><div class="step-text">Убедитесь что исправили причину блокировки (spam rate < 0.1%)</div></li>
+        <li><div class="step-n">2</div><div class="step-text">Подождите 3-5 дней после исправления</div></li>
+        <li><div class="step-n">3</div><div class="step-text">Перейдите на support.google.com/mail/troubleshooter/2696779</div></li>
+        <li><div class="step-n">4</div><div class="step-text">Выберите «My messages are being blocked» -> заполните форму</div></li>
+        <li><div class="step-n">5</div><div class="step-text">Ответ приходит в течение 1-3 рабочих дней</div></li>
+      </ul>
+
+      <h2>Протокол восстановления — шаг за шагом</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># День 1-3: остановить рассылки</span>
+<span class="comment"># В MailWizz: приостановите все активные кампании</span>
+
+<span class="comment"># День 1: диагностика</span>
+<span class="comment"># Postmaster: что изменилось? когда начался рост spam rate?</span>
+<span class="comment"># Blacklist: mxtoolbox.com -> Blacklist Check</span>
+<span class="comment"># mail-tester.com: что сейчас с оценкой?</span>
+
+<span class="comment"># День 2-3: исправляем причину</span>
+<span class="comment"># Высокий spam rate -> улучшить контент, сделать отписку заметной</span>
+<span class="comment"># Blacklist -> запросить делистинг на сайте blacklist</span>
+
+<span class="comment"># День 4-7: малые объёмы</span>
+<span class="comment"># Шлём 50-100 писем только самым активным (открывали за 30 дней)</span>
+<span class="comment"># Просим 10-20 друзей открыть письмо и нажать "Не спам"</span>
+
+<span class="comment"># Неделя 2+: постепенный рост</span>
+<span class="comment"># Следуем плану прогрева как для нового домена</span></pre></div>
+    `
+  }
+  9: {
+    module: 'Модуль 3 · Решение проблем',
+    title:  'Алёрты при падении репутации',
+    time:   '10 мин',
+    content: `
+      <h2>Зачем нужны алёрты</h2>
+      <p>Postmaster не присылает уведомлений по умолчанию. Вы должны сами заходить и смотреть. Но при активных рассылках — лучше автоматизировать мониторинг и получать алёрт сразу когда что-то пошло не так.</p>
+
+      <h2>Способ 1: Google Alerts + Postmaster RSS</h2>
+      <p>Postmaster не имеет встроенных уведомлений, но можно использовать скрипт на Google Apps Script:</p>
+
+      <div class="code-block">
+        <div class="code-label">Google Apps Script — алёрт на почту при проблемах</div>
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <pre><span class="comment">// Создайте новый Google Apps Script на script.google.com
+// Добавьте этот код и настройте триггер «раз в день»</span>
+
+function checkPostmaster() {
+  <span class="comment">// Открывайте Postmaster вручную раз в день
+  // Этот скрипт шлёт напоминание</span>
+  const email = Session.getActiveUser().getEmail();
+  GmailApp.sendEmail(
+    email,
+    '📊 Проверь Postmaster сегодня',
+    'Зайди на postmaster.google.com и проверь Spam Rate и Domain Reputation.'
+  );
+}</pre>
+      </div>
+
+      <h2>Способ 2: n8n + Postmaster API (продвинутый)</h2>
+      <p>Google Postmaster имеет API. Через n8n можно автоматически проверять метрики и слать алёрт в Telegram:</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <pre><span class="comment"># В n8n: Schedule trigger → HTTP Request → Telegram</span>
+<span class="comment"># API Endpoint:</span>
+https://gmailpostmastertools.googleapis.com/v1/domains/{domain}/trafficStats
+
+<span class="comment"># Если spamRate > 0.001 (0.1%) → отправить алёрт в Telegram</span></pre>
+      </div>
+
+      <h2>Способ 3: Ежедневная рутина (самый простой)</h2>
+      <p>Установите напоминание в телефоне: каждое утро в 9:00 — открыть Postmaster. 2 минуты в день спасут вас от недель восстановления.</p>
+
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Spam Rate — в норме (&lt;0.1%)?</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Domain Reputation — не упала?</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Delivery Errors — нет новых блокировок?</span></div>
+      </div>
+
+      <h2>Автоматический мониторинг через n8n</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Workflow: каждое утро 8:00</span>
+<span class="comment"># 1. Schedule Trigger</span>
+<span class="comment"># 2. HTTP Request -> Postmaster API</span>
+URL: https://gmailpostmastertools.googleapis.com/v1/domains/yourdomain.com/trafficStats
+<span class="comment"># Требует OAuth2 авторизацию Google</span>
+
+<span class="comment"># 3. Code нода - проверяем показатели:</span>
+const stats = items[0].json;
+const spamRate = stats.spamRate || 0;
+const domainRep = stats.domainReputation;
+
+if (spamRate > 0.001 || domainRep === 'LOW' || domainRep === 'BAD') {
+  return [{ json: { alert: true, spamRate, domainRep } }];
+}
+return [{ json: { alert: false } }];
+
+<span class="comment"># 4. IF: alert == true -> Telegram сообщение</span>
+Postmaster Alert!
+Spam Rate: {{ $json.spamRate * 100 }}%
+Reputation: {{ $json.domainRep }}</pre></div>
+    `
+  }
+  10: {
+    module: 'Модуль 3 · Решение проблем',
+    title:  'Чеклист здоровой репутации',
+    time:   '8 мин',
+    content: `
+      <h2>Еженедельный чеклист отправителя</h2>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:flex;gap:10px;padding:12px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <span style="color:var(--accent3);font-size:16px">✓</span>
+          <div><div style="font-size:13px;color:var(--text)">Spam Rate &lt; 0.1% всю неделю</div>
+          <div style="font-size:11px;color:var(--muted)">Postmaster → Spam Rate → последние 7 дней</div></div>
+        </div>
+        <div style="display:flex;gap:10px;padding:12px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <span style="color:var(--accent3);font-size:16px">✓</span>
+          <div><div style="font-size:13px;color:var(--text)">Domain Reputation — High или Medium</div>
+          <div style="font-size:11px;color:var(--muted)">Postmaster → Domain Reputation</div></div>
+        </div>
+        <div style="display:flex;gap:10px;padding:12px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <span style="color:var(--accent3);font-size:16px">✓</span>
+          <div><div style="font-size:13px;color:var(--text)">Authentication 100% для DKIM, SPF, DMARC</div>
+          <div style="font-size:11px;color:var(--muted)">Postmaster → Authentication</div></div>
+        </div>
+        <div style="display:flex;gap:10px;padding:12px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <span style="color:var(--accent3);font-size:16px">✓</span>
+          <div><div style="font-size:13px;color:var(--text)">IP не в blacklist</div>
+          <div style="font-size:11px;color:var(--muted)">mxtoolbox.com → Blacklist Check</div></div>
+        </div>
+        <div style="display:flex;gap:10px;padding:12px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <span style="color:var(--accent3);font-size:16px">✓</span>
+          <div><div style="font-size:13px;color:var(--text)">Open Rate кампаний &gt; 20%</div>
+          <div style="font-size:11px;color:var(--muted)">MailWizz → Campaigns → статистика</div></div>
+        </div>
+        <div style="display:flex;gap:10px;padding:12px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <span style="color:var(--accent3);font-size:16px">✓</span>
+          <div><div style="font-size:13px;color:var(--text)">Bounce Rate &lt; 2%</div>
+          <div style="font-size:11px;color:var(--muted)">MailWizz → Campaigns → статистика</div></div>
+        </div>
+        <div style="display:flex;gap:10px;padding:12px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <span style="color:var(--accent3);font-size:16px">✓</span>
+          <div><div style="font-size:13px;color:var(--text)">Нет аномалий в Delivery Errors</div>
+          <div style="font-size:11px;color:var(--muted)">Postmaster → Delivery Errors</div></div>
+        </div>
+      </div>
+
+      
+      <!-- ══ ТЕСТ КУРСА ═══════════════════════════════════════════ -->
+      
+          <div id="cq-status" style="font-size:11px;color:var(--muted);font-family:var(--font-mono)"></div>
+        </div>
+
+        <div id="cq-questions"></div>
+
+        <div id="cq-result" style="display:none;margin-top:20px;padding:20px;background:var(--surface);border:1px solid rgba(0,229,255,.2);text-align:center">
+          <div id="cq-result-icon" style="font-size:36px;margin-bottom:10px">🎯</div>
+          <div id="cq-result-title" style="font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--heading);margin-bottom:6px"></div>
+          <div id="cq-result-text" style="font-size:13px;color:var(--muted);margin-bottom:16px"></div>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+            <button id="cq-retry-btn" onclick="cqRetry()" class="btn-ghost" style="display:none">Попробовать снова</button>
+          </div>
+        </div>
+      </div>
+      <!-- ══ КОНЕЦ ТЕСТА ══════════════════════════════════════════ -->
+
+      <script>
+      (function() {
+        const CQ = [{"q": "Google Postmaster Domain Reputation 'Low' означает:", "opts": ["Домен новый", "Большинство писем с этого домена попадают в спам", "Технические проблемы с DKIM", "Домен заблокирован"], "c": 1, "e": "Low reputation = Gmail видит ваш домен как источник нежелательной почты. Письма почти всегда в спаме. Нужно снизить Spam Rate и улучшить качество базы подписчиков."}, {"q": "Что такое Spam Rate в Google Postmaster?", "opts": ["Процент писем попавших в папку Промоакции", "Доля пользователей Gmail нажавших 'Спам' на ваши письма", "Процент писем не доставленных", "Скорость отправки"], "c": 1, "e": "Spam Rate = количество жалоб 'Это спам' / количество доставленных писем. Порог Google: 0.1% — начало проблем, 0.3% — массовые блокировки. Следите ежедневно."}, {"q": "В каком разделе Postmaster смотреть если письма доходят но с задержкой?", "opts": ["Domain Reputation", "Delivery Errors", "Spam Rate", "IP Reputation"], "c": 1, "e": "Delivery Errors показывает типы и количество ошибок доставки: connection refused, SMTP errors, rate limits. Поможет понять почему Gmail замедляет или отклоняет письма."}, {"q": "Authentication раздел в Postmaster должен показывать:", "opts": ["50% прохождение SPF", "100% прохождение SPF, DKIM, DMARC", "Только DKIM", "Не важно"], "c": 1, "e": "100% аутентификация — цель. Если меньше — значит часть писем уходит с серверов не прописанных в SPF или без DKIM подписи. Ищите 'утечку' через сторонние сервисы."}, {"q": "Как часто нужно проверять данные в Google Postmaster?", "opts": ["Раз в год", "Раз в квартал", "Еженедельно в активный период рассылок", "Только когда есть жалобы"], "c": 2, "e": "Еженедельно — минимум. В период активных рассылок и прогрева — ежедневно. Postmaster показывает данные с задержкой 1-2 дня, поэтому ранняя реакция важна."}];
+        const CQ_KEY = 'postmaster_quiz_passed';
+        let cqAnswered = {};
+        let cqCorrect  = 0;
+
+        function cqRender() {
+          cqAnswered = {}; cqCorrect = 0;
+          const el = document.getElementById('cq-questions');
+          if (!el) return;
+          el.innerHTML = CQ.map((q, i) => `
+            <div class="cq-card" id="cq-q${i}" style="margin-bottom:12px;padding:20px;background:var(--bg2);border:1px solid var(--border)">
+              <div style="font-size:10px;color:var(--muted);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Вопрос ${i+1} из ${CQ.length}</div>
+              <div style="font-size:15px;color:var(--heading);font-weight:600;line-height:1.5;margin-bottom:14px">${q.q}</div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                ${q.opts.map((opt, j) => `
+                  <div id="cq-q${i}o${j}" onclick="cqAnswer(${i},${j})"
+                       style="display:flex;gap:10px;align-items:center;padding:10px 14px;
+                              background:var(--bg);border:1px solid var(--border);
+                              cursor:pointer;font-size:13px;color:var(--text);transition:all .12s"
+                       onmouseover="if(!this.dataset.locked)this.style.borderColor='var(--accent)'"
+                       onmouseout="if(!this.dataset.locked)this.style.borderColor='var(--border)'">
+                    <div style="min-width:22px;height:22px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-family:var(--font-mono);color:var(--muted);flex-shrink:0">${String.fromCharCode(65+j)}</div>
+                    ${opt}
+                  </div>`).join('')}
+              </div>
+              <div id="cq-q${i}exp" style="display:none;margin-top:10px;padding:10px 14px;background:var(--surface);border-left:3px solid var(--accent);font-size:12px;color:var(--muted);line-height:1.7">${q.e}</div>
+            </div>`).join('');
+          document.getElementById('cq-score').style.display = 'flex';
+          cqUpdateScore();
+        }
+
+        window.cqAnswer = function(qi, oi) {
+          if (cqAnswered[qi] !== undefined) return;
+          cqAnswered[qi] = oi;
+          const q = CQ[qi];
+          const isOk = oi === q.c;
+          if (isOk) cqCorrect++;
+
+          q.opts.forEach((_,j) => {
+            const el = document.getElementById(`cq-q${qi}o${j}`);
+            if (!el) return;
+            el.dataset.locked = '1';
+            el.style.cursor = 'default';
+            el.style.pointerEvents = 'none';
+            if (j === q.c) {
+              el.style.borderColor = 'var(--accent3)';
+              el.style.background  = 'rgba(0,255,136,.08)';
+              el.style.color       = 'var(--accent3)';
+              el.querySelector('div').style.borderColor = 'var(--accent3)';
+              el.querySelector('div').style.color       = 'var(--accent3)';
+            } else if (j === oi && !isOk) {
+              el.style.borderColor = '#ff6b6b';
+              el.style.background  = 'rgba(255,107,107,.06)';
+              el.style.color       = '#ff6b6b';
+            }
+          });
+
+          document.getElementById(`cq-q${qi}exp`).style.display = 'block';
+          cqUpdateScore();
+
+          if (Object.keys(cqAnswered).length === CQ.length) {
+            setTimeout(cqShowResult, 500);
+          }
+        };
+
+        function cqUpdateScore() {
+          const total    = CQ.length;
+          const answered = Object.keys(cqAnswered).length;
+          const pct      = total ? Math.round(cqCorrect / total * 100) : 0;
+          const circle   = document.getElementById('cq-score-circle');
+          const bar      = document.getElementById('cq-bar');
+          const status   = document.getElementById('cq-status');
+          if (circle) circle.textContent = cqCorrect + '/' + total;
+          if (bar)    bar.style.width    = pct + '%';
+          if (status) status.textContent = answered + ' из ' + total + ' отвечено';
+          if (circle) circle.style.borderColor = pct >= 80 ? 'var(--accent3)' : 'var(--accent2)';
+        }
+
+        function cqShowResult() {
+          const passed = cqCorrect >= 4;
+          const icon   = document.getElementById('cq-result-icon');
+          const title  = document.getElementById('cq-result-title');
+          const text   = document.getElementById('cq-result-text');
+          const retry  = document.getElementById('cq-retry-btn');
+          const result = document.getElementById('cq-result');
+
+          if (passed) {
+            icon.textContent  = '🏆';
+            title.textContent = 'Тест пройден! ' + cqCorrect + ' из ' + CQ.length;
+            text.textContent  = 'Отличная работа! Теперь вы можете завершить курс и получить сертификат.';
+            if (retry) retry.style.display = 'none';
+            // Разблокируем финальный блок
+            const finale = document.getElementById('courseFinale');
+            if (finale) {
+              finale.style.display   = 'block';
+              finale.style.animation = 'fadeIn .5s ease';
+            }
+            try { localStorage.setItem(CQ_KEY, '1'); } catch(e) {}
+          } else {
+            icon.textContent  = '💪';
+            title.textContent = 'Почти! ' + cqCorrect + ' из ' + CQ.length;
+            text.textContent  = 'Нужно 4 правильных ответа. Перечитайте объяснения и попробуйте снова.';
+            if (retry) retry.style.display = 'inline-flex';
+          }
+          if (result) result.style.display = 'block';
+        }
+
+        window.cqRetry = function() {
+          document.getElementById('cq-result').style.display = 'none';
+          cqRender();
+        };
+
+        // Проверяем был ли тест уже пройден
+        const alreadyPassed = localStorage.getItem(CQ_KEY);
+        if (alreadyPassed) {
+          const finale = document.getElementById('courseFinale');
+          if (finale) finale.style.display = 'block';
+          document.getElementById('courseQuizWrap').style.display = 'none';
+        } else {
+          cqRender();
+        }
+      })();
+      <\/script>
+
+      
+      <h2>Заявка на whitelist</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Whitelist Mail.ru: приоритетная очередь и лучшая доставляемость</span>
+<span class="comment"># Требования для включения:</span>
+<span class="comment"># - Домен верифицирован более 3 месяцев</span>
+<span class="comment"># - Репутация стабильно > 70</span>
+<span class="comment"># - Spam Rate < 0.1%</span>
+<span class="comment"># - FBL подключён и обрабатывается</span>
+
+<span class="comment"># Заявка: postmaster.mail.ru -> Whitelist -> Подать заявку</span>
+<span class="comment"># Рассматривают 5-10 рабочих дней</span></pre></div>`
+  }
+  14: {
+    module: 'Модуль 3 · Mail.ru Postmaster',
+    title:  'Решение проблем с доставкой на Mail.ru',
+    time:   '15 мин',
+    content: `
+      <h2>Письма идут в спам — диагностика</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Шаг 1: проверяем статус IP на Mail.ru</span>
+dig -x ВАШ_IP +short
+<span class="comment"># PTR должна совпадать с HELO/EHLO именем сервера</span>
+
+<span class="comment"># Шаг 2: тест через mail-tester.com</span>
+<span class="comment"># Создаём тестовый адрес на mail.ru</span>
+<span class="comment"># Отправляем через mail-tester.com -> смотрим оценку</span>
+
+<span class="comment"># Шаг 3: проверяем заголовки письма</span>
+<span class="comment"># В Mail.ru: Ещё -> Служебные заголовки</span>
+<span class="comment"># X-Spam-Status: YES — письмо помечено спамом, причина в X-Spam-Reason</span></pre></div>
+      <h2>Типичные причины спама на Mail.ru</h2>
+      <div style="display:flex;flex-direction:column;gap=8px;margin:16px 0">
+        <div style="padding:10px 14px;background:var(--bg2);border:1px solid var(--border);margin-bottom:6px"><div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:3px">Нет PTR или PTR не совпадает</div><div style="font-size:12px;color:var(--muted)">Mail.ru очень строг к PTR. Настройте через хостера.</div></div>
+        <div style="padding:10px 14px;background:var(--bg2);border:1px solid var(--border);margin-bottom:6px"><div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:3px">Спам-слова в теме</div><div style="font-size:12px;color:var(--muted)">«БЕСПЛАТНО», «100% ГАРАНТИЯ», «СРОЧНО» — Mail.ru фильтрует агрессивнее Gmail.</div></div>
+        <div style="padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><div style="font-size:12px;color:#f0a500;font-weight:600;margin-bottom:3px">Молодой домен без репутации</div><div style="font-size:12px;color:var(--muted)">Mail.ru не доверяет доменам моложе 30 дней. Прогревайте постепенно.</div></div>
+      </div>`
+  }
+  15: {
+    module: 'Модуль 3 · Mail.ru Postmaster',
+    title:  'Итог — мониторинг трёх провайдеров',
+    time:   '10 мин',
+    content: `
+      <h2>Единый дашборд репутации</h2>
+      <p>Теперь у вас три источника данных — Google Postmaster, Яндекс Postoffice, Mail.ru Postmaster. Объедините их в еженедельный отчёт через n8n.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># n8n: еженедельный сводный отчёт</span>
+📊 Репутация за неделю
+
+Gmail (Google Postmaster):
+  Reputation: High
+  Spam Rate: 0.04%
+  Auth: 100%
+
+Яндекс:
+  Репутация: Good
+  В спаме: 1.2%
+  Жалобы: 0.02%
+
+Mail.ru:
+  Репутация: 78/100
+  В спаме: 2.1%
+  Жалобы: 0.05%
+
+IP: Чисто (0 blacklists)</pre></div>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="font-size:12px;color:var(--text)">Gmail Spam Rate — тревога</span><span style="font-size:12px;color:#f0a500;font-weight:600">&gt; 0.1%</span></div>
+        <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="font-size:12px;color:var(--text)">Яндекс в спаме — тревога</span><span style="font-size:12px;color:#f0a500;font-weight:600">&gt; 5%</span></div>
+        <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="font-size:12px;color:var(--text)">Mail.ru в спаме — тревога</span><span style="font-size:12px;color:#f0a500;font-weight:600">&gt; 5%</span></div>
+      </div>
+      
+      
+      <!-- ══ ТЕСТ КУРСА ═══════════════════════════════════════════ -->
+      <div id="quizBlock" style="margin-top:40px">
+        <div style="padding:20px 24px;background:rgba(123,97,255,.06);border:1px solid rgba(123,97,255,.25);margin-bottom:20px">
+          <div style="font-size:10px;color:var(--accent2);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Финальный тест</div>
+          <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:6px">Проверьте знания</div>
+          <div style="font-size:13px;color:var(--muted)">5 вопросов — нужно 4 правильных.</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px">
+          <div style="flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden">
+            <div id="quizBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;transition:width .4s"></div>
+          </div>
+          <span id="quizCount" style="font-size:11px;color:var(--muted);font-family:var(--font-mono);min-width:50px;text-align:right">0 из 5</span>
+        </div>
+        <div id="quizQuestions"></div>
+        <div id="quizResult" style="display:none;margin-top:20px;padding:24px;background:var(--surface);border:1px solid rgba(0,229,255,.2);text-align:center"></div>
+      </div>
+      <div id="courseFinale" style="display:none;margin-top:32px;padding:28px;background:var(--surface);border:1px solid rgba(0,229,255,.2)"><div style="font-size:36px;margin-bottom:12px">&#127891;</div><div style="font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--heading);margin-bottom:10px">Курс завершён!</div><div style="font-size:14px;color:var(--muted);line-height:1.9;margin-bottom:20px">Вы прошли все уроки и финальный тест.</div><div style="display:flex;gap:12px;flex-wrap:wrap"><a href="course-blacklist.html?token=blacklist2025" class="btn-primary">Следующий курс: Blacklist →</a><a href="courses.html" class="btn-ghost">Все курсы</a></div></div>`
+            <div class="cq-card" id="cq-q${i}" style="margin-bottom:12px;padding:20px;background:var(--bg2);border:1px solid var(--border)">
+              <div style="font-size:10px;color:var(--muted);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Вопрос ${i+1} из ${CQ.length}</div>
+              <div style="font-size:15px;color:var(--heading);font-weight:600;line-height:1.5;margin-bottom:14px">${q.q}</div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                ${q.opts.map((opt, j) => `
+                  <div id="cq-q${i}o${j}" onclick="cqAnswer(${i},${j})"
+                       style="display:flex;gap:10px;align-items:center;padding:10px 14px;
+                              background:var(--bg);border:1px solid var(--border);
+                              cursor:pointer;font-size:13px;color:var(--text);transition:all .12s"
+                       onmouseover="if(!this.dataset.locked)this.style.borderColor='var(--accent)'"
+                       onmouseout="if(!this.dataset.locked)this.style.borderColor='var(--border)'">
+                    <div style="min-width:22px;height:22px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-family:var(--font-mono);color:var(--muted);flex-shrink:0">${String.fromCharCode(65+j)}</div>
+                    ${opt}
+                  </div>`).join('')}
+              </div>
+              <div id="cq-q${i}exp" style="display:none;margin-top:10px;padding:10px 14px;background:var(--surface);border-left:3px solid var(--accent);font-size:12px;color:var(--muted);line-height:1.7">${q.e}</div>
+            </div>`).join('');
+          document.getElementById('cq-score').style.display = 'flex';
+          cqUpdateScore();
+        }
+
+        window.cqAnswer = function(qi, oi) {
+          if (cqAnswered[qi] !== undefined) return;
+          cqAnswered[qi] = oi;
+          const q = CQ[qi];
+          const isOk = oi === q.c;
+          if (isOk) cqCorrect++;
+
+          q.opts.forEach((_,j) => {
+            const el = document.getElementById(`cq-q${qi}o${j}`);
+            if (!el) return;
+            el.dataset.locked = '1';
+            el.style.cursor = 'default';
+            el.style.pointerEvents = 'none';
+            if (j === q.c) {
+              el.style.borderColor = 'var(--accent3)';
+              el.style.background  = 'rgba(0,255,136,.08)';
+              el.style.color       = 'var(--accent3)';
+              el.querySelector('div').style.borderColor = 'var(--accent3)';
+              el.querySelector('div').style.color       = 'var(--accent3)';
+            } else if (j === oi && !isOk) {
+              el.style.borderColor = '#ff6b6b';
+              el.style.background  = 'rgba(255,107,107,.06)';
+              el.style.color       = '#ff6b6b';
+            }
+          });
+
+          document.getElementById(`cq-q${qi}exp`).style.display = 'block';
+          cqUpdateScore();
+
+          if (Object.keys(cqAnswered).length === CQ.length) {
+            setTimeout(cqShowResult, 500);
+          }
+        };
+
+        function cqUpdateScore() {
+          const total    = CQ.length;
+          const answered = Object.keys(cqAnswered).length;
+          const pct      = total ? Math.round(cqCorrect / total * 100) : 0;
+          const circle   = document.getElementById('cq-score-circle');
+          const bar      = document.getElementById('cq-bar');
+          const status   = document.getElementById('cq-status');
+          if (circle) circle.textContent = cqCorrect + '/' + total;
+          if (bar)    bar.style.width    = pct + '%';
+          if (status) status.textContent = answered + ' из ' + total + ' отвечено';
+          if (circle) circle.style.borderColor = pct >= 80 ? 'var(--accent3)' : 'var(--accent2)';
+        }
+
+        function cqShowResult() {
+          const passed = cqCorrect >= 4;
+          const icon   = document.getElementById('cq-result-icon');
+          const title  = document.getElementById('cq-result-title');
+          const text   = document.getElementById('cq-result-text');
+          const retry  = document.getElementById('cq-retry-btn');
+          const result = document.getElementById('cq-result');
+
+          if (passed) {
+            icon.textContent  = '🏆';
+            title.textContent = 'Тест пройден! ' + cqCorrect + ' из ' + CQ.length;
+            text.textContent  = 'Отличная работа! Теперь вы можете завершить курс и получить сертификат.';
+            if (retry) retry.style.display = 'none';
+            // Разблокируем финальный блок
+            const finale = document.getElementById('courseFinale');
+            if (finale) {
+              finale.style.display   = 'block';
+              finale.style.animation = 'fadeIn .5s ease';
+            }
+            try { localStorage.setItem(CQ_KEY, '1'); } catch(e) {}
+          } else {
+            icon.textContent  = '💪';
+            title.textContent = 'Почти! ' + cqCorrect + ' из ' + CQ.length;
+            text.textContent  = 'Нужно 4 правильных ответа. Перечитайте объяснения и попробуйте снова.';
+            if (retry) retry.style.display = 'inline-flex';
+          }
+          if (result) result.style.display = 'block';
+        }
+
+        window.cqRetry = function() {
+          document.getElementById('cq-result').style.display = 'none';
+          cqRender();
+        };
+
+        // Проверяем был ли тест уже пройден
+        const alreadyPassed = localStorage.getItem(CQ_KEY);
+        if (alreadyPassed) {
+          const finale = document.getElementById('courseFinale');
+          if (finale) finale.style.display = 'block';
+          document.getElementById('courseQuizWrap').style.display = 'none';
+        } else {
+          cqRender();
+        }
+      })();
+      <\/script>
+
+      
+<div class="cquiz-wrap" id="courseQuiz">
+  <div class="cquiz-header">
+    <div class="cquiz-title">🎯 Проверьте знания</div>
+    <div class="cquiz-sub">2 вопросов · отвечайте сразу видите объяснение</div>
+  </div>
+
+      <div class="cquiz-q">
+        <div class="cquiz-qn">Вопрос 1 из 2</div>
+        <div class="cquiz-qtext">Домены Mail.ru Group включают:</div>
+        <div class="cquiz-opts">
+          <div class="cquiz-opt" id="cqo_mailru_0_0" onclick="cqAnswer_mailru(0, 0)">
+            <div class="cquiz-opt-key">A</div>Только @mail.ru
+          </div>
+          <div class="cquiz-opt" id="cqo_mailru_0_1" onclick="cqAnswer_mailru(0, 1)">
+            <div class="cquiz-opt-key">B</div>@mail.ru, @inbox.ru, @bk.ru, @list.ru, @vk.com
+          </div>
+          <div class="cquiz-opt" id="cqo_mailru_0_2" onclick="cqAnswer_mailru(0, 2)">
+            <div class="cquiz-opt-key">C</div>Только корпоративные
+          </div>
+          <div class="cquiz-opt" id="cqo_mailru_0_3" onclick="cqAnswer_mailru(0, 3)">
+            <div class="cquiz-opt-key">D</div>@yandex.ru тоже
+          </div>
+        </div>
+        <div class="cquiz-explain" id="cqexp_mailru_0">VK Mail управляет несколькими доменами. В российских базах 30-50% адресов — крупнейший провайдер.</div>
+      </div>
+      <div class="cquiz-q">
+        <div class="cquiz-qn">Вопрос 2 из 2</div>
+        <div class="cquiz-qtext">Whitelist Mail.ru даёт:</div>
+        <div class="cquiz-opts">
+          <div class="cquiz-opt" id="cqo_mailru_1_0" onclick="cqAnswer_mailru(1, 0)">
+            <div class="cquiz-opt-key">A</div>Бесплатный аккаунт
+          </div>
+          <div class="cquiz-opt" id="cqo_mailru_1_1" onclick="cqAnswer_mailru(1, 1)">
+            <div class="cquiz-opt-key">B</div>Приоритетную очередь и лучшую доставляемость
+          </div>
+          <div class="cquiz-opt" id="cqo_mailru_1_2" onclick="cqAnswer_mailru(1, 2)">
+            <div class="cquiz-opt-key">C</div>Доступ к API
+          </div>
+          <div class="cquiz-opt" id="cqo_mailru_1_3" onclick="cqAnswer_mailru(1, 3)">
+            <div class="cquiz-opt-key">D</div>Бесплатный сервер
+          </div>
+        </div>
+        <div class="cquiz-explain" id="cqexp_mailru_1">Требования: 3+ месяца верификации, репутация >70, Spam Rate <0.1%, FBL настроен. Заявка через Postmaster.</div>
+      </div>
+  <div class="cquiz-progress">
+    <div class="cquiz-bar"><div class="cquiz-fill" id="cqfill_mailru" style="width:0%"></div></div>
+    <span style="font-size:11px;color:var(--muted);font-family:var(--font-mono)" id="cqlabel_mailru">0 / 2</span>
+  </div>
+  <div class="cquiz-result" id="cqresult_mailru"></div>
+</div>`
+  }
+}
+window.lessons = lessons;
+window.currentLesson = currentLesson;
+
+// quiz:postmaster
+var qData_postmaster = [{"q": "Google Postmaster Domain Reputation 'Low' означает:", "opts": ["Домен новый", "Большинство писем с этого домена попадают в спам", "Технические проблемы с DKIM", "Домен заблокирован"], "c": 1, "e": "Low reputation = Gmail видит ваш домен как источник нежелательной почты. Письма почти всегда в спаме. Нужно снизить Spam Rate и улучшить качество базы подписчиков."}, {"q": "Что такое Spam Rate в Google Postmaster?", "opts": ["Процент писем попавших в папку Промоакции", "Доля пользователей Gmail нажавших 'Спам' на ваши письма", "Процент писем не доставленных", "Скорость отправки"], "c": 1, "e": "Spam Rate = количество жалоб 'Это спам' / количество доставленных писем. Порог Google: 0.1% — начало проблем, 0.3% — массовые блокировки. Следите ежедневно."}, {"q": "В каком разделе Postmaster смотреть если письма доходят но с задержкой?", "opts": ["Domain Reputation", "Delivery Errors", "Spam Rate", "IP Reputation"], "c": 1, "e": "Delivery Errors показывает типы и количество ошибок доставки: connection refused, SMTP errors, rate limits. Поможет понять почему Gmail замедляет или отклоняет письма."}, {"q": "Authentication раздел в Postmaster должен показывать:", "opts": ["50% прохождение SPF", "100% прохождение SPF, DKIM, DMARC", "Только DKIM", "Не важно"], "c": 1, "e": "100% аутентификация — цель. Если меньше — значит часть писем уходит с серверов не прописанных в SPF или без DKIM подписи. Ищите 'утечку' через сторонние сервисы."}, {"q": "Как часто нужно проверять данные в Google Postmaster?", "opts": ["Раз в год", "Раз в квартал", "Еженедельно в активный период рассылок", "Только когда есть жалобы"], "c": 2, "e": "Еженедельно — минимум. В период активных рассылок и прогрева — ежедневно. Postmaster показывает данные с задержкой 1-2 дня, поэтому ранняя реакция важна."}];
+var qAns_postmaster = {};
+var qOk_postmaster = 0;
+
+function quizInit_postmaster() {
+  qAns_postmaster = {}; qOk_postmaster = 0;
+  var c = document.getElementById("quizQuestions");
+  if (!c) return;
+  var h = "";
+  qData_postmaster.forEach(function(q, i) {
+    h += "<div style=\"margin-bottom:12px;padding:20px;background:var(--bg2);border:1px solid var(--border)\">";
+    h += "<div style=\"font-size:11px;color:var(--muted);font-family:var(--font-mono);margin-bottom:8px\">Вопрос " + (i+1) + " из 5</div>";
+    h += "<div style=\"font-size:15px;color:var(--heading);font-weight:600;line-height:1.5;margin-bottom:14px\">" + q.q + "</div>";
+    h += "<div style=\"display:flex;flex-direction:column;gap:6px\">";
+    q.opts.forEach(function(opt, j) {
+      h += "<div id=\"qo_postmaster_" + i + "_" + j + "\" onclick=\"quizAns_postmaster(" + i + "," + j + ")\" style=\"display:flex;gap:10px;align-items:flex-start;padding:10px 14px;background:var(--bg);border:1px solid var(--border);cursor:pointer;font-size:13px;color:var(--text)\">";
+      h += "<div style=\"min-width:22px;height:22px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-family:var(--font-mono);color:var(--muted);flex-shrink:0\">" + String.fromCharCode(65+j) + "</div>";
+      h += opt + "</div>";
+    });
+    h += "</div>";
+    h += "<div id=\"qe_postmaster_" + i + "\" style=\"display:none;margin-top:10px;padding:10px 14px;background:var(--surface);border-left:3px solid var(--accent);font-size:12px;color:var(--muted);line-height:1.7\">" + (q.e||"") + "</div>";
+    h += "</div>";
+  });
+  c.innerHTML = h;
+  var bar = document.getElementById("quizBar");
+  var cnt = document.getElementById("quizCount");
+  if (bar) bar.style.width = "0%";
+  if (cnt) cnt.textContent = "0 из 5";
+  var res = document.getElementById("quizResult");
+  if (res) res.style.display = "none";
+}
+
+window["quizAns_postmaster"] = function(qi, oi) {
+  if (qAns_postmaster[qi] !== undefined) return;
+  qAns_postmaster[qi] = oi;
+  var q = qData_postmaster[qi];
+  var correct = (q.c !== undefined) ? q.c : q.correct;
+  var isOk = (oi === correct);
+  if (isOk) qOk_postmaster++;
+  q.opts.forEach(function(_, j) {
+    var el = document.getElementById("qo_postmaster_" + qi + "_" + j);
+    if (!el) return;
+    el.style.pointerEvents = "none";
+    if (j === correct) { el.style.borderColor = "var(--accent3)"; el.style.background = "rgba(0,255,136,.06)"; }
+    else if (j === oi && !isOk) { el.style.borderColor = "#ff6b6b"; el.style.background = "rgba(255,107,107,.06)"; }
+  });
+  var exp = document.getElementById("qe_postmaster_" + qi);
+  if (exp) exp.style.display = "block";
+  var answered = Object.keys(qAns_postmaster).length;
+  var bar = document.getElementById("quizBar");
+  var cnt = document.getElementById("quizCount");
+  if (bar) bar.style.width = Math.round(answered/5*100) + "%";
+  if (cnt) cnt.textContent = answered + " из 5";
+  if (answered === 5) {
+    setTimeout(function() {
+      var passed = qOk_postmaster >= 4;
+      var res = document.getElementById("quizResult");
+      if (!res) return;
+      res.style.display = "block";
+      if (passed) {
+        res.innerHTML = "<div style=\"font-size:36px;margin-bottom:10px\">&#127942;</div>"
+          + "<div style=\"font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--heading);margin-bottom:8px\">Тест пройден! " + qOk_postmaster + "/5</div>"
+          + "<div style=\"font-size:13px;color:var(--muted);margin-bottom:16px\">Курс завершён — смотрите финальный блок ниже.</div>";
+        var f = document.getElementById("courseFinale");
+        if (f) { f.style.display = "block"; f.scrollIntoView({behavior:"smooth",block:"nearest"}); }
+        try { localStorage.setItem("postmaster_quiz_passed","1"); } catch(e) {}
+      } else {
+        res.innerHTML = "<div style=\"font-size:36px;margin-bottom:10px\">&#128170;</div>"
+          + "<div style=\"font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--heading);margin-bottom:8px\">Почти! " + qOk_postmaster + "/5</div>"
+          + "<div style=\"font-size:13px;color:var(--muted);margin-bottom:16px\">Нужно 4 правильных. Попробуйте снова.</div>"
+          + "<button class=\"btn-ghost\" onclick=\"quizInit_postmaster()\">Попробовать снова</button>";
+      }
+      res.scrollIntoView({behavior:"smooth",block:"nearest"});
+    }, 400);
+  }
+};
+
+// ── LESSON NAVIGATION ──
+// currentLesson initialized in head
+
+
+
+
+function copyCode(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.textContent = 'скопировано!';
+    setTimeout(() => btn.textContent = 'копировать', 2000);
+  });
+}
+
+// ── Прогресс курса ──────────────────────────────────────
+const COURSE_KEY = window.location.pathname.replace(/.*\//, '').replace('.html','');
+const DONE_KEY   = COURSE_KEY + '_done_lessons';
+
+
+
+
+
+function updateProgress() {
+  var done = getDone();
+  var total = Object.keys(lessons).length;
+  var el = document.getElementById('progressText');
+  if (el) el.textContent = done.length + ' / ' + total + ' pройдено';
+  document.querySelectorAll('.sidebar-lesson').forEach(function(sl) {
+    var attr = sl.getAttribute('onclick') || '';
+    var m = attr.match(/showLesson\((\d+)\)/);
+    if (m) {
+      if (done.indexOf(parseInt(m[1])) >= 0) sl.classList.add('done');
+      else sl.classList.remove('done');
+    }
+  });
+}
+
+function toggleComplete() {
+  const cur  = window._currentLesson || 1;
+  const done = getDone();
+  const idx  = done.indexOf(cur);
+  if (idx >= 0) done.splice(idx, 1); else done.push(cur);
+  saveDone(done);
+  updateProgress();
+}
+
+// Патч showLesson чтобы обновлять кнопку при переходе
+const _origShowLesson = showLesson;
+showLesson = function(n) {
+  _origShowLesson(n);
+  window._currentLesson = n;
+  setTimeout(updateProgress, 50);
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  window._currentLesson = 1;
+  updateProgress();
+});
+
+<script>
+(function() {
+  const CQ_QUESTIONS = [{"q": "Domain Reputation Low в Postmaster означает:", "opts": ["Домен новый", "Письма регулярно помечаются как спам — большинство идёт в папку Спам", "Технические проблемы", "Домен не верифицирован"], "correct": 1, "explain": "Low = Gmail видит домен как источник нежелательной почты. Немедленно снизьте Spam Rate: чистите базу, отписывайте неактивных."}, {"q": "Spam Rate должен быть:", "opts": ["Менее 1%", "Менее 0.5%", "Менее 0.1%", "Нет ограничений"], "correct": 2, "explain": "Google: выше 0.1% — проблемы с доставкой, выше 0.3% — массовые блокировки. 1 жалоба на 1000 писем. Следите ежедневно."}];
+  let cqAnswered = {};
+  let cqCorrect  = 0;
+
+  function cqAnswer(qi, oi) {
+    if (cqAnswered[qi] !== undefined) return;
+    cqAnswered[qi] = oi;
+    const q = CQ_QUESTIONS[qi];
+    const isOk = (oi === q.correct);
+    if (isOk) cqCorrect++;
+
+    q.opts.forEach((_, j) => {
+      const el = document.getElementById('cqo_postmaster_' + qi + '_' + j);
+      if (!el) return;
+      el.style.pointerEvents = 'none';
+      if (j === q.correct) el.classList.add('correct');
+      else if (j === oi && !isOk) el.classList.add('wrong');
+    });
+
+    const exp = document.getElementById('cqexp_postmaster_' + qi);
+    if (exp) exp.classList.add('show');
+
+    // Прогресс
+    const answered = Object.keys(cqAnswered).length;
+    const total    = CQ_QUESTIONS.length;
+    const pct = Math.round(cqCorrect / total * 100);
+    const barFill  = document.getElementById('cqfill_postmaster');
+    const barLabel = document.getElementById('cqlabel_postmaster');
+    if (barFill)  barFill.style.width = Math.round(answered / total * 100) + '%';
+    if (barLabel) barLabel.textContent = answered + ' / ' + total;
+
+    // Итог
+    if (answered === total) {
+      setTimeout(() => {
+        const res = document.getElementById('cqresult_postmaster');
+        if (!res) return;
+        let emoji, msg;
+        if (pct >= 80) { emoji = '🎯'; msg = 'Отличный результат — ' + pct + '%! Вы усвоили материал курса.'; }
+        else if (pct >= 60) { emoji = '📚'; msg = pct + '% — есть пробелы. Вернитесь к сложным урокам.'; }
+        else { emoji = '💪'; msg = pct + '% — повторите курс и попробуйте снова.'; }
+        res.innerHTML = '<div style="font-size:32px;margin-bottom:10px">' + emoji + '</div>'
+          + '<div style="font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--heading);margin-bottom:8px">Тест завершён</div>'
+          + '<div style="font-size:13px;color:var(--muted);margin-bottom:20px">' + msg + '</div>'
+          + (pct >= 80
+            ? '<a href="certificate.html" class="btn-primary">Получить сертификат →</a>'
+            : '<button class="btn-ghost" onclick="location.reload()">Повторить тест</button>');
+        res.classList.add('show');
+        res.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 400);
+    }
+  }
+
+  // Экспортируем функцию глобально
+  window['cqAnswer_postmaster'] = cqAnswer;
+})();
+</script>
+
+
+</script>
+</body>
+</html>

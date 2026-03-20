@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Шаблоны и чеклисты — MAILSTACK</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .res-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); margin:32px 0; }
+    .res-card { background:var(--bg2); padding:28px 24px; display:flex; flex-direction:column; }
+    .res-tag { font-size:10px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin-bottom:12px; font-family:var(--font-mono); }
+    .res-title { font-family:var(--font-head); font-size:17px; font-weight:800; color:var(--heading); margin-bottom:8px; letter-spacing:-.3px; }
+    .res-desc { font-size:13px; color:var(--muted); line-height:1.7; margin-bottom:20px; flex:1; }
+    .res-items { display:flex; flex-direction:column; gap:4px; margin-bottom:20px; }
+    .res-item { font-size:11px; color:var(--text); display:flex; gap:8px; padding:6px 10px; background:var(--bg); border:1px solid var(--border); font-family:var(--font-mono); cursor:pointer; transition:border-color .15s; }
+    .res-item:hover { border-color:var(--accent); color:var(--accent); }
+    .res-item .copy-icon { margin-left:auto; color:var(--muted); font-size:10px; }
+    .code-popup { display:none; position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:1000; align-items:center; justify-content:center; padding:20px; }
+    .code-popup.active { display:flex; }
+    .code-box { background:var(--bg2); border:1px solid var(--border); max-width:860px; width:100%; max-height:85vh; overflow:hidden; display:flex; flex-direction:column; }
+    .code-box-header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+    .code-box-title { font-family:var(--font-head); font-size:15px; font-weight:700; color:var(--heading); }
+    .code-box-close { background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer; padding:4px 8px; }
+    .code-box-close:hover { color:var(--heading); }
+    .code-box-body { overflow:auto; padding:0; flex:1; }
+    .code-box-body pre { margin:0; padding:24px; font-size:12px; line-height:1.7; font-family:var(--font-mono); color:var(--text); white-space:pre; }
+    .code-box-footer { padding:12px 20px; border-top:1px solid var(--border); display:flex; gap:10px; }
+    .checklist-wrap { display:flex; flex-direction:column; gap:6px; }
+    .check-item { display:flex; gap:10px; align-items:flex-start; padding:10px 14px; background:var(--bg); border:1px solid var(--border); cursor:pointer; transition:background .15s; }
+    .check-item:hover { background:var(--surface); }
+    .check-item.done { background:rgba(0,255,136,.04); border-color:rgba(0,255,136,.2); }
+    .check-item.done .check-text { text-decoration:line-through; color:var(--muted); }
+    .check-box { width:16px; height:16px; border:1px solid var(--border); border-radius:2px; flex-shrink:0; margin-top:1px; display:flex; align-items:center; justify-content:center; font-size:10px; }
+    .check-item.done .check-box { background:var(--accent3); border-color:var(--accent3); color:var(--bg); }
+    .check-text { font-size:12px; color:var(--text); line-height:1.5; }
+    .section-tabs { display:flex; gap:1px; background:var(--border); border:1px solid var(--border); margin-bottom:32px; }
+    .section-tab { padding:12px 20px; font-size:12px; font-family:var(--font-mono); color:var(--muted); background:var(--bg); cursor:pointer; transition:all .15s; border:none; }
+    .section-tab.active { background:var(--surface); color:var(--accent); }
+    .tab-content { display:none; }
+    .tab-content.active { display:block; }
+    .time-block { display:flex; gap:6px; align-items:center; font-size:11px; color:var(--muted); margin-top:8px; }
+    .time-dot { width:6px; height:6px; border-radius:50%; background:var(--accent3); }
+    @media(max-width:900px){ .res-grid { grid-template-columns:1fr; } }
+  
+/* ── Resources Lock ────────────────────────────────────── */
+.resources-locked   { display: none; }
+.resources-unlocked { display: none; }
+
+.lock-overlay {
+  position: fixed; inset: 0; background: var(--bg);
+  z-index: 999; display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.lock-box {
+  max-width: 480px; width: 100%;
+  background: var(--bg2); border: 1px solid rgba(0,229,255,.2);
+  padding: 48px 40px; text-align: center;
+}
+.lock-icon    { font-size: 48px; margin-bottom: 20px; }
+.lock-title   { font-family: var(--font-head); font-size: 26px; font-weight: 800;
+                color: var(--heading); margin-bottom: 10px; letter-spacing: -.5px; }
+.lock-desc    { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 28px; }
+.lock-input   { width: 100%; padding: 12px 14px; background: var(--bg);
+                border: 1px solid var(--border); color: var(--text);
+                font-family: var(--font-mono); font-size: 14px; outline: none;
+                margin-bottom: 10px; box-sizing: border-box; text-align: center;
+                letter-spacing: .1em; transition: border-color .2s; }
+.lock-input:focus { border-color: var(--accent); }
+.lock-error   { font-size: 12px; color: #ff6b6b; margin-bottom: 10px;
+                font-family: var(--font-mono); min-height: 18px; }
+.lock-features { display: flex; flex-direction: column; gap: 6px;
+                 margin-bottom: 28px; text-align: left; }
+.lock-feat    { display: flex; gap: 10px; padding: 8px 12px;
+                background: var(--bg); border: 1px solid var(--border);
+                font-size: 12px; color: var(--text); }
+.lock-divider { height: 1px; background: var(--border); margin: 24px 0; }
+.lock-buy     { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="index.html" class="logo"><span>MAIL</span><span class="logo-stack">STACK</span></a>
+  <div class="nav-links">
+    <a href="services.html">Услуги</a>
+    <a href="start.html">С чего начать</a>
+    <a href="courses.html">Курсы</a>
+    <a href="resources.html" class="active">Шаблоны</a>
+    <a href="servers.html">Серверы</a>
+    <a href="portfolio.html">Кейсы</a>
+    <a href="https://t.me/yourusername" class="btn-nav">Написать</a>
+  </div>
+</nav>
+
+<div class="lock-overlay" id="lockOverlay">
+  <div class="lock-box">
+    <div class="lock-icon">🔒</div>
+    <div class="lock-title">Закрытый раздел</div>
+    <div class="lock-desc">
+      Шаблоны, конфиги и чеклисты доступны только студентам полного курса MAILSTACK.<br>
+      Если у вас есть токен — введите его ниже.
+    </div>
+
+    <div class="lock-features">
+      <div class="lock-feat"><span style="color:var(--accent3)">✓</span> 15+ готовых Nginx конфигов</div>
+      <div class="lock-feat"><span style="color:var(--accent3)">✓</span> Docker Compose шаблоны всего стека</div>
+      <div class="lock-feat"><span style="color:var(--accent3)">✓</span> Полные DNS шаблоны с SPF/DKIM/DMARC</div>
+      <div class="lock-feat"><span style="color:var(--accent3)">✓</span> Bash-скрипты мониторинга и бэкапа</div>
+      <div class="lock-feat"><span style="color:var(--accent3)">✓</span> HTML-шаблоны писем</div>
+      <div class="lock-feat"><span style="color:var(--accent3)">✓</span> Чеклисты: запуск, рассылка, аудит</div>
+    </div>
+
+    <input type="text" id="resourceToken" class="lock-input"
+           placeholder="Введите токен доступа"
+           onkeydown="if(event.key==='Enter') checkResourceToken()">
+    <div class="lock-error" id="lockError"></div>
+    <button class="btn-primary" onclick="checkResourceToken()" style="width:100%;padding:14px;font-size:15px">
+      Получить доступ →
+    </button>
+
+    <div class="lock-divider"></div>
+
+    <div class="lock-buy">Нет токена? Токен доступа входит в пакет <strong style="color:var(--heading)">«Всё включено»</strong>.</div>
+    <div style="display:flex;gap:10px">
+      <a href="https://t.me/yourusername" class="btn-primary" style="flex:1;display:block;text-align:center;padding:12px">
+        Купить пакет →
+      </a>
+      <a href="courses.html" class="btn-ghost" style="flex:1;display:block;text-align:center;padding:12px">
+        Смотреть курсы
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="resources-content" style="display:none">
+
+
+<section style="padding:80px 60px 40px">
+  <div class="section-label">Шаблоны и чеклисты</div>
+  <h1 style="font-family:var(--font-head);font-size:clamp(32px,5vw,56px);font-weight:800;color:var(--heading);letter-spacing:-2px;line-height:1.1;margin:0 0 16px">
+    Копируйте.<br><em>Не изобретайте велосипед.</em>
+  </h1>
+  <p style="font-size:16px;color:var(--muted);max-width:560px;line-height:1.7;margin:0">
+    Готовые конфиги Nginx, DNS шаблоны, bash-скрипты, чеклисты — всё что нужно для email-инфраструктуры.
+  </p>
+</section>
+
+<section style="padding:0 60px 80px">
+  <div class="section-tabs" id="mainTabs">
+    <button class="section-tab active" data-tab="configs">⚙️ Конфиги</button>
+    <button class="section-tab" data-tab="dns">🌐 DNS шаблоны</button>
+    <button class="section-tab" data-tab="scripts">📜 Bash-скрипты</button>
+    <button class="section-tab" data-tab="checklists">✅ Чеклисты</button>
+  </div>
+
+  <!-- ════ КОНФИГИ ════ -->
+  <div class="tab-content active" id="tab-configs">
+    <div class="res-grid">
+
+      <div class="res-card">
+        <div class="res-tag">Nginx</div>
+        <div class="res-title">Reverse Proxy — универсальный шаблон</div>
+        <div class="res-desc">Шаблон для проксирования любого сервиса за Nginx с SSL. Работает для Mailcow, Postal, n8n, Chatwoot, UptimeKuma.</div>
+        <div class="res-items">
+          <div class="res-item" onclick="showCode('nginx-proxy')">nginx-proxy-template.conf <span class="copy-icon">↗</span></div>
+          <div class="res-item" onclick="showCode('nginx-mailcow')">nginx-mailcow.conf <span class="copy-icon">↗</span></div>
+          <div class="res-item" onclick="showCode('nginx-n8n')">nginx-n8n.conf (WebSocket) <span class="copy-icon">↗</span></div>
+          <div class="res-item" onclick="showCode('nginx-security')">nginx-security-headers.conf <span class="copy-icon">↗</span></div>
+        </div>
+      </div>
+
+      <div class="res-card">
+        <div class="res-tag">Docker</div>
+        <div class="res-title">Docker Compose шаблоны</div>
+        <div class="res-desc">Готовые compose файлы для всех сервисов email-стека. Копируйте и адаптируйте под свой сервер.</div>
+        <div class="res-items">
+          <div class="res-item" onclick="showCode('docker-n8n')">docker-compose-n8n.yml <span class="copy-icon">↗</span></div>
+          <div class="res-item" onclick="showCode('docker-chatwoot')">docker-compose-chatwoot.yml <span class="copy-icon">↗</span></div>
+          <div class="res-item" onclick="showCode('docker-monitoring')">docker-compose-monitoring.yml <span class="copy-icon">↗</span></div>
+        </div>
+      </div>
+
+      <div class="res-card">
+        <div class="res-tag">Email</div>
+        <div class="res-title">HTML-шаблоны писем</div>
+        <div class="res-desc">Готовые HTML-шаблоны писем. Тестированы в Gmail, Яндекс, Mail.ru, Outlook.</div>
+        <div class="res-items">
+          <div class="res-item" onclick="showCode('html-base')">base-template.html — основа <span class="copy-icon">↗</span></div>
+          <div class="res-item" onclick="showCode('html-welcome')">welcome-email.html — приветствие <span class="copy-icon">↗</span></div>
+          <div class="res-item" onclick="showCode('html-token')">token-delivery.html — токен доступа <span class="copy-icon">↗</span></div>
+          <div class="res-item" onclick="showCode('html-transact')">transactional-base.html <span class="copy-icon">↗</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════ DNS ════ -->
+  <div class="tab-content" id="tab-dns">
+    <div class="res-grid">
+
+      <div class="res-card">
+        <div class="res-tag">Обязательные записи</div>
+        <div class="res-title">Полный набор DNS для email</div>
+        <div class="res-desc">Все записи которые нужны для работы email-инфраструктуры. Скопируйте и замените yourdomain.com на ваш домен.</div>
+        <div class="res-items">
+          <div class="res-item" onclick="showCode('dns-full')">dns-full-template.txt — полный набор <span class="copy-icon">↗</span></div>
+          <div class="res-item" onclick="showCode('dns-spf')">SPF запись — примеры <span class="copy-icon">↗</span></div>
+          <div class="res-item" onclick="showCode('dns-dmarc')">DMARC запись — от p=none до p=reject <span class="copy-icon">↗</span></div>
+          <div class="res-item" onclick="showCode('dns-bimi')">BIMI + MTA-STS записи <span class="copy-icon">↗</span></div>
+        </div>
+      </div>
+
+      <div class="res-card">
+        <div class="res-tag">Проверка</div>
+        <div class="res-title">Команды для проверки DNS</div>
+        <div class="res-desc">Готовые команды dig для проверки каждого типа записей. Замените yourdomain.com.</div>
+        <div class="res-items">
+          <div class="res-item" onclick="showCode('dns-check')">dns-check-commands.sh <span class="copy-icon">↗</span></div>
+        </div>
+      </div>
+
+      <div class="res-card">
+        <div class="res-tag">Cloudflare</div>
+        <div class="res-title">Настройка через Cloudflare</div>
+        <div class="res-desc">Специфика настройки DNS через Cloudflare — какие записи через proxy (оранжевая), какие без (серая).</div>
+        <div class="res-items">
+          <div class="res-item" onclick="showCode('dns-cloudflare')">cloudflare-setup-guide.txt <span class="copy-icon">↗</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════ SCRIPTS ════ -->
+  <div class="tab-content" id="tab-scripts">
+    <div class="res-grid">
+
+      <div class="res-card">
+        <div class="res-tag">Мониторинг</div>
+        <div class="res-title">Bash-скрипты мониторинга</div>
+        <div class="res-desc">Скрипты для мониторинга сервера, проверки сервисов и отправки алёртов в Telegram.</div>
+        <div class="res-items">
+          <div class="res-item" onclick="showCode('script-monitor')">server-monitor.sh — ресурсы + Telegram <span class="copy-icon">↗</span></div>
+          <div class="res-item" onclick="showCode('script-blacklist')">blacklist-check.sh — IP в блэклистах <span class="copy-icon">↗</span></div>
+          <div class="res-item" onclick="showCode('script-ssl')">ssl-check.sh — даты SSL сертификатов <span class="copy-icon">↗</span></div>
+          <div class="res-item" onclick="showCode('script-diag')">quick-diag.sh — быстрая диагностика <span class="copy-icon">↗</span></div>
+        </div>
+      </div>
+
+      <div class="res-card">
+        <div class="res-tag">Бэкапы</div>
+        <div class="res-title">Скрипты резервного копирования</div>
+        <div class="res-desc">Автоматизация бэкапов всего email-стека с загрузкой в облако через rclone.</div>
+        <div class="res-items">
+          <div class="res-item" onclick="showCode('script-backup')">backup-to-cloud.sh — полный бэкап <span class="copy-icon">↗</span></div>
+          <div class="res-item" onclick="showCode('script-backup-mwizz')">backup-mailwizz.sh — только MailWizz <span class="copy-icon">↗</span></div>
+          <div class="res-item" onclick="showCode('script-update')">update-stack.sh — обновление стека <span class="copy-icon">↗</span></div>
+        </div>
+      </div>
+
+      <div class="res-card">
+        <div class="res-tag">Аудит</div>
+        <div class="res-title">Скрипты аудита</div>
+        <div class="res-desc">Комплексные скрипты для проверки DNS, репутации IP и правильности настройки email-инфраструктуры.</div>
+        <div class="res-items">
+          <div class="res-item" onclick="showCode('script-dns-audit')">dns-audit.sh — полная проверка DNS <span class="copy-icon">↗</span></div>
+          <div class="res-item" onclick="showCode('script-email-health')">email-health.sh — проверка всего стека <span class="copy-icon">↗</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════ ЧЕКЛИСТЫ ════ -->
+  <div class="tab-content" id="tab-checklists">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+
+      <div>
+        <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:6px">Запуск с нуля</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:16px">Отмечайте по мере выполнения — сохраняется в браузере</div>
+        <div class="checklist-wrap" id="checklist-start">
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">VPS создан, Ubuntu 22.04 LTS</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">SSH-ключ настроен, root вход по ключу</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Hostname настроен: hostnamectl set-hostname mail.yourdomain.com</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">DNS A-запись: mail.yourdomain.com → IP сервера</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">DNS MX-запись: yourdomain.com → mail.yourdomain.com</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">PTR-запись настроена у хостера</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Docker установлен: docker --version</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Nginx установлен и запущен</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">SSL сертификат получен через certbot</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Mailcow установлен и запущен</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Postal установлен и настроен</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">SPF запись добавлена в DNS</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">DKIM настроен в Postal, запись добавлена в DNS</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">DMARC настроен (начать с p=none)</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">mail-tester.com показывает 9+/10</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Прогрев IP начат по плану</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">fail2ban установлен и настроен</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Автоматические бэкапы настроены</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">UptimeKuma мониторит все сервисы</div></div>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:10px">
+          <button onclick="resetChecklist('checklist-start')" style="font-size:11px;padding:6px 12px;background:none;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-family:var(--font-mono)">Сбросить</button>
+          <span id="progress-start" style="font-size:11px;color:var(--muted);padding:6px 0;font-family:var(--font-mono)"></span>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:6px">Перед каждой рассылкой</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:16px">Быстрая проверка перед нажатием «Отправить»</div>
+        <div class="checklist-wrap" id="checklist-send">
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">IP не в блэклистах (mxtoolbox.com/blacklists)</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">mail-tester.com показывает 9+/10</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Domain Reputation в Postmaster: High/Medium</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Spam Rate за 7 дней: ниже 0.1%</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Hard bounce удалены из базы</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">FBL жалобы обработаны и отписаны</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Ссылка отписки работает</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Тестовое письмо проверено в Gmail, Яндекс, Mail.ru</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Тема без капслока и спам-слов</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Один CTA в письме</div></div>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:10px">
+          <button onclick="resetChecklist('checklist-send')" style="font-size:11px;padding:6px 12px;background:none;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-family:var(--font-mono)">Сбросить</button>
+          <span id="progress-send" style="font-size:11px;color:var(--muted);padding:6px 0;font-family:var(--font-mono)"></span>
+        </div>
+
+        <div style="margin-top:40px;font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:6px">Ежемесячный аудит</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:16px">Запускайте первого числа каждого месяца</div>
+        <div class="checklist-wrap" id="checklist-monthly">
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">apt upgrade выполнен</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Mailcow и n8n обновлены</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">SSL сертификаты: certbot certificates (>30 дней)</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Бэкапы проверены: последний успешный когда?</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Open relay тест: mxtoolbox.com/diagnostic</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">fail2ban активен, нет подозрительных блокировок</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Disk usage: df -h (не более 80%)</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Все мониторы UptimeKuma зелёные</div></div>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:10px">
+          <button onclick="resetChecklist('checklist-monthly')" style="font-size:11px;padding:6px 12px;background:none;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-family:var(--font-mono)">Сбросить</button>
+          <span id="progress-monthly" style="font-size:11px;color:var(--muted);padding:6px 0;font-family:var(--font-mono)"></span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════ КОД ПОПАП ════ -->
+<div class="code-popup" id="codePopup">
+  <div class="code-box">
+    <div class="code-box-header">
+      <div class="code-box-title" id="popupTitle">nginx-proxy-template.conf</div>
+      <button class="code-box-close" onclick="closeCode()">×</button>
+    </div>
+    <div class="code-box-body">
+      <pre id="popupCode"></pre>
+    </div>
+    <div class="code-box-footer">
+      <button class="btn-primary" onclick="copyPopupCode()">Копировать</button>
+      <button class="btn-ghost" onclick="closeCode()">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand"><div class="logo"><span>MAIL</span><span class="logo-stack">STACK</span></div><p>Email-инфраструктура под ключ</p></div>
+    <div class="footer-links">
+      <a href="courses.html">Курсы</a>
+      <a href="resources.html">Шаблоны</a>
+      <a href="services.html">Услуги</a>
+      <a href="portfolio.html">Кейсы</a>
+    </div>
+    <div style="font-size:12px;color:var(--muted)">hello@mailstack.dev</div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+// ── Tabs ─────────────────────────────────────────────────────────
+document.querySelectorAll('.section-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.section-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ── Checklists ───────────────────────────────────────────────────
+function toggleCheck(el) {
+  el.classList.toggle('done');
+  const box = el.querySelector('.check-box');
+  box.textContent = el.classList.contains('done') ? '✓' : '';
+  saveChecklists();
+  updateProgress();
+}
+
+function resetChecklist(id) {
+  document.querySelectorAll('#' + id + ' .check-item').forEach(el => {
+    el.classList.remove('done');
+    el.querySelector('.check-box').textContent = '';
+  });
+  saveChecklists();
+  updateProgress();
+}
+
+function updateProgress() {
+  ['start','send','monthly'].forEach(key => {
+    const wrap = document.getElementById('checklist-' + key);
+    if (!wrap) return;
+    const items = wrap.querySelectorAll('.check-item');
+    const done  = wrap.querySelectorAll('.check-item.done');
+    const el    = document.getElementById('progress-' + key);
+    if (el) el.textContent = done.length + ' / ' + items.length + ' выполнено';
+  });
+}
+
+function saveChecklists() {
+  ['start','send','monthly'].forEach(key => {
+    const wrap = document.getElementById('checklist-' + key);
+    if (!wrap) return;
+    const state = Array.from(wrap.querySelectorAll('.check-item')).map(el => el.classList.contains('done'));
+    try { localStorage.setItem('checklist_' + key, JSON.stringify(state)); } catch(e) {}
+  });
+}
+
+function loadChecklists() {
+  ['start','send','monthly'].forEach(key => {
+    try {
+      const state = JSON.parse(localStorage.getItem('checklist_' + key) || '[]');
+      const wrap  = document.getElementById('checklist-' + key);
+      if (!wrap) return;
+      wrap.querySelectorAll('.check-item').forEach((el, i) => {
+        if (state[i]) { el.classList.add('done'); el.querySelector('.check-box').textContent = '✓'; }
+      });
+    } catch(e) {}
+  });
+  updateProgress();
+}
+loadChecklists();
+
+// ── Code snippets ────────────────────────────────────────────────
+const CODES = {
+'nginx-proxy': {title:'nginx-proxy-template.conf', code:`# Универсальный шаблон Nginx reverse proxy
+# Замените: DOMAIN и PORT
+
+server {
+    listen 80;
+    server_name DOMAIN;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name DOMAIN;
+
+    ssl_certificate /etc/letsencrypt/live/DOMAIN/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/DOMAIN/privkey.pem;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_session_cache shared:SSL:10m;
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Strict-Transport-Security "max-age=31536000" always;
+
+    location / {
+        proxy_pass http://127.0.0.1:PORT;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        client_max_body_size 50m;
+        proxy_read_timeout 300s;
+    }
+}`},
+
+'nginx-mailcow': {title:'nginx-mailcow.conf', code:`# Nginx конфиг для Mailcow (когда Mailcow на нестандартных портах)
+# mailcow.conf: HTTP_PORT=8080 HTTP_BIND=127.0.0.1 HTTPS_PORT=8443 HTTPS_BIND=127.0.0.1
+
+server {
+    listen 80;
+    server_name mail.yourdomain.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name mail.yourdomain.com;
+
+    ssl_certificate /etc/letsencrypt/live/mail.yourdomain.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/mail.yourdomain.com/privkey.pem;
+
+    location / {
+        proxy_pass https://127.0.0.1:8443;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_ssl_verify off;
+        client_max_body_size 100m;
+        proxy_read_timeout 300s;
+    }
+}`},
+
+'nginx-n8n': {title:'nginx-n8n.conf (с WebSocket)', code:`# Nginx для n8n — обязательно нужен WebSocket
+server {
+    listen 80;
+    server_name n8n.yourdomain.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name n8n.yourdomain.com;
+
+    ssl_certificate /etc/letsencrypt/live/n8n.yourdomain.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/n8n.yourdomain.com/privkey.pem;
+
+    location / {
+        proxy_pass http://127.0.0.1:5678;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 86400;
+        client_max_body_size 50m;
+    }
+}`},
+
+'nginx-security': {title:'nginx-security-headers.conf', code:`# Файл с заголовками безопасности
+# Подключить через: include /etc/nginx/security-headers.conf;
+
+server_tokens off;
+add_header X-Frame-Options "SAMEORIGIN" always;
+add_header X-XSS-Protection "1; mode=block" always;
+add_header X-Content-Type-Options "nosniff" always;
+add_header Referrer-Policy "no-referrer-when-downgrade" always;
+add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+# Rate limiting
+limit_req_zone $binary_remote_addr zone=login:10m rate=5r/m;
+# Использование в location: limit_req zone=login burst=3 nodelay;`},
+
+'docker-n8n': {title:'docker-compose-n8n.yml', code:`version: "3.8"
+services:
+  n8n:
+    image: n8nio/n8n
+    restart: always
+    container_name: n8n
+    ports:
+      - "127.0.0.1:5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=сильный-пароль
+      - N8N_HOST=n8n.yourdomain.com
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - WEBHOOK_URL=https://n8n.yourdomain.com/
+      - GENERIC_TIMEZONE=Europe/Moscow
+      - N8N_EMAIL_MODE=smtp
+      - N8N_SMTP_HOST=postal.yourdomain.com
+      - N8N_SMTP_PORT=587
+      - N8N_SMTP_USER=smtp_user
+      - N8N_SMTP_PASS=smtp_pass
+      - N8N_SMTP_SENDER=noreply@yourdomain.com
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+volumes:
+  n8n_data:`},
+
+'docker-monitoring': {title:'docker-compose-monitoring.yml', code:`version: "3.8"
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    restart: always
+    container_name: uptime-kuma
+    ports:
+      - "127.0.0.1:3001:3001"
+    volumes:
+      - uptime_data:/app/data
+
+volumes:
+  uptime_data:`},
+
+'dns-full': {title:'dns-full-template.txt', code:`# Полный набор DNS записей для email-инфраструктуры
+# Замените: yourdomain.com → ваш домен, 65.21.123.45 → ваш IP
+
+# ─── A записи ───────────────────────────────────────────
+mail.yourdomain.com.        A      65.21.123.45
+postal.yourdomain.com.      A      65.21.123.45
+n8n.yourdomain.com.         A      65.21.123.45
+mailwizz.yourdomain.com.    A      65.21.123.45
+status.yourdomain.com.      A      65.21.123.45
+
+# ─── MX запись ──────────────────────────────────────────
+yourdomain.com.     MX  10  mail.yourdomain.com.
+
+# ─── SPF ────────────────────────────────────────────────
+yourdomain.com.     TXT  "v=spf1 ip4:65.21.123.45 mx ~all"
+
+# ─── DKIM (получить из Postal UI) ───────────────────────
+mail._domainkey.yourdomain.com.  TXT  "v=DKIM1; k=rsa; p=МИМ...КЛЮЧ...ОТ...POSTAL"
+
+# ─── DMARC ──────────────────────────────────────────────
+# Начать с p=none, затем p=quarantine, потом p=reject
+_dmarc.yourdomain.com.  TXT  "v=DMARC1; p=none; rua=mailto:dmarc@yourdomain.com; ruf=mailto:dmarc@yourdomain.com; fo=1"
+
+# ─── MTA-STS ────────────────────────────────────────────
+_mta-sts.yourdomain.com.       TXT  "v=STSv1; id=20260319"
+_smtp._tls.yourdomain.com.     TXT  "v=TLSRPTv1; rua=mailto:tls@yourdomain.com"
+
+# ─── BIMI (опционально) ─────────────────────────────────
+default._bimi.yourdomain.com.  TXT  "v=BIMI1; l=https://yourdomain.com/bimi/logo.svg;"`},
+
+'dns-spf': {title:'SPF записи — примеры', code:`# ─── Примеры SPF записей ───────────────────────────────
+
+# Базовая: только ваш IP
+"v=spf1 ip4:65.21.123.45 ~all"
+
+# С несколькими IP
+"v=spf1 ip4:65.21.123.45 ip4:65.21.123.46 ~all"
+
+# Строгая: только ваш IP, остальные отклонять
+"v=spf1 ip4:65.21.123.45 -all"
+
+# С MX записью (если IP совпадает с MX)
+"v=spf1 ip4:65.21.123.45 mx ~all"
+
+# ─── Значения модификатора ──────────────────────────────
+~all  → SoftFail (пометить как спам, не отклонять) — для начала
+-all  → HardFail (отклонить) — когда уверены
++all  → Pass всем — НИКОГДА не использовать
+?all  → Neutral — не рекомендуется
+
+# ─── Проверка SPF ───────────────────────────────────────
+dig TXT yourdomain.com +short | grep spf
+# Валидатор: mxtoolbox.com/spf.aspx`},
+
+'dns-dmarc': {title:'DMARC записи', code:`# ─── DMARC политики — от мягкой к строгой ─────────────
+
+# Шаг 1: только мониторинг (p=none)
+# Получаем отчёты, ничего не блокируем
+_dmarc.yourdomain.com. TXT "v=DMARC1; p=none; rua=mailto:dmarc@yourdomain.com"
+
+# Шаг 2: мягкая блокировка (p=quarantine) — через 2-4 недели
+# Неавторизованные письма → папка Спам
+_dmarc.yourdomain.com. TXT "v=DMARC1; p=quarantine; pct=25; rua=mailto:dmarc@yourdomain.com"
+# pct=25 → применять к 25% писем, постепенно увеличивать
+
+# Шаг 3: строгая политика (p=reject) — финальный шаг
+# Неавторизованные письма → отклонять
+_dmarc.yourdomain.com. TXT "v=DMARC1; p=reject; rua=mailto:dmarc@yourdomain.com; ruf=mailto:dmarc@yourdomain.com; fo=1"
+
+# ─── Параметры DMARC ────────────────────────────────────
+# rua  → куда слать агрегированные отчёты (ежедневно)
+# ruf  → куда слать forensic отчёты (при каждом fail)
+# fo=1 → слать отчёт при любом сбое (SPF или DKIM)
+# pct  → процент писем под политику (100 = все)
+# adkim → строгость DKIM: r=relaxed (по умолчанию), s=strict
+# aspf  → строгость SPF: r=relaxed, s=strict`},
+
+'script-monitor': {title:'server-monitor.sh', code:`#!/bin/bash
+# Мониторинг ресурсов сервера с алёртами в Telegram
+# Настройте: BOT_TOKEN и CHAT_ID
+
+BOT_TOKEN="ВАШ_ТОКЕН_БОТА"
+CHAT_ID="ВАШ_CHAT_ID"
+THRESHOLD_CPU=80
+THRESHOLD_RAM=85
+THRESHOLD_DISK=80
+
+send_alert() {
+    curl -s "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \\
+        -d "chat_id=${CHAT_ID}" \\
+        -d "text=$1" \\
+        -d "parse_mode=HTML" > /dev/null
+}
+
+CPU=$(top -bn1 | grep "Cpu(s)" | awk '{print $2}' | cut -d. -f1)
+RAM=$(free | awk '/Mem:/ {printf "%.0f", $3/$2*100}')
+DISK=$(df / | tail -1 | awk '{print $5}' | tr -d '%')
+
+ALERT=""
+[ "$CPU"  -gt "$THRESHOLD_CPU"  ] && ALERT+="🔴 CPU: ${CPU}%\\n"
+[ "$RAM"  -gt "$THRESHOLD_RAM"  ] && ALERT+="🔴 RAM: ${RAM}%\\n"
+[ "$DISK" -gt "$THRESHOLD_DISK" ] && ALERT+="🔴 Disk: ${DISK}%\\n"
+
+# Проверка Docker контейнеров
+for container in n8n uptime-kuma; do
+    STATUS=$(docker inspect -f '{{.State.Running}}' $container 2>/dev/null)
+    [ "$STATUS" != "true" ] && ALERT+="🔴 Контейнер ${container} не работает\\n"
+done
+
+if [ -n "$ALERT" ]; then
+    send_alert "⚠️ Сервер: есть проблемы\\n\\n${ALERT}"
+fi
+
+# Добавить в cron: */30 * * * * /root/server-monitor.sh`},
+
+'script-blacklist': {title:'blacklist-check.sh', code:`#!/bin/bash
+# Проверка IP в блэклистах с алёртом в Telegram
+# Запускать каждые 6 часов через cron
+
+IP="65.21.123.45"  # ваш IP
+BOT_TOKEN="ВАШ_ТОКЕН"
+CHAT_ID="ВАШ_CHAT_ID"
+REVERSED=$(echo $IP | awk -F. '{print $4"."$3"."$2"."$1}')
+
+check_blacklist() {
+    local zone=$1
+    local name=$2
+    local result=$(dig ${REVERSED}.${zone} A +short 2>/dev/null)
+    if [ -n "$result" ]; then
+        echo "LISTED: $name ($result)"
+        return 1
+    fi
+    return 0
+}
+
+ISSUES=""
+check_blacklist "zen.spamhaus.org"         "Spamhaus ZEN"   || ISSUES+="Spamhaus ZEN\\n"
+check_blacklist "b.barracudacentral.org"   "Barracuda BRBL" || ISSUES+="Barracuda BRBL\\n"
+check_blacklist "dnsbl.sorbs.net"          "SORBS"          || ISSUES+="SORBS\\n"
+
+if [ -n "$ISSUES" ]; then
+    curl -s "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \\
+        -d "chat_id=${CHAT_ID}" \\
+        -d "text=🚨 IP ${IP} в блэклистах:\\n${ISSUES}\\nПроверьте: mxtoolbox.com/blacklists.aspx?domain=${IP}"
+else
+    echo "$(date): ${IP} чисто"
+fi
+
+# Cron: 0 */6 * * * /root/blacklist-check.sh >> /var/log/blacklist.log 2>&1`},
+
+'script-diag': {title:'quick-diag.sh', code:`#!/bin/bash
+# Быстрая диагностика email-стека
+DOMAIN="yourdomain.com"
+
+echo "=== Диагностика $(date) ==="
+echo ""
+
+echo "--- Сервисы ---"
+systemctl is-active --quiet nginx && echo "✓ Nginx" || echo "✗ Nginx ОСТАНОВЛЕН"
+docker ps | grep -q mailcow  && echo "✓ Mailcow" || echo "✗ Mailcow"
+docker ps | grep -q postal   && echo "✓ Postal" || echo "✗ Postal"
+docker ps | grep -q n8n      && echo "✓ n8n" || echo "✗ n8n"
+
+echo ""
+echo "--- Ресурсы ---"
+echo "RAM: $(free -h | awk '/Mem:/{print $3"/"$2}')"
+echo "Disk: $(df -h / | awk 'NR==2{print $3"/"$2" ("$5" used)"}')"
+
+echo ""
+echo "--- DNS ---"
+echo "A mail.$DOMAIN: $(dig A mail.$DOMAIN +short)"
+echo "MX: $(dig MX $DOMAIN +short)"
+dig TXT $DOMAIN +short | grep -q spf && echo "SPF: OK" || echo "SPF: НЕ НАЙДЕН"
+dig TXT _dmarc.$DOMAIN +short | grep -q dmarc && echo "DMARC: OK" || echo "DMARC: НЕ НАЙДЕН"
+
+echo ""
+echo "--- Blacklist ---"
+IP=$(dig A mail.$DOMAIN +short | head -1)
+REV=$(echo $IP | awk -F. '{print $4"."$3"."$2"."$1}')
+dig ${REV}.zen.spamhaus.org A +short &>/dev/null \\
+  && echo "⚠ SPAMHAUS: НАЙДЕН!" || echo "✓ Spamhaus: чисто"
+
+echo ""
+echo "--- HTTP ---"
+curl -s -o /dev/null -w "mail.$DOMAIN: %{http_code}\\n" https://mail.$DOMAIN
+curl -s -o /dev/null -w "n8n.$DOMAIN: %{http_code}\\n" https://n8n.$DOMAIN`},
+
+'script-backup': {title:'backup-to-cloud.sh', code:`#!/bin/bash
+# Полный бэкап email-стека в облако через rclone
+# Требует: rclone настроен с remote "b2"
+# Cron: 0 2 * * * /root/backup-to-cloud.sh
+
+LOG="/var/log/backup.log"
+DATE=$(date +%Y%m%d_%H%M)
+echo "[$DATE] Начало бэкапа" >> $LOG
+
+# ─── Mailcow ────────────────────────────────────────────
+cd /opt/mailcow-dockerized
+./helper-scripts/backup_and_restore.sh backup all >> $LOG 2>&1
+
+rclone copy /var/mailcow/backup/ b2:mailstack-backups/mailcow/ \\
+  --include "*.gz" --include "*.sql" >> $LOG 2>&1
+
+find /var/mailcow/backup -maxdepth 1 -type d -mtime +7 -exec rm -rf {} + 2>>$LOG
+
+# ─── MailWizz ───────────────────────────────────────────
+DB_PASS=$(grep DB_PASSWORD /opt/mailwizz/.env 2>/dev/null | cut -d= -f2)
+if [ -n "$DB_PASS" ]; then
+  mysqldump -u mailwizz -p$DB_PASS mailwizz 2>/dev/null | \\
+    gzip > /root/backups/mailwizz_${DATE}.sql.gz
+  rclone copy /root/backups/ b2:mailstack-backups/mailwizz/ \\
+    --include "mailwizz_*.sql.gz" >> $LOG 2>&1
+fi
+
+# ─── n8n workflows ──────────────────────────────────────
+docker exec n8n n8n export:workflow --all \\
+  --output=/home/node/.n8n/backup.json 2>/dev/null
+docker cp n8n:/home/node/.n8n/backup.json \\
+  /root/backups/n8n-${DATE}.json 2>/dev/null
+rclone copy /root/backups/ b2:mailstack-backups/n8n/ \\
+  --include "n8n-*.json" >> $LOG 2>&1
+
+# ─── Конфиги ────────────────────────────────────────────
+tar czf /root/backups/configs-${DATE}.tar.gz \\
+  /opt/mailcow-dockerized/mailcow.conf \\
+  /opt/n8n/.env \\
+  /etc/nginx/sites-available/ \\
+  /etc/letsencrypt/renewal/ 2>/dev/null
+rclone copy /root/backups/ b2:mailstack-backups/configs/ \\
+  --include "configs-*.tar.gz" >> $LOG 2>&1
+
+# ─── Облачная очистка (>30 дней) ────────────────────────
+rclone delete b2:mailstack-backups --min-age 30d >> $LOG 2>&1
+find /root/backups -mtime +7 -delete 2>>$LOG
+
+echo "[$DATE] Бэкап завершён" >> $LOG`},
+
+'html-base': {title:'base-template.html', code:`<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Заголовок письма</title>
+  <style>
+    body { margin:0; padding:0; background:#f4f4f4; }
+    img  { border:0; display:block; }
+    @media screen and (max-width:600px) {
+      .container { width:100% !important; }
+      .hide-mob  { display:none !important; }
+      h1 { font-size:20px !important; }
+      .btn { width:100% !important; box-sizing:border-box !important; }
+    }
+    @media (prefers-color-scheme:dark) {
+      .email-bg   { background-color:#1a1a2e !important; }
+      .email-card { background-color:#ffffff !important; }
+      .email-text { color:#e0e0e0 !important; }
+    }
+  </style>
+</head>
+<body>
+<table width="100%" border="0" cellpadding="0" cellspacing="0"
+       class="email-bg" style="background:#f4f4f4;">
+  <tr><td align="center" style="padding:20px 0;">
+    <table class="container" width="600" border="0"
+           cellpadding="0" cellspacing="0"
+           class="email-card" style="background:#ffffff;">
+
+      <!-- Хедер -->
+      <tr><td style="background:#080a0f;padding:24px;text-align:center;">
+        <img src="https://yourdomain.com/logo.png" width="150" alt="MAILSTACK"
+             style="display:block;margin:0 auto;">
+      </td></tr>
+
+      <!-- Preheader (невидимый) -->
+      <tr><td>
+        <div style="display:none;font-size:1px;color:#fefefe;max-height:0;overflow:hidden;">
+          Текст preheader — 50-90 символов, дополняет тему письма
+        </div>
+      </td></tr>
+
+      <!-- Контент -->
+      <tr><td style="padding:32px 40px;font-family:Arial,sans-serif;">
+        <h1 style="margin:0 0 16px;font-size:24px;color:#080a0f;line-height:1.3;" class="email-text">
+          Привет, [FNAME]!
+        </h1>
+        <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#333333;" class="email-text">
+          Текст письма...
+        </p>
+
+        <!-- CTA кнопка (работает в Outlook) -->
+        <!--[if mso]>
+        <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml"
+          href="https://yourdomain.com/link"
+          style="height:44px;v-text-anchor:middle;width:200px;"
+          arcsize="5%" stroke="f" fillcolor="#00e5ff">
+          <w:anchorlock/>
+          <center style="color:#080a0f;font-family:Arial;font-size:16px;font-weight:bold;">
+            Открыть →
+          </center>
+        </v:roundrect>
+        <![endif]-->
+        <!--[if !mso]><!-->
+        <table border="0" cellpadding="0" cellspacing="0"><tr>
+          <td style="background:#00e5ff;border-radius:4px;">
+            <a href="https://yourdomain.com/link" class="btn"
+               style="display:block;padding:12px 24px;color:#080a0f;
+                      font-weight:bold;text-decoration:none;font-size:16px;
+                      font-family:Arial,sans-serif;">
+              Открыть →
+            </a>
+          </td>
+        </tr></table>
+        <!--<![endif]-->
+
+        <p style="margin:24px 0 0;font-size:14px;color:#666;font-family:Arial,sans-serif;">
+          P.S. Ценный постскриптум
+        </p>
+      </td></tr>
+
+      <!-- Футер -->
+      <tr><td style="padding:20px 40px;text-align:center;font-size:12px;
+                     color:#888888;border-top:1px solid #eeeeee;
+                     font-family:Arial,sans-serif;">
+        <p style="margin:0 0 8px;">MAILSTACK · yourdomain.com</p>
+        <p style="margin:0;">
+          <a href="[UNSUBSCRIBE_URL]" style="color:#888888;text-decoration:underline;">
+            Отписаться
+          </a>
+        </p>
+      </td></tr>
+
+    </table>
+  </td></tr>
+</table>
+
+</div>
+
+<script>
+const RESOURCE_TOKENS = ['allaccess2025'];
+const RESOURCE_STORAGE_KEY = 'resources_access';
+
+// Rate limiting
+let lockAttempts = parseInt(sessionStorage.getItem('lock_attempts') || '0');
+let lockUntil   = parseInt(sessionStorage.getItem('lock_until')    || '0');
+
+function checkResourceToken() {
+  const now = Date.now();
+
+  if (now < lockUntil) {
+    const mins = Math.ceil((lockUntil - now) / 60000);
+    document.getElementById('lockError').textContent = `Слишком много попыток. Подождите ${mins} мин.`;
+    return;
+  }
+
+  const token = document.getElementById('resourceToken').value.trim().toLowerCase();
+  const valid = RESOURCE_TOKENS.map(t => t.toLowerCase());
+
+  if (valid.includes(token)) {
+    // Успех
+    try { localStorage.setItem(RESOURCE_STORAGE_KEY, token); } catch(e) {}
+    sessionStorage.removeItem('lock_attempts');
+    sessionStorage.removeItem('lock_until');
+    openResources();
+  } else {
+    lockAttempts++;
+    sessionStorage.setItem('lock_attempts', lockAttempts);
+    if (lockAttempts >= 5) {
+      const until = now + 15 * 60 * 1000;
+      sessionStorage.setItem('lock_until', until);
+      document.getElementById('lockError').textContent = 'Заблокировано на 15 минут.';
+    } else {
+      document.getElementById('lockError').textContent = `Неверный токен. Осталось попыток: ${5 - lockAttempts}`;
+    }
+    document.getElementById('resourceToken').style.borderColor = '#ff6b6b';
+    setTimeout(() => { document.getElementById('resourceToken').style.borderColor = 'var(--border)'; }, 1500);
+  }
+}
+
+function openResources() {
+  document.getElementById('lockOverlay').style.display = 'none';
+  document.querySelector('.resources-content').style.display = 'block';
+  document.body.style.overflow = '';
+}
+
+// Проверяем сохранённый токен
+(function() {
+  const saved = localStorage.getItem(RESOURCE_STORAGE_KEY);
+  // Также проверяем URL параметр
+  const urlToken = new URLSearchParams(window.location.search).get('token');
+  const token = urlToken || saved;
+
+  if (token && RESOURCE_TOKENS.map(t=>t.toLowerCase()).includes(token.toLowerCase())) {
+    openResources();
+  } else {
+    document.getElementById('lockOverlay').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+})();
+</script>
+
+</body>
+</html>`},
+};
+
+function showCode(key) {
+  const item = CODES[key];
+  if (!item) return;
+  document.getElementById('popupTitle').textContent = item.title;
+  document.getElementById('popupCode').textContent = item.code;
+  document.getElementById('codePopup').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCode() {
+  document.getElementById('codePopup').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function copyPopupCode() {
+  const code = document.getElementById('popupCode').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.querySelector('.code-box-footer .btn-primary');
+    btn.textContent = 'Скопировано!';
+    setTimeout(() => btn.textContent = 'Копировать', 2000);
+  });
+}
+
+document.getElementById('codePopup').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeCode();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCode(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,2032 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<script>
+window._GATE_TOKENS=["docker2025","yC8vZ4XfF9Zp!yu"];
+window._GATE_KEY="docker";
+window.currentLesson = 1;
+try { window.completed = new Set(JSON.parse(localStorage.getItem('docker_done') || '[]')); } catch(e) { window.completed = new Set(); }
+var completed = window.completed;
+var currentLesson = window.currentLesson;
+(function(){
+  function _ls(op,k,v){try{if(op==="g")return localStorage.getItem(k);if(op==="s")localStorage.setItem(k,v);if(op==="r")localStorage.removeItem(k);}catch(e){}}
+  function _err(el,msg){if(el){el.textContent=msg;el.style.display="block";}}
+  function _checkPwd(){
+    var gi=document.getElementById("gateInput");
+    if(!gi)return;
+    var val=gi.value.trim();
+    var err=document.getElementById("gateError");
+    var tokens=window._GATE_TOKENS||[];
+    var K=window._GATE_KEY||"course";
+    var att=parseInt(_ls("g",K+"_attempts")||"0");
+    var lk=parseInt(_ls("g",K+"_lock")||"0");
+    if(lk&&Date.now()<lk){_err(err,"Подождите "+Math.ceil((lk-Date.now())/60000)+" мин.");return;}
+    if(tokens.includes(val)){
+      _ls("s",K+"_access",val);_ls("r",K+"_attempts");_ls("r",K+"_lock");
+      if(typeof openCourse==="function"){openCourse();}
+      else{var pg=document.getElementById("passwordGate");var cl=document.getElementById("courseLayout");if(pg)pg.style.display="none";if(cl)cl.style.display="grid";}
+    }else{
+      var n=att+1;_ls("s",K+"_attempts",String(n));
+      if(n>=5){_ls("s",K+"_lock",String(Date.now()+15*60*1000));_ls("s",K+"_attempts","0");_err(err,"Слишком много попыток. Подождите 15 минут.");}
+      else{_err(err,"Неверный токен. Попыток осталось: "+(5-n));if(gi)gi.style.borderColor="#ff6b6b";}
+    }
+  }
+  window.checkPassword=_checkPwd;
+  document.addEventListener("DOMContentLoaded",function(){
+    var K=window._GATE_KEY||"docker";
+    var tokens=window._GATE_TOKENS||[];
+    try{var s=localStorage.getItem(K+"_access");if(s&&tokens.includes(s)){if(typeof openCourse==="function")openCourse();return;}}catch(e){}
+    try{var u=new URLSearchParams(location.search).get("token");if(u&&tokens.includes(u)){try{localStorage.setItem(K+"_access",u);}catch(e){}if(typeof openCourse==="function")openCourse();}}catch(e){}
+  });
+})();
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Курс: Docker для email-стека — MAILSTACK</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23080a0f'/><rect x='4' y='8' width='24' height='16' rx='2' fill='none' stroke='rgba(255,255,255,.22)' stroke-width='1.2'/><polyline points='4,8 16,18 28,8' fill='none' stroke='%2300e5ff' stroke-width='2' stroke-linejoin='round'/><text x='7' y='26' fill='%2300e5ff' font-family='monospace' font-size='8' font-weight='bold'>›_</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+<style>
+/* ── COURSE LAYOUT ── */
+.course-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 0;
+  min-height: 100vh;
+  padding-top: 61px;
+}
+
+/* Sidebar */
+.course-sidebar {
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  position: sticky;
+  top: 61px;
+  height: calc(100vh - 61px);
+  overflow-y: auto;
+  padding: 32px 0;
+}
+.sidebar-title {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  padding: 0 24px;
+  margin-bottom: 16px;
+}
+.sidebar-module {
+  margin-bottom: 8px;
+}
+.sidebar-module-title {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  padding: 8px 24px;
+  margin-top: 8px;
+}
+.sidebar-lesson {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 24px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .2s;
+  border-left: 2px solid transparent;
+  text-decoration: none;
+}
+.sidebar-lesson:hover { color: var(--text); background: rgba(255,255,255,.03); }
+.sidebar-lesson.active { color: var(--accent); border-left-color: var(--accent); background: rgba(0,229,255,.05); }
+.sidebar-lesson.done { color: var(--accent3); }
+.lesson-num {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+}
+.sidebar-lesson.active .lesson-num { border-color: var(--accent); color: var(--accent); }
+.sidebar-lesson.done .lesson-num { border-color: var(--accent3); background: var(--accent3); color: var(--bg); }
+.sidebar-progress {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  margin-top: 16px;
+}
+.progress-bar-wrap {
+  background: var(--surface);
+  height: 4px;
+  border-radius: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: var(--accent3);
+  border-radius: 2px;
+  transition: width .5s ease;
+}
+
+/* Lesson content */
+.course-content {
+  padding: 48px 64px;
+  max-width: 860px;
+}
+.lesson-header {
+  margin-bottom: 40px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+}
+.lesson-module-tag {
+  font-size: 11px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 12px;
+}
+.lesson-title {
+  font-family: var(--font-head);
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 800;
+  color: var(--heading);
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+  line-height: 1.1;
+}
+.lesson-meta {
+  display: flex;
+  gap: 20px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Content blocks */
+.lesson-body h2 {
+  font-family: var(--font-head);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--heading);
+  margin: 40px 0 16px;
+  letter-spacing: -.5px;
+}
+.lesson-body h3 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--heading);
+  margin: 28px 0 12px;
+}
+.lesson-body p {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+.lesson-body ul, .lesson-body ol {
+  padding-left: 20px;
+  margin-bottom: 16px;
+}
+.lesson-body li {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.8;
+  margin-bottom: 6px;
+}
+
+/* Code blocks */
+.code-block {
+  background: #0a0e18;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  padding: 20px 24px;
+  margin: 20px 0;
+  border-radius: 0;
+  position: relative;
+  overflow-x: auto;
+}
+.code-block pre {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: #c9d1d9;
+  line-height: 1.7;
+  margin: 0;
+  white-space: pre;
+}
+.code-block .comment { color: #6e7681; }
+.code-block .cmd { color: var(--accent); }
+.code-block .str { color: var(--accent3); }
+.code-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+}
+.copy-btn {
+  position: absolute;
+  top: 12px; right: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 11px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  transition: all .2s;
+}
+.copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+/* Note / Warning / Tip blocks */
+.note-block {
+  padding: 16px 20px;
+  margin: 20px 0;
+  border-left: 3px solid;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.note-block.info { border-color: var(--accent); background: rgba(0,229,255,.05); color: var(--text); }
+.note-block.warn { border-color: #f0a500; background: rgba(240,165,0,.05); color: var(--text); }
+.note-block.tip  { border-color: var(--accent3); background: rgba(0,255,136,.05); color: var(--text); }
+.note-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 6px; }
+.note-block.info .note-label { color: var(--accent); }
+.note-block.warn .note-label { color: #f0a500; }
+.note-block.tip  .note-label { color: var(--accent3); }
+
+/* Step counter */
+.steps-list { list-style: none; padding: 0; margin: 20px 0; }
+.steps-list li {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  align-items: flex-start;
+}
+.step-n {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+}
+.step-text { font-size: 14px; color: var(--text); line-height: 1.7; padding-top: 4px; }
+
+/* Nav between lessons */
+.lesson-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 56px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+  gap: 16px;
+}
+.lesson-nav-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 24px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  cursor: pointer;
+  transition: all .2s;
+  text-decoration: none;
+  max-width: 280px;
+}
+.lesson-nav-btn:hover { border-color: var(--accent); background: var(--surface); }
+.nav-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.nav-title { font-size: 14px; color: var(--heading); font-weight: 500; }
+
+/* Password gate */
+#passwordGate {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gate-box {
+  text-align: center;
+  max-width: 420px;
+  padding: 48px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+}
+.gate-logo { margin-bottom: 24px; }
+.gate-title { font-family: var(--font-head); font-size: 24px; font-weight: 800; color: var(--heading); margin-bottom: 8px; }
+.gate-desc { font-size: 13px; color: var(--muted); margin-bottom: 28px; line-height: 1.7; }
+.gate-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px 16px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  margin-bottom: 12px;
+  outline: none;
+  transition: border-color .2s;
+  box-sizing: border-box;
+}
+.gate-input:focus { border-color: var(--accent); }
+.gate-error { font-size: 12px; color: #ff6b6b; margin-bottom: 12px; display: none; }
+.gate-buy { font-size: 13px; color: var(--muted); margin-top: 20px; }
+.gate-buy a { color: var(--accent); text-decoration: none; }
+
+@media (max-width: 900px) {
+  .course-layout { grid-template-columns: 1fr; }
+  .course-sidebar { position: static; height: auto; }
+  .course-content { padding: 32px 24px; }
+}
+
+/* ── Прогресс курса v2 ─────────────────────────────────── */
+.progress-wrap { padding:14px 20px 12px; border-bottom:1px solid var(--border); }
+.progress-label { display:flex; justify-content:space-between; font-size:10px; color:var(--muted); font-family:var(--font-mono); margin-bottom:6px; text-transform:uppercase; letter-spacing:.08em; }
+.progress-fill  { height:3px; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:2px; transition:width .4s; }
+.sidebar-item-done::after { content:'✓'; position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:10px; color:var(--accent3); }
+.sidebar-lesson  { position:relative; }
+.complete-btn    { display:flex; align-items:center; gap:8px; padding:10px 16px; background:rgba(0,255,136,.05); border:1px solid rgba(0,255,136,.2); color:var(--accent3); font-size:11px; font-family:var(--font-mono); cursor:pointer; width:100%; margin-top:16px; transition:all .15s; }
+.complete-btn:hover { background:rgba(0,255,136,.12); }
+.complete-btn.done  { background:rgba(0,255,136,.1); border-color:var(--accent3); }
+
+/* ── Course Quiz ───────────────────────────────────────── */
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+#courseFinale { animation: fadeIn .5s ease; }
+
+/* ── Course Quiz ─────────────────────────────────────────── */
+.cquiz-wrap    { margin-top: 40px; }
+.cquiz-header  { padding: 20px 24px; background: rgba(123,97,255,.06); border: 1px solid rgba(123,97,255,.2); border-bottom: none; }
+.cquiz-title   { font-family: var(--font-head); font-size: 18px; font-weight: 800; color: var(--heading); margin-bottom: 4px; }
+.cquiz-sub     { font-size: 12px; color: var(--muted); font-family: var(--font-mono); }
+.cquiz-q       { background: var(--bg2); border: 1px solid var(--border); border-top: none; padding: 20px 24px; }
+.cquiz-qtext   { font-size: 15px; color: var(--heading); font-weight: 600; margin-bottom: 14px; line-height: 1.5; }
+.cquiz-qn      { font-size: 10px; color: var(--muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 8px; }
+.cquiz-opts    { display: flex; flex-direction: column; gap: 6px; margin-bottom: 0; }
+.cquiz-opt     { display: flex; gap: 10px; align-items: center; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); cursor: pointer; font-size: 13px; color: var(--text); transition: all .15s; }
+.cquiz-opt:hover    { border-color: var(--accent); }
+.cquiz-opt.correct  { border-color: var(--accent3); background: rgba(0,255,136,.06); color: var(--accent3); }
+.cquiz-opt.wrong    { border-color: #ff6b6b; background: rgba(255,107,107,.05); color: #ff6b6b; }
+.cquiz-opt-key { min-width: 22px; height: 22px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 10px; font-family: var(--font-mono); color: var(--muted); flex-shrink: 0; }
+.cquiz-opt.correct .cquiz-opt-key { border-color: var(--accent3); color: var(--accent3); }
+.cquiz-opt.wrong    .cquiz-opt-key { border-color: #ff6b6b; color: #ff6b6b; }
+.cquiz-explain { margin-top: 10px; padding: 10px 14px; background: var(--surface); border-left: 3px solid var(--accent); font-size: 12px; color: var(--muted); line-height: 1.7; display: none; }
+.cquiz-explain.show { display: block; }
+.cquiz-progress { padding: 14px 24px; background: var(--bg2); border: 1px solid var(--border); border-top: none; display: flex; align-items: center; gap: 14px; }
+.cquiz-bar     { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.cquiz-fill    { height: 100%; background: linear-gradient(90deg, var(--accent3), var(--accent)); border-radius: 2px; transition: width .4s; }
+.cquiz-result  { padding: 24px; background: var(--surface); border: 1px solid rgba(0,229,255,.2); border-top: none; text-align: center; display: none; }
+.cquiz-result.show { display: block; }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="passwordGate">
+  <div class="gate-box">
+    <div class="gate-logo">
+      <svg width="210" height="22" viewBox="0 0 270 28" fill="none">
+        <rect x="1" y="1" width="40" height="26" rx="3" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1"/>
+        <polyline points="1,1 21,14 41,1" fill="none" stroke="#00e5ff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+        <text x="5" y="24" fill="#00e5ff" font-family="'JetBrains Mono', monospace" font-size="12">›_</text>
+        <text x="50" y="21" fill="#ffffff" font-family="'Syne', sans-serif" font-size="20" font-weight="800" letter-spacing="-1">MAIL<tspan fill="#00e5ff">STACK</tspan></text>
+      </svg>
+    </div>
+    <div class="gate-title">Курс: Docker для email-стека</div>
+    <div class="gate-desc">Этот курс доступен после оплаты. Введите токен доступа который вы получили в Telegram после покупки.</div>
+    <input type="password" id="gateInput" class="gate-input" placeholder="Введите токен доступа" onkeydown="if(event.key==='Enter')checkPassword()">
+    <div class="gate-error" id="gateError">Неверный токен. Проверьте сообщение в Telegram или напишите нам.</div>
+    <button onclick="checkPassword()" id="pwBtn" class="btn-primary" style="width:100%">Войти в курс</button>
+    <div class="gate-buy">Нет доступа? <a href="courses.html">Купить курс →</a></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="index.html" class="logo">
+    <svg width="270" height="28" viewBox="0 0 270 28" fill="none">
+      <rect x="1" y="1" width="40" height="26" rx="3" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1"/>
+      <polyline points="1,1 21,14 41,1" fill="none" stroke="#00e5ff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      <text x="5" y="24" fill="#00e5ff" font-family="'JetBrains Mono', monospace" font-size="12">›_</text>
+      <text x="50" y="21" fill="#ffffff" font-family="'Syne', sans-serif" font-size="20" font-weight="800" letter-spacing="-1">MAIL<tspan fill="#00e5ff">STACK</tspan></text>
+    </svg>
+  </a>
+    <ul class="nav-links">
+    <li><a href="index.html">Главная</a></li>
+    <li><a href="services.html">Услуги</a></li>
+    <li><a href="courses.html" class="active">Курсы</a></li>
+    <li><a href="compare.html">Сравнение</a></li>
+    <li><a href="servers.html">Серверы</a></li>
+    <li><a href="portfolio.html">Кейсы</a></li>
+  </ul>
+  <a href="courses.html" class="nav-cta">Все курсы</a>
+  <button class="nav-burger" id="navBurger"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- COURSE LAYOUT -->
+<div class="course-layout" id="courseLayout" style="display:none">
+
+  <!-- SIDEBAR -->
+  <aside class="course-sidebar">
+    <div class="sidebar-title">Docker для email-стека</div>
+    <div class="progress-wrap"><span id="progressText" style="font-size:12px;color:var(--muted);font-family:var(--font-mono)">0 / 0 пройдено</span></div>
+
+    <div class="sidebar-module-title">Модуль 1 · Основы Docker</div>
+    <a class="sidebar-lesson" data-n="1" onclick="showLesson(1)" href="#">
+      <div class="lesson-num">1</div>Контейнеры vs виртуальные машины — в чём разница
+    </a>
+    <a class="sidebar-lesson" data-n="2" onclick="showLesson(2)" href="#">
+      <div class="lesson-num">2</div>Установка Docker на Ubuntu
+    </a>
+    <a class="sidebar-lesson" data-n="3" onclick="showLesson(3)" href="#">
+      <div class="lesson-num">3</div>Основные команды Docker
+    </a>
+    <div class="sidebar-module-title">Модуль 2 · Docker Compose</div>
+    <a class="sidebar-lesson" data-n="4" onclick="showLesson(4)" href="#">
+      <div class="lesson-num">4</div>Что такое docker-compose.yml
+    </a>
+    <a class="sidebar-lesson" data-n="5" onclick="showLesson(5)" href="#">
+      <div class="lesson-num">5</div>Команды Docker Compose
+    </a>
+    <a class="sidebar-lesson" data-n="6" onclick="showLesson(6)" href="#">
+      <div class="lesson-num">6</div>Volumes и Networks — хранение данных
+    </a>
+    <a class="sidebar-lesson" data-n="7" onclick="showLesson(7)" href="#">
+      <div class="lesson-num">7</div>Переменные окружения — файл .env
+    </a>
+    <div class="sidebar-module-title">Модуль 3 · Docker для email</div>
+    <a class="sidebar-lesson" data-n="8" onclick="showLesson(8)" href="#">
+      <div class="lesson-num">8</div>Управление контейнерами Mailcow
+    </a>
+    <a class="sidebar-lesson" data-n="9" onclick="showLesson(9)" href="#">
+      <div class="lesson-num">9</div>Обновление контейнеров без даунтайма
+    </a>
+    <a class="sidebar-lesson" data-n="10" onclick="showLesson(10)" href="#">
+      <div class="lesson-num">10</div>Логи, диагностика и очистка
+    </a>
+    <a class="sidebar-lesson" data-n="11" onclick="showLesson(11)" href="#">
+      <div class="lesson-num">11</div>Backup Docker Volumes
+    </a>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="course-content" id="lessonContent">
+    <!-- Уроки рендерятся JS-ом -->
+  </main>
+
+</div>
+
+<script src="js/main.js"></script>
+<script>
+function openCourse() {
+  document.getElementById('passwordGate').style.display = 'none';
+  document.getElementById('courseLayout').style.display = 'grid';
+  window._courseOpen = true;
+  // showLesson вызовется из DOMContentLoaded когда lessons загружены
+  if (typeof showLesson === 'function') {
+    showLesson(window.currentLesson || 1);
+  }
+}
+
+// Проверяем сохранённый доступ
+
+
+
+// ── PROGRESS SYSTEM ──
+
+function getDone() {
+  try { return JSON.parse(localStorage.getItem(DONE_KEY) || '[]'); } catch(e) { return []; }
+}
+
+function saveDone(arr) {
+  try { localStorage.setItem(DONE_KEY, JSON.stringify(arr)); } catch(e) {}
+}
+
+function markDone(n) {
+  var done = getDone();
+  if (done.indexOf(n) < 0) done.push(n);
+  saveDone(done);
+  refreshProgress();
+}
+
+function refreshProgress() {
+  var done = getDone();
+  var total = Object.keys(lessons).length;
+  // Счётчик
+  var el = document.getElementById('progressText');
+  if (el) el.textContent = done.length + ' / ' + total + ' пройдено';
+  // Сайдбар — зелёный для пройденных
+  document.querySelectorAll('.sidebar-lesson').forEach(function(item) {
+    var attr = item.getAttribute('onclick') || '';
+    var match = attr.match(/showLesson.(\d+)./);
+    if (!match) return;
+    var num = parseInt(match[1]);
+    if (done.indexOf(num) >= 0) {
+      item.classList.add('done');
+    } else {
+      item.classList.remove('done');
+    }
+  });
+}
+
+function updateProgress() { refreshProgress(); }
+
+function showLesson(n) {
+  // Помечаем предыдущий урок как пройденный
+  if (typeof currentLesson !== 'undefined' && currentLesson !== n && currentLesson >= 1) {
+    markDone(currentLesson);
+  }
+  currentLesson = n;
+  window.currentLesson = n;
+  var lesson = lessons[n];
+  if (!lesson) return;
+
+  // Сайдбар — active + done
+  refreshProgress();
+  document.querySelectorAll('.sidebar-lesson').forEach(function(el) {
+    var attr = el.getAttribute('onclick') || '';
+    var m = attr.match(/showLesson.(\d+)./);
+    if (!m) return;
+    el.classList.toggle('active', parseInt(m[1]) === n);
+  });
+
+  // Рендерим контент
+  var total = Object.keys(lessons).length;
+  var prev = n > 1 ? lessons[n-1] : null;
+  var next = n < total ? lessons[n+1] : null;
+
+  var prevBtn = prev
+    ? '<a class="lesson-nav-btn" onclick="showLesson(' + (n-1) + ')" href="#"><div class="nav-label">← Назад</div><div class="nav-title">' + prev.title + '</div></a>'
+    : '<div></div>';
+  var nextBtn = next
+    ? '<a class="lesson-nav-btn" onclick="showLesson(' + (n+1) + ')" href="#" style="text-align:right"><div class="nav-label">Вперёд →</div><div class="nav-title">' + next.title + '</div></a>'
+    : '<div></div>';
+
+  document.getElementById('lessonContent').innerHTML =
+    '<div class="lesson-header">'
+    + '<div class="lesson-module-tag">' + lesson.module + '</div>'
+    + '<div class="lesson-title">' + lesson.title + '</div>'
+    + '<div class="lesson-meta"><span>⏱ ' + lesson.time + '</span><span>Урок ' + n + ' из ' + total + '</span></div>'
+    + '</div>'
+    + '<div class="lesson-body">' + lesson.content + '</div>'
+    + '<div class="lesson-nav">' + prevBtn + nextBtn + '</div>';
+
+  refreshProgress();
+  window.scrollTo(0, 0);
+  if (n === 11) {
+    var qb = document.getElementById("quizBlock");
+    if (qb && typeof quizInit_docker === "function") quizInit_docker();
+  }
+}
+
+// ── LESSONS DATA ──
+var lessons = {
+  1: {
+    module: 'Модуль 1 · Основы Docker',
+    title: 'Контейнеры vs виртуальные машины — в чём разница',
+    time: '12 мин',
+    content: `
+
+      <div style="margin:0 0 28px;padding:20px 24px;background:var(--bg2);border:1px solid rgba(0,229,255,.15)">
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px">📍 Дорожная карта обучения</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <a href="course-vps.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">VPS с нуля ✓</a>
+          <a href="course-dns.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">DNS для email ✓</a>
+          <span style="color:var(--muted);font-size:16px">→</span>
+          <span style="font-size:11px;padding:4px 10px;background:rgba(0,229,255,.08);border:1px solid var(--accent);color:var(--accent);font-family:var(--font-mono);font-weight:700">📖 Docker</span>
+          <span style="color:var(--muted);font-size:16px">→</span>
+          <a href="course-mailcow-postal.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">Mailcow+Postal</a>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:10px">После этого курса: Mailcow+Postal</div>
+      </div>      <div style="margin:0 0 32px;padding:20px 24px;background:var(--bg2);border:1px solid rgba(0,229,255,.15)">
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px">📍 Где вы находитесь</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <a href="course-vps.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">VPS с нуля ✓</a>
+          <span style="color:var(--muted);font-size:16px">→</span>
+          <span style="font-size:11px;padding:4px 10px;background:rgba(0,229,255,.08);border:1px solid var(--accent);color:var(--accent);font-family:var(--font-mono);font-weight:700">📖 Docker</span>
+          <span style="color:var(--muted);font-size:16px">→</span>
+          <a href="course-mailcow-postal.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">Mailcow + Postal</a>
+        </div>
+        <div style="font-size:11px;color:var(--accent3);margin-top:10px">✓ Нужен перед установкой Mailcow — он работает через Docker</div>
+      </div>
+
+      <h2>Аналогия: квартира vs комната в общежитии</h2>
+      <p>Виртуальная машина (VM) — это как отдельная квартира. У неё своя кухня, ванная, стены. Полностью изолирована. Но занимает много места и требует времени на «переезд».</p>
+      <p>Docker-контейнер — это как комната в общежитии. Своя комната, своё пространство, но кухня и ванная — общие (ядро операционной системы). Занимает мало места, запускается за секунды.</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin:20px 0">
+        <div style="background:var(--bg2);padding:20px">
+          <div style="font-size:14px;font-weight:700;color:var(--heading);margin-bottom:12px">🏠 Виртуальная машина</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-size:12px;color:var(--muted);padding:6px 10px;background:var(--bg);border:1px solid var(--border)">Своя OS (Ubuntu, Windows)</div>
+            <div style="font-size:12px;color:var(--muted);padding:6px 10px;background:var(--bg);border:1px solid var(--border)">Своё ядро Linux</div>
+            <div style="font-size:12px;color:var(--muted);padding:6px 10px;background:var(--bg);border:1px solid var(--border)">Старт: 1–2 минуты</div>
+            <div style="font-size:12px;color:var(--muted);padding:6px 10px;background:var(--bg);border:1px solid var(--border)">Размер: гигабайты</div>
+            <div style="font-size:12px;color:var(--muted);padding:6px 10px;background:var(--bg);border:1px solid var(--border)">Изоляция: полная</div>
+          </div>
+        </div>
+        <div style="background:var(--bg2);padding:20px;border-left:1px solid var(--border)">
+          <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:12px">🐳 Docker-контейнер</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-size:12px;color:var(--muted);padding:6px 10px;background:var(--bg);border:1px solid rgba(0,229,255,.2)">Только нужные программы</div>
+            <div style="font-size:12px;color:var(--muted);padding:6px 10px;background:var(--bg);border:1px solid rgba(0,229,255,.2)">Общее ядро хоста</div>
+            <div style="font-size:12px;color:var(--muted);padding:6px 10px;background:var(--bg);border:1px solid rgba(0,229,255,.2)">Старт: секунды</div>
+            <div style="font-size:12px;color:var(--muted);padding:6px 10px;background:var(--bg);border:1px solid rgba(0,229,255,.2)">Размер: мегабайты</div>
+            <div style="font-size:12px;color:var(--muted);padding:6px 10px;background:var(--bg);border:1px solid rgba(0,229,255,.2)">Изоляция: процессная</div>
+          </div>
+        </div>
+      </div>
+
+      <h2>Зачем Docker для email-стека</h2>
+      <p>Mailcow состоит из 15+ сервисов: Postfix, Dovecot, Nginx, MySQL, Redis, Rspamd и другие. Без Docker их нужно было бы устанавливать и настраивать вручную — это дни работы. С Docker — одна команда и всё запущено.</p>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:16px 0">
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Изоляция — сервисы не мешают друг другу</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Обновление — один контейнер не ломает остальные</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Воспроизводимость — одинаково работает на любом сервере</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Backup — скопируй папку с данными и всё готово</span>
+        </div>
+      </div>
+
+      <h2>Как Docker работает под капотом</h2>
+      <div style="margin:16px 0;border:1px solid var(--border)">
+        <svg width="100%" viewBox="0 0 640 160" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono',monospace">
+          <rect width="640" height="160" fill="#080a0f"/>
+          <rect x="20" y="110" width="600" height="35" rx="4" fill="#0d1117" stroke="#5a6278" stroke-width="1"/>
+          <text x="320" y="133" text-anchor="middle" fill="#5a6278" font-size="11">Linux Kernel (общее ядро хоста)</text>
+          <rect x="30" y="65" width="130" height="38" rx="3" fill="#0d1117" stroke="#00e5ff" stroke-width="1.5"/>
+          <text x="95" y="84" text-anchor="middle" fill="#00e5ff" font-size="10" font-weight="700">Mailcow</text>
+          <text x="95" y="97" text-anchor="middle" fill="#5a6278" font-size="9">15 контейнеров</text>
+          <rect x="175" y="65" width="130" height="38" rx="3" fill="#0d1117" stroke="#7b61ff" stroke-width="1.5"/>
+          <text x="240" y="84" text-anchor="middle" fill="#7b61ff" font-size="10" font-weight="700">Postal</text>
+          <text x="240" y="97" text-anchor="middle" fill="#5a6278" font-size="9">4 контейнера</text>
+          <rect x="320" y="65" width="130" height="38" rx="3" fill="#0d1117" stroke="#00ff88" stroke-width="1.5"/>
+          <text x="385" y="84" text-anchor="middle" fill="#00ff88" font-size="10" font-weight="700">n8n</text>
+          <text x="385" y="97" text-anchor="middle" fill="#5a6278" font-size="9">1 контейнер</text>
+          <rect x="465" y="65" width="130" height="38" rx="3" fill="#0d1117" stroke="#f0a500" stroke-width="1.5"/>
+          <text x="530" y="84" text-anchor="middle" fill="#f0a500" font-size="10" font-weight="700">Chatwoot</text>
+          <text x="530" y="97" text-anchor="middle" fill="#5a6278" font-size="9">3 контейнера</text>
+          <text x="320" y="25" text-anchor="middle" fill="#e8eaf0" font-size="11">Каждое приложение изолировано, но делит одно ядро</text>
+          <line x1="95" y1="103" x2="95" y2="110" stroke="#5a6278" stroke-width="1"/>
+          <line x1="240" y1="103" x2="240" y2="110" stroke="#5a6278" stroke-width="1"/>
+          <line x1="385" y1="103" x2="385" y2="110" stroke="#5a6278" stroke-width="1"/>
+          <line x1="530" y1="103" x2="530" y2="110" stroke="#5a6278" stroke-width="1"/>
+        </svg>
+      </div>
+
+      <h2>Ключевые концепции Docker</h2>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:16px 0">
+        <div style="padding:12px 16px;background:var(--bg2);border:1px solid var(--border);display:grid;grid-template-columns:120px 1fr;gap:12px">
+          <div style="font-size:13px;color:var(--accent);font-weight:700">Image (образ)</div>
+          <div style="font-size:12px;color:var(--muted)">Шаблон контейнера — как ISO-файл для виртуалки. Скачивается из Docker Hub. Неизменяем.</div>
+        </div>
+        <div style="padding:12px 16px;background:var(--bg2);border:1px solid var(--border);display:grid;grid-template-columns:120px 1fr;gap:12px">
+          <div style="font-size:13px;color:var(--accent);font-weight:700">Container</div>
+          <div style="font-size:12px;color:var(--muted)">Запущенный экземпляр образа. Как запущенная программа из установочного файла.</div>
+        </div>
+        <div style="padding:12px 16px;background:var(--bg2);border:1px solid var(--border);display:grid;grid-template-columns:120px 1fr;gap:12px">
+          <div style="font-size:13px;color:var(--accent);font-weight:700">Volume</div>
+          <div style="font-size:12px;color:var(--muted)">Постоянное хранилище данных. Данные в volume не удаляются при пересоздании контейнера.</div>
+        </div>
+        <div style="padding:12px 16px;background:var(--bg2);border:1px solid var(--border);display:grid;grid-template-columns:120px 1fr;gap:12px">
+          <div style="font-size:13px;color:var(--accent);font-weight:700">Network</div>
+          <div style="font-size:12px;color:var(--muted)">Виртуальная сеть между контейнерами. Контейнеры в одной сети видят друг друга по имени.</div>
+        </div>
+      </div>
+    `
+  },
+  2: {
+    module: 'Модуль 1 · Основы Docker',
+    title: 'Установка Docker на Ubuntu',
+    time: '10 мин',
+    content: `
+      <h2>Официальный способ установки</h2>
+      <p>Не используйте <code>apt install docker.io</code> — это старая версия из репозиториев Ubuntu. Устанавливайте Docker от официального репозитория Docker Inc.</p>
+
+      <div class="code-block">
+        <div class="code-label">bash — полная установка Docker</div>
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <pre><span class="comment"># Самый простой способ — официальный скрипт</span>
+curl -fsSL https://get.docker.com | sh
+
+<span class="comment"># Добавляем текущего пользователя в группу docker</span>
+<span class="comment"># (чтобы не писать sudo перед каждой командой)</span>
+usermod -aG docker $USER
+
+<span class="comment"># Проверяем что установилось</span>
+docker --version
+<span class="comment"># Docker version 25.x.x, build xxxxxxx</span></pre>
+      </div>
+
+      <h2>Устанавливаем Docker Compose</h2>
+      <p>Docker Compose — инструмент для запуска нескольких контейнеров вместе. Mailcow использует именно его.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <pre><span class="comment"># Docker Compose V2 (встроен как плагин)</span>
+apt install docker-compose-plugin -y
+
+<span class="comment"># Проверяем</span>
+docker compose version
+<span class="comment"># Docker Compose version v2.x.x</span></pre>
+      </div>
+
+      <h2>Настраиваем автозапуск</h2>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <pre><span class="comment"># Docker должен стартовать при перезагрузке сервера</span>
+systemctl enable docker
+systemctl start docker
+
+<span class="comment"># Проверяем статус</span>
+systemctl status docker</pre>
+      </div>
+
+      <h2>Первый тест</h2>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <pre><span class="comment"># Запускаем тестовый контейнер</span>
+docker run hello-world
+
+<span class="comment"># Если всё OK увидите:</span>
+<span class="comment"># Hello from Docker!</span>
+<span class="comment"># This message shows that your installation is working correctly.</span></pre>
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">✓ Docker установлен</div>
+        Если <code>hello-world</code> запустился — всё готово. Теперь разберём основные команды.
+      </div>
+
+      <h2>Решение проблем при установке</h2>
+      <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0">
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:4px">Permission denied при запуске docker</div>
+          <div style="font-size:12px;color:var(--muted)">Нужно добавить пользователя в группу docker и перезайти: <code>usermod -aG docker $USER && newgrp docker</code></div>
+        </div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:4px">Cannot connect to the Docker daemon</div>
+          <div style="font-size:12px;color:var(--muted)">Docker не запущен: <code>systemctl start docker && systemctl enable docker</code></div>
+        </div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:#f0a500;font-weight:600;margin-bottom:4px">docker: not found после apt install</div>
+          <div style="font-size:12px;color:var(--muted)">Установлен старый пакет docker.io. Удалите и установите по официальной инструкции через get.docker.com</div>
+        </div>
+      </div>
+
+      <h2>Что происходит при docker run hello-world</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># 1. Docker ищет образ hello-world локально</span>
+<span class="comment"># 2. Не находит — скачивает из Docker Hub</span>
+<span class="comment"># 3. Создаёт контейнер из образа</span>
+<span class="comment"># 4. Запускает и показывает сообщение</span>
+<span class="comment"># 5. Контейнер завершается</span>
+
+docker images       <span class="comment"># покажет скачанный образ hello-world</span>
+docker ps -a        <span class="comment"># покажет завершённый контейнер</span>
+docker rm $(docker ps -aq)  <span class="comment"># удалить все остановленные</span></pre></div>
+    `
+  },
+  3: {
+    module: 'Модуль 1 · Основы Docker',
+    title: 'Основные команды Docker',
+    time: '15 мин',
+    content: `
+      <h2>Команды которые нужны каждый день</h2>
+      <p>Не нужно знать все 100+ команд Docker. Для работы с Mailcow и Postal хватит этих двадцати. Запомните их — и вы сможете управлять любым Docker-приложением.</p>
+
+      <h2>Работа с контейнерами</h2>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:280px">docker ps</code>
+          <span style="font-size:12px;color:var(--muted)">Список запущенных контейнеров</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:280px">docker ps -a</code>
+          <span style="font-size:12px;color:var(--muted)">Все контейнеры (включая остановленные)</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:280px">docker start CONTAINER</code>
+          <span style="font-size:12px;color:var(--muted)">Запустить остановленный контейнер</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:280px">docker stop CONTAINER</code>
+          <span style="font-size:12px;color:var(--muted)">Остановить контейнер</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:280px">docker restart CONTAINER</code>
+          <span style="font-size:12px;color:var(--muted)">Перезапустить контейнер</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:280px">docker logs CONTAINER</code>
+          <span style="font-size:12px;color:var(--muted)">Логи контейнера</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:280px">docker logs CONTAINER -f</code>
+          <span style="font-size:12px;color:var(--muted)">Логи в реальном времени (Ctrl+C для выхода)</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:280px">docker logs CONTAINER --tail 50</code>
+          <span style="font-size:12px;color:var(--muted)">Последние 50 строк логов</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:280px">docker exec -it CONTAINER bash</code>
+          <span style="font-size:12px;color:var(--muted)">Войти внутрь контейнера (как SSH)</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:280px">docker stats</code>
+          <span style="font-size:12px;color:var(--muted)">Использование CPU/RAM каждым контейнером</span>
+        </div>
+      </div>
+
+      <h2>Работа с образами</h2>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent2);min-width:280px">docker images</code>
+          <span style="font-size:12px;color:var(--muted)">Список скачанных образов</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent2);min-width:280px">docker pull nginx</code>
+          <span style="font-size:12px;color:var(--muted)">Скачать образ из Docker Hub</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent2);min-width:280px">docker rmi IMAGE</code>
+          <span style="font-size:12px;color:var(--muted)">Удалить образ</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent2);min-width:280px">docker system prune -f</code>
+          <span style="font-size:12px;color:var(--muted)">Очистить неиспользуемые образы и контейнеры</span>
+        </div>
+      </div>
+
+      <h2>Практика — поиграем с nginx</h2>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <pre><span class="comment"># Запускаем nginx на порту 8080</span>
+docker run -d -p 8080:80 --name test-nginx nginx
+
+<span class="comment"># Проверяем что работает</span>
+curl http://localhost:8080
+
+<span class="comment"># Смотрим логи</span>
+docker logs test-nginx
+
+<span class="comment"># Останавливаем и удаляем</span>
+docker stop test-nginx
+docker rm test-nginx</pre>
+      </div>
+
+      <h2>Практика: запускаем Nginx и смотрим что происходит</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Запускаем Nginx в фоне на порту 8080</span>
+docker run -d -p 8080:80 --name my-nginx nginx
+
+<span class="comment"># Проверяем что работает</span>
+curl http://localhost:8080
+<span class="comment"># Должны увидеть HTML страницу Nginx</span>
+
+<span class="comment"># Смотрим логи в реальном времени</span>
+docker logs my-nginx -f
+
+<span class="comment"># Заходим внутрь контейнера</span>
+docker exec -it my-nginx bash
+ls /etc/nginx/       <span class="comment"># конфиги Nginx</span>
+ls /usr/share/nginx/html/  <span class="comment"># статические файлы</span>
+exit
+
+<span class="comment"># Останавливаем и удаляем</span>
+docker stop my-nginx && docker rm my-nginx</pre></div>
+
+      <h2>Разница между stop и kill</h2>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:16px 0">
+        <div style="padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:var(--accent);font-weight:600;margin-bottom:3px">docker stop CONTAINER</div>
+          <div style="font-size:12px;color:var(--muted)">Отправляет SIGTERM — контейнер корректно завершается. Ждёт 10 секунд. Рекомендуется всегда.</div>
+        </div>
+        <div style="padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:3px">docker kill CONTAINER</div>
+          <div style="font-size:12px;color:var(--muted)">Отправляет SIGKILL — мгновенное завершение. Может привести к повреждению данных. Только если stop не работает.</div>
+        </div>
+      </div>
+
+      <h2>Мониторинг ресурсов контейнеров</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Использование CPU, RAM, сети в реальном времени</span>
+docker stats
+
+<span class="comment"># Только текущий снимок без обновления</span>
+docker stats --no-stream
+
+<span class="comment"># Только конкретный контейнер</span>
+docker stats my-nginx --no-stream</pre></div>
+    `
+  },
+  4: {
+    module: 'Модуль 2 · Docker Compose',
+    title: 'Что такое docker-compose.yml',
+    time: '15 мин',
+    content: `
+      <h2>Аналогия: рецепт из нескольких блюд</h2>
+      <p>Представьте что вы готовите обед из трёх блюд. Можно готовить каждое по отдельности и помнить все ингредиенты. А можно написать один рецепт: «Борщ: картофель 3шт, капуста 200г... Салат: ...». Docker Compose — это такой рецепт для приложений.</p>
+
+      <h2>Структура docker-compose.yml</h2>
+      <div class="code-block">
+        <div class="code-label">docker-compose.yml — пример простого приложения</div>
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <pre>version: '3.8'
+
+services:
+  <span class="comment"># Сервис 1 — веб-сервер</span>
+  web:
+    image: nginx:latest          <span class="comment"># Какой образ использовать</span>
+    ports:
+      - "80:80"                  <span class="comment"># Порт хоста:порт контейнера</span>
+    volumes:
+      - ./html:/usr/share/nginx/html  <span class="comment"># Папка хоста:папка контейнера</span>
+    restart: always              <span class="comment"># Перезапускать при падении</span>
+
+  <span class="comment"># Сервис 2 — база данных</span>
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: myapp
+    volumes:
+      - db_data:/var/lib/mysql   <span class="comment"># Именованный volume</span>
+    restart: always
+
+volumes:
+  db_data:                       <span class="comment"># Объявляем именованный volume</span></pre>
+      </div>
+
+      <h2>Ключевые параметры</h2>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:16px 0">
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:120px">image</code>
+          <span style="font-size:12px;color:var(--muted)">Образ из Docker Hub или своего реестра</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:120px">ports</code>
+          <span style="font-size:12px;color:var(--muted)">Пробрасываем порты: <code>хост:контейнер</code></span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:120px">volumes</code>
+          <span style="font-size:12px;color:var(--muted)">Монтируем папки или именованные тома</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:120px">environment</code>
+          <span style="font-size:12px;color:var(--muted)">Переменные окружения (пароли, настройки)</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:120px">restart</code>
+          <span style="font-size:12px;color:var(--muted)"><code>always</code> — перезапускать всегда, <code>unless-stopped</code> — если не остановлен вручную</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:120px">depends_on</code>
+          <span style="font-size:12px;color:var(--muted)">Запускать только после другого сервиса</span>
+        </div>
+      </div>
+
+      <div class="note-block info">
+        <div class="note-label">ℹ Mailcow и docker-compose.yml</div>
+        Mailcow поставляется со своим <code>docker-compose.yml</code> — вам не нужно его писать. Но понимание структуры поможет разбираться с настройками и проблемами.
+      </div>
+
+      <h2>Разбор docker-compose.yml Mailcow — что значит каждая строка</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Фрагмент docker-compose.yml Mailcow с комментариями:</span>
+services:
+  postfix-mailcow:
+    image: mailcow/postfix:1.63      <span class="comment"># образ и версия</span>
+    depends_on:
+      - mysql-mailcow                <span class="comment"># сначала запустить mysql</span>
+    volumes:
+      - ./data/conf/postfix:/opt/postfix/conf  <span class="comment"># конфиги</span>
+      - postfix-vol-1:/var/spool/postfix       <span class="comment"># очередь писем</span>
+    environment:
+      - TZ=${TZ}                     <span class="comment"># часовой пояс из .env</span>
+    ports:
+      - "${SMTP_PORT:-25}:25"        <span class="comment"># порт из .env или 25</span>
+    restart: always                  <span class="comment"># перезапускать всегда</span>
+    networks:
+      mailcow-network:               <span class="comment"># своя сеть для изоляции</span>
+        aliases:
+          - postfix</pre></div>
+
+      <h2>Переменные окружения в Mailcow .env</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Ключевые переменные в /opt/mailcow-dockerized/mailcow.conf:</span>
+MAILCOW_HOSTNAME=mail.yourdomain.com
+TZ=Europe/Moscow
+DBPASS=автогенерированный_пароль
+DBROOT=автогенерированный_root_пароль
+SKIP_LETS_ENCRYPT=n          <span class="comment"># получать SSL автоматически</span>
+SMTP_PORT=25
+SMTPS_PORT=465
+SUBMISSION_PORT=587
+IMAP_PORT=143
+IMAPS_PORT=993</pre></div>
+    `
+  },
+  5: {
+    module: 'Модуль 2 · Docker Compose',
+    title: 'Команды Docker Compose',
+    time: '12 мин',
+    content: `
+      <h2>Основные команды</h2>
+      <p>Все команды выполняются из папки где лежит <code>docker-compose.yml</code>.</p>
+
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:260px">docker compose up -d</code>
+          <span style="font-size:12px;color:var(--muted)">Запустить все сервисы в фоне</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:260px">docker compose down</code>
+          <span style="font-size:12px;color:var(--muted)">Остановить и удалить контейнеры</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:260px">docker compose ps</code>
+          <span style="font-size:12px;color:var(--muted)">Статус сервисов в этом compose-проекте</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:260px">docker compose logs -f</code>
+          <span style="font-size:12px;color:var(--muted)">Логи всех сервисов в реальном времени</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:260px">docker compose logs web -f</code>
+          <span style="font-size:12px;color:var(--muted)">Логи конкретного сервиса</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:260px">docker compose restart web</code>
+          <span style="font-size:12px;color:var(--muted)">Перезапустить конкретный сервис</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:260px">docker compose pull</code>
+          <span style="font-size:12px;color:var(--muted)">Скачать обновлённые образы</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <code style="color:var(--accent);min-width:260px">docker compose exec web bash</code>
+          <span style="font-size:12px;color:var(--muted)">Войти в контейнер сервиса web</span>
+        </div>
+      </div>
+
+      <h2>Обновление сервисов без даунтайма</h2>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <pre><span class="comment"># Скачиваем новые версии образов</span>
+docker compose pull
+
+<span class="comment"># Пересоздаём контейнеры с новыми образами</span>
+docker compose up -d --remove-orphans
+
+<span class="comment"># Старые образы можно удалить</span>
+docker image prune -f</pre>
+      </div>
+
+      <h2>Применительно к Mailcow</h2>
+      <div class="code-block">
+        <div class="code-label">Типичные команды для работы с Mailcow</div>
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <pre><span class="comment"># Из папки /opt/mailcow-dockerized</span>
+cd /opt/mailcow-dockerized
+
+<span class="comment"># Статус всех контейнеров Mailcow</span>
+docker compose ps
+
+<span class="comment"># Логи конкретного сервиса</span>
+docker compose logs postfix-mailcow -f
+
+<span class="comment"># Перезапустить только Rspamd</span>
+docker compose restart rspamd-mailcow
+
+<span class="comment"># Полный рестарт Mailcow</span>
+docker compose down && docker compose up -d</pre>
+      </div>
+
+      <h2>Полный справочник команд Docker Compose</h2>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:flex;gap:12px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border)"><code style="color:var(--accent);min-width:280px;font-size:11px">docker compose up -d</code><span style="font-size:12px;color:var(--muted)">Запустить все сервисы в фоне</span></div>
+        <div style="display:flex;gap:12px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border)"><code style="color:var(--accent);min-width:280px;font-size:11px">docker compose down</code><span style="font-size:12px;color:var(--muted)">Остановить и удалить контейнеры</span></div>
+        <div style="display:flex;gap:12px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border)"><code style="color:var(--accent);min-width:280px;font-size:11px">docker compose down -v</code><span style="font-size:12px;color:var(--muted)">Остановить И удалить volumes (осторожно!)</span></div>
+        <div style="display:flex;gap:12px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border)"><code style="color:var(--accent);min-width:280px;font-size:11px">docker compose ps</code><span style="font-size:12px;color:var(--muted)">Статус сервисов</span></div>
+        <div style="display:flex;gap:12px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border)"><code style="color:var(--accent);min-width:280px;font-size:11px">docker compose logs -f</code><span style="font-size:12px;color:var(--muted)">Логи всех сервисов в реальном времени</span></div>
+        <div style="display:flex;gap:12px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border)"><code style="color:var(--accent);min-width:280px;font-size:11px">docker compose logs web --tail 50</code><span style="font-size:12px;color:var(--muted)">Последние 50 строк сервиса web</span></div>
+        <div style="display:flex;gap:12px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border)"><code style="color:var(--accent);min-width:280px;font-size:11px">docker compose restart web</code><span style="font-size:12px;color:var(--muted)">Перезапустить один сервис</span></div>
+        <div style="display:flex;gap:12px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border)"><code style="color:var(--accent);min-width:280px;font-size:11px">docker compose exec web bash</code><span style="font-size:12px;color:var(--muted)">Зайти в контейнер сервиса web</span></div>
+        <div style="display:flex;gap:12px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border)"><code style="color:var(--accent);min-width:280px;font-size:11px">docker compose pull && up -d</code><span style="font-size:12px;color:var(--muted)">Обновить и перезапустить</span></div>
+        <div style="display:flex;gap:12px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border)"><code style="color:var(--accent);min-width:280px;font-size:11px">docker compose config</code><span style="font-size:12px;color:var(--muted)">Проверить валидность compose файла</span></div>
+      </div>
+
+      <h2>Типичные проблемы и решения</h2>
+      <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0">
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:4px">Port already in use</div>
+          <div style="font-size:12px;color:var(--muted)">Порт занят другим процессом. Найдите: <code>ss -tlnp | grep :80</code>. Остановите: <code>systemctl stop nginx</code> или <code>systemctl stop apache2</code>.</div>
+        </div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:4px">No space left on device</div>
+          <div style="font-size:12px;color:var(--muted)">Диск заполнен образами и логами. Очистите: <code>docker system prune -f && docker image prune -a -f</code>.</div>
+        </div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:#f0a500;font-weight:600;margin-bottom:4px">Container exits immediately</div>
+          <div style="font-size:12px;color:var(--muted)">Смотрите логи: <code>docker compose logs SERVICE_NAME</code>. Обычно причина — неправильные переменные окружения или отсутствующий файл конфигурации.</div>
+        </div>
+      </div>
+    `
+  },
+  6: {
+    module: 'Модуль 2 · Docker Compose',
+    title: 'Volumes и Networks — хранение данных',
+    time: '12 мин',
+    content: `
+      <h2>Проблема: данные исчезают при перезапуске</h2>
+      <p>По умолчанию всё что создаётся внутри контейнера — исчезает когда контейнер удаляется. База данных, письма, настройки — всё пропадёт. Volumes решают эту проблему.</p>
+
+      <h2>Два типа Volumes</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0">
+        <div style="padding:16px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:13px;color:var(--accent);font-weight:600;margin-bottom:8px">Bind mount (папка хоста)</div>
+          <div class="code-block" style="margin:0;padding:10px;font-size:11px"><pre style="margin:0">volumes:
+  - ./data:/app/data</pre></div>
+          <div style="font-size:12px;color:var(--muted);margin-top:8px;line-height:1.6">Папка на вашем сервере монтируется в контейнер. Видите файлы напрямую. Удобно для конфигов.</div>
+        </div>
+        <div style="padding:16px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:13px;color:var(--accent2);font-weight:600;margin-bottom:8px">Named volume (управляемый)</div>
+          <div class="code-block" style="margin:0;padding:10px;font-size:11px"><pre style="margin:0">volumes:
+  - db_data:/var/lib/mysql</pre></div>
+          <div style="font-size:12px;color:var(--muted);margin-top:8px;line-height:1.6">Docker сам управляет хранилищем. Лучше для баз данных — Docker оптимизирует производительность.</div>
+        </div>
+      </div>
+
+      <h2>Полезные команды для Volumes</h2>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <pre><span class="comment"># Список всех volumes</span>
+docker volume ls
+
+<span class="comment"># Где физически хранится volume</span>
+docker volume inspect mailcow_mysql_data
+
+<span class="comment"># Удалить неиспользуемые volumes (осторожно!)</span>
+docker volume prune</pre>
+      </div>
+
+      <h2>Networks — как контейнеры общаются</h2>
+      <p>По умолчанию все контейнеры в одном compose-файле могут общаться друг с другом по имени сервиса. Например контейнер <code>web</code> может подключиться к <code>db</code> просто написав <code>db:3306</code>.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <pre><span class="comment"># Список Docker-сетей</span>
+docker network ls
+
+<span class="comment"># Проверить какие контейнеры в какой сети</span>
+docker network inspect bridge</pre>
+      </div>
+
+      <div class="note-block info">
+        <div class="note-label">ℹ Mailcow и volumes</div>
+        Mailcow использует named volumes для хранения почты, базы данных и настроек. Они находятся в <code>/var/lib/docker/volumes/</code>. При backup достаточно скопировать эту папку.
+      </div>
+
+      <h2>Типы volumes — когда что использовать</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0">
+        <div style="padding:14px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:13px;color:var(--accent);font-weight:600;margin-bottom:8px">Named Volume</div>
+          <div class="code-block" style="margin:0"><pre style="font-size:11px;margin:0">volumes:
+  - db_data:/var/lib/mysql</pre></div>
+          <div style="font-size:12px;color:var(--muted);margin-top:8px">Docker управляет хранилищем. Лучше для баз данных — оптимизирован. Данные в <code>/var/lib/docker/volumes/</code></div>
+        </div>
+        <div style="padding:14px;background:var(--bg2);border:1px solid rgba(0,229,255,.2)">
+          <div style="font-size:13px;color:var(--accent2);font-weight:600;margin-bottom:8px">Bind Mount</div>
+          <div class="code-block" style="margin:0"><pre style="font-size:11px;margin:0">volumes:
+  - ./config:/app/config</pre></div>
+          <div style="font-size:12px;color:var(--muted);margin-top:8px">Папка хоста монтируется в контейнер. Видите файлы напрямую. Удобно для конфигов.</div>
+        </div>
+      </div>
+
+      <h2>Работа с volumes из командной строки</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Список всех volumes</span>
+docker volume ls
+
+<span class="comment"># Где физически хранится volume</span>
+docker volume inspect mailcow_mysql_data
+<span class="comment"># "Mountpoint": "/var/lib/docker/volumes/mailcow_mysql_data/_data"</span>
+
+<span class="comment"># Удалить неиспользуемые volumes (ОСТОРОЖНО!)</span>
+docker volume prune
+
+<span class="comment"># Скопировать файл из volume через временный контейнер</span>
+docker run --rm -v mailcow_mysql_data:/data -v $(pwd):/backup \
+  ubuntu tar czf /backup/mysql-backup.tar.gz /data</pre></div>
+
+      <h2>Сети Docker — как контейнеры общаются</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Контейнеры в одном compose могут обращаться друг к другу по имени сервиса</span>
+<span class="comment"># Например внутри контейнера web: curl http://db:3306</span>
+
+<span class="comment"># Посмотреть какие контейнеры в какой сети:</span>
+docker network ls
+docker network inspect bridge
+
+<span class="comment"># Создать общую сеть для двух compose-проектов:</span>
+docker network create shared-network
+<span class="comment"># В обоих docker-compose.yml добавить:</span>
+<span class="comment"># networks:</span>
+<span class="comment">#   shared-network:</span>
+<span class="comment">#     external: true</span></pre></div>
+    `
+  },
+  7: {
+    module: 'Модуль 2 · Docker Compose',
+    title: 'Переменные окружения — файл .env',
+    time: '10 мин',
+    content: `
+      <h2>Зачем нужен .env файл</h2>
+      <p>Пароли и секретные данные нельзя хранить прямо в <code>docker-compose.yml</code> — этот файл часто попадает в Git-репозитории. Решение — файл <code>.env</code> рядом с compose-файлом. Docker Compose автоматически его читает.</p>
+
+      <div class="code-block">
+        <div class="code-label">.env файл</div>
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <pre>MYSQL_ROOT_PASSWORD=super_secret_password_123
+MYSQL_DATABASE=mailcow
+MYSQL_USER=mailcow
+MYSQL_PASSWORD=another_secret_456
+
+MAILCOW_HOSTNAME=mail.yourdomain.com
+MAILCOW_TZ=Europe/Moscow</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-label">docker-compose.yml — используем переменные</div>
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <pre>services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}</pre>
+      </div>
+
+      <h2>Правила безопасности</h2>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:16px 0">
+        <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.15)">
+          <span style="color:#ff6b6b">✗</span><span style="font-size:12px;color:var(--text)">Никогда не коммитьте .env в Git</span>
+        </div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.15)">
+          <span style="color:#ff6b6b">✗</span><span style="font-size:12px;color:var(--text)">Не храните .env в публичных местах</span>
+        </div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.15)">
+          <span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Добавьте .env в .gitignore</span>
+        </div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.15)">
+          <span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Права на файл: chmod 600 .env</span>
+        </div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.15)">
+          <span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Включайте .env в backup вместе с данными</span>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <pre><span class="comment"># Создаём .gitignore если используете Git</span>
+echo ".env" >> .gitignore
+
+<span class="comment"># Ограничиваем права доступа к .env</span>
+chmod 600 .env</pre>
+      </div>
+
+      <h2>Безопасность .env файла</h2>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:16px 0">
+        <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.15)"><span style="color:#ff6b6b">✗</span><span style="font-size:12px;color:var(--text)">Никогда не коммитьте .env в Git репозиторий</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.15)"><span style="color:#ff6b6b">✗</span><span style="font-size:12px;color:var(--text)">Не храните .env в публично доступных местах</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.15)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Добавьте в .gitignore: echo ".env" >> .gitignore</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.15)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Ограничьте права: chmod 600 .env</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.15)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Включайте .env в backup вместе с данными</span></div>
+      </div>
+
+      <h2>Генерация надёжных паролей для .env</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Генерируем случайные пароли:</span>
+openssl rand -hex 32    <span class="comment"># 64-символьный hex</span>
+openssl rand -base64 32 <span class="comment"># 44-символьный base64</span>
+
+<span class="comment"># Пример хорошего .env для кастомного приложения:</span>
+POSTGRES_DB=myapp
+POSTGRES_USER=myapp
+POSTGRES_PASSWORD=$(openssl rand -hex 20)
+SECRET_KEY=$(openssl rand -hex 32)
+REDIS_PASSWORD=$(openssl rand -hex 16)</pre></div>
+
+      <h2>Шаблон .env для email-стека</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># /opt/n8n/.env</span>
+N8N_HOST=n8n.yourdomain.com
+N8N_PROTOCOL=https
+WEBHOOK_URL=https://n8n.yourdomain.com/
+GENERIC_TIMEZONE=Europe/Moscow
+N8N_BASIC_AUTH_ACTIVE=true
+N8N_BASIC_AUTH_USER=admin
+N8N_BASIC_AUTH_PASSWORD=ваш_пароль_минимум_16_символов</pre></div>
+    `
+  },
+  8: {
+    module: 'Модуль 3 · Docker для email',
+    title: 'Управление контейнерами Mailcow',
+    time: '15 мин',
+    content: `
+      <h2>Структура Mailcow в Docker</h2>
+      <p>Mailcow состоит из 15+ контейнеров. Каждый отвечает за свою часть работы. Знать их имена — значит понимать где искать проблему.</p>
+
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:grid;grid-template-columns:200px 1fr;gap:12px;padding:8px 14px;background:var(--surface);border:1px solid var(--border)">
+          <span style="font-size:10px;color:var(--muted);text-transform:uppercase">Контейнер</span>
+          <span style="font-size:10px;color:var(--muted);text-transform:uppercase">Что делает</span>
+        </div>
+        <div style="display:grid;grid-template-columns:200px 1fr;gap:12px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none">
+          <code style="font-size:11px;color:var(--accent)">postfix-mailcow</code>
+          <span style="font-size:12px;color:var(--muted)">SMTP — приём и отправка почты</span>
+        </div>
+        <div style="display:grid;grid-template-columns:200px 1fr;gap:12px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none">
+          <code style="font-size:11px;color:var(--accent)">dovecot-mailcow</code>
+          <span style="font-size:12px;color:var(--muted)">IMAP/POP3 — доступ к почте клиентами</span>
+        </div>
+        <div style="display:grid;grid-template-columns:200px 1fr;gap:12px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none">
+          <code style="font-size:11px;color:var(--accent)">rspamd-mailcow</code>
+          <span style="font-size:12px;color:var(--muted)">Антиспам — фильтрация входящих</span>
+        </div>
+        <div style="display:grid;grid-template-columns:200px 1fr;gap:12px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none">
+          <code style="font-size:11px;color:var(--accent)">nginx-mailcow</code>
+          <span style="font-size:12px;color:var(--muted)">Веб-сервер — панель управления</span>
+        </div>
+        <div style="display:grid;grid-template-columns:200px 1fr;gap:12px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none">
+          <code style="font-size:11px;color:var(--accent)">mysql-mailcow</code>
+          <span style="font-size:12px;color:var(--muted)">База данных — хранит настройки</span>
+        </div>
+        <div style="display:grid;grid-template-columns:200px 1fr;gap:12px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none">
+          <code style="font-size:11px;color:var(--accent)">acme-mailcow</code>
+          <span style="font-size:12px;color:var(--muted)">Let's Encrypt SSL-сертификаты</span>
+        </div>
+        <div style="display:grid;grid-template-columns:200px 1fr;gap:12px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none">
+          <code style="font-size:11px;color:var(--accent)">redis-mailcow</code>
+          <span style="font-size:12px;color:var(--muted)">Кеш — ускорение работы</span>
+        </div>
+      </div>
+
+      <h2>Команды для работы с Mailcow</h2>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <pre><span class="comment"># Всегда работаем из этой папки</span>
+cd /opt/mailcow-dockerized
+
+<span class="comment"># Статус всех контейнеров</span>
+docker compose ps
+
+<span class="comment"># Письмо не приходит — смотрим postfix</span>
+docker compose logs postfix-mailcow --tail 50
+
+<span class="comment"># SSL не обновляется — смотрим acme</span>
+docker compose logs acme-mailcow --tail 20
+
+<span class="comment"># Письмо в спаме — смотрим rspamd</span>
+docker compose logs rspamd-mailcow --tail 30
+
+<span class="comment"># Перезапуск только одного сервиса</span>
+docker compose restart postfix-mailcow
+
+<span class="comment"># Обновление Mailcow</span>
+./update.sh</pre>
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">💡 Быстрая диагностика</div>
+        Когда что-то перестало работать — первым делом выполните <code>docker compose ps</code>. Если какой-то контейнер в статусе <code>Exit</code> — смотрите его логи. Там обычно есть причина.
+      </div>
+
+      <h2>Диагностика контейнеров Mailcow — полное руководство</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre>cd /opt/mailcow-dockerized
+
+<span class="comment"># Быстрая проверка — что не так?</span>
+docker compose ps | grep -v "Up"
+<span class="comment"># Покажет только контейнеры НЕ в статусе Up</span>
+
+<span class="comment"># Подробный статус с состоянием здоровья</span>
+docker compose ps --format "table {{.Name}}	{{.Status}}	{{.Ports}}"
+
+<span class="comment"># Письма не приходят — смотрим Postfix</span>
+docker compose logs postfix-mailcow 2>&1 | grep -i "reject\|error\|warning" | tail -20
+
+<span class="comment"># Письма не уходят — смотрим очередь</span>
+docker compose exec postfix-mailcow postqueue -p
+
+<span class="comment"># Принудительно обработать очередь</span>
+docker compose exec postfix-mailcow postqueue -f
+
+<span class="comment"># SSL не обновляется</span>
+docker compose logs acme-mailcow --tail 30
+
+<span class="comment"># Веб-интерфейс недоступен</span>
+docker compose logs nginx-mailcow --tail 20
+
+<span class="comment"># Высокий CPU — кто виноват?</span>
+docker stats --no-stream | sort -k3 -rn | head -5</pre></div>
+
+      <h2>Типичные проблемы Mailcow и решения</h2>
+      <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0">
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:4px">mysql-mailcow в статусе Exit</div>
+          <div style="font-size:12px;color:var(--muted)">База данных упала. Проверьте: <code>docker compose logs mysql-mailcow --tail 20</code>. Часто причина — заполненный диск.</div>
+        </div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:#f0a500;font-weight:600;margin-bottom:4px">rspamd занимает много RAM</div>
+          <div style="font-size:12px;color:var(--muted)">Нормально при большом объёме почты. Добавьте Swap если не хватает RAM: курс VPS урок 7.</div>
+        </div>
+      </div>
+    `
+  },
+  9: {
+    module: 'Модуль 3 · Docker для email',
+    title: 'Обновление контейнеров без даунтайма',
+    time: '12 мин',
+    content: `
+      <h2>Стратегия обновления Mailcow</h2>
+      <p>Mailcow предоставляет официальный скрипт обновления. Не обновляйте вручную — скрипт учитывает все зависимости и миграции базы данных.</p>
+
+      <div class="note-block warn">
+        <div class="note-label">⚠ Всегда делайте backup перед обновлением</div>
+        Перед обновлением — backup volumes. Если что-то пойдёт не так — сможете откатиться.
+      </div>
+
+      <h2>Обновление Mailcow</h2>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <pre><span class="comment"># 1. Переходим в папку Mailcow</span>
+cd /opt/mailcow-dockerized
+
+<span class="comment"># 2. Делаем backup (см. следующий урок)</span>
+./helper-scripts/backup_and_restore.sh backup all
+
+<span class="comment"># 3. Запускаем обновление</span>
+./update.sh
+
+<span class="comment"># Скрипт спросит подтверждение и всё сделает сам:</span>
+<span class="comment"># - скачает новые образы</span>
+<span class="comment"># - остановит сервисы</span>
+<span class="comment"># - применит миграции БД</span>
+<span class="comment"># - запустит новые версии</span></pre>
+      </div>
+
+      <h2>Обновление отдельного контейнера</h2>
+      <p>Иногда нужно обновить только один сервис — например только Rspamd:</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <pre><span class="comment"># Скачиваем новый образ</span>
+docker compose pull rspamd-mailcow
+
+<span class="comment"># Пересоздаём только этот контейнер</span>
+docker compose up -d --no-deps rspamd-mailcow
+
+<span class="comment"># --no-deps = не трогать зависимые контейнеры</span></pre>
+      </div>
+
+      <h2>Откат если что-то пошло не так</h2>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <pre><span class="comment"># Восстанавливаем из backup</span>
+./helper-scripts/backup_and_restore.sh restore /path/to/backup
+
+<span class="comment"># Или откатываем на предыдущую версию образа</span>
+git log --oneline  <span class="comment"># смотрим историю</span>
+git checkout COMMIT_HASH  <span class="comment"># откатываемся</span>
+docker compose up -d</pre>
+      </div>
+
+      <h2>Полный процесс обновления Mailcow</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre>cd /opt/mailcow-dockerized
+
+<span class="comment"># Шаг 1: backup перед обновлением</span>
+./helper-scripts/backup_and_restore.sh backup all
+
+<span class="comment"># Шаг 2: запускаем обновление</span>
+./update.sh
+
+<span class="comment"># Скрипт сам:
+# - скачает новые образы
+# - остановит сервисы
+# - применит миграции базы данных
+# - запустит новые версии</span>
+
+<span class="comment"># Шаг 3: проверяем что всё работает</span>
+docker compose ps
+<span class="comment"># Все должны быть Up</span></pre></div>
+
+      <h2>Откат если что-то пошло не так</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Восстановление из backup</span>
+./helper-scripts/backup_and_restore.sh restore /var/mailcow/backup/ДАТА
+
+<span class="comment"># Откат на предыдущую версию через git</span>
+git log --oneline | head -5    <span class="comment"># смотрим историю</span>
+git checkout ПРЕДЫДУЩИЙ_ХЭШ   <span class="comment"># откатываемся</span>
+docker compose up -d</pre></div>
+
+      <h2>Обновление только одного контейнера</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Обновить только Rspamd без остановки других:</span>
+docker compose pull rspamd-mailcow
+docker compose up -d --no-deps rspamd-mailcow
+<span class="comment"># --no-deps = не трогать зависимые контейнеры</span></pre></div>
+    `
+  },
+  10: {
+    module: 'Модуль 3 · Docker для email',
+    title: 'Логи, диагностика и очистка',
+    time: '12 мин',
+    content: `
+      <h2>Читаем логи правильно</h2>
+      <p>Логи Docker — ваш главный инструмент диагностики. Научитесь их читать и вы сможете решить 90% проблем самостоятельно.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <pre><span class="comment"># Последние 100 строк с временными метками</span>
+docker compose logs --tail 100 -t postfix-mailcow
+
+<span class="comment"># Поиск ошибок в логах</span>
+docker compose logs postfix-mailcow 2>&1 | grep -i "error\\|reject\\|warn"
+
+<span class="comment"># Логи за последний час</span>
+docker compose logs --since 1h postfix-mailcow
+
+<span class="comment"># Логи в реальном времени с фильтром</span>
+docker compose logs -f postfix-mailcow | grep "NOQUEUE"</pre>
+      </div>
+
+      <h2>Диагностика проблем</h2>
+      <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0">
+        <div style="padding:14px 16px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:#f0a500;font-weight:600;margin-bottom:4px">Письма не приходят</div>
+          <div style="font-size:12px;color:var(--muted)"><code>docker compose logs postfix-mailcow</code> — ищите «reject» или «connection refused»</div>
+        </div>
+        <div style="padding:14px 16px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:#f0a500;font-weight:600;margin-bottom:4px">Панель не открывается</div>
+          <div style="font-size:12px;color:var(--muted)"><code>docker compose logs nginx-mailcow</code> — ищите ошибки SSL или конфигурации</div>
+        </div>
+        <div style="padding:14px 16px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:12px;color:#f0a500;font-weight:600;margin-bottom:4px">Высокое потребление RAM</div>
+          <div style="font-size:12px;color:var(--muted)"><code>docker stats</code> — найдите контейнер который ест больше всего</div>
+        </div>
+      </div>
+
+      <h2>Регулярная очистка Docker</h2>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <pre><span class="comment"># Показывает сколько места занимает Docker</span>
+docker system df
+
+<span class="comment"># Удаляет неиспользуемые образы, контейнеры, сети</span>
+<span class="comment"># (не трогает volumes с данными)</span>
+docker system prune -f
+
+<span class="comment"># Удаляет ВСЁ включая volumes — ОСТОРОЖНО!</span>
+<span class="comment"># docker system prune -a --volumes</span>
+
+<span class="comment"># Добавьте в cron — раз в месяц</span>
+<span class="comment"># 0 4 1 * * docker system prune -f</span></pre>
+      </div>
+
+      <h2>Читаем логи как профессионал</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Последние 100 строк с временными метками</span>
+docker compose logs --tail 100 -t postfix-mailcow
+
+<span class="comment"># Логи за последний час</span>
+docker compose logs --since 1h postfix-mailcow
+
+<span class="comment"># Поиск ошибок сразу по всем контейнерам</span>
+docker compose logs 2>&1 | grep -i "error\|fatal\|panic" | tail -30
+
+<span class="comment"># Следим за конкретным паттерном в реальном времени</span>
+docker compose logs -f postfix-mailcow | grep "NOQUEUE\|reject"
+
+<span class="comment"># Сохраняем логи в файл для анализа</span>
+docker compose logs postfix-mailcow > /tmp/postfix-$(date +%Y%m%d).log</pre></div>
+
+      <h2>Скрипт еженедельной очистки Docker</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment">#!/bin/bash — /root/docker-cleanup.sh</span>
+echo "=== Docker disk usage before ===" 
+docker system df
+
+docker image prune -f      <span class="comment"># удаляем висячие образы</span>
+docker container prune -f  <span class="comment"># удаляем остановленные контейнеры</span>
+docker network prune -f    <span class="comment"># удаляем неиспользуемые сети</span>
+
+echo "=== Docker disk usage after ==="
+docker system df</pre></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Cron — каждое воскресенье в 4:00</span>
+0 4 * * 0 /root/docker-cleanup.sh >> /var/log/docker-cleanup.log 2>&1</pre></div>
+    `
+  },
+  11: {
+    module: 'Модуль 3 · Docker для email',
+    title: 'Backup Docker Volumes',
+    time: '12 мин',
+    content: `
+      <h2>Что нужно бэкапить в Docker-окружении</h2>
+      <p>Данные Mailcow хранятся в Docker volumes и bind-mount папках. Backup этих данных = полная резервная копия вашего почтового сервера.</p>
+
+      <div style="display:flex;flex-direction:column;gap:6px;margin:16px 0">
+        
+      
+      
+        
+      </div>
+      <div id="quizBlock" style="margin-top:40px">
+        <div style="padding:20px 24px;background:rgba(123,97,255,.06);border:1px solid rgba(123,97,255,.25);margin-bottom:20px">
+          <div style="font-size:10px;color:var(--accent2);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Финальный тест</div>
+          <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:6px">Проверьте знания</div>
+          <div style="font-size:13px;color:var(--muted)">5 вопросов — нужно 4 правильных.</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px">
+          <div style="flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden">
+            <div id="quizBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;transition:width .4s"></div>
+          </div>
+          <span id="quizCount" style="font-size:11px;color:var(--muted);font-family:var(--font-mono);min-width:50px;text-align:right">0 из 5</span>
+        </div>
+        <div id="quizQuestions"></div>
+        <div id="quizResult" style="display:none;margin-top:20px;padding:24px;background:var(--surface);border:1px solid rgba(0,229,255,.2);text-align:center"></div>
+      </div>
+      <div id="courseFinale" style="display:none;margin-top:32px;padding:28px;background:var(--surface);border:1px solid rgba(0,229,255,.2)"><div style="font-size:36px;margin-bottom:12px">&#127891;</div><div style="font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--heading);margin-bottom:10px">Курс завершён!</div><div style="font-size:14px;color:var(--muted);line-height:1.9;margin-bottom:20px">Вы прошли все уроки и финальный тест.</div><div style="display:flex;gap:12px;flex-wrap:wrap"><a href="course-nginx.html?token=nginx2025" class="btn-primary">Следующий курс: Nginx + SSL →</a><a href="courses.html" class="btn-ghost">Все курсы</a></div></div>`
+            <div class="cq-card" id="cq-q${i}" style="margin-bottom:12px;padding:20px;background:var(--bg2);border:1px solid var(--border)">
+              <div style="font-size:10px;color:var(--muted);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Вопрос ${i+1} из ${CQ.length}</div>
+              <div style="font-size:15px;color:var(--heading);font-weight:600;line-height:1.5;margin-bottom:14px">${q.q}</div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                ${q.opts.map((opt, j) => `
+                  <div id="cq-q${i}o${j}" onclick="cqAnswer(${i},${j})"
+                       style="display:flex;gap:10px;align-items:center;padding:10px 14px;
+                              background:var(--bg);border:1px solid var(--border);
+                              cursor:pointer;font-size:13px;color:var(--text);transition:all .12s"
+                       onmouseover="if(!this.dataset.locked)this.style.borderColor='var(--accent)'"
+                       onmouseout="if(!this.dataset.locked)this.style.borderColor='var(--border)'">
+                    <div style="min-width:22px;height:22px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-family:var(--font-mono);color:var(--muted);flex-shrink:0">${String.fromCharCode(65+j)}</div>
+                    ${opt}
+                  </div>`).join('')}
+              </div>
+              <div id="cq-q${i}exp" style="display:none;margin-top:10px;padding:10px 14px;background:var(--surface);border-left:3px solid var(--accent);font-size:12px;color:var(--muted);line-height:1.7">${q.e}</div>
+            </div>`).join('');
+          document.getElementById('cq-score').style.display = 'flex';
+          cqUpdateScore();
+        }
+
+        window.cqAnswer = function(qi, oi) {
+          if (cqAnswered[qi] !== undefined) return;
+          cqAnswered[qi] = oi;
+          const q = CQ[qi];
+          const isOk = oi === q.c;
+          if (isOk) cqCorrect++;
+
+          q.opts.forEach((_,j) => {
+            const el = document.getElementById(`cq-q${qi}o${j}`);
+            if (!el) return;
+            el.dataset.locked = '1';
+            el.style.cursor = 'default';
+            el.style.pointerEvents = 'none';
+            if (j === q.c) {
+              el.style.borderColor = 'var(--accent3)';
+              el.style.background  = 'rgba(0,255,136,.08)';
+              el.style.color       = 'var(--accent3)';
+              el.querySelector('div').style.borderColor = 'var(--accent3)';
+              el.querySelector('div').style.color       = 'var(--accent3)';
+            } else if (j === oi && !isOk) {
+              el.style.borderColor = '#ff6b6b';
+              el.style.background  = 'rgba(255,107,107,.06)';
+              el.style.color       = '#ff6b6b';
+            }
+          });
+
+          document.getElementById(`cq-q${qi}exp`).style.display = 'block';
+          cqUpdateScore();
+
+          if (Object.keys(cqAnswered).length === CQ.length) {
+            setTimeout(cqShowResult, 500);
+          }
+        };
+
+        function cqUpdateScore() {
+          const total    = CQ.length;
+          const answered = Object.keys(cqAnswered).length;
+          const pct      = total ? Math.round(cqCorrect / total * 100) : 0;
+          const circle   = document.getElementById('cq-score-circle');
+          const bar      = document.getElementById('cq-bar');
+          const status   = document.getElementById('cq-status');
+          if (circle) circle.textContent = cqCorrect + '/' + total;
+          if (bar)    bar.style.width    = pct + '%';
+          if (status) status.textContent = answered + ' из ' + total + ' отвечено';
+          if (circle) circle.style.borderColor = pct >= 80 ? 'var(--accent3)' : 'var(--accent2)';
+        }
+
+        function cqShowResult() {
+          const passed = cqCorrect >= 4;
+          const icon   = document.getElementById('cq-result-icon');
+          const title  = document.getElementById('cq-result-title');
+          const text   = document.getElementById('cq-result-text');
+          const retry  = document.getElementById('cq-retry-btn');
+          const result = document.getElementById('cq-result');
+
+          if (passed) {
+            icon.textContent  = '🏆';
+            title.textContent = 'Тест пройден! ' + cqCorrect + ' из ' + CQ.length;
+            text.textContent  = 'Отличная работа! Теперь вы можете завершить курс и получить сертификат.';
+            if (retry) retry.style.display = 'none';
+            // Разблокируем финальный блок
+            const finale = document.getElementById('courseFinale');
+            if (finale) {
+              finale.style.display   = 'block';
+              finale.style.animation = 'fadeIn .5s ease';
+            }
+            try { localStorage.setItem(CQ_KEY, '1'); } catch(e) {}
+          } else {
+            icon.textContent  = '💪';
+            title.textContent = 'Почти! ' + cqCorrect + ' из ' + CQ.length;
+            text.textContent  = 'Нужно 4 правильных ответа. Перечитайте объяснения и попробуйте снова.';
+            if (retry) retry.style.display = 'inline-flex';
+          }
+          if (result) result.style.display = 'block';
+        }
+
+        window.cqRetry = function() {
+          document.getElementById('cq-result').style.display = 'none';
+          cqRender();
+        };
+
+        // Проверяем был ли тест уже пройден
+        const alreadyPassed = localStorage.getItem(CQ_KEY);
+        if (alreadyPassed) {
+          const finale = document.getElementById('courseFinale');
+          if (finale) finale.style.display = 'block';
+          document.getElementById('courseQuizWrap').style.display = 'none';
+        } else {
+          cqRender();
+        }
+      })();
+      <\/script>
+
+      <div id="courseQuizWrap" style="margin-top:32px">
+  <div style="padding:20px 24px;background:rgba(123,97,255,.06);border:1px solid rgba(123,97,255,.25);margin-bottom:20px">
+    <div style="font-size:10px;color:var(--accent2);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">📝 Финальный тест</div>
+    <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:6px">Проверьте знания</div>
+    <div style="font-size:13px;color:var(--muted)">5 вопросов. Нужно 4 из 5 чтобы завершить курс.</div>
+  </div>
+  <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px">
+    <div style="flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden">
+      <div id="cqfill_docker" style="height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;transition:width .4s"></div>
+    </div>
+    <div id="cqlabel_docker" style="font-size:11px;color:var(--muted);font-family:var(--font-mono);min-width:36px">Ответьте на вопросы ниже</div>
+  </div>
+  <div id="cq-questions"></div>
+  <div id="cqresult_docker" style="display:none;margin-top:20px;padding:20px;background:var(--surface);border:1px solid rgba(0,229,255,.2);text-align:center"></div>
+</div>
+
+
+      <h2>Стратегия backup для email-инфраструктуры</h2>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:16px 0">
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <span style="color:var(--accent);font-weight:700;min-width:100px;font-size:12px">Ежедневно</span>
+          <span style="font-size:12px;color:var(--muted)">Backup базы данных Mailcow. Легко и быстро, критично важно.</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <span style="color:var(--accent);font-weight:700;min-width:100px;font-size:12px">Еженедельно</span>
+          <span style="font-size:12px;color:var(--muted)">Полный backup всех volumes. Занимает больше времени и места.</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)">
+          <span style="color:var(--accent2);font-weight:700;min-width:100px;font-size:12px">Перед обновл.</span>
+          <span style="font-size:12px;color:var(--muted)">Полный backup перед любым обновлением системы.</span>
+        </div>
+      </div>
+
+      <h2>Автоматический backup в облако через rclone</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Устанавливаем rclone</span>
+curl https://rclone.org/install.sh | sudo bash
+
+<span class="comment"># Настраиваем подключение к Backblaze B2 (дёшево: $6/TB/мес):</span>
+rclone config
+<span class="comment"># New remote -> b2 -> ваши ключи B2</span>
+
+<span class="comment"># Скрипт backup с загрузкой в облако:</span>
+#!/bin/bash
+cd /opt/mailcow-dockerized
+./helper-scripts/backup_and_restore.sh backup all
+rclone copy /var/mailcow/backup b2bucket:mailcow-backups \
+  --include "*.tar.gz" \
+  --min-age 1h         <span class="comment"># только файлы старше 1 часа</span>
+
+<span class="comment"># Удаляем локальные backup старше 7 дней</span>
+find /var/mailcow/backup -name "*.tar.gz" -mtime +7 -delete</pre></div>
+    `
+  },
+}
+
+window.lessons = lessons;
+window.currentLesson = currentLesson;
+
+// quiz:docker
+var qData_docker = [{"q": "Чем отличается 'docker compose up' от 'docker compose up -d'?", "opts": ["Нет разницы", "up -d запускает в фоновом режиме (detached)", "up -d удаляет старые контейнеры", "up -d пересобирает образы"], "c": 1, "e": "-d (detached) запускает контейнеры в фоне и возвращает управление терминалу. Без -d логи выводятся в терминал и Ctrl+C остановит всё."}, {"q": "Команда для просмотра логов конкретного контейнера в реальном времени:", "opts": ["docker status n8n", "docker logs -f n8n", "docker inspect n8n", "docker ps n8n"], "c": 1, "e": "docker logs -f n8n — следит за логами контейнера n8n. -f (follow) — как tail -f. --tail 50 — последние 50 строк."}, {"q": "Volume в Docker нужен для:", "opts": ["Ускорения контейнера", "Сохранения данных между перезапусками контейнера", "Открытия портов", "Связи двух контейнеров"], "c": 1, "e": "Контейнер эфемерен — при пересоздании теряет все данные. Volume монтирует папку с хоста внутрь контейнера. Данные живут на хосте независимо от жизни контейнера."}, {"q": "docker compose down vs docker compose stop — в чём разница?", "opts": ["Нет разницы", "stop останавливает контейнеры, down удаляет их (но не volumes)", "down удаляет всё включая volumes", "stop удаляет образы"], "c": 1, "e": "stop — останавливает, можно запустить снова через start. down — удаляет контейнеры и сети. down -v — также удаляет volumes (данные!). Используйте down только когда нужно пересоздать контейнеры."}, {"q": "Как проверить что все сервисы в compose стеке запустились нормально?", "opts": ["ping localhost", "docker compose ps", "netstat -a", "systemctl status docker"], "c": 1, "e": "docker compose ps показывает статус каждого сервиса из docker-compose.yml. State: Up — работает, Exit — упал, Restarting — в цикле перезапуска."}];
+var qAns_docker = {};
+var qOk_docker = 0;
+
+function quizInit_docker() {
+  qAns_docker = {}; qOk_docker = 0;
+  var c = document.getElementById("quizQuestions");
+  if (!c) return;
+  var h = "";
+  qData_docker.forEach(function(q, i) {
+    h += "<div style=\"margin-bottom:12px;padding:20px;background:var(--bg2);border:1px solid var(--border)\">";
+    h += "<div style=\"font-size:11px;color:var(--muted);font-family:var(--font-mono);margin-bottom:8px\">Вопрос " + (i+1) + " из 5</div>";
+    h += "<div style=\"font-size:15px;color:var(--heading);font-weight:600;line-height:1.5;margin-bottom:14px\">" + q.q + "</div>";
+    h += "<div style=\"display:flex;flex-direction:column;gap:6px\">";
+    q.opts.forEach(function(opt, j) {
+      h += "<div id=\"qo_docker_" + i + "_" + j + "\" onclick=\"quizAns_docker(" + i + "," + j + ")\" style=\"display:flex;gap:10px;align-items:flex-start;padding:10px 14px;background:var(--bg);border:1px solid var(--border);cursor:pointer;font-size:13px;color:var(--text)\">";
+      h += "<div style=\"min-width:22px;height:22px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-family:var(--font-mono);color:var(--muted);flex-shrink:0\">" + String.fromCharCode(65+j) + "</div>";
+      h += opt + "</div>";
+    });
+    h += "</div>";
+    h += "<div id=\"qe_docker_" + i + "\" style=\"display:none;margin-top:10px;padding:10px 14px;background:var(--surface);border-left:3px solid var(--accent);font-size:12px;color:var(--muted);line-height:1.7\">" + (q.e||"") + "</div>";
+    h += "</div>";
+  });
+  c.innerHTML = h;
+  var bar = document.getElementById("quizBar");
+  var cnt = document.getElementById("quizCount");
+  if (bar) bar.style.width = "0%";
+  if (cnt) cnt.textContent = "0 из 5";
+  var res = document.getElementById("quizResult");
+  if (res) res.style.display = "none";
+}
+
+window["quizAns_docker"] = function(qi, oi) {
+  if (qAns_docker[qi] !== undefined) return;
+  qAns_docker[qi] = oi;
+  var q = qData_docker[qi];
+  var correct = (q.c !== undefined) ? q.c : q.correct;
+  var isOk = (oi === correct);
+  if (isOk) qOk_docker++;
+  q.opts.forEach(function(_, j) {
+    var el = document.getElementById("qo_docker_" + qi + "_" + j);
+    if (!el) return;
+    el.style.pointerEvents = "none";
+    if (j === correct) { el.style.borderColor = "var(--accent3)"; el.style.background = "rgba(0,255,136,.06)"; }
+    else if (j === oi && !isOk) { el.style.borderColor = "#ff6b6b"; el.style.background = "rgba(255,107,107,.06)"; }
+  });
+  var exp = document.getElementById("qe_docker_" + qi);
+  if (exp) exp.style.display = "block";
+  var answered = Object.keys(qAns_docker).length;
+  var bar = document.getElementById("quizBar");
+  var cnt = document.getElementById("quizCount");
+  if (bar) bar.style.width = Math.round(answered/5*100) + "%";
+  if (cnt) cnt.textContent = answered + " из 5";
+  if (answered === 5) {
+    setTimeout(function() {
+      var passed = qOk_docker >= 4;
+      var res = document.getElementById("quizResult");
+      if (!res) return;
+      res.style.display = "block";
+      if (passed) {
+        res.innerHTML = "<div style=\"font-size:36px;margin-bottom:10px\">&#127942;</div>"
+          + "<div style=\"font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--heading);margin-bottom:8px\">Тест пройден! " + qOk_docker + "/5</div>"
+          + "<div style=\"font-size:13px;color:var(--muted);margin-bottom:16px\">Курс завершён — смотрите финальный блок ниже.</div>";
+        var f = document.getElementById("courseFinale");
+        if (f) { f.style.display = "block"; f.scrollIntoView({behavior:"smooth",block:"nearest"}); }
+        try { localStorage.setItem("docker_quiz_passed","1"); } catch(e) {}
+      } else {
+        res.innerHTML = "<div style=\"font-size:36px;margin-bottom:10px\">&#128170;</div>"
+          + "<div style=\"font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--heading);margin-bottom:8px\">Почти! " + qOk_docker + "/5</div>"
+          + "<div style=\"font-size:13px;color:var(--muted);margin-bottom:16px\">Нужно 4 правильных. Попробуйте снова.</div>"
+          + "<button class=\"btn-ghost\" onclick=\"quizInit_docker()\">Попробовать снова</button>";
+      }
+      res.scrollIntoView({behavior:"smooth",block:"nearest"});
+    }, 400);
+  }
+};
+
+// ── LESSON NAVIGATION ──
+// currentLesson initialized in head
+
+
+
+
+function copyCode(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.textContent = 'скопировано!';
+    setTimeout(() => btn.textContent = 'копировать', 2000);
+  });
+}
+
+// ── Прогресс курса ──────────────────────────────────────
+const COURSE_KEY = window.location.pathname.replace(/.*\//, '').replace('.html','');
+const DONE_KEY   = COURSE_KEY + '_done_lessons';
+
+
+
+
+
+function updateProgress() {
+  var done = getDone();
+  var total = Object.keys(lessons).length;
+  var el = document.getElementById('progressText');
+  if (el) el.textContent = done.length + ' / ' + total + ' pройдено';
+  document.querySelectorAll('.sidebar-lesson').forEach(function(sl) {
+    var attr = sl.getAttribute('onclick') || '';
+    var m = attr.match(/showLesson\((\d+)\)/);
+    if (m) {
+      if (done.indexOf(parseInt(m[1])) >= 0) sl.classList.add('done');
+      else sl.classList.remove('done');
+    }
+  });
+}
+
+function toggleComplete() {
+  const cur  = window._currentLesson || 1;
+  const done = getDone();
+  const idx  = done.indexOf(cur);
+  if (idx >= 0) done.splice(idx, 1); else done.push(cur);
+  saveDone(done);
+  updateProgress();
+}
+
+// Патч showLesson чтобы обновлять кнопку при переходе
+const _origShowLesson = showLesson;
+showLesson = function(n) {
+  _origShowLesson(n);
+  window._currentLesson = n;
+  setTimeout(updateProgress, 50);
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  window._currentLesson = 1;
+  updateProgress();
+});
+
+<script>
+(function() {
+  const CQ_QUESTIONS = [{"q": "Docker образ (image) — это:", "opts": ["Запущенный контейнер", "Неизменяемый шаблон для создания контейнеров", "Файл конфигурации", "Виртуальная машина"], "correct": 1, "explain": "Image — шаблон с файловой системой. Container — запущенный экземпляр. Один image можно запустить как много контейнеров одновременно."}, {"q": "Команда для просмотра логов контейнера:", "opts": ["docker status n8n", "docker logs n8n --tail 50", "docker inspect n8n", "docker ps n8n"], "correct": 1, "explain": "docker logs — главная команда диагностики. --tail 50 — последние 50 строк. -f — следить в реальном времени. Первое что смотрим когда контейнер не запускается."}, {"q": "Чем docker compose down отличается от stop?", "opts": ["Нет разницы", "stop останавливает, down останавливает и удаляет контейнеры", "down удаляет образы", "stop удаляет volumes"], "correct": 1, "explain": "stop — останавливает (можно запустить снова). down — удаляет контейнеры и сети (volumes остаются без флага -v). Используйте down при обновлении конфигурации."}];
+  let cqAnswered = {};
+  let cqCorrect  = 0;
+
+  function cqAnswer(qi, oi) {
+    if (cqAnswered[qi] !== undefined) return;
+    cqAnswered[qi] = oi;
+    const q = CQ_QUESTIONS[qi];
+    const isOk = (oi === q.correct);
+    if (isOk) cqCorrect++;
+
+    q.opts.forEach((_, j) => {
+      const el = document.getElementById('cqo_docker_' + qi + '_' + j);
+      if (!el) return;
+      el.style.pointerEvents = 'none';
+      if (j === q.correct) el.classList.add('correct');
+      else if (j === oi && !isOk) el.classList.add('wrong');
+    });
+
+    const exp = document.getElementById('cqexp_docker_' + qi);
+    if (exp) exp.classList.add('show');
+
+    // Прогресс
+    const answered = Object.keys(cqAnswered).length;
+    const total    = CQ_QUESTIONS.length;
+    const pct = Math.round(cqCorrect / total * 100);
+    const barFill  = document.getElementById('cqfill_docker');
+    const barLabel = document.getElementById('cqlabel_docker');
+    if (barFill)  barFill.style.width = Math.round(answered / total * 100) + '%';
+    if (barLabel) barLabel.textContent = answered + ' / ' + total;
+
+    // Итог
+    if (answered === total) {
+      setTimeout(() => {
+        const res = document.getElementById('cqresult_docker');
+        if (!res) return;
+        let emoji, msg;
+        if (pct >= 80) { emoji = '🎯'; msg = 'Отличный результат — ' + pct + '%! Вы усвоили материал курса.'; }
+        else if (pct >= 60) { emoji = '📚'; msg = pct + '% — есть пробелы. Вернитесь к сложным урокам.'; }
+        else { emoji = '💪'; msg = pct + '% — повторите курс и попробуйте снова.'; }
+        res.innerHTML = '<div style="font-size:32px;margin-bottom:10px">' + emoji + '</div>'
+          + '<div style="font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--heading);margin-bottom:8px">Тест завершён</div>'
+          + '<div style="font-size:13px;color:var(--muted);margin-bottom:20px">' + msg + '</div>'
+          + (pct >= 80
+            ? '<a href="certificate.html" class="btn-primary">Получить сертификат →</a>'
+            : '<button class="btn-ghost" onclick="location.reload()">Повторить тест</button>');
+        res.classList.add('show');
+        res.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 400);
+    }
+  }
+
+  // Экспортируем функцию глобально
+  window['cqAnswer_docker'] = cqAnswer;
+})();
+</script>
+
+
+</script>
+</body>
+</html>

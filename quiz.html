@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Тестирование — MAILSTACK</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .quiz-wrap { max-width: 720px; margin: 0 auto; }
+    .quiz-card { background: var(--bg2); border: 1px solid var(--border); padding: 32px; margin-bottom: 12px; }
+    .quiz-n { font-size: 10px; color: var(--muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 10px; }
+    .quiz-q { font-size: 17px; color: var(--heading); font-weight: 600; line-height: 1.5; margin-bottom: 20px; }
+    .quiz-opts { display: flex; flex-direction: column; gap: 8px; }
+    .quiz-opt { display: flex; gap: 12px; align-items: center; padding: 12px 16px; background: var(--bg); border: 1px solid var(--border); cursor: pointer; font-size: 14px; color: var(--text); transition: all .15s; border-radius: 0; }
+    .quiz-opt:hover { border-color: var(--accent); color: var(--heading); }
+    .quiz-opt.selected { border-color: var(--accent); background: rgba(0,229,255,.06); }
+    .quiz-opt.correct  { border-color: var(--accent3); background: rgba(0,255,136,.08); color: var(--accent3); }
+    .quiz-opt.wrong    { border-color: #ff6b6b; background: rgba(255,107,107,.06); color: #ff6b6b; }
+    .quiz-opt .opt-key { min-width: 24px; height: 24px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-family: var(--font-mono); color: var(--muted); }
+    .quiz-opt.correct .opt-key { border-color: var(--accent3); color: var(--accent3); background: rgba(0,255,136,.1); }
+    .quiz-opt.wrong    .opt-key { border-color: #ff6b6b; color: #ff6b6b; }
+    .quiz-explain { margin-top: 14px; padding: 12px 16px; background: var(--surface); border-left: 3px solid var(--accent); font-size: 13px; color: var(--muted); line-height: 1.7; display: none; }
+    .quiz-explain.show { display: block; }
+    .topic-tabs { display: flex; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 32px; flex-wrap: wrap; }
+    .topic-tab { padding: 10px 18px; font-size: 12px; font-family: var(--font-mono); color: var(--muted); background: var(--bg); cursor: pointer; border: none; transition: all .15s; }
+    .topic-tab.active { background: var(--surface); color: var(--accent); }
+    .score-bar-wrap { background: var(--bg2); border: 1px solid var(--border); padding: 20px 24px; margin-bottom: 24px; display: flex; align-items: center; gap: 20px; }
+    .score-circle { width: 64px; height: 64px; border-radius: 50%; border: 3px solid var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: var(--font-head); font-size: 20px; font-weight: 800; color: var(--heading); flex-shrink: 0; }
+    .score-circle span { font-size: 10px; color: var(--muted); font-family: var(--font-mono); }
+    .progress-track { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    .progress-track-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 3px; transition: width .4s; }
+    .result-panel { background: var(--surface); border: 1px solid rgba(0,229,255,.2); padding: 32px; text-align: center; margin-top: 32px; }
+  
+/* ── Quiz recommendations ─────────────────────────────── */
+.suggest-course { margin-top: 12px; padding: 14px 16px; background: rgba(123,97,255,.06); border: 1px solid rgba(123,97,255,.2); }
+.suggest-label  { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: var(--accent2); font-family: var(--font-mono); margin-bottom: 10px; }
+.suggest-body   { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.suggest-title  { font-size: 14px; font-weight: 600; color: var(--heading); margin-bottom: 4px; }
+.suggest-desc   { font-size: 12px; color: var(--muted); }
+.suggest-btn    { padding: 8px 16px; background: var(--accent2); color: #fff; text-decoration: none; font-size: 12px; font-family: var(--font-mono); white-space: nowrap; flex-shrink: 0; transition: opacity .15s; }
+.suggest-btn:hover { opacity: .85; }
+
+.rec-header { font-size: 13px; color: var(--heading); font-weight: 600; margin-bottom: 16px; }
+.rec-grid   { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.rec-card   { padding: 16px; background: var(--bg2); border: 1px solid var(--border); }
+.rec-title  { font-size: 14px; font-weight: 700; color: var(--heading); margin-bottom: 6px; font-family: var(--font-head); }
+.rec-desc   { font-size: 12px; color: var(--muted); line-height: 1.6; }
+.rec-cta    { padding: 16px 20px; background: rgba(0,229,255,.04); border: 1px solid rgba(0,229,255,.2); display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.rec-cta-text { font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="index.html" class="logo"><span>MAIL</span><span class="logo-stack">STACK</span></a>
+  <div class="nav-links">
+    <a href="courses.html">Курсы</a>
+    <a href="resources.html">Шаблоны</a>
+    <a href="quiz.html" class="active">Тест</a>
+    <a href="https://t.me/yourusername" class="btn-nav">Написать</a>
+  </div>
+</nav>
+
+<section style="padding:60px 60px 20px">
+  <div class="section-label">Тестирование знаний</div>
+  <h1 style="font-family:var(--font-head);font-size:clamp(28px,4vw,48px);font-weight:800;color:var(--heading);letter-spacing:-2px;margin:0 0 12px">
+    Проверьте себя
+  </h1>
+  <p style="font-size:15px;color:var(--muted);max-width:520px;line-height:1.7;margin:0">
+    Выберите тему и отвечайте на вопросы. После каждого ответа видите объяснение. Цель — 80% и выше.
+  </p>
+</section>
+
+<section style="padding:20px 60px 80px">
+  <div class="quiz-wrap">
+
+    <!-- Выбор темы -->
+    <div class="topic-tabs" id="topicTabs">
+      <button class="topic-tab active" data-topic="infrastructure">🖥 Инфраструктура</button>
+      <button class="topic-tab" data-topic="deliverability">📬 Доставляемость</button>
+      <button class="topic-tab" data-topic="marketing">📊 Маркетинг</button>
+      <button class="topic-tab" data-topic="security">🔐 Безопасность</button>
+      <button class="topic-tab" data-topic="all">🎯 Все темы</button>
+    </div>
+
+    <!-- Прогресс -->
+    <div class="score-bar-wrap">
+      <div class="score-circle" id="scoreCircle">0<span>%</span></div>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:6px;font-family:var(--font-mono)">
+          <span id="scoreLabel">0 правильных из 0</span>
+          <span id="questProgress">Вопрос 0 / 0</span>
+        </div>
+        <div class="progress-track"><div class="progress-track-fill" id="progressFill" style="width:0%"></div></div>
+      </div>
+      <button id="resetBtn" onclick="resetQuiz()" style="padding:8px 14px;background:none;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-family:var(--font-mono);font-size:11px">↺ Сброс</button>
+    </div>
+
+    <!-- Вопросы -->
+    <div id="quizContainer"></div>
+
+    <!-- Результат -->
+    <div class="result-panel" id="resultPanel" style="display:none">
+      <div style="font-size:48px;margin-bottom:12px" id="resultEmoji">🎉</div>
+      <div style="font-family:var(--font-head);font-size:28px;font-weight:800;color:var(--heading);margin-bottom:8px" id="resultTitle">Отличный результат!</div>
+      <div style="font-size:14px;color:var(--muted);margin-bottom:24px" id="resultText">Вы ответили на X из Y вопросов</div>
+      <div id="resultRecs" style="display:none;margin-bottom:20px;text-align:left"></div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <button class="btn-primary" onclick="resetQuiz()">Пройти ещё раз</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script src="js/main.js"></script>
+<script>
+
+const COURSE_MAP = {
+  infrastructure: {
+    slug: 'vps',
+    title: 'VPS с нуля',
+    token: 'vps2025',
+    desc: 'Базовая инфраструктура: сервер, SSH, Linux, Docker.',
+    related: ['course-linux.html', 'course-vps.html', 'course-nginx.html', 'course-docker.html']
+  },
+  deliverability: {
+    slug: 'spf-dkim-dmarc',
+    title: 'SPF / DKIM / DMARC',
+    token: 'spf2025',
+    desc: 'Аутентификация, прогрев, репутация домена.',
+    related: ['course-spf-dkim-dmarc.html', 'course-warmup.html', 'course-postmaster.html', 'course-blacklist.html']
+  },
+  marketing: {
+    slug: 'mailwizz',
+    title: 'MailWizz',
+    token: 'mailwizz2025',
+    desc: 'Рассылки, сегментация, A/B тесты, автоматизации.',
+    related: ['course-mailwizz.html', 'course-copywriting.html', 'course-segmentation.html', 'course-abtests.html']
+  },
+  security: {
+    slug: 'security',
+    title: 'Безопасность сервера',
+    token: 'security2025',
+    desc: 'fail2ban, SSL, UFW, мониторинг угроз.',
+    related: ['course-security.html', 'course-nginx.html', 'course-audit.html']
+  }
+};
+
+const QUESTIONS = {
+infrastructure: [
+  { q: "Какой порт использует SMTP для отправки писем от клиента к серверу?", course: { slug: "mailcow-postal", title: "Mailcow + Postal", token: "mcp2025" }, opts: ["25","465","587","993"], correct: 2, explain: "587 — стандартный порт для submission (отправки от клиента). 25 — SMTP между серверами. 465 — устаревший SMTPS. 993 — IMAP." },
+  { q: "Что означает PTR-запись в DNS?", course: { slug: "dns", title: "DNS для email", token: "dns2025" }, opts: ["Перенаправление трафика","Обратный DNS — IP → доменное имя","Политика безопасности","Маршрутизация почты"], correct: 1, explain: "PTR (Pointer Record) — обратная DNS запись. Позволяет по IP адресу узнать доменное имя. Критична для почтовых серверов — большинство провайдеров проверяют что PTR совпадает с именем отправляющего сервера." },
+  { q: "Команда 'docker compose ps' показывает:", course: { slug: "docker", title: "Docker", token: "docker2025" }, opts: ["Список всех образов Docker","Статус запущенных контейнеров в compose стеке","Использование памяти контейнерами","Сетевые интерфейсы Docker"], correct: 1, explain: "docker compose ps показывает статус сервисов описанных в docker-compose.yml — запущен ли каждый контейнер, на каких портах слушает, последний статус." },
+  { q: "Что делает команда 'nginx -t'?", course: { slug: "nginx", title: "Nginx + SSL", token: "nginx2025" }, opts: ["Запускает Nginx","Перезапускает Nginx","Проверяет конфигурацию на синтаксические ошибки","Показывает текущий трафик"], correct: 2, explain: "nginx -t тестирует конфигурацию без применения. Всегда выполняйте эту команду перед nginx reload — если есть ошибка, reload не сломает работающий сервер." },
+  { q: "Для чего нужен reverse proxy (Nginx перед Mailcow)?", course: { slug: "nginx", title: "Nginx + SSL", token: "nginx2025" }, opts: ["Для ускорения базы данных","Чтобы один сервер мог обслуживать несколько доменов на 443 порту","Для шифрования почты","Для DNS резолвинга"], correct: 1, explain: "Reverse proxy принимает все входящие соединения на 80/443 и по имени домена перенаправляет к нужному внутреннему сервису. Так один IP/порт могут использовать Mailcow, n8n, Chatwoot и другие сервисы одновременно." },
+  { q: "Что происходит если TTL DNS записи равен 300?", course: { slug: "dns", title: "DNS для email", token: "dns2025" }, opts: ["Запись действует 300 дней","Кэш DNS обновляется каждые 5 минут","Максимум 300 запросов в секунду","Запись устаревает через 300 мс"], correct: 1, explain: "TTL (Time To Live) задаётся в секундах. 300 секунд = 5 минут. После истечения TTL DNS-резолверы удаляют запись из кэша и делают новый запрос. Маленький TTL = быстрое обновление, но больше нагрузка на DNS." },
+  { q: "Какая команда Linux покажет какой процесс использует порт 443?", course: { slug: "linux", title: "Linux для начинающих", token: "linux2025" }, opts: ["netstat -p 443","ss -tlnp | grep :443","lsof /port/443","ps -port 443"], correct: 1, explain: "ss -tlnp — показывает TCP (-t) сокеты в listening состоянии (-l) с именами процессов (-p) в числовом виде (-n). grep :443 фильтрует по порту." },
+  { q: "Cron запись '0 2 * * *' означает:", course: { slug: "linux", title: "Linux для начинающих", token: "linux2025" }, opts: ["Каждые 2 часа","В 2:00 каждые 2 минуты","Каждый день в 2:00","В 2:00 только по будням"], correct: 2, explain: "Формат cron: минута час день-месяца месяц день-недели. 0 2 * * * = 0 минут, 2 часа, любой день, любой месяц, любой день недели = каждый день в 02:00." },
+],
+deliverability: [
+  { q: "Что означает DKIM=fail в заголовках письма?", course: { slug: "spf-dkim-dmarc", title: "SPF/DKIM/DMARC", token: "spf2025" }, opts: ["Письмо не зашифровано","Подпись не совпадает с публичным ключом в DNS","Домен в чёрном списке","Отправитель заблокирован"], correct: 1, explain: "DKIM fail значит что принимающий сервер нашёл DKIM запись в DNS, но подпись письма ей не соответствует. Причины: ключ обновился но DNS не обновили, или письмо было изменено при передаче." },
+  { q: "Какой максимальный Spam Rate допускает Gmail до начала блокировки?", course: { slug: "postmaster", title: "Google Postmaster", token: "postmaster2025" }, opts: ["1%","0.5%","0.1%","5%"], correct: 2, explain: "Google объявил в 2024 году что отправители с Spam Rate выше 0.1% начнут испытывать проблемы с доставкой, выше 0.3% — массовые блокировки. Следите за метрикой в Google Postmaster." },
+  { q: "Hard bounce — это:", course: { slug: "bounce", title: "Bounce и FBL", token: "bounce2025" }, opts: ["Временная ошибка доставки","Постоянная ошибка — адрес не существует","Письмо отмечено как спам","Превышен размер вложения"], correct: 1, explain: "Hard bounce — постоянная ошибка (код 5xx): адрес не существует, домен не принимает почту. Нужно немедленно удалить из базы. Soft bounce — временная (4xx): ящик переполнен, сервер недоступен." },
+  { q: "DMARC с политикой p=quarantine означает:", course: { slug: "spf-dkim-dmarc", title: "SPF/DKIM/DMARC", token: "spf2025" }, opts: ["Полностью отклонять неаутентифицированные письма","Принять письмо но положить в папку Спам","Только мониторинг без действий","Переслать на другой адрес"], correct: 1, explain: "p=none — только мониторинг. p=quarantine — подозрительные письма идут в спам. p=reject — отклонять сразу. Переходите постепенно: none → quarantine → reject наблюдая DMARC отчёты." },
+  { q: "Зачем нужен прогрев IP при запуске нового почтового сервера?", course: { slug: "warmup", title: "Прогрев домена", token: "warmup2025" }, opts: ["Для технической проверки сервера","Потому что новый IP не имеет репутации и нужно постепенно её строить","Для регистрации в DNS","Чтобы получить PTR запись"], correct: 1, explain: "Новый IP — это чистый лист для спам-фильтров. Внезапная массовая отправка с нового IP выглядит как спам. Прогрев — постепенное наращивание объёмов (начиная с 50-100 писем/день) чтобы провайдеры видели нормальное поведение." },
+  { q: "Что показывает Google Postmaster Domain Reputation: 'Low'?", course: { slug: "postmaster", title: "Google Postmaster", token: "postmaster2025" }, opts: ["Домен новый и ещё не имеет репутации","Письма с этого домена регулярно попадают в спам","Домен заблокирован полностью","Технические проблемы с DKIM"], correct: 1, explain: "Low reputation означает что Gmail воспринимает ваш домен как источник нежелательной почты. Письма будут почти всегда попадать в спам. Нужно срочно снизить Spam Rate и улучшить качество базы." },
+  { q: "FBL (Feedback Loop) позволяет:", course: { slug: "bounce", title: "Bounce и FBL", token: "bounce2025" }, opts: ["Ускорить доставку писем","Получать уведомления когда получатель нажимает 'Это спам'","Проверять SPF записи","Анализировать Open Rate"], correct: 1, explain: "FBL — механизм при котором почтовый провайдер (Яндекс, Mail.ru) присылает ARF-отчёт отправителю когда пользователь жалуется на письмо. Нужно сразу отписывать таких пользователей от рассылки." },
+  { q: "SPF запись 'v=spf1 ip4:1.2.3.4 -all' означает:", course: { slug: "spf-dkim-dmarc", title: "SPF/DKIM/DMARC", token: "spf2025" }, opts: ["Разрешить отправку с IP 1.2.3.4 и мягко отклонять остальных","Разрешить только IP 1.2.3.4, жёстко отклонять все остальные","Разрешить всем кроме 1.2.3.4","Только мониторинг"], correct: 1, explain: "-all (HardFail) означает что письма с любых IP кроме указанных должны быть отклонены. ~all (SoftFail) — помечать как подозрительные но не отклонять. Начинайте с ~all и переходите к -all когда убедитесь что все ваши IP прописаны." },
+],
+marketing: [
+  { q: "Open Rate — это:", course: { slug: "abtests", title: "A/B тесты", token: "abtests2025" }, opts: ["Процент писем доставленных в инбокс","Доля открывших письмо от числа доставленных","Количество кликов по ссылкам","Процент отписок"], correct: 1, explain: "Open Rate = Открытия / Доставлено × 100%. Средний OR для email-маркетинга 20-30%. Зависит от темы письма, имени отправителя и времени отправки. Важно: Apple Mail Privacy Protection с iOS 15 искусственно завышает Open Rate — ориентируйтесь на Click Rate и конверсии." },
+  { q: "Что такое preheader в email?", course: { slug: "copywriting", title: "Копирайтинг", token: "copywriting2025" }, opts: ["Скрытый пиксель для отслеживания открытий","Текст показывающийся после темы в списке входящих","Заголовок HTTP запроса","Техническая информация о письме"], correct: 1, explain: "Preheader — короткий текст (40-90 символов) который почтовые клиенты показывают рядом с темой в списке писем. Это ваш второй шанс зацепить внимание. Если не задать — будет показан первый текст из письма." },
+  { q: "Какой порог срабатывания A/B теста темы письма является статистически значимым?", course: { slug: "abtests", title: "A/B тесты", token: "abtests2025" }, opts: ["Минимум 100 получателей на вариант","Минимум 500 получателей на вариант","Минимум 1000 получателей на вариант","Достаточно 50 на вариант"], correct: 2, explain: "Для статистически значимого A/B теста нужно минимум 1000 получателей на каждый вариант. При меньшей выборке разница между вариантами может быть случайной и делать выводы нельзя." },
+  { q: "Hard bounce адрес нужно:", course: { slug: "segmentation", title: "Сегментация базы", token: "segmentation2025" }, opts: ["Попробовать отправить ещё раз через неделю","Немедленно удалить из базы навсегда","Перенести в отдельный список для ретаргетинга","Отправить повторно через другой сервер"], correct: 1, explain: "Hard bounce (код 550 и подобные) — адрес не существует или домен не принимает почту. Повторная отправка на такие адреса портит вашу репутацию. MailWizz автоматически помечает их — проверьте что Bounce Server настроен." },
+  { q: "Что означает CTOR (Click-to-Open Rate)?", course: { slug: "abtests", title: "A/B тесты", token: "abtests2025" }, opts: ["Общий процент кликов от всех отправленных","Процент кликнувших из тех кто открыл письмо","Конверсия в покупку","Отношение переходов к показам"], correct: 1, explain: "CTOR = Клики / Открытия × 100%. Показывает качество контента письма — насколько интересно то что внутри. Норма: 10-20%. Низкий CTOR при высоком OR = тема зацепила, но контент разочаровал." },
+  { q: "Trigg-based (триггерная) цепочка welcome-серии обычно включает:", course: { slug: "triggers", title: "Триггерные цепочки", token: "triggers2025" }, opts: ["Одно приветственное письмо","3-7 писем отправляемых по расписанию или событиям","Ежедневные письма в течение месяца","Только транзакционные уведомления"], correct: 1, explain: "Классическая welcome-серия: письмо 1 сразу (подтверждение + приветствие), письмо 2 через день (ценный контент), письмо 3 через 3 дня (социальное доказательство), письмо 4 через неделю (оффер). 3-7 писем — оптимально." },
+  { q: "UTM-метки в ссылках нужны для:", course: { slug: "abtests", title: "A/B тесты", token: "abtests2025" }, opts: ["Ускорения загрузки ссылок","Отслеживания источника трафика в Google Analytics","Проверки валидности URL","Шифрования адреса получателя"], correct: 1, explain: "UTM параметры (utm_source, utm_medium, utm_campaign) позволяют Google Analytics отличить переходы из email от других источников. Без UTM все email переходы попадают в 'Direct traffic' и вы не видите реальную эффективность рассылок." },
+  { q: "RFM-анализ в email-маркетинге — это сегментация по:", course: { slug: "segmentation", title: "Сегментация базы", token: "segmentation2025" }, opts: ["Рейтингу, частоте, монетизации","Давности, частоте и денежной ценности","Регионам, форматам, метрикам","Результатам, воронкам, метаданным"], correct: 1, explain: "RFM: Recency (когда последний раз покупал), Frequency (как часто), Monetary (сколько потратил). Позволяет выделить VIP-клиентов, спящих и потерянных — и работать с каждым сегментом по-своему." },
+],
+security: [
+  { q: "Что такое Open Relay и почему это опасно?", course: { slug: "security", title: "Безопасность сервера", token: "security2025" }, opts: ["Открытый SSL сертификат","Почтовый сервер принимающий и пересылающий письма для любых отправителей","Открытый порт SSH","Незашифрованное SMTP соединение"], correct: 1, explain: "Open Relay — сервер без аутентификации который пересылает почту от кого угодно кому угодно. Спамеры используют такие серверы для рассылок. Результат: IP в блэклистах за несколько часов. Проверяйте: mxtoolbox.com/diagnostic." },
+  { q: "fail2ban защищает сервер от:", course: { slug: "security", title: "Безопасность сервера", token: "security2025" }, opts: ["DDoS атак","Брутфорс атак — блокирует IP с множеством неудачных попыток входа","SQL инъекций","Вирусов в письмах"], correct: 1, explain: "fail2ban мониторит лог-файлы (SSH, SMTP, Nginx) и блокирует IP адреса которые делают слишком много ошибок аутентификации. По умолчанию: 5 неудачных попыток = бан на 10 минут (настраивается)." },
+  { q: "Минимально рекомендуемая длина SSH ключа RSA:", course: { slug: "security", title: "Безопасность сервера", token: "security2025" }, opts: ["512 бит","1024 бит","2048 бит","4096 бит"], correct: 2, explain: "2048 бит — минимальный рекомендуемый размер RSA ключа. 4096 более безопасен но медленнее. Современная альтернатива — Ed25519: короткий ключ (256 бит) с высокой безопасностью и скоростью. Создать: ssh-keygen -t ed25519." },
+  { q: "Что нужно сделать после смены конфига /etc/ssh/sshd_config?", course: { slug: "security", title: "Безопасность сервера", token: "security2025" }, opts: ["Перезагрузить сервер","systemctl restart sshd (не закрывая текущую SSH сессию)","Переустановить SSH","Изменить пароль root"], correct: 1, explain: "ВАЖНО: всегда оставляйте текущую SSH сессию открытой при перезапуске sshd. Если новый конфиг содержит ошибку и доступ будет заблокирован — вы сможете исправить это через открытую сессию. Только после проверки что новая сессия открывается — закрывайте старую." },
+  { q: "Команда 'certbot renew --dry-run' выполняет:", course: { slug: "nginx", title: "Nginx + SSL", token: "nginx2025" }, opts: ["Реальное обновление всех сертификатов","Тест процесса обновления без реального изменения сертификатов","Удаление просроченных сертификатов","Создание нового сертификата"], correct: 1, explain: "--dry-run симулирует процесс обновления: обращается к Let's Encrypt серверам, проходит все проверки, но не записывает новые сертификаты на диск. Запускайте ежемесячно чтобы убедиться что автообновление работает." },
+  { q: "UFW команда для разрешения только SSH, HTTP и HTTPS:", course: { slug: "security", title: "Безопасность сервера", token: "security2025" }, opts: ["ufw allow all && ufw enable","ufw allow 22 && ufw allow 80 && ufw allow 443 && ufw enable","ufw open 22,80,443","ufw set default allow"], correct: 1, explain: "Правильная последовательность: сначала разрешить SSH (22) — иначе заблокируете себя, потом HTTP (80) и HTTPS (443), затем включить UFW. ufw default deny incoming блокирует всё остальное." },
+  { q: "MTA-STS защищает от:", course: { slug: "bimi", title: "BIMI + MTA-STS", token: "bimi2025" }, opts: ["Спам рассылок","Перехвата почты при передаче между серверами (MITM)","Брутфорс атак","Фишинговых писем"], correct: 1, explain: "MTA-STS (Mail Transfer Agent Strict Transport Security) требует от отправляющих серверов использовать TLS при доставке почты на ваш домен. Защищает от атак man-in-the-middle где злоумышленник может перехватить или подменить письма при передаче." },
+  { q: "Что означает ExitCode: 137 у Docker контейнера?", course: { slug: "troubleshoot", title: "Устранение неполадок", token: "troubleshoot2025" }, opts: ["Ошибка конфигурации","Контейнер убит системой из-за нехватки памяти (OOM Kill)","Неверный образ","Сетевая ошибка"], correct: 1, explain: "Exit code 137 = 128 + 9 (SIGKILL). Linux ядро убивает процессы когда заканчивается оперативная память (OOM Killer). Решение: увеличить RAM, добавить swap, или ограничить потребление других контейнеров." },
+],
+};
+
+// Собираем 'all' из всех тем
+QUESTIONS.all = [];
+Object.entries(QUESTIONS).forEach(([topic, qs]) => {
+  if (topic === 'all') return;
+  qs.forEach(q => {
+    const qWithTopic = Object.assign({}, q);
+    if (!qWithTopic.topic) qWithTopic.topic = topic;
+    if (!qWithTopic.course) {
+      const cm = COURSE_MAP[topic];
+      if (cm) qWithTopic.course = { slug: cm.slug, title: cm.title, token: cm.token };
+    }
+    QUESTIONS.all.push(qWithTopic);
+  });
+});
+
+let currentTopic = 'infrastructure';
+let answered = {};
+let correct = 0;
+let total = 0;
+
+function getQuestions() {
+  return QUESTIONS[currentTopic] || [];
+}
+
+
+function renderQuiz() {
+  const qs = getQuestions();
+  total = qs.length;
+  answered = {};
+  correct = 0;
+  updateScore();
+
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = qs.map((q, i) => `
+    <div class="quiz-card" id="q${i}">
+      <div class="quiz-n">Вопрос ${i+1} из ${qs.length} · ${getTopicLabel()}</div>
+      <div class="quiz-q">${q.q}</div>
+      <div class="quiz-opts">
+        ${q.opts.map((opt, j) => `
+          <div class="quiz-opt" onclick="answer(${i}, ${j})" id="q${i}o${j}">
+            <div class="opt-key">${String.fromCharCode(65+j)}</div>
+            ${opt}
+          </div>
+        `).join('')}
+      </div>
+      <div class="quiz-explain" id="${`q${i}exp`}">${q.explain}</div>
+      <div id="${`q${i}suggest`}" style="display:none"></div>
+    </div>
+  `).join('');
+  document.getElementById('resultPanel').style.display = 'none';
+}
+
+
+function getTopicLabel() {
+  const labels = { infrastructure:'Инфраструктура', deliverability:'Доставляемость', marketing:'Маркетинг', security:'Безопасность', all:'Все темы' };
+  return labels[currentTopic] || '';
+}
+
+
+function answer(qi, oi) {
+  if (answered[qi] !== undefined) return;
+  const qs = getQuestions();
+  const q = qs[qi];
+  answered[qi] = oi;
+  const isCorrect = oi === q.correct;
+  if (isCorrect) correct++;
+
+  q.opts.forEach((_, j) => {
+    const el = document.getElementById(`q${qi}o${j}`);
+    el.style.pointerEvents = 'none';
+    if (j === q.correct) el.classList.add('correct');
+    else if (j === oi && !isCorrect) el.classList.add('wrong');
+  });
+
+  // Показываем объяснение
+  document.getElementById(`q${qi}exp`).classList.add('show');
+
+  // Если ошиблись — показываем рекомендацию курса
+  if (!isCorrect) {
+    // Не показывать один курс дважды подряд
+    const shownCourses = window._shownCourses || (window._shownCourses = new Set());
+    const course = q.course
+      ? { slug: q.course.slug, title: q.course.title, token: q.course.token,
+          desc: (COURSE_MAP[currentTopic] || COURSE_MAP.infrastructure).desc }
+      : (COURSE_MAP[currentTopic] || COURSE_MAP.infrastructure);
+    const suggestEl = document.getElementById(`q${qi}suggest`);
+    if (suggestEl) {
+      const courseKey = course.slug || currentTopic;
+      if (!shownCourses.has(courseKey)) {
+        shownCourses.add(courseKey);
+        suggestEl.innerHTML = `
+          <div class="suggest-course">
+            <div class="suggest-label">📚 Изучите эту тему подробнее</div>
+            <div class="suggest-body">
+              <div>
+                <div class="suggest-title">${course.title}</div>
+                <div class="suggest-desc">${course.desc}</div>
+              </div>
+              <a href="course-${course.slug}.html?token=${course.token}" class="suggest-btn">
+                Открыть курс →
+              </a>
+            </div>
+          </div>`;
+        suggestEl.style.display = 'block';
+      }
+    }
+  }
+
+  updateScore();
+  if (Object.keys(answered).length === qs.length) setTimeout(showResult, 600);
+}
+
+function updateScore() {
+  const qs = getQuestions();
+  const answeredCount = Object.keys(answered).length;
+  const pct = qs.length ? Math.round(correct / qs.length * 100) : 0;
+  const progressPct = qs.length ? Math.round(answeredCount / qs.length * 100) : 0;
+
+  document.getElementById('scoreCircle').innerHTML = pct + '<span>%</span>';
+  document.getElementById('scoreLabel').textContent = correct + ' правильных из ' + qs.length;
+  document.getElementById('questProgress').textContent = 'Вопрос ' + answeredCount + ' / ' + qs.length;
+  document.getElementById('progressFill').style.width = progressPct + '%';
+
+  const circle = document.getElementById('scoreCircle');
+  circle.style.borderColor = pct >= 80 ? 'var(--accent3)' : pct >= 60 ? '#f0a500' : 'var(--accent)';
+}
+
+
+function showResult() {
+  const qs = getQuestions();
+  const pct = Math.round(correct / qs.length * 100);
+  const panel = document.getElementById('resultPanel');
+
+  let emoji, title, text, scoreClass;
+  if (pct >= 90)      { emoji='🏆'; title='Превосходный результат!'; text=`${correct} из ${qs.length} — вы отлично знаете тему.`; scoreClass='green'; }
+  else if (pct >= 80) { emoji='🎯'; title='Хороший результат!'; text=`${correct} из ${qs.length} — уверенное знание материала.`; scoreClass='green'; }
+  else if (pct >= 60) { emoji='📚'; title='Почти готово'; text=`${correct} из ${qs.length} — есть пробелы, рекомендуем повторить.`; scoreClass='yellow'; }
+  else                { emoji='💪'; title='Нужно подтянуть знания'; text=`${correct} из ${qs.length} — пройдите рекомендованные курсы.`; scoreClass='red'; }
+
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultText').textContent = text;
+
+  // Собираем темы в которых были ошибки
+  // Собираем КОНКРЕТНЫЕ курсы по пропущенным вопросам
+  const wrongCourseMap = new Map(); // slug → course object
+  qs.forEach((q, i) => {
+    if (answered[i] !== undefined && answered[i] !== q.correct) {
+      const qCourse = q.course;
+      const topic   = q.topic || currentTopic;
+      if (qCourse) {
+        wrongCourseMap.set(qCourse.slug, {
+          slug: qCourse.slug, title: qCourse.title, token: qCourse.token,
+          desc: (COURSE_MAP[topic] || COURSE_MAP.infrastructure).desc
+        });
+      } else if (COURSE_MAP[topic]) {
+        const cm = COURSE_MAP[topic];
+        wrongCourseMap.set(cm.slug, cm);
+      }
+    }
+  });
+
+  // Рекомендации курсов
+  const recEl = document.getElementById('resultRecs');
+  if (pct < 90 && recEl) {
+    const courses = [...wrongCourseMap.values()].slice(0, 3);
+
+    if (courses.length > 0) {
+      recEl.innerHTML = `
+        <div class="rec-header">📋 Рекомендованные курсы по вашим ошибкам</div>
+        <div class="rec-grid">
+          ${courses.map(c => `
+            <div class="rec-card">
+              <div class="rec-title">${c.title}</div>
+              <div class="rec-desc">${c.desc}</div>
+              <a href="course-${c.slug}.html?token=${c.token}" class="btn-primary" style="display:block;text-align:center;margin-top:12px">
+                Открыть курс →
+              </a>
+            </div>
+          `).join('')}
+        </div>
+        <div class="rec-cta">
+          <div class="rec-cta-text">Хотите изучить всё с нуля под руководством? Запишитесь на курс.</div>
+          <a href="https://t.me/yourusername" class="btn-primary" style="white-space:nowrap">Написать в Telegram →</a>
+        </div>
+      `;
+      recEl.style.display = 'block';
+    }
+  } else if (recEl) {
+    recEl.innerHTML = `
+      <div class="rec-cta" style="border-color:rgba(0,255,136,.2)">
+        <div class="rec-cta-text">🎉 Отличный результат! Хотите разобраться глубже — посмотрите наши курсы.</div>
+        <a href="courses.html" class="btn-primary">Смотреть курсы →</a>
+      </div>`;
+    recEl.style.display = 'block';
+  }
+
+  panel.style.display = 'block';
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function resetQuiz() { window._shownCourses = new Set(); renderQuiz(); window.scrollTo(0,0); }
+
+// Tabs
+document.querySelectorAll('.topic-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.topic-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentTopic = btn.dataset.topic;
+    renderQuiz();
+  });
+});
+
+renderQuiz();
+</script>
+</body>
+</html>

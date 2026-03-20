@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Сертификат — MAILSTACK</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#080a0f; --bg2:#0d1117; --surface:#161c28;
+      --border:rgba(255,255,255,.07); --accent:#00e5ff; --accent2:#7b61ff;
+      --accent3:#00ff88; --text:#e8eaf0; --muted:#5a6278; --heading:#fff;
+      --font-head:'Syne',sans-serif; --font-mono:'JetBrains Mono',monospace;
+    }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { background:var(--bg); color:var(--text); font-family:var(--font-mono); min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 20px; }
+
+    .setup-screen { max-width:500px; width:100%; text-align:center; }
+    .setup-screen h1 { font-family:var(--font-head); font-size:28px; font-weight:800; color:var(--heading); margin-bottom:12px; }
+    .setup-screen p { font-size:13px; color:var(--muted); line-height:1.7; margin-bottom:24px; }
+    .form-group { margin-bottom:16px; text-align:left; }
+    .form-group label { display:block; font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px; }
+    .form-group input, .form-group select { width:100%; padding:12px 14px; background:var(--bg2); border:1px solid var(--border); color:var(--text); font-family:var(--font-mono); font-size:14px; outline:none; transition:border-color .2s; }
+    .form-group input:focus { border-color:var(--accent); }
+    .disclaimer { font-size:11px; color:var(--muted); padding:12px 14px; background:var(--bg2); border:1px solid rgba(255,200,0,.2); line-height:1.7; margin-bottom:24px; text-align:left; }
+    .disclaimer strong { color:#f0c040; }
+    .btn-gen { width:100%; padding:14px; background:var(--accent); color:var(--bg); font-family:var(--font-head); font-size:16px; font-weight:800; border:none; cursor:pointer; transition:opacity .2s; }
+    .btn-gen:hover { opacity:.9; }
+
+    /* Сертификат */
+    .cert-wrap { display:none; max-width:860px; width:100%; }
+    .cert-actions { display:flex; gap:12px; margin-bottom:24px; justify-content:center; flex-wrap:wrap; }
+
+    #cert {
+      background:#0d1117;
+      border:1px solid rgba(0,229,255,.3);
+      position:relative;
+      padding:60px 70px;
+      overflow:hidden;
+    }
+
+    /* Угловые акценты */
+    #cert::before, #cert::after {
+      content:''; position:absolute;
+      width:120px; height:120px;
+    }
+    #cert::before { top:0; left:0; border-top:2px solid var(--accent); border-left:2px solid var(--accent); }
+    #cert::after  { bottom:0; right:0; border-bottom:2px solid var(--accent); border-right:2px solid var(--accent); }
+
+    .cert-logo { font-family:var(--font-head); font-size:20px; font-weight:800; letter-spacing:-1px; margin-bottom:40px; }
+    .cert-logo span { color:var(--accent); }
+    .cert-label { font-size:11px; text-transform:uppercase; letter-spacing:.15em; color:var(--muted); margin-bottom:12px; }
+    .cert-title { font-family:var(--font-head); font-size:36px; font-weight:800; color:var(--heading); line-height:1.1; margin-bottom:30px; letter-spacing:-1px; }
+    .cert-name  { font-family:var(--font-head); font-size:48px; font-weight:800; background:linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:12px; letter-spacing:-2px; line-height:1; }
+    .cert-course { font-size:18px; color:var(--text); margin-bottom:40px; line-height:1.5; }
+    .cert-divider { height:1px; background:linear-gradient(90deg,transparent,var(--accent),transparent); margin:32px 0; }
+    .cert-meta { display:flex; justify-content:space-between; align-items:flex-end; }
+    .cert-meta-item { }
+    .cert-meta-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; margin-bottom:4px; }
+    .cert-meta-value { font-size:14px; color:var(--heading); font-weight:700; }
+    .cert-id { font-size:10px; color:var(--muted); font-family:var(--font-mono); }
+    .cert-seal { width:80px; height:80px; border:2px solid var(--accent3); border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--accent3); font-size:9px; text-transform:uppercase; letter-spacing:.05em; text-align:center; }
+    .cert-seal-icon { font-size:24px; margin-bottom:2px; }
+    .cert-disclaimer { font-size:10px; color:var(--muted); margin-top:24px; padding:10px 14px; border:1px solid rgba(255,255,255,.05); line-height:1.6; }
+    .cert-watermark { position:absolute; bottom:30px; left:50%; transform:translateX(-50%); font-size:10px; color:rgba(255,255,255,.04); text-transform:uppercase; letter-spacing:.3em; white-space:nowrap; font-family:var(--font-head); font-weight:800; font-size:60px; }
+
+    @media print {
+      body { background:#fff; padding:0; }
+      .cert-actions { display:none; }
+      #cert { border:none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Форма -->
+<div class="setup-screen" id="setupScreen">
+  <div style="font-size:40px;margin-bottom:16px">🎓</div>
+  <h1>Получить сертификат</h1>
+  <p>Сертификат подтверждает что вы прошли курс MAILSTACK. Введите своё имя — оно появится на сертификате.</p>
+
+  <div class="disclaimer">
+    <strong>⚠ Важно:</strong> Это информационный сертификат об участии в обучении. Он не является документом об образовании, не имеет юридической силы и не несёт никаких официальных обязательств. Просто приятная бумажка которую можно добавить в портфолио или повесить на стену.
+  </div>
+
+  <div class="form-group">
+    <label>Ваше имя (как напечатать на сертификате)</label>
+    <input type="text" id="certName" placeholder="Иван Петров" maxlength="40">
+  </div>
+
+  <div class="form-group">
+    <label>Курс который вы прошли</label>
+    <select id="certCourse">
+      <option value="Linux для начинающих">Linux для начинающих</option>
+      <option value="VPS с нуля">VPS с нуля</option>
+      <option value="DNS для email">DNS для email</option>
+      <option value="Docker для email-стека">Docker для email-стека</option>
+      <option value="Nginx + SSL — reverse proxy">Nginx + SSL — reverse proxy</option>
+      <option value="Безопасность сервера">Безопасность сервера</option>
+      <option value="Резервное копирование email-стека">Резервное копирование email-стека</option>
+      <option value="Мониторинг стека: UptimeKuma + алёрты">Мониторинг стека</option>
+      <option value="Mailcow + Postal">Mailcow + Postal</option>
+      <option value="SPF / DKIM / DMARC">SPF / DKIM / DMARC</option>
+      <option value="BIMI + MTA-STS + TLS-RPT">BIMI + MTA-STS</option>
+      <option value="Прогрев домена и IP">Прогрев домена и IP</option>
+      <option value="Google Postmaster Tools">Google Postmaster Tools</option>
+      <option value="Mail.ru Postmaster">Mail.ru Postmaster</option>
+      <option value="Blacklist — выход и профилактика">Blacklist — выход и профилактика</option>
+      <option value="Bounce и FBL — управление репутацией">Bounce и FBL</option>
+      <option value="Аудит и диагностика email-инфраструктуры">Аудит и диагностика</option>
+      <option value="Устранение неполадок">Устранение неполадок</option>
+      <option value="MailWizz — платформа рассылок">MailWizz</option>
+      <option value="HTML-шаблоны писем">HTML-шаблоны писем</option>
+      <option value="Копирайтинг для email-рассылок">Копирайтинг для email</option>
+      <option value="Сегментация и чистка базы">Сегментация базы</option>
+      <option value="Триггерные цепочки в MailWizz">Триггерные цепочки</option>
+      <option value="A/B тесты и аналитика рассылок">A/B тесты и аналитика</option>
+      <option value="Транзакционные письма">Транзакционные письма</option>
+      <option value="n8n автоматизации">n8n автоматизации</option>
+      <option value="Chatwoot — мультиканальная поддержка">Chatwoot</option>
+      <option value="Миграция с Unisender на собственный стек">Миграция с Unisender</option>
+      <option value="Email-инфраструктура для агентств">Email-агентства</option>
+      <option value="Полный курс MAILSTACK (все модули)">✨ Полный курс MAILSTACK</option>
+    </select>
+  </div>
+
+  <button class="btn-gen" onclick="generateCert()">Создать сертификат →</button>
+</div>
+
+<!-- Сертификат -->
+<div class="cert-wrap" id="certWrap">
+  <div class="cert-actions">
+    <button class="btn-gen" style="width:auto;padding:12px 24px" onclick="window.print()">🖨️ Распечатать / PDF</button>
+    <button onclick="document.getElementById('setupScreen').style.display='block';document.getElementById('certWrap').style.display='none'"
+      style="padding:12px 24px;background:none;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-family:var(--font-mono)">
+      ← Изменить данные
+    </button>
+  </div>
+
+  <div id="cert">
+    <div class="cert-watermark">MAILSTACK</div>
+
+    <div class="cert-logo">MAIL<span>STACK</span></div>
+
+    <div class="cert-label">Сертификат об участии в обучении</div>
+    <div class="cert-title">Настоящим подтверждается<br>прохождение курса</div>
+
+    <div class="cert-name" id="displayName">Имя Фамилия</div>
+    <div class="cert-course" id="displayCourse">Название курса</div>
+
+    <div class="cert-divider"></div>
+
+    <div class="cert-meta">
+      <div class="cert-meta-item">
+        <div class="cert-meta-label">Дата выдачи</div>
+        <div class="cert-meta-value" id="displayDate">—</div>
+        <div class="cert-id" id="displayId">ID: —</div>
+      </div>
+      <div class="cert-meta-item" style="text-align:center">
+        <div class="cert-seal">
+          <div class="cert-seal-icon">✦</div>
+          <div>MAILSTACK<br>Academy</div>
+        </div>
+      </div>
+      <div class="cert-meta-item" style="text-align:right">
+        <div class="cert-meta-label">Платформа</div>
+        <div class="cert-meta-value">mailstack.ru</div>
+        <div class="cert-id">Email-инфраструктура</div>
+      </div>
+    </div>
+
+    <div class="cert-disclaimer">
+      ⚠ Этот сертификат является подтверждением участия в образовательной программе MAILSTACK и не имеет юридической силы. Он не является официальным документом об образовании, не несёт юридических обязательств и выдаётся исключительно в ознакомительных целях.
+    </div>
+  </div>
+</div>
+
+<script>
+function generateCert() {
+  const name   = document.getElementById('certName').value.trim();
+  const course = document.getElementById('certCourse').value;
+
+  if (!name) {
+    document.getElementById('certName').style.borderColor = '#ff6b6b';
+    document.getElementById('certName').focus();
+    return;
+  }
+
+  const now  = new Date();
+  const date = now.toLocaleDateString('ru-RU', { year:'numeric', month:'long', day:'numeric' });
+  const id   = 'MS-' + now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') +
+               '-' + Math.floor(Math.random()*90000+10000);
+
+  document.getElementById('displayName').textContent   = name;
+  document.getElementById('displayCourse').textContent = course;
+  document.getElementById('displayDate').textContent   = date;
+  document.getElementById('displayId').textContent     = 'ID: ' + id;
+
+  document.getElementById('setupScreen').style.display = 'none';
+  document.getElementById('certWrap').style.display    = 'block';
+  window.scrollTo(0, 0);
+}
+
+document.getElementById('certName').addEventListener('keydown', e => {
+  if (e.key === 'Enter') generateCert();
+  document.getElementById('certName').style.borderColor = 'var(--border)';
+});
+</script>
+</body>
+</html>
