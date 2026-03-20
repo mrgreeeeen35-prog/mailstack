@@ -1133,6 +1133,9 @@
     .nav-links { display: none; }
     .nav-cta { display: none; }
     .nav-burger { display: flex; align-items: center; justify-content: center; }
+    .grid-4 { grid-template-columns: repeat(2,1fr) !important; }
+    .grid-2 { grid-template-columns: 1fr !important; }
+    .footer-grid { grid-template-columns: 1fr !important; padding: 40px 24px 24px !important; }
     .hero { padding: 100px 24px 60px; }
     section { padding: 60px 24px; }
     .services-grid, .steps, .tech-grid, .pricing-grid, .platforms-grid, .constructor-cols, .calc-cols { grid-template-columns: 1fr; }
@@ -1383,7 +1386,7 @@
   <h2>Всё, что нужно для<br><em>мощного email</em></h2>
   <p class="section-desc">От установки сервера до первой рассылки — беру на себя весь технический процесс.</p>
 
-  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border)" class="reveal">
+  <div class="grid-2 reveal" style="display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border)">
 
     <div style="background:var(--bg);padding:40px 36px;transition:background .25s;position:relative;overflow:hidden" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2))"></div>
@@ -1816,13 +1819,109 @@
 .tariff-pick.active { background: rgba(0,229,255,.1); border-color: var(--accent); color: var(--accent); }
 </style>
 
-<!-- SAVINGS CALCULATOR -->
+<!-- SAVINGS: WHY OWN INFRA + CALCULATOR -->
 <section id="savings" style="background: var(--bg2);">
-  <div class="section-label">Экономия</div>
-  <h2>Сколько вы<br><em>переплачиваете</em></h2>
-  <p class="section-desc">Двигайте слайдер — калькулятор покажет разницу в реальном времени.</p>
+  <div class="section-label">Зачем своя инфра</div>
+  <h2>Почему не<br><em>Unisender?</em></h2>
+  <p class="section-desc">Четыре причины перейти на собственную email-инфраструктуру.</p>
 
-  <div class="calc-wrap reveal">
+  <!-- 4 ARGUMENT CARDS -->
+  <div class="grid-4 reveal" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:40px">
+    <div style="background:var(--bg);padding:32px 24px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent)"></div>
+      <div style="font-family:var(--font-head);font-size:36px;font-weight:800;color:var(--accent);margin-bottom:14px">$$</div>
+      <div style="font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--heading);margin-bottom:8px">В 10-30x дешевле</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7">VPS от 1 500 ₽/мес + бесплатный софт вместо 40 000+ ₽ за Unisender или Mailchimp.</div>
+    </div>
+    <div style="background:var(--bg);padding:32px 24px;border-left:1px solid var(--border);position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent3)"></div>
+      <div style="font-family:var(--font-head);font-size:36px;font-weight:800;color:var(--accent3);margin-bottom:14px">🔒</div>
+      <div style="font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--heading);margin-bottom:8px">Полный контроль</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7">Никто не заблокирует аккаунт в пятницу вечером. Ваш сервер, ваши правила.</div>
+    </div>
+    <div style="background:var(--bg);padding:32px 24px;border-left:1px solid var(--border);position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent2)"></div>
+      <div style="font-family:var(--font-head);font-size:36px;font-weight:800;color:var(--accent2);margin-bottom:14px">∞</div>
+      <div style="font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--heading);margin-bottom:8px">Без лимитов</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7">Нет ограничений на письма, контакты и домены. Масштабируйтесь когда нужно.</div>
+    </div>
+    <div style="background:var(--bg);padding:32px 24px;border-left:1px solid var(--border);position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#ff6b6b"></div>
+      <div style="font-family:var(--font-head);font-size:36px;font-weight:800;color:#ff6b6b;margin-bottom:14px">🛡</div>
+      <div style="font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--heading);margin-bottom:8px">Приватность</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7">Данные на вашем сервере. GDPR и 152-ФЗ — под контролем.</div>
+    </div>
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div style="margin-top:48px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono)">А в цифрах:</div>
+
+  <div style="overflow-x:auto;margin-top:16px" class="reveal">
+    <table style="width:100%;border-collapse:collapse;border:1px solid var(--border);min-width:600px">
+      <thead>
+        <tr>
+          <th style="background:var(--surface);padding:16px 20px;text-align:left;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;border-bottom:1px solid var(--border);width:30%"></th>
+          <th style="background:rgba(0,229,255,.04);padding:16px 20px;text-align:center;border-bottom:1px solid var(--border);border-left:1px solid rgba(0,229,255,.2);border-top:2px solid var(--accent)">
+            <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--accent)">MAILSTACK</div>
+            <div style="font-size:11px;color:var(--muted)">своя инфра</div>
+          </th>
+          <th style="background:var(--surface);padding:16px 20px;text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">
+            <div style="font-size:14px;font-weight:600;color:var(--heading)">Unisender</div>
+          </th>
+          <th style="background:var(--surface);padding:16px 20px;text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">
+            <div style="font-size:14px;font-weight:600;color:var(--heading)">SendGrid</div>
+          </th>
+          <th style="background:var(--surface);padding:16px 20px;text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">
+            <div style="font-size:14px;font-weight:600;color:var(--heading)">Mailchimp</div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:14px 20px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)">100К писем/мес</td>
+          <td style="text-align:center;font-size:14px;font-weight:700;color:var(--accent3);border-bottom:1px solid var(--border);border-left:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.02)">~1 500 ₽ <span style="font-size:10px;font-weight:400;color:var(--muted);display:block">только VPS</span></td>
+          <td style="text-align:center;font-size:13px;color:#ff6b6b;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">~15 000 ₽</td>
+          <td style="text-align:center;font-size:13px;color:#ff6b6b;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">~$50</td>
+          <td style="text-align:center;font-size:13px;color:#ff6b6b;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">~$75</td>
+        </tr>
+        <tr>
+          <td style="padding:14px 20px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)">Лимит контактов</td>
+          <td style="text-align:center;font-size:13px;color:var(--accent3);border-bottom:1px solid var(--border);border-left:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.02)">Без лимита</td>
+          <td style="text-align:center;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);border-left:1px solid var(--border)">По тарифу</td>
+          <td style="text-align:center;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);border-left:1px solid var(--border)">По тарифу</td>
+          <td style="text-align:center;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);border-left:1px solid var(--border)">По тарифу</td>
+        </tr>
+        <tr>
+          <td style="padding:14px 20px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)">Блокировка аккаунта</td>
+          <td style="text-align:center;font-size:13px;color:var(--accent3);border-bottom:1px solid var(--border);border-left:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.02)">Невозможна</td>
+          <td style="text-align:center;font-size:13px;color:#ff6b6b;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">Да</td>
+          <td style="text-align:center;font-size:13px;color:#ff6b6b;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">Да</td>
+          <td style="text-align:center;font-size:13px;color:#ff6b6b;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">Да</td>
+        </tr>
+        <tr>
+          <td style="padding:14px 20px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)">Данные клиентов</td>
+          <td style="text-align:center;font-size:13px;color:var(--accent3);border-bottom:1px solid var(--border);border-left:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.02)">На вашем сервере</td>
+          <td style="text-align:center;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);border-left:1px solid var(--border)">На чужом</td>
+          <td style="text-align:center;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);border-left:1px solid var(--border)">На чужом</td>
+          <td style="text-align:center;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);border-left:1px solid var(--border)">На чужом</td>
+        </tr>
+        <tr>
+          <td style="padding:14px 20px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)">Свои домены / IP</td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.02)"><span style="color:var(--accent3);font-size:16px">✓</span></td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--muted);opacity:.4;font-size:16px">—</span></td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="font-size:11px;color:var(--muted)">платно</span></td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--muted);opacity:.4;font-size:16px">—</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CALCULATOR -->
+  <div style="margin-top:48px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono)">Проверьте сами:</div>
+  <h3 style="font-family:var(--font-head);font-size:24px;font-weight:800;color:var(--heading);margin-top:8px;letter-spacing:-0.5px">Сколько вы <em style="color:var(--accent);font-style:normal">переплачиваете</em></h3>
+  <p style="font-size:13px;color:var(--muted);margin-top:8px">Двигайте слайдер — калькулятор покажет разницу в реальном времени.</p>
+
+  <div class="calc-wrap reveal" style="margin-top:28px">
     <div class="calc-cols">
 
       <!-- LEFT: inputs -->
@@ -1922,7 +2021,7 @@
   <h2>Научитесь<br><em>сами</em></h2>
   <p class="section-desc">24 курса — от Linux до запуска email-агентства. Пошаговые уроки с квизами и сертификатами.</p>
 
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:40px" class="reveal">
+  <div class="grid-4 reveal" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:40px">
 
     <div style="background:var(--bg2);padding:28px 24px;transition:background .25s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg2)'">
       <div style="font-size:28px;margin-bottom:12px">🐧</div>
@@ -2010,103 +2109,6 @@
   </div>
 </section>
 
-<!-- VS SAAS COMPARISON -->
-<section style="background:var(--bg2);padding:60px 60px">
-  <div class="section-label">Зачем своя инфра</div>
-  <h2>Почему не<br><em>Unisender?</em></h2>
-  <p class="section-desc">Четыре причины перейти на собственную email-инфраструктуру.</p>
-
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:40px" class="reveal">
-    <div style="background:var(--bg);padding:32px 24px;position:relative;overflow:hidden">
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent)"></div>
-      <div style="font-family:var(--font-head);font-size:36px;font-weight:800;color:var(--accent);margin-bottom:14px">$$</div>
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--heading);margin-bottom:8px">В 10-30x дешевле</div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.7">VPS от 1 500 ₽/мес + бесплатный софт вместо 40 000+ ₽ за Unisender или Mailchimp.</div>
-    </div>
-    <div style="background:var(--bg);padding:32px 24px;border-left:1px solid var(--border);position:relative;overflow:hidden">
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent3)"></div>
-      <div style="font-family:var(--font-head);font-size:36px;font-weight:800;color:var(--accent3);margin-bottom:14px">🔒</div>
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--heading);margin-bottom:8px">Полный контроль</div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.7">Никто не заблокирует аккаунт в пятницу вечером. Ваш сервер, ваши правила.</div>
-    </div>
-    <div style="background:var(--bg);padding:32px 24px;border-left:1px solid var(--border);position:relative;overflow:hidden">
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent2)"></div>
-      <div style="font-family:var(--font-head);font-size:36px;font-weight:800;color:var(--accent2);margin-bottom:14px">∞</div>
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--heading);margin-bottom:8px">Без лимитов</div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.7">Нет ограничений на письма, контакты и домены. Масштабируйтесь когда нужно.</div>
-    </div>
-    <div style="background:var(--bg);padding:32px 24px;border-left:1px solid var(--border);position:relative;overflow:hidden">
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#ff6b6b"></div>
-      <div style="font-family:var(--font-head);font-size:36px;font-weight:800;color:#ff6b6b;margin-bottom:14px">🛡</div>
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--heading);margin-bottom:8px">Приватность</div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.7">Данные на вашем сервере. GDPR и 152-ФЗ — под контролем.</div>
-    </div>
-  </div>
-
-  <!-- Таблица сравнения -->
-  <div style="margin-top:32px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono)">А в цифрах:</div>
-
-  <div style="overflow-x:auto;margin-top:40px" class="reveal">
-    <table style="width:100%;border-collapse:collapse;border:1px solid var(--border);min-width:600px">
-      <thead>
-        <tr>
-          <th style="background:var(--surface);padding:16px 20px;text-align:left;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;border-bottom:1px solid var(--border);width:30%"></th>
-          <th style="background:rgba(0,229,255,.04);padding:16px 20px;text-align:center;border-bottom:1px solid var(--border);border-left:1px solid rgba(0,229,255,.2);border-top:2px solid var(--accent)">
-            <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--accent)">MAILSTACK</div>
-            <div style="font-size:11px;color:var(--muted)">своя инфра</div>
-          </th>
-          <th style="background:var(--surface);padding:16px 20px;text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">
-            <div style="font-size:14px;font-weight:600;color:var(--heading)">Unisender</div>
-          </th>
-          <th style="background:var(--surface);padding:16px 20px;text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">
-            <div style="font-size:14px;font-weight:600;color:var(--heading)">SendGrid</div>
-          </th>
-          <th style="background:var(--surface);padding:16px 20px;text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">
-            <div style="font-size:14px;font-weight:600;color:var(--heading)">Mailchimp</div>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="padding:14px 20px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)">100К писем/мес</td>
-          <td style="text-align:center;font-size:14px;font-weight:700;color:var(--accent3);border-bottom:1px solid var(--border);border-left:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.02)">~1 500 ₽ <span style="font-size:10px;font-weight:400;color:var(--muted);display:block">только VPS</span></td>
-          <td style="text-align:center;font-size:13px;color:#ff6b6b;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">~15 000 ₽</td>
-          <td style="text-align:center;font-size:13px;color:#ff6b6b;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">~$50</td>
-          <td style="text-align:center;font-size:13px;color:#ff6b6b;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">~$75</td>
-        </tr>
-        <tr>
-          <td style="padding:14px 20px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)">Лимит контактов</td>
-          <td style="text-align:center;font-size:13px;color:var(--accent3);border-bottom:1px solid var(--border);border-left:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.02)">Без лимита</td>
-          <td style="text-align:center;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);border-left:1px solid var(--border)">По тарифу</td>
-          <td style="text-align:center;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);border-left:1px solid var(--border)">По тарифу</td>
-          <td style="text-align:center;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);border-left:1px solid var(--border)">По тарифу</td>
-        </tr>
-        <tr>
-          <td style="padding:14px 20px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)">Блокировка аккаунта</td>
-          <td style="text-align:center;font-size:13px;color:var(--accent3);border-bottom:1px solid var(--border);border-left:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.02)">Невозможна</td>
-          <td style="text-align:center;font-size:13px;color:#ff6b6b;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">Да</td>
-          <td style="text-align:center;font-size:13px;color:#ff6b6b;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">Да</td>
-          <td style="text-align:center;font-size:13px;color:#ff6b6b;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">Да</td>
-        </tr>
-        <tr>
-          <td style="padding:14px 20px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)">Данные клиентов</td>
-          <td style="text-align:center;font-size:13px;color:var(--accent3);border-bottom:1px solid var(--border);border-left:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.02)">На вашем сервере</td>
-          <td style="text-align:center;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);border-left:1px solid var(--border)">На чужом</td>
-          <td style="text-align:center;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);border-left:1px solid var(--border)">На чужом</td>
-          <td style="text-align:center;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);border-left:1px solid var(--border)">На чужом</td>
-        </tr>
-        <tr>
-          <td style="padding:14px 20px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)">Свои домены / IP</td>
-          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.02)"><span style="color:var(--accent3);font-size:16px">✓</span></td>
-          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--muted);opacity:.4;font-size:16px">—</span></td>
-          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="font-size:11px;color:var(--muted)">платно</span></td>
-          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--muted);opacity:.4;font-size:16px">—</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
 <!-- CTA -->
 <section id="cta" class="cta-section">
   <div class="cta-glow"></div>
@@ -2152,7 +2154,7 @@
 
 <!-- FOOTER -->
 <footer style="background:var(--bg2);border-top:1px solid var(--border)">
-  <div style="max-width:1200px;margin:0 auto;padding:60px 60px 40px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px">
+  <div class="footer-grid" style="max-width:1200px;margin:0 auto;padding:60px 60px 40px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px">
 
     <div>
       <svg width="200" height="24" viewBox="0 0 270 28" fill="none" style="margin-bottom:16px">
