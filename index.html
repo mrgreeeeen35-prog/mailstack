@@ -118,6 +118,26 @@
     color: var(--bg);
   }
 
+  /* ── NICHE TAGS ── */
+  .niche-tag {
+    font-size: 10px;
+    padding: 3px 10px;
+    letter-spacing: .02em;
+    text-decoration: none;
+    transition: all .25s;
+    position: relative;
+  }
+  .niche-tag:hover {
+    color: #fff !important;
+    border-color: transparent !important;
+    transform: translateY(-1px);
+  }
+  .niche-tag[data-glow="green"]:hover { background: #00ff88 !important; box-shadow: 0 0 16px rgba(0,255,136,.5); }
+  .niche-tag[data-glow="purple"]:hover { background: #7b61ff !important; box-shadow: 0 0 16px rgba(123,97,255,.5); }
+  .niche-tag[data-glow="cyan"]:hover { background: #00e5ff !important; box-shadow: 0 0 16px rgba(0,229,255,.5); }
+  .niche-tag[data-glow="red"]:hover { background: #ff6b6b !important; box-shadow: 0 0 16px rgba(255,107,107,.5); }
+  .niche-tag[data-glow="orange"]:hover { background: #f97316 !important; box-shadow: 0 0 16px rgba(249,115,22,.5); }
+
   /* ── BURGER ── */
   .nav-burger {
     display: none;
@@ -1315,10 +1335,10 @@
       <div style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--heading);margin-bottom:8px">Переплачиваете SaaS</div>
       <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px">Unisender, SendPulse, GetResponse — 40–150К/мес. База растёт, счёт тоже. На своей инфре — только VPS от 1 500 ₽.</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <a href="workflows.html?filter=ecommerce" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#00ff88;border:1px solid rgba(0,255,136,.25);background:rgba(0,255,136,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,255,136,.15)'" onmouseout="this.style.background='rgba(0,255,136,.06)'">E-commerce →</a>
-        <a href="workflows.html?filter=infobiz" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#7b61ff;border:1px solid rgba(123,97,255,.25);background:rgba(123,97,255,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(123,97,255,.15)'" onmouseout="this.style.background='rgba(123,97,255,.06)'">Инфобизнес →</a>
-        <a href="workflows.html?filter=edtech" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#7b61ff;border:1px solid rgba(123,97,255,.25);background:rgba(123,97,255,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(123,97,255,.15)'" onmouseout="this.style.background='rgba(123,97,255,.06)'">EdTech →</a>
-        <a href="workflows.html?filter=marketplace" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#00ff88;border:1px solid rgba(0,255,136,.25);background:rgba(0,255,136,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,255,136,.15)'" onmouseout="this.style.background='rgba(0,255,136,.06)'">Маркетплейсы →</a>
+        <a href="workflows.html?filter=ecommerce" class="niche-tag" data-glow="green" style="color:#00ff88;border:1px solid rgba(0,255,136,.25);background:rgba(0,255,136,.06)">E-commerce →</a>
+        <a href="workflows.html?filter=infobiz" class="niche-tag" data-glow="purple" style="color:#7b61ff;border:1px solid rgba(123,97,255,.25);background:rgba(123,97,255,.06)">Инфобизнес →</a>
+        <a href="workflows.html?filter=edtech" class="niche-tag" data-glow="purple" style="color:#7b61ff;border:1px solid rgba(123,97,255,.25);background:rgba(123,97,255,.06)">EdTech →</a>
+        <a href="workflows.html?filter=marketplace" class="niche-tag" data-glow="green" style="color:#00ff88;border:1px solid rgba(0,255,136,.25);background:rgba(0,255,136,.06)">Маркетплейсы →</a>
       </div>
     </div>
 
@@ -1328,10 +1348,10 @@
       <div style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--heading);margin-bottom:8px">Заблокировали аккаунт</div>
       <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px">SendGrid, Mailchimp, SaaS-платформа отключила без предупреждения. Транзакционные письма не уходят — клиенты злятся.</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <a href="workflows.html?filter=saas" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#00e5ff;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,229,255,.15)'" onmouseout="this.style.background='rgba(0,229,255,.06)'">SaaS / IT →</a>
-        <a href="workflows.html?filter=igaming" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#ff6b6b;border:1px solid rgba(255,107,107,.25);background:rgba(255,107,107,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(255,107,107,.15)'" onmouseout="this.style.background='rgba(255,107,107,.06)'">iGaming →</a>
-        <a href="workflows.html?filter=crypto" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#f97316;border:1px solid rgba(249,115,22,.25);background:rgba(249,115,22,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(249,115,22,.15)'" onmouseout="this.style.background='rgba(249,115,22,.06)'">Крипто →</a>
-        <a href="workflows.html?filter=dating" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#ff6b6b;border:1px solid rgba(255,107,107,.25);background:rgba(255,107,107,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(255,107,107,.15)'" onmouseout="this.style.background='rgba(255,107,107,.06)'">Дейтинг →</a>
+        <a href="workflows.html?filter=saas" class="niche-tag" data-glow="cyan" style="color:#00e5ff;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.06)">SaaS / IT →</a>
+        <a href="workflows.html?filter=igaming" class="niche-tag" data-glow="red" style="color:#ff6b6b;border:1px solid rgba(255,107,107,.25);background:rgba(255,107,107,.06)">iGaming →</a>
+        <a href="workflows.html?filter=crypto" class="niche-tag" data-glow="orange" style="color:#f97316;border:1px solid rgba(249,115,22,.25);background:rgba(249,115,22,.06)">Крипто →</a>
+        <a href="workflows.html?filter=dating" class="niche-tag" data-glow="red" style="color:#ff6b6b;border:1px solid rgba(255,107,107,.25);background:rgba(255,107,107,.06)">Дейтинг →</a>
       </div>
     </div>
 
@@ -1341,10 +1361,10 @@
       <div style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--heading);margin-bottom:8px">Письма в спаме</div>
       <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px">Домены в блэклистах, нет прогрева, DNS настроен криво. Нужна ротация IP и доставляемость с нуля.</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <a href="workflows.html?filter=coldoutreach" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#f97316;border:1px solid rgba(249,115,22,.25);background:rgba(249,115,22,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(249,115,22,.15)'" onmouseout="this.style.background='rgba(249,115,22,.06)'">Cold outreach →</a>
-        <a href="workflows.html?filter=edtech" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#7b61ff;border:1px solid rgba(123,97,255,.25);background:rgba(123,97,255,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(123,97,255,.15)'" onmouseout="this.style.background='rgba(123,97,255,.06)'">EdTech →</a>
-        <a href="workflows.html?filter=recruiting" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#00e5ff;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,229,255,.15)'" onmouseout="this.style.background='rgba(0,229,255,.06)'">Рекрутинг →</a>
-        <a href="workflows.html?filter=affiliate" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#f97316;border:1px solid rgba(249,115,22,.25);background:rgba(249,115,22,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(249,115,22,.15)'" onmouseout="this.style.background='rgba(249,115,22,.06)'">Affiliate →</a>
+        <a href="workflows.html?filter=coldoutreach" class="niche-tag" data-glow="orange" style="color:#f97316;border:1px solid rgba(249,115,22,.25);background:rgba(249,115,22,.06)">Cold outreach →</a>
+        <a href="workflows.html?filter=edtech" class="niche-tag" data-glow="purple" style="color:#7b61ff;border:1px solid rgba(123,97,255,.25);background:rgba(123,97,255,.06)">EdTech →</a>
+        <a href="workflows.html?filter=recruiting" class="niche-tag" data-glow="cyan" style="color:#00e5ff;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.06)">Рекрутинг →</a>
+        <a href="workflows.html?filter=affiliate" class="niche-tag" data-glow="orange" style="color:#f97316;border:1px solid rgba(249,115,22,.25);background:rgba(249,115,22,.06)">Affiliate →</a>
       </div>
     </div>
 
@@ -1354,10 +1374,10 @@
       <div style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--heading);margin-bottom:8px">Нужен свой сервер</div>
       <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px">152-ФЗ, GDPR, конфиденциальность. Данные клиентов нельзя хранить на чужих серверах — нужна своя инфраструктура.</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <a href="workflows.html?filter=fintech" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#00ff88;border:1px solid rgba(0,255,136,.25);background:rgba(0,255,136,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,255,136,.15)'" onmouseout="this.style.background='rgba(0,255,136,.06)'">Финтех →</a>
-        <a href="workflows.html?filter=medical" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#ff6b6b;border:1px solid rgba(255,107,107,.25);background:rgba(255,107,107,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(255,107,107,.15)'" onmouseout="this.style.background='rgba(255,107,107,.06)'">Медицина →</a>
-        <a href="workflows.html?filter=legal" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#7b61ff;border:1px solid rgba(123,97,255,.25);background:rgba(123,97,255,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(123,97,255,.15)'" onmouseout="this.style.background='rgba(123,97,255,.06)'">Юридические →</a>
-        <a href="workflows.html?filter=gov" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#00e5ff;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,229,255,.15)'" onmouseout="this.style.background='rgba(0,229,255,.06)'">Госсектор →</a>
+        <a href="workflows.html?filter=fintech" class="niche-tag" data-glow="green" style="color:#00ff88;border:1px solid rgba(0,255,136,.25);background:rgba(0,255,136,.06)">Финтех →</a>
+        <a href="workflows.html?filter=medical" class="niche-tag" data-glow="red" style="color:#ff6b6b;border:1px solid rgba(255,107,107,.25);background:rgba(255,107,107,.06)">Медицина →</a>
+        <a href="workflows.html?filter=legal" class="niche-tag" data-glow="purple" style="color:#7b61ff;border:1px solid rgba(123,97,255,.25);background:rgba(123,97,255,.06)">Юридические →</a>
+        <a href="workflows.html?filter=gov" class="niche-tag" data-glow="cyan" style="color:#00e5ff;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.06)">Госсектор →</a>
       </div>
     </div>
 
@@ -1367,9 +1387,9 @@
       <div style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--heading);margin-bottom:8px">Хаос сервисов</div>
       <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px">10 клиентов — 10 разных платформ. Нет единого контроля, отчётности, изоляции доменов и IP.</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <a href="workflows.html?filter=emailagency" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#00e5ff;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,229,255,.15)'" onmouseout="this.style.background='rgba(0,229,255,.06)'">Email-агентства →</a>
-        <a href="workflows.html?filter=markagency" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#f97316;border:1px solid rgba(249,115,22,.25);background:rgba(249,115,22,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(249,115,22,.15)'" onmouseout="this.style.background='rgba(249,115,22,.06)'">Маркетинг-агентства →</a>
-        <a href="workflows.html?filter=franchise" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#00ff88;border:1px solid rgba(0,255,136,.25);background:rgba(0,255,136,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,255,136,.15)'" onmouseout="this.style.background='rgba(0,255,136,.06)'">Франшизы →</a>
+        <a href="workflows.html?filter=emailagency" class="niche-tag" data-glow="cyan" style="color:#00e5ff;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.06)">Email-агентства →</a>
+        <a href="workflows.html?filter=markagency" class="niche-tag" data-glow="orange" style="color:#f97316;border:1px solid rgba(249,115,22,.25);background:rgba(249,115,22,.06)">Маркетинг-агентства →</a>
+        <a href="workflows.html?filter=franchise" class="niche-tag" data-glow="green" style="color:#00ff88;border:1px solid rgba(0,255,136,.25);background:rgba(0,255,136,.06)">Франшизы →</a>
       </div>
     </div>
 
@@ -1379,9 +1399,9 @@
       <div style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--heading);margin-bottom:8px">Запускаете с нуля</div>
       <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px">Новый продукт, первые транзакционные письма. Хотите сразу на своей инфре — без зависимости от SaaS.</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <a href="workflows.html?filter=startup" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#00e5ff;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,229,255,.15)'" onmouseout="this.style.background='rgba(0,229,255,.06)'">Стартапы →</a>
-        <a href="workflows.html?filter=startup" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#7b61ff;border:1px solid rgba(123,97,255,.25);background:rgba(123,97,255,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(123,97,255,.15)'" onmouseout="this.style.background='rgba(123,97,255,.06)'">Новые проекты →</a>
-        <a href="workflows.html?filter=startup" style="font-size:10px;padding:3px 10px;letter-spacing:.02em;color:#00ff88;border:1px solid rgba(0,255,136,.25);background:rgba(0,255,136,.06);text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(0,255,136,.15)'" onmouseout="this.style.background='rgba(0,255,136,.06)'">MVP →</a>
+        <a href="workflows.html?filter=startup" class="niche-tag" data-glow="cyan" style="color:#00e5ff;border:1px solid rgba(0,229,255,.25);background:rgba(0,229,255,.06)">Стартапы →</a>
+        <a href="workflows.html?filter=startup" class="niche-tag" data-glow="purple" style="color:#7b61ff;border:1px solid rgba(123,97,255,.25);background:rgba(123,97,255,.06)">Новые проекты →</a>
+        <a href="workflows.html?filter=startup" class="niche-tag" data-glow="green" style="color:#00ff88;border:1px solid rgba(0,255,136,.25);background:rgba(0,255,136,.06)">MVP →</a>
       </div>
     </div>
 
