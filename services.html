@@ -187,6 +187,9 @@
 .badge-rec  { background:rgba(0,255,136,.12); color:var(--accent3); border:1px solid rgba(0,255,136,.2); }
 .badge-free { background:rgba(0,255,136,.08); color:var(--accent3); border:1px solid rgba(0,255,136,.15); }
 .badge-paid { background:rgba(255,255,255,.05); color:var(--muted); border:1px solid var(--border); }
+.badge-setup { background:rgba(0,229,255,.08); color:var(--accent); border:1px solid rgba(0,229,255,.2); }
+.badge-pro { background:rgba(123,97,255,.08); color:var(--accent2); border:1px solid rgba(123,97,255,.2); }
+.badge-once { background:rgba(249,115,22,.08); color:#f97316; border:1px solid rgba(249,115,22,.2); }
 .c-card-price { font-size:12px; color:var(--accent); font-weight:500; font-family:var(--font-mono); }
 .c-cat-note { font-size:11px; color:var(--muted); padding-top:6px; }
 .c-summary {
@@ -313,26 +316,31 @@
             <div class="c-card" data-key="mta-mailcow" data-price="8000" data-group="mta" data-radio="1">
               <div class="c-card-name">Mailcow</div>
               <div class="c-card-desc">Только приём и хранение почты</div>
+              <div class="c-card-badge badge-free">open-source</div>
               <div class="c-card-price">8 000 ₽</div>
             </div>
             <div class="c-card" data-key="mta-postal" data-price="9000" data-group="mta" data-radio="1">
               <div class="c-card-name">Postal</div>
               <div class="c-card-desc">Только отправка и ротация IP</div>
+              <div class="c-card-badge badge-free">open-source</div>
               <div class="c-card-price">9 000 ₽</div>
             </div>
             <div class="c-card" data-key="mta-iredmail" data-price="6000" data-group="mta" data-radio="1">
               <div class="c-card-name">iRedMail</div>
               <div class="c-card-desc">Готовый стек Postfix + Dovecot</div>
+              <div class="c-card-badge badge-free">open-source</div>
               <div class="c-card-price">6 000 ₽</div>
             </div>
             <div class="c-card" data-key="mta-postfix" data-price="12000" data-group="mta" data-radio="1">
               <div class="c-card-name">Postfix / Exim</div>
               <div class="c-card-desc">Ручная настройка под задачу</div>
+              <div class="c-card-badge badge-pro">для профи</div>
               <div class="c-card-price">12 000 ₽</div>
             </div>
             <div class="c-card" data-key="mta-mailu" data-price="6000" data-group="mta" data-radio="1">
               <div class="c-card-name">Mailu</div>
               <div class="c-card-desc">Простая альтернатива Mailcow</div>
+              <div class="c-card-badge badge-free">open-source</div>
               <div class="c-card-price">6 000 ₽</div>
             </div>
           </div>
@@ -363,11 +371,13 @@
             <div class="c-card" data-key="mon-blacklist" data-price="4000" data-group="monitoring">
               <div class="c-card-name">Blacklist-мониторинг</div>
               <div class="c-card-desc">Автопроверка IP/доменов по 80+ DNSBL — алёрт при попадании</div>
+              <div class="c-card-badge badge-setup">настройка</div>
               <div class="c-card-price">4 000 ₽</div>
             </div>
             <div class="c-card" data-key="mon-postmaster" data-price="4000" data-group="monitoring">
               <div class="c-card-name">Google Postmaster + SNDS</div>
               <div class="c-card-desc">Репутация домена и IP в Gmail и Outlook — настройка и отчёты</div>
+              <div class="c-card-badge badge-free">бесплатный</div>
               <div class="c-card-price">4 000 ₽</div>
             </div>
             <div class="c-card" data-key="mon-dmarc" data-price="4000" data-group="monitoring">
@@ -379,6 +389,7 @@
             <div class="c-card" data-key="mon-queues" data-price="3000" data-group="monitoring">
               <div class="c-card-name">Мониторинг очередей</div>
               <div class="c-card-desc">Queue size, bounce/complaint rate Postal — алёрт при аномалиях</div>
+              <div class="c-card-badge badge-setup">настройка</div>
               <div class="c-card-price">3 000 ₽</div>
             </div>
           </div>
@@ -409,11 +420,13 @@
             <div class="c-card" data-key="sec-ssl" data-price="3000" data-group="security">
               <div class="c-card-name">SSL/TLS hardening</div>
               <div class="c-card-desc">Let's Encrypt автообновление, TLS 1.3, HSTS, шифрование SMTP</div>
+              <div class="c-card-badge badge-setup">настройка</div>
               <div class="c-card-price">3 000 ₽</div>
             </div>
             <div class="c-card" data-key="sec-ssh" data-price="3000" data-group="security">
               <div class="c-card-name">SSH hardening</div>
               <div class="c-card-desc">Только ключи, смена порта, отключение root-логина</div>
+              <div class="c-card-badge badge-setup">настройка</div>
               <div class="c-card-price">3 000 ₽</div>
             </div>
             <div class="c-card" data-key="sec-firewall" data-price="3000" data-group="security">
@@ -425,11 +438,13 @@
             <div class="c-card" data-key="sec-2fa" data-price="3000" data-group="security">
               <div class="c-card-name">2FA для панелей</div>
               <div class="c-card-desc">Двухфакторная аутентификация для Mailcow, SOGo, MailWizz</div>
+              <div class="c-card-badge badge-setup">настройка</div>
               <div class="c-card-price">3 000 ₽</div>
             </div>
             <div class="c-card" data-key="sec-antispam" data-price="5000" data-group="security">
               <div class="c-card-name">Настройка Rspamd</div>
               <div class="c-card-desc">Тонкая настройка антиспама — меньше ложных срабатываний, больше inbox</div>
+              <div class="c-card-badge badge-pro">продвинутый</div>
               <div class="c-card-price">5 000 ₽</div>
             </div>
           </div>
@@ -460,6 +475,7 @@
             <div class="c-card" data-key="mk-sendy" data-price="3000" data-group="marketing">
               <div class="c-card-name">Sendy</div>
               <div class="c-card-desc">Рассылки через Amazon SES</div>
+              <div class="c-card-badge badge-paid">лицензия отдельно</div>
               <div class="c-card-price">3 000 ₽</div>
             </div>
             <div class="c-card" data-key="mk-phplist" data-price="3000" data-group="marketing">
@@ -546,6 +562,7 @@
             <div class="c-card" data-key="ex-warmup-manual" data-price="5000" data-group="extra">
               <div class="c-card-name">Ручной прогрев</div>
               <div class="c-card-desc">Веду прогрев домена до рабочего объёма</div>
+              <div class="c-card-badge badge-pro">ручная работа</div>
               <div class="c-card-price">5 000 ₽</div>
             </div>
             <div class="c-card" data-key="ex-warmup-auto" data-price="3000" data-group="extra">
@@ -557,51 +574,61 @@
             <div class="c-card" data-key="ex-audit" data-price="7000" data-group="extra">
               <div class="c-card-name">Аудит доставляемости</div>
               <div class="c-card-desc">Blacklist, репутация IP, DNS, score — отчёт + рекомендации</div>
+              <div class="c-card-badge badge-once">разовая</div>
               <div class="c-card-price">7 000 ₽</div>
             </div>
             <div class="c-card" data-key="ex-cleanup" data-price="0" data-group="extra">
               <div class="c-card-name">Чистка базы</div>
               <div class="c-card-desc">Удаляю невалидные, неактивные адреса и спам-ловушки</div>
+              <div class="c-card-badge badge-once">за контакт</div>
               <div class="c-card-price">от 0,3 ₽/контакт</div>
             </div>
             <div class="c-card" data-key="ex-bimi" data-price="8000" data-group="extra">
               <div class="c-card-name">BIMI + лого в инбоксе</div>
               <div class="c-card-desc">Логотип в Gmail и Apple Mail рядом с письмом</div>
+              <div class="c-card-badge badge-paid">сертификат отдельно</div>
               <div class="c-card-price">8 000 ₽</div>
             </div>
             <div class="c-card" data-key="ex-dmarc" data-price="3000" data-group="extra">
               <div class="c-card-name">SPF / DKIM / DMARC</div>
               <div class="c-card-desc">Полная настройка аутентификации писем</div>
+              <div class="c-card-badge badge-setup">настройка</div>
               <div class="c-card-price">3 000 ₽</div>
             </div>
             <div class="c-card" data-key="ex-migration" data-price="10000" data-group="extra">
               <div class="c-card-name">Миграция сервера</div>
               <div class="c-card-desc">Переезд с cPanel, Plesk, другого Mailcow без потери писем</div>
+              <div class="c-card-badge badge-once">разовая</div>
               <div class="c-card-price">10 000 ₽</div>
             </div>
             <div class="c-card" data-key="ex-backup" data-price="4000" data-group="extra">
               <div class="c-card-name">Резервное копирование</div>
               <div class="c-card-desc">Автобэкапы на S3 / Backblaze / SFTP</div>
+              <div class="c-card-badge badge-setup">настройка</div>
               <div class="c-card-price">4 000 ₽</div>
             </div>
             <div class="c-card" data-key="ex-crm" data-price="8000" data-group="extra">
               <div class="c-card-name">Интеграция с CRM</div>
               <div class="c-card-desc">AmoCRM, Bitrix24 — синхронизация контактов и триггеры</div>
+              <div class="c-card-badge badge-setup">интеграция</div>
               <div class="c-card-price">8 000 ₽</div>
             </div>
             <div class="c-card" data-key="ex-webhook" data-price="6000" data-group="extra">
               <div class="c-card-name">Webhook → письмо</div>
               <div class="c-card-desc">Регистрация, оплата, брошенная корзина → автописьмо</div>
+              <div class="c-card-badge badge-setup">интеграция</div>
               <div class="c-card-price">6 000 ₽</div>
             </div>
             <div class="c-card" data-key="ex-tg-notify" data-price="4000" data-group="extra">
               <div class="c-card-name">Email → Telegram</div>
               <div class="c-card-desc">Важные входящие письма пересылаются в Telegram-бот</div>
+              <div class="c-card-badge badge-setup">интеграция</div>
               <div class="c-card-price">4 000 ₽</div>
             </div>
             <div class="c-card" data-key="ex-docs" data-price="5000" data-group="extra">
               <div class="c-card-name">Документация</div>
               <div class="c-card-desc">Инструкции по управлению и обучение команды</div>
+              <div class="c-card-badge badge-once">разовая</div>
               <div class="c-card-price">5 000 ₽</div>
             </div>
           </div>
