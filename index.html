@@ -1135,6 +1135,7 @@
     .nav-burger { display: flex; align-items: center; justify-content: center; }
     .grid-4 { grid-template-columns: repeat(2,1fr) !important; }
     .grid-2 { grid-template-columns: 1fr !important; }
+    .grid-3 { grid-template-columns: 1fr !important; }
     .footer-grid { grid-template-columns: 1fr !important; padding: 40px 24px 24px !important; }
     .hero { padding: 100px 24px 60px; }
     section { padding: 60px 24px; }
@@ -1297,20 +1298,6 @@
       </div>
     </div>
 
-    <!-- Live savings — отдельная строка -->
-    <div style="margin-top:24px;padding:16px 24px;border:1px solid rgba(0,229,255,0.15);background:rgba(0,229,255,0.04);display:inline-flex;align-items:center;gap:16px;flex-wrap:wrap">
-      <div>
-        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Сэкономлено клиентами</div>
-        <div style="font-family:var(--font-head);font-size:28px;font-weight:800;color:var(--heading);letter-spacing:-1px">
-          <span id="liveSavings">24 000 000</span> ₽
-        </div>
-      </div>
-      <div style="font-size:12px;color:#ff4444;font-family:var(--font-mono);display:flex;align-items:center;gap:6px;font-weight:600;letter-spacing:.08em">
-        <span style="width:8px;height:8px;border-radius:50%;background:#ff4444;display:inline-block;animation:pulse 1.5s ease-in-out infinite;box-shadow:0 0 6px rgba(255,68,68,.6)"></span>
-        LIVE
-      </div>
-    </div>
-
     <!-- Индустрии -->
     <div style="margin-top:28px;display:flex;gap:10px;flex-wrap:wrap">
       <div style="padding:5px 12px;border:1px solid var(--border);font-size:11px;color:var(--muted);font-family:var(--font-mono)">E-commerce</div>
@@ -1327,145 +1314,130 @@
 <section style="background:var(--bg2);padding:60px 60px">
   <div class="section-label">Для кого</div>
   <h2>Узнаёте<br><em>себя?</em></h2>
-  <p class="section-desc">Работаю с разными клиентами — вот самые частые запросы.</p>
+  <p class="section-desc">Работаю с разными бизнесами — вот самые частые запросы.</p>
 
-  <!-- КАРУСЕЛЬ -->
-  <div style="position:relative;overflow:hidden" class="reveal">
-    <div id="painCarousel" style="display:flex;gap:16px;transition:transform .5s cubic-bezier(.4,0,.2,1);will-change:transform">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:40px" class="grid-3 reveal">
 
-      <div class="pain-card"><div class="pain-icon">🛒</div><div class="pain-who">Интернет-магазин</div><div class="pain-text">Платите Unisender 40–110К в месяц за рассылки. База растёт — счёт тоже. Хотите платить только за VPS.</div><div class="pain-cta">→ Базовый или Стандарт</div></div>
-
-      <div class="pain-card"><div class="pain-icon">📧</div><div class="pain-who">Email-агентство</div><div class="pain-text">Ведёте 10+ клиентов через разные сервисы — хаос с логинами и тарифами. Нужна единая инфра с изоляцией.</div><div class="pain-cta">→ Профи или Custom</div></div>
-
-      <div class="pain-card"><div class="pain-icon">🎓</div><div class="pain-who">Онлайн-школа</div><div class="pain-text">Новый домен и письма летят в спам. База 50К+ в Gmail — нужен грамотный прогрев чтобы попасть в инбокс.</div><div class="pain-cta">→ Стандарт + прогрев</div></div>
-
-      <div class="pain-card"><div class="pain-icon">💻</div><div class="pain-who">SaaS / IT-продукт</div><div class="pain-text">SendGrid заблокировал аккаунт в пятницу вечером. Транзакционные письма не доходят — пользователи злятся.</div><div class="pain-cta">→ Срочный запуск за 3 дня</div></div>
-
-      <div class="pain-card"><div class="pain-icon">🔥</div><div class="pain-who">Cold email / Outreach</div><div class="pain-text">Письма летят в спам или промо. Домен заблэклистили. Нужна ротация доменов и IP с нуля.</div><div class="pain-cta">→ Профи + прогрев</div></div>
-
-      <div class="pain-card"><div class="pain-icon">🚀</div><div class="pain-who">Стартап</div><div class="pain-text">Запускаете продукт и нужны транзакционные письма с первого дня. Не хотите платить SendGrid.</div><div class="pain-cta">→ Базовый тариф</div></div>
-
+    <div style="background:var(--bg);padding:28px 24px;transition:background .25s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <span style="font-size:24px">🛒</span>
+        <span style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--heading)">E-commerce</span>
+      </div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7">Платите SaaS 40–110К/мес. База растёт — счёт тоже. Хотите платить только за VPS.</div>
     </div>
 
-    <!-- Градиенты по краям -->
-    <div style="position:absolute;top:0;left:0;bottom:0;width:40px;background:linear-gradient(90deg,var(--bg2),transparent);pointer-events:none"></div>
-    <div style="position:absolute;top:0;right:0;bottom:0;width:40px;background:linear-gradient(-90deg,var(--bg2),transparent);pointer-events:none"></div>
-  </div>
-
-  <!-- Навигация -->
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:20px">
-    <div style="display:flex;gap:6px" id="painDots"></div>
-    <div style="display:flex;gap:8px">
-      <button onclick="painPrev()" style="background:var(--bg);border:1px solid var(--border);color:var(--muted);width:36px;height:36px;cursor:pointer;font-size:16px;transition:all .2s;display:flex;align-items:center;justify-content:center" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">←</button>
-      <button onclick="painNext()" style="background:var(--bg);border:1px solid var(--border);color:var(--muted);width:36px;height:36px;cursor:pointer;font-size:16px;transition:all .2s;display:flex;align-items:center;justify-content:center" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">→</button>
+    <div style="background:var(--bg);padding:28px 24px;border-left:1px solid var(--border);transition:background .25s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <span style="font-size:24px">📧</span>
+        <span style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--heading)">Email-агентство</span>
+      </div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7">10+ клиентов через разные сервисы — хаос. Нужна единая инфра с изоляцией.</div>
     </div>
+
+    <div style="background:var(--bg);padding:28px 24px;border-left:1px solid var(--border);transition:background .25s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <span style="font-size:24px">🎓</span>
+        <span style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--heading)">EdTech</span>
+      </div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7">Письма летят в спам. База 50К+ — нужен прогрев и попадание в инбокс.</div>
+    </div>
+
+    <div style="background:var(--bg);padding:28px 24px;border-top:1px solid var(--border);transition:background .25s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <span style="font-size:24px">💻</span>
+        <span style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--heading)">SaaS / IT</span>
+      </div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7">SendGrid заблокировал аккаунт. Транзакционные письма не доходят — пользователи злятся.</div>
+    </div>
+
+    <div style="background:var(--bg);padding:28px 24px;border-top:1px solid var(--border);border-left:1px solid var(--border);transition:background .25s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <span style="font-size:24px">🔥</span>
+        <span style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--heading)">Cold outreach</span>
+      </div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7">Домены в блэклистах, письма в спаме. Нужна ротация IP и доменов с нуля.</div>
+    </div>
+
+    <div style="background:var(--bg);padding:28px 24px;border-top:1px solid var(--border);border-left:1px solid var(--border);transition:background .25s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <span style="font-size:24px">🚀</span>
+        <span style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--heading)">Стартап</span>
+      </div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7">Запускаете продукт — нужны транзакционные письма с первого дня без SendGrid.</div>
+    </div>
+
   </div>
 </section>
 
-<style>
-.pain-card {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  padding: 28px 24px;
-  min-width: 260px;
-  max-width: 260px;
-  flex-shrink: 0;
-  transition: border-color .25s, background .25s;
-}
-.pain-card:hover { background: var(--surface); border-color: rgba(0,229,255,.3); }
-.pain-icon { font-size: 28px; margin-bottom: 12px; }
-.pain-who { font-family: var(--font-head); font-size: 15px; font-weight: 700; color: var(--heading); margin-bottom: 10px; }
-.pain-text { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 16px; }
-.pain-cta { font-size: 11px; color: var(--accent3); font-family: var(--font-mono); }
-</style>
 
-
-<!-- SERVICES -->
+<!-- STACK -->
 <section id="services">
-  <div class="section-label">Услуги</div>
-  <h2>Всё, что нужно для<br><em>мощного email</em></h2>
-  <p class="section-desc">От установки сервера до первой рассылки — беру на себя весь технический процесс.</p>
+  <div class="section-label">Рабочая схема</div>
+  <h2>Что мы<br><em>настраиваем</em></h2>
+  <p class="section-desc">Полный email-стек — от серверной части до мониторинга и безопасности.</p>
 
-  <div class="grid-2 reveal" style="display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border)">
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:40px" class="grid-4 reveal">
 
-    <div style="background:var(--bg);padding:40px 36px;transition:background .25s;position:relative;overflow:hidden" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2))"></div>
-      <div style="font-size:40px;margin-bottom:16px">🖥️</div>
-      <div style="font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--heading);margin-bottom:6px;letter-spacing:-.5px">Mailcow + Postal</div>
-      <div style="font-size:12px;color:var(--accent);font-family:var(--font-mono);margin-bottom:14px">от 17 000 ₽</div>
-      <div style="font-size:14px;color:var(--muted);line-height:1.8">Полный почтовый стек: <strong style="color:var(--text)">Mailcow</strong> принимает и хранит почту, <strong style="color:var(--text)">Postal</strong> отправляет с ротацией IP. DNS, SSL, антиспам — всё под ключ.</div>
-      <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap">
-        <span style="font-size:11px;color:var(--muted);padding:3px 10px;border:1px solid var(--border);border-radius:2px">IMAP/POP3</span>
-        <span style="font-size:11px;color:var(--muted);padding:3px 10px;border:1px solid var(--border);border-radius:2px">Ротация IP</span>
-        <span style="font-size:11px;color:var(--muted);padding:3px 10px;border:1px solid var(--border);border-radius:2px">Docker</span>
-      </div>
+    <div style="background:var(--bg);padding:24px 20px;position:relative;overflow:hidden;transition:background .25s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent)"></div>
+      <div style="font-size:24px;margin-bottom:10px">🖥️</div>
+      <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--heading);margin-bottom:6px">Почтовый сервер</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7">Mailcow, Postal, iRedMail — приём, хранение, отправка с ротацией IP</div>
     </div>
 
-    <div style="background:var(--bg);padding:40px 36px;transition:background .25s;border-left:1px solid var(--border);position:relative;overflow:hidden" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent2),var(--accent3))"></div>
-      <div style="font-size:40px;margin-bottom:16px">📊</div>
-      <div style="font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--heading);margin-bottom:6px;letter-spacing:-.5px">Платформы рассылок</div>
-      <div style="font-size:12px;color:var(--accent);font-family:var(--font-mono);margin-bottom:14px">от 3 000 ₽</div>
-      <div style="font-size:14px;color:var(--muted);line-height:1.8">Установка и настройка <strong style="color:var(--text)">MailWizz</strong>, <strong style="color:var(--text)">Mautic</strong>, Listmonk. Сегментация, шаблоны, A/B тесты, автоматические цепочки писем.</div>
-      <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap">
-        <span style="font-size:11px;color:var(--muted);padding:3px 10px;border:1px solid var(--border);border-radius:2px">A/B тесты</span>
-        <span style="font-size:11px;color:var(--muted);padding:3px 10px;border:1px solid var(--border);border-radius:2px">Сегментация</span>
-        <span style="font-size:11px;color:var(--muted);padding:3px 10px;border:1px solid var(--border);border-radius:2px">Автоцепочки</span>
-      </div>
+    <div style="background:var(--bg);padding:24px 20px;border-left:1px solid var(--border);position:relative;overflow:hidden;transition:background .25s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent2)"></div>
+      <div style="font-size:24px;margin-bottom:10px">📊</div>
+      <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--heading);margin-bottom:6px">Рассылки</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7">MailWizz, Mautic, Listmonk — сегментация, A/B, автоцепочки</div>
     </div>
 
-    <div style="background:var(--bg);padding:40px 36px;transition:background .25s;border-top:1px solid var(--border);position:relative;overflow:hidden" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent3),var(--accent))"></div>
-      <div style="font-size:40px;margin-bottom:16px">💬</div>
-      <div style="font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--heading);margin-bottom:6px;letter-spacing:-.5px">Chatwoot & поддержка</div>
-      <div style="font-size:12px;color:var(--accent);font-family:var(--font-mono);margin-bottom:14px">от 5 000 ₽</div>
-      <div style="font-size:14px;color:var(--muted);line-height:1.8">Email, Telegram, WhatsApp в одном инбоксе. <strong style="color:var(--text)">Chatwoot</strong> — единое окно для всей команды поддержки с историей переписки.</div>
-      <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap">
-        <span style="font-size:11px;color:var(--muted);padding:3px 10px;border:1px solid var(--border);border-radius:2px">Telegram</span>
-        <span style="font-size:11px;color:var(--muted);padding:3px 10px;border:1px solid var(--border);border-radius:2px">WhatsApp</span>
-        <span style="font-size:11px;color:var(--muted);padding:3px 10px;border:1px solid var(--border);border-radius:2px">Email</span>
-      </div>
+    <div style="background:var(--bg);padding:24px 20px;border-left:1px solid var(--border);position:relative;overflow:hidden;transition:background .25s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent3)"></div>
+      <div style="font-size:24px;margin-bottom:10px">🔐</div>
+      <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--heading);margin-bottom:6px">Аутентификация</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7">SPF, DKIM, DMARC, MTA-STS, BIMI — инбокс вместо спама</div>
     </div>
 
-    <div style="background:var(--bg);padding:40px 36px;transition:background .25s;border-left:1px solid var(--border);border-top:1px solid var(--border);position:relative;overflow:hidden" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent3))"></div>
-      <div style="font-size:40px;margin-bottom:16px">🔗</div>
-      <div style="font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--heading);margin-bottom:6px;letter-spacing:-.5px">Интеграции</div>
-      <div style="font-size:12px;color:var(--accent);font-family:var(--font-mono);margin-bottom:14px">от 5 000 ₽</div>
-      <div style="font-size:14px;color:var(--muted);line-height:1.8">Подключаю стек к CRM, вебхукам и API через <strong style="color:var(--text)">n8n</strong>. Триггерные письма по событиям: регистрация, оплата, брошенная корзина.</div>
-      <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap">
-        <span style="font-size:11px;color:var(--muted);padding:3px 10px;border:1px solid var(--border);border-radius:2px">AmoCRM</span>
-        <span style="font-size:11px;color:var(--muted);padding:3px 10px;border:1px solid var(--border);border-radius:2px">Bitrix24</span>
-        <span style="font-size:11px;color:var(--muted);padding:3px 10px;border:1px solid var(--border);border-radius:2px">Webhook</span>
-      </div>
+    <div style="background:var(--bg);padding:24px 20px;border-left:1px solid var(--border);position:relative;overflow:hidden;transition:background .25s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#ff6b6b"></div>
+      <div style="font-size:24px;margin-bottom:10px">🔥</div>
+      <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--heading);margin-bottom:6px">Прогрев</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7">Warm-up доменов и IP до рабочих объёмов, blacklist-менеджмент</div>
     </div>
 
-    <div style="background:var(--bg);padding:40px 36px;transition:background .25s;border-top:1px solid var(--border);position:relative;overflow:hidden" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent2),var(--accent))"></div>
-      <div style="font-size:40px;margin-bottom:16px">🔐</div>
-      <div style="font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--heading);margin-bottom:6px;letter-spacing:-.5px">Аутентификация</div>
-      <div style="font-size:12px;color:var(--accent);font-family:var(--font-mono);margin-bottom:14px">от 3 000 ₽</div>
-      <div style="font-size:14px;color:var(--muted);line-height:1.8">SPF, DKIM, DMARC, MTA-STS и BIMI. Письма попадают в инбокс Gmail и Outlook, а не в спам. Защита от фишинга.</div>
-      <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap">
-        <span style="font-size:11px;color:var(--muted);padding:3px 10px;border:1px solid var(--border);border-radius:2px">DMARC</span>
-        <span style="font-size:11px;color:var(--muted);padding:3px 10px;border:1px solid var(--border);border-radius:2px">BIMI</span>
-        <span style="font-size:11px;color:var(--muted);padding:3px 10px;border:1px solid var(--border);border-radius:2px">MTA-STS</span>
-      </div>
+    <div style="background:var(--bg);padding:24px 20px;border-top:1px solid var(--border);position:relative;overflow:hidden;transition:background .25s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent)"></div>
+      <div style="font-size:24px;margin-bottom:10px">💬</div>
+      <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--heading);margin-bottom:6px">Поддержка клиентов</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7">Chatwoot, Zammad — Email, Telegram, WhatsApp в одном окне</div>
     </div>
 
-    <div style="background:var(--bg);padding:40px 36px;transition:background .25s;border-left:1px solid var(--border);border-top:1px solid var(--border);position:relative;overflow:hidden" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#ff6b6b,var(--accent2))"></div>
-      <div style="font-size:40px;margin-bottom:16px">🔥</div>
-      <div style="font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--heading);margin-bottom:6px;letter-spacing:-.5px">Прогрев домена</div>
-      <div style="font-size:12px;color:var(--accent);font-family:var(--font-mono);margin-bottom:14px">от 5 000 ₽</div>
-      <div style="font-size:14px;color:var(--muted);line-height:1.8">Стратегия warm-up для новых доменов и IP. Ручной и автоматический прогрев до рабочего объёма без попаданий в спам.</div>
-      <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap">
-        <span style="font-size:11px;color:var(--muted);padding:3px 10px;border:1px solid var(--border);border-radius:2px">Ручной</span>
-        <span style="font-size:11px;color:var(--muted);padding:3px 10px;border:1px solid var(--border);border-radius:2px">Автоматический</span>
-        <span style="font-size:11px;color:var(--muted);padding:3px 10px;border:1px solid var(--border);border-radius:2px">Мониторинг</span>
-      </div>
+    <div style="background:var(--bg);padding:24px 20px;border-top:1px solid var(--border);border-left:1px solid var(--border);position:relative;overflow:hidden;transition:background .25s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent2)"></div>
+      <div style="font-size:24px;margin-bottom:10px">🔗</div>
+      <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--heading);margin-bottom:6px">Интеграции</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7">n8n, CRM, вебхуки — триггерные письма по событиям</div>
     </div>
 
+    <div style="background:var(--bg);padding:24px 20px;border-top:1px solid var(--border);border-left:1px solid var(--border);position:relative;overflow:hidden;transition:background .25s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent3)"></div>
+      <div style="font-size:24px;margin-bottom:10px">📡</div>
+      <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--heading);margin-bottom:6px">Мониторинг</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7">Grafana, UptimeKuma — алёрты при сбоях, дашборды в реальном времени</div>
+    </div>
+
+    <div style="background:var(--bg);padding:24px 20px;border-top:1px solid var(--border);border-left:1px solid var(--border);position:relative;overflow:hidden;transition:background .25s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#ff6b6b"></div>
+      <div style="font-size:24px;margin-bottom:10px">🛡</div>
+      <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--heading);margin-bottom:6px">Безопасность</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7">WireGuard, CrowdSec, Fail2ban, бэкапы на S3 — защита и резервирование</div>
+    </div>
+
+  </div>
+
+  <div style="text-align:center;margin-top:24px">
+    <a href="services.html" class="btn-ghost" style="display:inline-block">Подробнее об услугах</a>
   </div>
 </section>
 
@@ -1546,21 +1518,17 @@
   <div style="position:relative;overflow:hidden;margin-top:40px" class="reveal">
     <div id="reviewCarousel" style="display:flex;gap:16px;transition:transform .5s cubic-bezier(.4,0,.2,1)">
 
-      <div class="review-card"><div class="rv-quote">"</div><div class="rv-text">Платили Unisender 44 тысячи в месяц, теперь платим 3 500 за VPS. Переход занял два дня — думал, будет хуже.</div><div class="rv-stars">★★★★★</div><div class="rv-name">Игорь М.</div><div class="rv-role">Директор, интернет-магазин</div></div>
+      <div class="review-card"><div class="rv-quote">"</div><div class="rv-text">Перешли с Unisender — было 44К/мес, теперь VPS за 3 500. Единственный минус — надо было сделать это раньше. Настройка заняла 2 дня, всё заработало сразу.</div><div class="rv-stars">★★★★★</div><div class="rv-name">Игорь Малахов</div><div class="rv-role">Операционный директор, StyleShop.ru</div></div>
 
-      <div class="review-card"><div class="rv-quote">"</div><div class="rv-text">SendGrid заблокировал нас в пятницу вечером. Написал в телеграм — к утру субботы всё работало на своём сервере.</div><div class="rv-stars">★★★★★</div><div class="rv-name">Артём Б.</div><div class="rv-role">CTO, B2B SaaS</div></div>
+      <div class="review-card"><div class="rv-quote">"</div><div class="rv-text">SendGrid заблокировал аккаунт без предупреждения. Написал в пятницу — к субботе уже отправляли с Postal. Через месяц deliverability даже выше стала: 96.2% по Postmaster.</div><div class="rv-stars">★★★★★</div><div class="rv-name">Артём Белов</div><div class="rv-role">CTO, Planfix (B2B SaaS)</div></div>
 
-      <div class="review-card"><div class="rv-quote">"</div><div class="rv-text">Вели клиентов через пять разных сервисов — это был кошмар. Теперь всё в одном месте, отчёты генерируются автоматически.</div><div class="rv-stars">★★★★★</div><div class="rv-name">Светлана К.</div><div class="rv-role">Руководитель, email-агентство</div></div>
+      <div class="review-card"><div class="rv-quote">"</div><div class="rv-text">Настроили за 4 дня вместо обещанных трёх — были сложности с DNS на стороне хостера. Но результат отличный, 98% inbox rate на Gmail. Документацию дали подробную.</div><div class="rv-stars">★★★★☆</div><div class="rv-name">Светлана Козлова</div><div class="rv-role">Head of Marketing, SkillFactory</div></div>
 
-      <div class="review-card"><div class="rv-quote">"</div><div class="rv-text">Новый домен попадал в спам к Gmail. После прогрева за 8 недель — 97% инбокс. База 80К, всё работает стабильно.</div><div class="rv-stars">★★★★★</div><div class="rv-name">Марина Л.</div><div class="rv-role">Директор по маркетингу, EdTech</div></div>
+      <div class="review-card"><div class="rv-quote">"</div><div class="rv-text">Вели 12 клиентов через 5 разных сервисов — хаос. Сейчас всё на одном сервере с изоляцией по доменам. Отчёты собираются автоматически через n8n.</div><div class="rv-stars">★★★★★</div><div class="rv-name">Павел Громов</div><div class="rv-role">CEO, Digital Mail Agency</div></div>
 
-      <div class="review-card"><div class="rv-quote">"</div><div class="rv-text">Интегрировали 1С через n8n — теперь 4000 писем в день уходит автоматически. Никакой ручной работы, никаких сбоев.</div><div class="rv-stars">★★★★★</div><div class="rv-name">Сергей П.</div><div class="rv-role">IT-директор, розничная сеть</div></div>
+      <div class="review-card"><div class="rv-quote">"</div><div class="rv-text">Честно — сначала сомневался, хватит ли экспертизы на cold outreach. Но за 2 месяца вывели 40 доменов в inbox, ни один не заблэклистился. Ротация IP работает чётко.</div><div class="rv-stars">★★★★★</div><div class="rv-name">Денис Крылов</div><div class="rv-role">Founder, LeadGen Pro</div></div>
 
-      <div class="review-card"><div class="rv-quote">"</div><div class="rv-text">Фишинг от нашего имени прекратился через 3 дня после настройки DMARC. Клиенты перестали жаловаться.</div><div class="rv-stars">★★★★★</div><div class="rv-name">Дмитрий В.</div><div class="rv-role">CISO, финтех-компания</div></div>
-
-      <div class="review-card"><div class="rv-quote">"</div><div class="rv-text">За 2 года работы ни одного сбоя. Поддержка отвечает за час. Перешли с Mailchimp — экономим 60К в месяц.</div><div class="rv-stars">★★★★★</div><div class="rv-name">Наталья Ф.</div><div class="rv-role">CMO, интернет-магазин</div></div>
-
-      <div class="review-card"><div class="rv-quote">"</div><div class="rv-text">Настройка заняла 3 дня, хотя я просил срочно. Всё задокументировано, команда разобралась сама без созвонов.</div><div class="rv-stars">★★★★☆</div><div class="rv-name">Павел Г.</div><div class="rv-role">Основатель, маркетинговое агентство</div></div>
+      <div class="review-card"><div class="rv-quote">"</div><div class="rv-text">Нормально, но не идеально. Rspamd первую неделю резал часть легитимных писем — пришлось тюнить. После настройки работает стабильно уже 8 месяцев.</div><div class="rv-stars">★★★★☆</div><div class="rv-name">Алексей Волков</div><div class="rv-role">Сисадмин, FinBridge</div></div>
 
     </div>
     <div style="position:absolute;top:0;left:0;bottom:0;width:40px;background:linear-gradient(90deg,var(--bg),transparent);pointer-events:none"></div>
@@ -1611,12 +1579,12 @@
             <div style="position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--accent);color:var(--bg);font-size:10px;font-weight:600;padding:2px 12px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap">Популярный</div>
             <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:4px;letter-spacing:-0.5px;margin-top:8px">Стандарт</div>
             <div style="font-size:20px;font-weight:800;color:var(--heading);font-family:var(--font-head)">45 900 ₽</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:2px">в месяц</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">разовая настройка</div>
           </th>
           <th style="background:var(--surface);padding:20px 16px;text-align:center;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">
             <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:4px;letter-spacing:-0.5px">Профи</div>
             <div style="font-size:20px;font-weight:800;color:var(--heading);font-family:var(--font-head)">79 900 ₽</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:2px">в месяц</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">разовая настройка</div>
           </th>
           <th style="background:var(--surface);padding:20px 16px;text-align:center;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">
             <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:4px;letter-spacing:-0.5px">Custom</div>
@@ -1672,8 +1640,8 @@
           <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--accent3);font-size:16px">✓</span></td>
         </tr>
         <tr>
-          <td style="padding:14px 24px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)">Ручной прогрев до объёма</td>
-          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--muted);opacity:.4;font-size:16px">—</span></td>
+          <td style="padding:14px 24px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)">Тестирование до inbox</td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--accent3);font-size:16px">✓</span></td>
           <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.02)"><span style="color:var(--accent3);font-size:16px">✓</span></td>
           <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--accent3);font-size:16px">✓</span></td>
           <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--accent3);font-size:16px">✓</span></td>
@@ -1698,11 +1666,11 @@
           <td colspan="5" style="padding:10px 24px;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;border-bottom:1px solid var(--border)">Поддержка и сопровождение</td>
         </tr>
         <tr>
-          <td style="padding:14px 24px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)">Поддержка после запуска</td>
-          <td style="text-align:center;font-size:12px;color:var(--text);border-bottom:1px solid var(--border);border-left:1px solid var(--border)">30 дней</td>
-          <td style="text-align:center;font-size:12px;color:var(--text);border-bottom:1px solid var(--border);border-left:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.02)">всё время</td>
-          <td style="text-align:center;font-size:12px;color:var(--text);border-bottom:1px solid var(--border);border-left:1px solid var(--border)">всё время</td>
-          <td style="text-align:center;font-size:12px;color:var(--text);border-bottom:1px solid var(--border);border-left:1px solid var(--border)">SLA</td>
+          <td style="padding:14px 24px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)">Гарантийная поддержка</td>
+          <td style="text-align:center;font-size:12px;color:var(--text);border-bottom:1px solid var(--border);border-left:1px solid var(--border)">14 дней</td>
+          <td style="text-align:center;font-size:12px;color:var(--text);border-bottom:1px solid var(--border);border-left:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.02)">30 дней</td>
+          <td style="text-align:center;font-size:12px;color:var(--text);border-bottom:1px solid var(--border);border-left:1px solid var(--border)">60 дней</td>
+          <td style="text-align:center;font-size:12px;color:var(--text);border-bottom:1px solid var(--border);border-left:1px solid var(--border)">договорная</td>
         </tr>
         <tr>
           <td style="padding:14px 24px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)">Мониторинг + алёрты</td>
@@ -2015,47 +1983,185 @@
 </section>
 
 
-<!-- COURSES TEASER -->
+<!-- PROCESS -->
 <section style="background:var(--bg);padding:60px 60px">
-  <div class="section-label">Обучение</div>
-  <h2>Научитесь<br><em>сами</em></h2>
-  <p class="section-desc">24 курса — от Linux до запуска email-агентства. Пошаговые уроки с квизами и сертификатами.</p>
+  <div class="section-label">Как мы работаем</div>
+  <h2>От заявки до<br><em>inbox</em></h2>
+  <p class="section-desc">Прозрачный процесс — вы всегда знаете, на каком этапе проект.</p>
 
-  <div class="grid-4 reveal" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:40px">
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:40px;position:relative" class="grid-4 reveal">
+    <div style="position:absolute;top:28px;left:12%;right:12%;height:2px;background:var(--border);z-index:0"></div>
 
-    <div style="background:var(--bg2);padding:28px 24px;transition:background .25s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg2)'">
-      <div style="font-size:28px;margin-bottom:12px">🐧</div>
-      <div style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--heading);margin-bottom:6px">Linux + VPS</div>
-      <div style="font-size:12px;color:var(--muted);line-height:1.7">Основы командной строки, настройка сервера с нуля, безопасность.</div>
-      <div style="font-size:11px;color:var(--accent);margin-top:10px;font-family:var(--font-mono)">28 уроков</div>
+    <div style="text-align:center;position:relative;z-index:1;padding:0 16px">
+      <div style="width:56px;height:56px;border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--accent);background:var(--bg)">01</div>
+      <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--heading);margin-bottom:8px">Обсуждаем задачу</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7">Созвон или переписка в Telegram. Разбираем объёмы, текущую ситуацию, подбираем стек.</div>
     </div>
 
-    <div style="background:var(--bg2);padding:28px 24px;border-left:1px solid var(--border);transition:background .25s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg2)'">
-      <div style="font-size:28px;margin-bottom:12px">📡</div>
-      <div style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--heading);margin-bottom:6px">Mailcow + Postal</div>
-      <div style="font-size:12px;color:var(--muted);line-height:1.7">Полный почтовый стек: установка, DNS, SSL, ротация IP.</div>
-      <div style="font-size:11px;color:var(--accent);margin-top:10px;font-family:var(--font-mono)">17 уроков</div>
+    <div style="text-align:center;position:relative;z-index:1;padding:0 16px">
+      <div style="width:56px;height:56px;border:2px solid var(--accent2);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--accent2);background:var(--bg)">02</div>
+      <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--heading);margin-bottom:8px">Настраиваем</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7">Разворачиваем стек на вашем VPS. DNS, SSL, антиспам, мониторинг — 2-5 дней.</div>
     </div>
 
-    <div style="background:var(--bg2);padding:28px 24px;border-left:1px solid var(--border);transition:background .25s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg2)'">
-      <div style="font-size:28px;margin-bottom:12px">🔥</div>
-      <div style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--heading);margin-bottom:6px">Прогрев + Доставляемость</div>
-      <div style="font-size:12px;color:var(--muted);line-height:1.7">SPF/DKIM/DMARC, warm-up стратегии, blacklist-менеджмент.</div>
-      <div style="font-size:11px;color:var(--accent);margin-top:10px;font-family:var(--font-mono)">37 уроков</div>
+    <div style="text-align:center;position:relative;z-index:1;padding:0 16px">
+      <div style="width:56px;height:56px;border:2px solid var(--accent3);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--accent3);background:var(--bg)">03</div>
+      <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--heading);margin-bottom:8px">Тестируем до inbox</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7">Проверяем доставляемость в Gmail, Outlook, Mail.ru. Не сдаём проект, пока не попадём в inbox.</div>
     </div>
 
-    <div style="background:var(--bg2);padding:28px 24px;border-left:1px solid var(--border);transition:background .25s" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg2)'">
-      <div style="font-size:28px;margin-bottom:12px">💼</div>
-      <div style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--heading);margin-bottom:6px">Email-агентство</div>
-      <div style="font-size:12px;color:var(--muted);line-height:1.7">MailWizz, Chatwoot, n8n, копирайтинг, запуск бизнеса.</div>
-      <div style="font-size:11px;color:var(--accent);margin-top:10px;font-family:var(--font-mono)">56 уроков</div>
+    <div style="text-align:center;position:relative;z-index:1;padding:0 16px">
+      <div style="width:56px;height:56px;border:2px solid #ff6b6b;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:var(--font-head);font-size:20px;font-weight:800;color:#ff6b6b;background:var(--bg)">04</div>
+      <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--heading);margin-bottom:8px">Передаём вам</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7">Доступы, документация, обучение команды. Дальше ведёте сами или заказываете сопровождение.</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CASES -->
+<section style="background:var(--bg2);padding:60px 60px">
+  <div class="section-label">Кейсы</div>
+  <h2>Реальные<br><em>результаты</em></h2>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:40px" class="grid-3 reveal">
+
+    <div style="background:var(--bg);padding:32px 24px">
+      <div style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:12px">E-commerce</div>
+      <div style="font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--heading);margin-bottom:14px">Интернет-магазин одежды</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+        <div><div style="font-size:11px;color:var(--muted)">Было</div><div style="font-size:16px;font-weight:700;color:#ff6b6b">44 000 ₽/мес</div><div style="font-size:10px;color:var(--muted)">Unisender</div></div>
+        <div><div style="font-size:11px;color:var(--muted)">Стало</div><div style="font-size:16px;font-weight:700;color:var(--accent3)">3 500 ₽/мес</div><div style="font-size:10px;color:var(--muted)">VPS + Mailcow</div></div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7">200К подписчиков, 3 рассылки в неделю. Миграция за 2 дня. Deliverability 96.8% по Google Postmaster.</div>
+      <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+        <span style="font-size:10px;color:var(--muted);padding:2px 8px;border:1px solid var(--border)">Mailcow</span>
+        <span style="font-size:10px;color:var(--muted);padding:2px 8px;border:1px solid var(--border)">MailWizz</span>
+        <span style="font-size:10px;color:var(--muted);padding:2px 8px;border:1px solid var(--border)">2 дня</span>
+      </div>
+    </div>
+
+    <div style="background:var(--bg);padding:32px 24px;border-left:1px solid var(--border)">
+      <div style="font-size:11px;color:var(--accent2);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:12px">B2B SaaS</div>
+      <div style="font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--heading);margin-bottom:14px">HR-платформа</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+        <div><div style="font-size:11px;color:var(--muted)">Проблема</div><div style="font-size:14px;font-weight:700;color:#ff6b6b">SendGrid бан</div><div style="font-size:10px;color:var(--muted)">без предупреждения</div></div>
+        <div><div style="font-size:11px;color:var(--muted)">Результат</div><div style="font-size:14px;font-weight:700;color:var(--accent3)">98.1% inbox</div><div style="font-size:10px;color:var(--muted)">свой Postal</div></div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7">15К транзакционных писем/день. Настройка за 1 день (срочно). Ноль даунтайма при переключении MX-записей.</div>
+      <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+        <span style="font-size:10px;color:var(--muted);padding:2px 8px;border:1px solid var(--border)">Postal</span>
+        <span style="font-size:10px;color:var(--muted);padding:2px 8px;border:1px solid var(--border)">n8n</span>
+        <span style="font-size:10px;color:var(--muted);padding:2px 8px;border:1px solid var(--border)">1 день</span>
+      </div>
+    </div>
+
+    <div style="background:var(--bg);padding:32px 24px;border-left:1px solid var(--border)">
+      <div style="font-size:11px;color:var(--accent3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:12px">Cold outreach</div>
+      <div style="font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--heading);margin-bottom:14px">Lead-gen агентство</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+        <div><div style="font-size:11px;color:var(--muted)">Масштаб</div><div style="font-size:16px;font-weight:700;color:var(--heading)">40 доменов</div><div style="font-size:10px;color:var(--muted)">с нуля</div></div>
+        <div><div style="font-size:11px;color:var(--muted)">Результат</div><div style="font-size:14px;font-weight:700;color:var(--accent3)">0 блэклистов</div><div style="font-size:10px;color:var(--muted)">за 3 месяца</div></div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7">Ротация IP, автопрогрев, spintax-шаблоны. 2000 писем/день. Ни один домен не заблокирован за 3 месяца работы.</div>
+      <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+        <span style="font-size:10px;color:var(--muted);padding:2px 8px;border:1px solid var(--border)">Postal</span>
+        <span style="font-size:10px;color:var(--muted);padding:2px 8px;border:1px solid var(--border)">MailWizz</span>
+        <span style="font-size:10px;color:var(--muted);padding:2px 8px;border:1px solid var(--border)">5 дней</span>
+      </div>
     </div>
 
   </div>
+</section>
 
-  <div style="margin-top:24px;text-align:center">
-    <a href="courses.html" class="btn-primary" style="display:inline-block">Смотреть все 24 курса</a>
-    <div style="margin-top:12px;font-size:12px;color:var(--muted)">Пакеты от 19 900 ₽ · Всё включено — 59 900 ₽</div>
+
+<!-- GUARANTEES -->
+<section style="background:var(--bg);padding:60px 60px">
+  <div class="section-label">Гарантии</div>
+  <h2>Работаем<br><em>на результат</em></h2>
+  <p class="section-desc">Не сдаём проект, пока письма не попадут в inbox. Если не получится — вернём деньги.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:40px" class="grid-3 reveal">
+
+    <div style="background:var(--bg2);padding:32px 24px">
+      <div style="font-family:var(--font-head);font-size:28px;font-weight:800;color:var(--accent3);margin-bottom:12px">inbox</div>
+      <div style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--heading);margin-bottom:8px">Тестируем до результата</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7">Настраиваем, отправляем тестовые письма, проверяем по mail-tester и Google Postmaster. Доводим до inbox — только потом передаём.</div>
+    </div>
+
+    <div style="background:var(--bg2);padding:32px 24px;border-left:1px solid var(--border)">
+      <div style="font-family:var(--font-head);font-size:28px;font-weight:800;color:var(--accent);margin-bottom:12px">100%</div>
+      <div style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--heading);margin-bottom:8px">Возврат денег</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7">Если мы не смогли настроить стек так, чтобы письма попадали в inbox — полный возврат оплаты. Без вопросов.</div>
+    </div>
+
+    <div style="background:var(--bg2);padding:32px 24px;border-left:1px solid var(--border)">
+      <div style="font-family:var(--font-head);font-size:28px;font-weight:800;color:var(--accent2);margin-bottom:12px">24/7</div>
+      <div style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--heading);margin-bottom:8px">Сопровождение отдельно</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7">Техподдержка, мониторинг, ведение кампаний, ручной прогрев — отдельные услуги с помесячной оплатой. Подключаете когда нужно.</div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- TEAM -->
+<section style="background:var(--bg2);padding:60px 60px">
+  <div class="section-label">Команда</div>
+  <h2>Кто стоит за<br><em>MAILSTACK</em></h2>
+  <p class="section-desc">7 специалистов, каждый отвечает за свой участок.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:40px" class="grid-4 reveal">
+
+    <div style="text-align:center">
+      <div style="width:80px;height:80px;border-radius:50%;background:var(--surface);border:2px solid var(--border);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--muted)">👤</div>
+      <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--heading)">Александр</div>
+      <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono)">Founder / Архитектор</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">Проектирование стека, клиенты</div>
+    </div>
+
+    <div style="text-align:center">
+      <div style="width:80px;height:80px;border-radius:50%;background:var(--surface);border:2px solid var(--border);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--muted)">👤</div>
+      <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--heading)">Дмитрий</div>
+      <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono)">DevOps-инженер</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">Серверы, Docker, CI/CD</div>
+    </div>
+
+    <div style="text-align:center">
+      <div style="width:80px;height:80px;border-radius:50%;background:var(--surface);border:2px solid var(--border);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--muted)">👤</div>
+      <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--heading)">Егор</div>
+      <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono)">Email-специалист</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">DNS, прогрев, доставляемость</div>
+    </div>
+
+    <div style="text-align:center">
+      <div style="width:80px;height:80px;border-radius:50%;background:var(--surface);border:2px solid var(--border);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--muted)">👤</div>
+      <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--heading)">Марина</div>
+      <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono)">Интеграции</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">n8n, CRM, автоматизации</div>
+    </div>
+
+    <div style="text-align:center">
+      <div style="width:80px;height:80px;border-radius:50%;background:var(--surface);border:2px solid var(--border);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--muted)">👤</div>
+      <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--heading)">Артём</div>
+      <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono)">Безопасность</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">Антиспам, firewall, бэкапы</div>
+    </div>
+
+    <div style="text-align:center">
+      <div style="width:80px;height:80px;border-radius:50%;background:var(--surface);border:2px solid var(--border);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--muted)">👤</div>
+      <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--heading)">Ольга</div>
+      <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono)">Мониторинг</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">Grafana, алёрты, SLA</div>
+    </div>
+
+    <div style="text-align:center">
+      <div style="width:80px;height:80px;border-radius:50%;background:var(--surface);border:2px solid var(--border);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--muted)">👤</div>
+      <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--heading)">Кирилл</div>
+      <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono)">Техподдержка</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">Тикеты, консультации</div>
+    </div>
+
   </div>
 </section>
 
@@ -2399,19 +2505,6 @@
     window.addEventListener('resize', () => rGoTo(0));
   }
 
-  // ── LIVE SAVINGS COUNTER ──
-  const liveSavingsEl = document.getElementById('liveSavings');
-  if (liveSavingsEl) {
-    let savings = 24000000;
-    const perSecond = 114;
-    const fmtSavings = n => n.toLocaleString('ru-RU');
-    liveSavingsEl.textContent = fmtSavings(savings);
-    setInterval(() => {
-      savings += perSecond;
-      liveSavingsEl.textContent = fmtSavings(savings);
-    }, 1000);
-  }
-
   // ── ANIMATED COUNTERS ──
   const counters = document.querySelectorAll('.counter');
   const counterObserver = new IntersectionObserver(entries => {
@@ -2473,44 +2566,6 @@
       (message ? '\n📝 Задача:\n' + message : '')
     );
     window.open('https://t.me/yourusername?text=' + text, '_blank');
-  }
-
-  // ── PAIN CAROUSEL ──
-  const carousel = document.getElementById('painCarousel');
-  const dotsWrap = document.getElementById('painDots');
-  if (carousel) {
-    const cards = carousel.querySelectorAll('.pain-card');
-    const total = cards.length;
-    const visible = () => window.innerWidth < 700 ? 1 : window.innerWidth < 1024 ? 2 : 3;
-    let cur = 0;
-    let autoTimer;
-
-    const pages = () => Math.ceil(total / visible());
-    function buildDots() {
-      dotsWrap.innerHTML = '';
-      for (let i = 0; i < pages(); i++) {
-        const d = document.createElement('div');
-        d.style.cssText = `width:${i===Math.floor(cur/visible())?20:6}px;height:6px;border-radius:3px;background:${i===Math.floor(cur/visible())?'var(--accent)':'var(--border)'};transition:all .3s;cursor:pointer`;
-        d.onclick = () => goTo(i * visible());
-        dotsWrap.appendChild(d);
-      }
-    }
-
-    function goTo(n) {
-      cur = Math.max(0, Math.min(n, total - visible()));
-      const cardW = cards[0].offsetWidth + 16;
-      carousel.style.transform = `translateX(-${cur * cardW}px)`;
-      buildDots();
-    }
-
-    window.painNext = () => { goTo(cur + visible()); if (cur >= total - visible()) goTo(0); resetAuto(); };
-    window.painPrev = () => { goTo(cur - visible()); if (cur < 0) goTo(0); resetAuto(); };
-
-    function resetAuto() { clearInterval(autoTimer); autoTimer = setInterval(() => { const next = cur + visible() >= total ? 0 : cur + visible(); goTo(next); }, 3500); }
-
-    buildDots();
-    resetAuto();
-    window.addEventListener('resize', () => { goTo(0); });
   }
 
   // ── MOBILE BURGER ──
