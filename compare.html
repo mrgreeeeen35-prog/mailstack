@@ -117,6 +117,19 @@
 
 <section>
 
+  <div class="compare-nav">
+    <a href="#mta" class="active">MTA / Почтовые серверы</a>
+    <a href="#marketing">Платформы рассылок</a>
+    <a href="#verification">Верификация email</a>
+    <a href="#warmup">Прогрев и доставляемость</a>
+    <a href="#support">Поддержка</a>
+    <a href="#automation">Автоматизации</a>
+    <a href="#infra-vs-saas">SaaS vs Своя инфра</a>
+    <a href="#monitoring">Мониторинг</a>
+    <a href="#security">Безопасность</a>
+    <a href="#hosting">Хостинг</a>
+  </div>
+
   <!-- ══ 1. MAIL SERVER / MTA ══ -->
   <div class="compare-section" id="mta">
     <div class="section-label">Mail Server / MTA</div>
@@ -490,7 +503,349 @@
     </div>
   </div>
 
-  <!-- ══ 3. ПОДДЕРЖКА ══ -->
+  <!-- ══ 3. ВЕРИФИКАЦИЯ EMAIL ══ -->
+  <div class="compare-section" id="verification" style="padding-top:40px;border-top:1px solid var(--border)">
+    <div class="section-label">Верификация email</div>
+    <h2>Проверка базы<br><em>перед рассылкой</em></h2>
+    <p class="section-desc">Каждый bounce — удар по репутации IP. Верификация перед отправкой снижает bounce rate до &lt;1% и защищает домен от блокировки.</p>
+
+    <div style="margin-bottom:40px;padding:16px 20px;background:rgba(255,107,107,.05);border:1px solid rgba(255,107,107,.2);font-size:13px;color:var(--text);line-height:1.7">
+      <div style="color:#ff6b6b;font-weight:600;margin-bottom:6px">⚠ Почему это критично</div>
+      Bounce rate &gt;2% → провайдеры (Gmail, Mail.ru) начинают понижать репутацию. &gt;5% → письма уходят в спам. &gt;10% → IP попадает в blacklist. Верификация — обязательный этап перед любой рассылкой.
+    </div>
+
+    <div class="tool-cards reveal">
+
+      <div class="tool-card recommended">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-rec">Рекомендуем</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★★</span> 4.9</div>
+        </div>
+        <div class="tool-name">MillionVerifier</div>
+        <div class="tool-type">Массовая верификация email</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">$37 за 100К · <a href="https://www.millionverifier.com" target="_blank" style="color:var(--accent);text-decoration:none">millionverifier.com ↗</a></div>
+        <div class="tool-desc">Одна из самых точных проверок: SMTP handshake, catch-all detection, disposable email фильтр. Точность 99%+. API для интеграции.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Точность 99%+ — лучшая в отрасли</div>
+          <div class="pro">Catch-all и disposable detection</div>
+          <div class="pro">API для автоматизации через n8n</div>
+          <div class="pro">Низкая цена за объём</div>
+          <div class="con">Только облачный сервис</div>
+          <div class="con">Нет self-hosted версии</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          3 000 ₽ — интеграция MillionVerifier с MailWizz/n8n для автоматической верификации перед отправкой.
+        </div>
+        <div class="tool-best">→ Лучший по точности и цене</div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-paid">$65 за 100К</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★★</span> 4.8</div>
+        </div>
+        <div class="tool-name">ZeroBounce</div>
+        <div class="tool-type">Верификация + скоринг</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">от $65 за 100К · <a href="https://www.zerobounce.net" target="_blank" style="color:var(--accent);text-decoration:none">zerobounce.net ↗</a></div>
+        <div class="tool-desc">Помимо верификации — скоринг активности email (как часто используется ящик). Abuse detection, toxic check, gender/location append.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Activity scoring — оценка активности ящика</div>
+          <div class="pro">Abuse и toxic email detection</div>
+          <div class="pro">Gender и location данные</div>
+          <div class="con">Дороже конкурентов</div>
+          <div class="con">Scoring не всегда точен</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          3 000 ₽ — интеграция ZeroBounce API с MailWizz через n8n для автоматической проверки.
+        </div>
+        <div class="tool-best">→ Верификация + скоринг активности</div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-paid">$24 за 100К</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★☆</span> 4.5</div>
+        </div>
+        <div class="tool-name">Reoon Email Verifier</div>
+        <div class="tool-type">Бюджетная верификация</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">от $24 за 100К · <a href="https://www.reoon.com" target="_blank" style="color:var(--accent);text-decoration:none">reoon.com ↗</a></div>
+        <div class="tool-desc">Одна из самых дешёвых верификаций. SMTP check, MX validation, disposable detection. Хорошая точность за свою цену.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Самая низкая цена на рынке</div>
+          <div class="pro">API для интеграции</div>
+          <div class="pro">Disposable и role-based detection</div>
+          <div class="con">Точность чуть ниже лидеров</div>
+          <div class="con">Меньше дополнительных данных</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          3 000 ₽ — интеграция Reoon API с MailWizz через n8n.
+        </div>
+        <div class="tool-best">→ Лучший бюджетный вариант</div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-paid">$50 за 100К</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★☆</span> 4.4</div>
+        </div>
+        <div class="tool-name">NeverBounce</div>
+        <div class="tool-type">Верификация + real-time API</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">от $50 за 100К · <a href="https://neverbounce.com" target="_blank" style="color:var(--accent);text-decoration:none">neverbounce.com ↗</a></div>
+        <div class="tool-desc">Популярный верификатор с real-time API для проверки email при сборе. Интеграция с 80+ платформами. Pay-as-you-go.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Real-time API — проверка при сборе</div>
+          <div class="pro">80+ готовых интеграций</div>
+          <div class="pro">Автоматическая очистка списков</div>
+          <div class="con">Дороже MillionVerifier</div>
+          <div class="con">Принадлежит ZoomInfo — privacy вопросы</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          3 000 ₽ — интеграция NeverBounce с MailWizz/формами через API.
+        </div>
+        <div class="tool-best">→ Real-time проверка при сборе email</div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-free">Бесплатный</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★☆</span> 4.0</div>
+        </div>
+        <div class="tool-name">Truemail (self-hosted)</div>
+        <div class="tool-type">Self-hosted верификация</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатный · <a href="https://truemail-rb.org" target="_blank" style="color:var(--accent);text-decoration:none">truemail-rb.org ↗</a></div>
+        <div class="tool-desc">Open-source верификация на вашем сервере. MX lookup, SMTP check, regex validation. Нет ограничений по объёму — бесплатно.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Полностью бесплатный, без лимитов</div>
+          <div class="pro">Self-hosted — данные не уходят наружу</div>
+          <div class="pro">API для интеграции</div>
+          <div class="con">Нет catch-all detection</div>
+          <div class="con">Точность ниже облачных сервисов</div>
+          <div class="con">Ваш IP может попасть в DNSBL при массовых проверках</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          4 000 ₽ — установка Truemail на сервер, интеграция с MailWizz.
+        </div>
+        <div class="tool-best">→ Self-hosted без лимитов и оплаты</div>
+      </div>
+
+    </div>
+
+    <table class="ctable">
+      <thead>
+        <tr>
+          <th>Характеристика</th>
+          <th class="rec-col">MillionVerifier ★</th>
+          <th>ZeroBounce</th>
+          <th>Reoon</th>
+          <th>NeverBounce</th>
+          <th>Truemail</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Цена за 100К</td><td class="rec-col" style="color:var(--accent3)">$37</td><td>$65</td><td style="color:var(--accent3)">$24</td><td>$50</td><td style="color:var(--accent3)">Бесплатно</td></tr>
+        <tr><td>Точность</td><td class="rec-col chk">99%+</td><td class="chk">98%+</td><td>95%+</td><td class="chk">97%+</td><td>90%+</td></tr>
+        <tr><td>Catch-all detection</td><td class="rec-col chk">✓</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td><td class="dsh">—</td></tr>
+        <tr><td>Disposable detection</td><td class="rec-col chk">✓</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td><td class="dsh">—</td></tr>
+        <tr><td>Activity scoring</td><td class="rec-col dsh">—</td><td class="chk">✓</td><td class="dsh">—</td><td class="dsh">—</td><td class="dsh">—</td></tr>
+        <tr><td>Real-time API</td><td class="rec-col chk">✓</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+        <tr><td>Self-hosted</td><td class="rec-col dsh">—</td><td class="dsh">—</td><td class="dsh">—</td><td class="dsh">—</td><td class="chk">✓</td></tr>
+      </tbody>
+    </table>
+
+    <div class="verdict">
+      <div class="verdict-title">✓ Вердикт MAILSTACK</div>
+      <div class="verdict-text"><strong>MillionVerifier</strong> — лучшее соотношение точности и цены, рекомендуем по умолчанию. <strong>ZeroBounce</strong> — если нужен скоринг активности ящиков. <strong>Reoon</strong> — самый бюджетный вариант. <strong>Truemail</strong> — если нужна бесплатная проверка на своём сервере и данные не должны уходить в облако.</div>
+    </div>
+  </div>
+
+  <!-- ══ 4. ПРОГРЕВ И ДОСТАВЛЯЕМОСТЬ ══ -->
+  <div class="compare-section" id="warmup" style="padding-top:40px;border-top:1px solid var(--border)">
+    <div class="section-label">Прогрев и доставляемость</div>
+    <h2>Прогрев домена и<br><em>тестирование inbox</em></h2>
+    <p class="section-desc">Новый домен и IP без прогрева = спам. Инструменты прогрева имитируют живую переписку и повышают репутацию отправителя.</p>
+
+    <div style="margin-bottom:40px;padding:16px 20px;background:rgba(0,229,255,.05);border:1px solid rgba(0,229,255,.2);font-size:13px;color:var(--text);line-height:1.7">
+      <div style="color:var(--accent);font-weight:600;margin-bottom:6px">💡 Как работает прогрев</div>
+      Сервис отправляет письма с вашего домена на свой пул ящиков, открывает их, отвечает, вынимает из спама. Gmail и Mail.ru видят "живую" переписку → повышают репутацию. Процесс занимает 2–4 недели.
+    </div>
+
+    <div class="tool-cards reveal">
+
+      <div class="tool-card recommended">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-rec">Рекомендуем</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★★</span> 4.9</div>
+        </div>
+        <div class="tool-name">Smartlead</div>
+        <div class="tool-type">Warmup + cold outreach</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">от $39/мес · <a href="https://www.smartlead.ai" target="_blank" style="color:var(--accent);text-decoration:none">smartlead.ai ↗</a></div>
+        <div class="tool-desc">Автоматический прогрев: отправляет, открывает, отвечает, вынимает из спама. Неограниченные ящики. Встроенный cold outreach и ротация.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Неограниченные ящики для прогрева</div>
+          <div class="pro">Автоматическое вынимание из спама</div>
+          <div class="pro">Встроенные cold outreach кампании</div>
+          <div class="pro">Детальная аналитика репутации</div>
+          <div class="con">Подписка от $39/мес</div>
+          <div class="con">Интерфейс на английском</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          4 000 ₽ — подключение всех ящиков к Smartlead, настройка графика прогрева.
+        </div>
+        <div class="tool-best">→ Лучший выбор для прогрева + outreach</div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-paid">от $25/мес</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★☆</span> 4.5</div>
+        </div>
+        <div class="tool-name">Lemwarm (Lemlist)</div>
+        <div class="tool-type">Прогрев email</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">от $25/мес · <a href="https://www.lemlist.com" target="_blank" style="color:var(--accent);text-decoration:none">lemlist.com ↗</a></div>
+        <div class="tool-desc">Прогрев от Lemlist — крупная сеть ящиков, имитация человеческой переписки. Dashborad с deliverability score.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Большая сеть прогревочных ящиков</div>
+          <div class="pro">Deliverability score в реальном времени</div>
+          <div class="pro">Простой интерфейс, быстрая настройка</div>
+          <div class="con">Цена за каждый ящик отдельно</div>
+          <div class="con">Только прогрев, outreach платно отдельно</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          3 000 ₽ — подключение ящиков к Lemwarm, настройка параметров прогрева.
+        </div>
+        <div class="tool-best">→ Простой прогрев от проверенной команды</div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-paid">от $15/мес</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★☆</span> 4.3</div>
+        </div>
+        <div class="tool-name">Warmbox</div>
+        <div class="tool-type">Автопрогрев email</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">от $15/мес · <a href="https://www.warmbox.ai" target="_blank" style="color:var(--accent);text-decoration:none">warmbox.ai ↗</a></div>
+        <div class="tool-desc">Бюджетный warmup: автоматические открытия, ответы, вынимание из спама. Хороший вариант для старта.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Низкая цена — от $15/мес за ящик</div>
+          <div class="pro">35 000+ прогревочных ящиков</div>
+          <div class="pro">Blacklist мониторинг включён</div>
+          <div class="con">Меньше аналитики чем Smartlead</div>
+          <div class="con">Нет встроенного outreach</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          3 000 ₽ — подключение ящиков к Warmbox, настройка прогрева.
+        </div>
+        <div class="tool-best">→ Бюджетный прогрев для старта</div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-paid">от $19/мес</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★☆</span> 4.4</div>
+        </div>
+        <div class="tool-name">MailReach</div>
+        <div class="tool-type">Прогрев + inbox placement</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">от $19/мес · <a href="https://www.mailreach.co" target="_blank" style="color:var(--accent);text-decoration:none">mailreach.co ↗</a></div>
+        <div class="tool-desc">Прогрев + тестирование куда попадает письмо: Inbox, Promotions, Spam. Inbox placement тест по основным провайдерам.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Inbox placement тест (куда попало письмо)</div>
+          <div class="pro">Подробная аналитика по провайдерам</div>
+          <div class="pro">Рекомендации по улучшению</div>
+          <div class="con">Дороже Warmbox при большом количестве ящиков</div>
+          <div class="con">Нет cold outreach</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          3 000 ₽ — подключение ящиков к MailReach, настройка прогрева и тестов.
+        </div>
+        <div class="tool-best">→ Прогрев + тестирование inbox placement</div>
+      </div>
+
+      <div class="tool-card recommended">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-free">Бесплатный</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★★</span> 4.9</div>
+        </div>
+        <div class="tool-name">mail-tester.com</div>
+        <div class="tool-type">Оценка доставляемости письма</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">Бесплатно (3/день) · <a href="https://www.mail-tester.com" target="_blank" style="color:var(--accent);text-decoration:none">mail-tester.com ↗</a></div>
+        <div class="tool-desc">Отправляете тестовое письмо — получаете оценку 0–10 с детальным разбором: SPF, DKIM, DMARC, SpamAssassin, контент, blacklists.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Мгновенная оценка 0–10 с детализацией</div>
+          <div class="pro">Проверка SPF, DKIM, DMARC, DNS</div>
+          <div class="pro">SpamAssassin score и анализ контента</div>
+          <div class="con">Только 3 бесплатных теста в день</div>
+          <div class="con">Не заменяет полноценный warmup</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          Бесплатно — проверяем каждый сервер через mail-tester в процессе настройки.
+        </div>
+        <div class="tool-best">→ Обязательная проверка после настройки</div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div class="tool-badge badge-paid">от $59/мес</div>
+          <div style="font-size:11px;color:var(--muted)"><span style="color:#fbbf24">★★★★☆</span> 4.3</div>
+        </div>
+        <div class="tool-name">GlockApps</div>
+        <div class="tool-type">Inbox placement тестирование</div>
+        <div style="font-size:12px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:10px">от $59/мес · <a href="https://glockapps.com" target="_blank" style="color:var(--accent);text-decoration:none">glockapps.com ↗</a></div>
+        <div class="tool-desc">Профессиональное тестирование: показывает куда попало письмо (Inbox/Spam/Promotions) у Gmail, Yahoo, Outlook, Mail.ru. DMARC аналитика.</div>
+        <div class="tool-pros-cons">
+          <div class="pro">Тест по 30+ провайдерам включая Mail.ru</div>
+          <div class="pro">Отдельно по Gmail, Yahoo, Outlook</div>
+          <div class="pro">DMARC аналитика включена</div>
+          <div class="con">$59/мес — дорого для старта</div>
+          <div class="con">Не заменяет warmup</div>
+        </div>
+        <div style="margin:12px 0;padding:10px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);font-size:11px;color:var(--muted);line-height:1.6">
+          <div style="color:var(--accent);font-weight:600;margin-bottom:4px">Установка MAILSTACK:</div>
+          3 000 ₽ — настройка регулярных тестов GlockApps для контроля доставляемости.
+        </div>
+        <div class="tool-best">→ Профессиональный контроль inbox placement</div>
+      </div>
+
+    </div>
+
+    <table class="ctable">
+      <thead>
+        <tr>
+          <th>Характеристика</th>
+          <th class="rec-col">Smartlead ★</th>
+          <th>Lemwarm</th>
+          <th>Warmbox</th>
+          <th>MailReach</th>
+          <th class="rec-col">mail-tester ★</th>
+          <th>GlockApps</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Тип</td><td class="rec-col">Warmup + outreach</td><td>Warmup</td><td>Warmup</td><td>Warmup + test</td><td class="rec-col">Тест</td><td>Inbox test</td></tr>
+        <tr><td>Цена/мес</td><td class="rec-col">от $39</td><td>от $25</td><td style="color:var(--accent3)">от $15</td><td>от $19</td><td class="rec-col" style="color:var(--accent3)">Бесплатно</td><td>от $59</td></tr>
+        <tr><td>Безлимит ящиков</td><td class="rec-col chk">✓</td><td class="dsh">—</td><td class="dsh">—</td><td class="dsh">—</td><td class="rec-col dsh">—</td><td class="dsh">—</td></tr>
+        <tr><td>Inbox placement тест</td><td class="rec-col dsh">—</td><td class="dsh">—</td><td class="dsh">—</td><td class="chk">✓</td><td class="rec-col chk">✓ базово</td><td class="chk">✓ подробно</td></tr>
+        <tr><td>Cold outreach</td><td class="rec-col chk">✓</td><td class="part">отдельно</td><td class="dsh">—</td><td class="dsh">—</td><td class="rec-col dsh">—</td><td class="dsh">—</td></tr>
+        <tr><td>SPF/DKIM/DMARC тест</td><td class="rec-col dsh">—</td><td class="dsh">—</td><td class="dsh">—</td><td class="part">базово</td><td class="rec-col chk">✓ детально</td><td class="chk">✓</td></tr>
+      </tbody>
+    </table>
+
+    <div class="verdict">
+      <div class="verdict-title">✓ Вердикт MAILSTACK</div>
+      <div class="verdict-text"><strong>Smartlead</strong> — лучший для прогрева + cold outreach, неограниченные ящики за $39. <strong>Warmbox</strong> — бюджетный вариант от $15. <strong>mail-tester.com</strong> — обязательная бесплатная проверка после настройки любого сервера. <strong>GlockApps</strong> — если нужен профессиональный inbox placement мониторинг по провайдерам.</div>
+    </div>
+  </div>
+
+  <!-- ══ 5. ПОДДЕРЖКА ══ -->
   <div class="compare-section" id="support" style="padding-top:40px;border-top:1px solid var(--border)">
     <div class="section-label">Поддержка клиентов</div>
     <h2>Help desk:<br><em>что выбрать?</em></h2>
@@ -613,13 +968,34 @@
 
     </div>
 
+    <table class="ctable">
+      <thead>
+        <tr>
+          <th>Характеристика</th>
+          <th class="rec-col">Chatwoot ★</th>
+          <th>Zammad</th>
+          <th>FreeScout</th>
+          <th>Typebot</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Каналы</td><td class="rec-col chk">Email, TG, WA, FB, чат</td><td>Email, TG</td><td>Только email</td><td>WA, TG, чат</td></tr>
+        <tr><td>Чат на сайте</td><td class="rec-col chk">✓</td><td class="dsh">—</td><td class="dsh">—</td><td class="chk">✓</td></tr>
+        <tr><td>SLA трекинг</td><td class="rec-col dsh">—</td><td class="chk">✓</td><td class="dsh">—</td><td class="dsh">—</td></tr>
+        <tr><td>Чат-боты</td><td class="rec-col part">базово</td><td class="dsh">—</td><td class="dsh">—</td><td class="chk">✓ визуально</td></tr>
+        <tr><td>Мобильное приложение</td><td class="rec-col chk">✓ iOS/Android</td><td class="dsh">—</td><td class="dsh">—</td><td class="dsh">—</td></tr>
+        <tr><td>RAM минимум</td><td class="rec-col">2 ГБ</td><td>4 ГБ</td><td>512 МБ</td><td>1 ГБ</td></tr>
+        <tr><td>Цена</td><td class="rec-col">Бесплатно</td><td>Бесплатно</td><td>Бесплатно</td><td>Бесплатно</td></tr>
+      </tbody>
+    </table>
+
     <div class="verdict">
       <div class="verdict-title">✓ Вердикт MAILSTACK</div>
       <div class="verdict-text"><strong>Chatwoot</strong> — лучший выбор для большинства. Один инструмент заменяет email-поддержку, Telegram, WhatsApp и чат на сайте. <strong>Zammad</strong> если нужны SLA и корпоративные процессы. <strong>FreeScout</strong> если нужен только email и минимальный сервер.</div>
     </div>
   </div>
 
-  <!-- ══ 4. АВТОМАТИЗАЦИИ ══ -->
+  <!-- ══ 6. АВТОМАТИЗАЦИИ ══ -->
   <div class="compare-section" id="automation" style="padding-top:40px;border-top:1px solid var(--border)">
     <div class="section-label">Автоматизации</div>
     <h2>No-code автоматизации:<br><em>что выбрать?</em></h2>
@@ -741,13 +1117,34 @@
 
     </div>
 
+    <table class="ctable">
+      <thead>
+        <tr>
+          <th>Характеристика</th>
+          <th class="rec-col">n8n ★</th>
+          <th>Activepieces</th>
+          <th>Huginn</th>
+          <th>Windmill</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Интеграций</td><td class="rec-col chk">500+</td><td>150+</td><td>50+</td><td>100+</td></tr>
+        <tr><td>Код внутри workflow</td><td class="rec-col chk">✓ JS/Python</td><td class="dsh">—</td><td class="part">Ruby</td><td class="chk">✓ Python/TS/Go</td></tr>
+        <tr><td>Визуальный редактор</td><td class="rec-col chk">✓</td><td class="chk">✓ проще</td><td class="dsh">—</td><td class="chk">✓</td></tr>
+        <tr><td>Webhook / cron</td><td class="rec-col chk">✓ / ✓</td><td class="chk">✓ / ✓</td><td class="chk">✓ / ✓</td><td class="chk">✓ / ✓</td></tr>
+        <tr><td>Сложность освоения</td><td class="rec-col">Средняя</td><td style="color:var(--accent3)">Низкая</td><td>Высокая</td><td>Высокая</td></tr>
+        <tr><td>RAM минимум</td><td class="rec-col">1 ГБ</td><td>1 ГБ</td><td>1 ГБ</td><td>2 ГБ</td></tr>
+        <tr><td>Цена</td><td class="rec-col">Бесплатно</td><td>Бесплатно</td><td>Бесплатно</td><td>Бесплатно</td></tr>
+      </tbody>
+    </table>
+
     <div class="verdict">
       <div class="verdict-title">✓ Вердикт MAILSTACK</div>
       <div class="verdict-text">Рекомендуем <strong>n8n</strong> — да, чуть сложнее, но возможности несравнимо шире. Activepieces подходит если нужно быстро настроить 2-3 простых сценария и не хочется разбираться в n8n.</div>
     </div>
   </div>
 
-  <!-- ══ 5. СВОЯ ИНФРА VS СЕРВИСЫ ══ -->
+  <!-- ══ 7. СВОЯ ИНФРА VS СЕРВИСЫ ══ -->
   <div class="compare-section" id="infra-vs-saas" style="padding-top:40px;border-top:1px solid var(--border)">
     <div class="section-label">Своя инфра vs SaaS</div>
     <h2>Unisender или<br><em>своя инфраструктура?</em></h2>
@@ -782,7 +1179,7 @@
     </div>
   </div>
 
-  <!-- ══ 6. МОНИТОРИНГ ══ -->
+  <!-- ══ 8. МОНИТОРИНГ ══ -->
   <div class="compare-section" id="monitoring" style="padding-top:40px;border-top:1px solid var(--border)">
     <div class="section-label">Мониторинг</div>
     <h2>Мониторинг и<br><em>логи</em></h2>
@@ -959,7 +1356,7 @@
     </div>
   </div>
 
-  <!-- ══ 7. БЕЗОПАСНОСТЬ ══ -->
+  <!-- ══ 9. БЕЗОПАСНОСТЬ ══ -->
   <div class="compare-section" id="security" style="padding-top:40px;border-top:1px solid var(--border)">
     <div class="section-label">Безопасность</div>
     <h2>Защита<br><em>инфраструктуры</em></h2>
@@ -1159,7 +1556,7 @@
     </div>
   </div>
 
-  <!-- ══ 8. ХОСТИНГ ══ -->
+  <!-- ══ 10. ХОСТИНГ ══ -->
   <div class="compare-section" id="hosting" style="padding-top:40px;border-top:1px solid var(--border)">
     <div class="section-label">Хостинг / VPS</div>
     <h2>Где держать<br><em>сервер?</em></h2>
