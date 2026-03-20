@@ -1576,22 +1576,23 @@
     <table class="ctable reveal">
       <thead>
         <tr>
-          <th>Инструмент</th>
-          <th>Тип защиты</th>
-          <th>Сложность</th>
-          <th>Обязательность</th>
-          <th>Настройка MAILSTACK</th>
+          <th>Характеристика</th>
+          <th class="rec-col">UFW ★</th>
+          <th class="rec-col">WireGuard ★</th>
+          <th class="rec-col">Rspamd ★</th>
+          <th>CrowdSec</th>
+          <th>Fail2ban</th>
+          <th>2FA</th>
         </tr>
       </thead>
       <tbody>
-        <tr><td>UFW / iptables</td><td>Firewall — закрытие портов</td><td style="color:var(--accent3)">Низкая</td><td style="color:var(--accent3);font-weight:600">Обязательно</td><td>2 000 ₽</td></tr>
-        <tr><td>SSH Hardening</td><td>Ключи, порт, отключение root</td><td style="color:var(--accent3)">Низкая</td><td style="color:var(--accent3);font-weight:600">Обязательно</td><td>2 000 ₽</td></tr>
-        <tr><td>SSL/TLS Hardening</td><td>Let's Encrypt, TLS 1.3, HSTS</td><td style="color:var(--accent3)">Низкая</td><td style="color:var(--accent3);font-weight:600">Обязательно</td><td>2 000 ₽</td></tr>
-        <tr><td>WireGuard</td><td>VPN-туннель между серверами</td><td style="color:#f0a500">Средняя</td><td style="color:var(--accent3)">Рекомендован</td><td>3 000 ₽</td></tr>
-        <tr><td>Rspamd</td><td>Антиспам + DKIM-подпись</td><td style="color:#f0a500">Средняя</td><td style="color:var(--accent3);font-weight:600">Обязательно</td><td>3 000 ₽</td></tr>
-        <tr><td>CrowdSec</td><td>Коллективная защита от атак</td><td style="color:#f0a500">Средняя</td><td style="color:var(--accent3)">Рекомендован</td><td>3 000 ₽</td></tr>
-        <tr><td>Fail2ban</td><td>Блокировка IP по логам</td><td style="color:var(--accent3)">Низкая</td><td style="color:var(--accent3)">Альтернатива CrowdSec</td><td>2 000 ₽</td></tr>
-        <tr><td>2FA</td><td>TOTP для веб-панелей</td><td style="color:var(--accent3)">Низкая</td><td style="color:var(--accent3)">Рекомендован</td><td>3 000 ₽</td></tr>
+        <tr><td>Тип защиты</td><td class="rec-col">Firewall</td><td class="rec-col">VPN-туннель</td><td class="rec-col">Антиспам + DKIM</td><td>Коллект. защита</td><td>Блокировка IP</td><td>Аутентификация</td></tr>
+        <tr><td>Self-hosted</td><td class="rec-col chk">✓</td><td class="rec-col chk">✓</td><td class="rec-col chk">✓</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+        <tr><td>Цена</td><td class="rec-col chk">Бесплатно</td><td class="rec-col chk">Бесплатно</td><td class="rec-col chk">Бесплатно</td><td class="chk">Бесплатно</td><td class="chk">Бесплатно</td><td class="chk">Бесплатно</td></tr>
+        <tr><td>Сложность</td><td class="rec-col" style="color:var(--accent3)">Низкая</td><td class="rec-col" style="color:#f0a500">Средняя</td><td class="rec-col" style="color:#f0a500">Средняя</td><td style="color:#f0a500">Средняя</td><td style="color:var(--accent3)">Низкая</td><td style="color:var(--accent3)">Низкая</td></tr>
+        <tr><td>Обязательность</td><td class="rec-col" style="color:var(--accent3);font-weight:600">Обязательно</td><td class="rec-col" style="color:var(--accent3)">Рекомендован</td><td class="rec-col" style="color:var(--accent3);font-weight:600">Обязательно</td><td>Рекомендован</td><td>Альтернатива CS</td><td>Рекомендован</td></tr>
+        <tr><td>Веб-интерфейс</td><td class="rec-col dsh">—</td><td class="rec-col dsh">—</td><td class="rec-col chk">✓ через Mailcow</td><td class="chk">✓ консоль</td><td class="dsh">—</td><td class="dsh">—</td></tr>
+        <tr><td>Работает с email</td><td class="rec-col chk">✓ порты 25/465/587</td><td class="rec-col chk">✓ связь серверов</td><td class="rec-col chk">✓ фильтрация</td><td class="chk">✓ логи Postfix</td><td class="chk">✓ логи SSH/SMTP</td><td class="part">панели управления</td></tr>
       </tbody>
     </table>
 
