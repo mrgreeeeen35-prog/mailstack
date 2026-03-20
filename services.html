@@ -285,6 +285,8 @@
           <button class="c-cat-tab" data-ccat="support">💬 Поддержка</button>
           <button class="c-cat-tab" data-ccat="automation">⚙️ Автоматизация</button>
           <button class="c-cat-tab" data-ccat="extra">🔥 Доп. услуги</button>
+          <button class="c-cat-tab" data-ccat="monitoring">📈 Мониторинг</button>
+          <button class="c-cat-tab" data-ccat="security">🛡 Безопасность</button>
         </div>
 
         <!-- MTA -->
@@ -357,6 +359,12 @@
               <div class="c-card-badge badge-free">бесплатный</div>
               <div class="c-card-price">3 000 ₽</div>
             </div>
+            <div class="c-card" data-key="mk-mailtrain" data-price="3000" data-group="marketing">
+              <div class="c-card-name">Mailtrain</div>
+              <div class="c-card-desc">Open-source платформа рассылок на Node.js</div>
+              <div class="c-card-badge badge-free">бесплатный</div>
+              <div class="c-card-price">3 000 ₽</div>
+            </div>
           </div>
           <div class="c-cat-note">Можно выбрать несколько</div>
         </div>
@@ -382,6 +390,12 @@
               <div class="c-card-badge badge-free">бесплатный</div>
               <div class="c-card-price">4 000 ₽</div>
             </div>
+            <div class="c-card" data-key="sup-typebot" data-price="4000" data-group="support">
+              <div class="c-card-name">Typebot</div>
+              <div class="c-card-desc">Визуальный конструктор чат-ботов</div>
+              <div class="c-card-badge badge-free">бесплатный</div>
+              <div class="c-card-price">4 000 ₽</div>
+            </div>
           </div>
           <div class="c-cat-note">Можно выбрать несколько</div>
         </div>
@@ -400,6 +414,18 @@
               <div class="c-card-desc">Современная альтернатива Zapier</div>
               <div class="c-card-badge badge-free">бесплатный</div>
               <div class="c-card-price">4 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="au-huginn" data-price="4000" data-group="automation">
+              <div class="c-card-name">Huginn</div>
+              <div class="c-card-desc">Self-hosted IFTTT — агенты и сценарии</div>
+              <div class="c-card-badge badge-free">бесплатный</div>
+              <div class="c-card-price">4 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="au-windmill" data-price="5000" data-group="automation">
+              <div class="c-card-name">Windmill</div>
+              <div class="c-card-desc">Скрипты и пайплайны для разработчиков</div>
+              <div class="c-card-badge badge-free">бесплатный</div>
+              <div class="c-card-price">5 000 ₽</div>
             </div>
           </div>
           <div class="c-cat-note">Можно выбрать несколько</div>
@@ -478,6 +504,56 @@
               <div class="c-card-name">Документация</div>
               <div class="c-card-desc">Инструкции по управлению и обучение команды</div>
               <div class="c-card-price">5 000 ₽</div>
+            </div>
+          </div>
+          <div class="c-cat-note">Можно выбрать несколько</div>
+        </div>
+
+        <!-- MONITORING -->
+        <div class="c-cat-panel" data-panel="monitoring">
+          <div class="c-cards-grid">
+            <div class="c-card" data-key="mon-grafana" data-price="5000" data-group="monitoring">
+              <div class="c-card-name">Grafana + Prometheus</div>
+              <div class="c-card-desc">Дашборды трафика, очередей, bounce rate</div>
+              <div class="c-card-badge badge-free">бесплатный</div>
+              <div class="c-card-price">5 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="mon-uptimekuma" data-price="3000" data-group="monitoring">
+              <div class="c-card-name">UptimeKuma</div>
+              <div class="c-card-desc">Мониторинг доступности с алёртами в Telegram</div>
+              <div class="c-card-badge badge-free">бесплатный</div>
+              <div class="c-card-price">3 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="mon-graylog" data-price="5000" data-group="monitoring">
+              <div class="c-card-name">Graylog</div>
+              <div class="c-card-desc">Централизованные логи почтовых серверов</div>
+              <div class="c-card-badge badge-free">бесплатный</div>
+              <div class="c-card-price">5 000 ₽</div>
+            </div>
+          </div>
+          <div class="c-cat-note">Можно выбрать несколько</div>
+        </div>
+
+        <!-- SECURITY -->
+        <div class="c-cat-panel" data-panel="security">
+          <div class="c-cards-grid">
+            <div class="c-card" data-key="sec-wireguard" data-price="4000" data-group="security">
+              <div class="c-card-name">WireGuard</div>
+              <div class="c-card-desc">VPN-туннель между серверами</div>
+              <div class="c-card-badge badge-free">бесплатный</div>
+              <div class="c-card-price">4 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="sec-crowdsec" data-price="3000" data-group="security">
+              <div class="c-card-name">CrowdSec</div>
+              <div class="c-card-desc">Коллективная защита от брутфорса и ботов</div>
+              <div class="c-card-badge badge-free">бесплатный</div>
+              <div class="c-card-price">3 000 ₽</div>
+            </div>
+            <div class="c-card" data-key="sec-fail2ban" data-price="2000" data-group="security">
+              <div class="c-card-name">Fail2ban</div>
+              <div class="c-card-desc">Блокировка IP при неудачных попытках входа</div>
+              <div class="c-card-badge badge-free">бесплатный</div>
+              <div class="c-card-price">2 000 ₽</div>
             </div>
           </div>
           <div class="c-cat-note">Можно выбрать несколько</div>
