@@ -118,6 +118,63 @@
     color: var(--bg);
   }
 
+  /* ── BURGER ── */
+  .nav-burger {
+    display: none;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--heading);
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    position: relative;
+    z-index: 110;
+    flex-shrink: 0;
+  }
+  .nav-burger span,
+  .nav-burger span::before,
+  .nav-burger span::after {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: var(--heading);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all .3s;
+  }
+  .nav-burger span { top: 50%; transform: translate(-50%, -50%); }
+  .nav-burger span::before { content:''; top: -6px; left: 0; }
+  .nav-burger span::after  { content:''; top:  6px; left: 0; }
+  .nav-burger.open span { background: transparent; }
+  .nav-burger.open span::before { top: 0; transform: rotate(45deg); }
+  .nav-burger.open span::after  { top: 0; transform: rotate(-45deg); }
+
+  /* ── MOBILE MENU ── */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    background: rgba(8,10,15,0.97);
+    backdrop-filter: blur(20px);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    color: var(--heading);
+    text-decoration: none;
+    font-family: var(--font-head);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    transition: color .2s;
+  }
+  .mobile-menu a:hover { color: var(--accent); }
+
   /* ── HERO ── */
   .hero {
     min-height: 100vh;
@@ -1074,6 +1131,8 @@
   @media (max-width: 900px) {
     nav { padding: 16px 24px; }
     .nav-links { display: none; }
+    .nav-cta { display: none; }
+    .nav-burger { display: flex; align-items: center; justify-content: center; }
     .hero { padding: 100px 24px 60px; }
     section { padding: 60px 24px; }
     .services-grid, .steps, .tech-grid, .pricing-grid, .platforms-grid, .constructor-cols, .calc-cols { grid-template-columns: 1fr; }
@@ -1186,7 +1245,19 @@
     <li><a href="portfolio.html">Кейсы</a></li>
   </ul>
   <a href="#cta" class="nav-cta">Написать</a>
+  <button class="nav-burger" id="navBurger" aria-label="Меню"><span></span></button>
 </nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" onclick="closeMobile()">Главная</a>
+  <a href="services.html" onclick="closeMobile()">Услуги</a>
+  <a href="compare.html" onclick="closeMobile()">Сравнение</a>
+  <a href="servers.html" onclick="closeMobile()">Серверы</a>
+  <a href="courses.html" onclick="closeMobile()">Курсы</a>
+  <a href="portfolio.html" onclick="closeMobile()">Кейсы</a>
+  <a href="#cta" class="nav-cta" style="display:inline-block;margin-top:12px" onclick="closeMobile()">Написать</a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -1518,6 +1589,7 @@
   <div class="section-label">Тарифы</div>
   <h2>Прозрачные<br><em>цены</em></h2>
   <p class="section-desc">Пакеты выгоднее на 20–32%. Подробнее об услугах — на <a href="services.html" style="color:var(--accent);text-decoration:none">странице услуг</a>.</p>
+  <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:8px">Цены — за настройку и сопровождение. VPS и домены оплачиваются отдельно (от 1 500 ₽/мес).</p>
 
   <!-- ТАБЛИЦА СРАВНЕНИЯ -->
   <div style="overflow-x:auto" class="reveal">
@@ -2437,6 +2509,22 @@
     buildDots();
     resetAuto();
     window.addEventListener('resize', () => { goTo(0); });
+  }
+
+  // ── MOBILE BURGER ──
+  const burger = document.getElementById('navBurger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  if (burger && mobileMenu) {
+    burger.addEventListener('click', () => {
+      burger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+      document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+    });
+  }
+  function closeMobile() {
+    burger?.classList.remove('open');
+    mobileMenu?.classList.remove('open');
+    document.body.style.overflow = '';
   }
 
 </script>
