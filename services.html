@@ -959,7 +959,7 @@
       <div style="font-family:var(--font-head);font-size:40px;font-weight:800;color:rgba(0,229,255,.15);line-height:1;flex-shrink:0">02</div>
       <div>
         <div style="font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--heading);margin-bottom:6px">Настраиваем</div>
-        <div style="font-size:13px;color:var(--muted);line-height:1.7">Разворачиваю VPS, устанавливаю стек, настраиваю DNS, SSL и аутентификацию.</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.7">Разворачиваю VPS, устанавливаю стек, настраиваю DNS, SSL, безопасность и мониторинг.</div>
       </div>
     </div>
     <div style="background:var(--bg2);padding:32px 28px;display:flex;gap:20px;align-items:flex-start;border-left:1px solid var(--border)">
@@ -1118,6 +1118,46 @@
           <td style="text-align:center;font-size:12px;color:#f0a500;border-bottom:1px solid var(--border);border-left:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.02)">+30%</td>
           <td style="text-align:center;font-size:12px;color:#f0a500;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">+30%</td>
           <td style="text-align:center;font-size:12px;color:#f0a500;border-bottom:1px solid var(--border);border-left:1px solid var(--border)">договорная</td>
+        </tr>
+
+        <!-- Безопасность и мониторинг -->
+        <tr style="background:var(--bg2)">
+          <td colspan="5" style="padding:10px 24px;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;border-bottom:1px solid var(--border)">Безопасность и мониторинг</td>
+        </tr>
+        <tr>
+          <td style="padding:14px 24px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)">Firewall + Fail2ban</td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--accent3);font-size:16px">✓</span></td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.02)"><span style="color:var(--accent3);font-size:16px">✓</span></td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--accent3);font-size:16px">✓</span></td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--accent3);font-size:16px">✓</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 24px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)">SSH hardening + SSL/TLS</td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--muted);opacity:.4;font-size:16px">—</span></td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.02)"><span style="color:var(--accent3);font-size:16px">✓</span></td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--accent3);font-size:16px">✓</span></td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--accent3);font-size:16px">✓</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 24px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)">CrowdSec</td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--muted);opacity:.4;font-size:16px">—</span></td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.02)"><span style="color:var(--accent3);font-size:16px">✓</span></td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--accent3);font-size:16px">✓</span></td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--accent3);font-size:16px">✓</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 24px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)">WireGuard VPN</td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--muted);opacity:.4;font-size:16px">—</span></td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.02)"><span style="color:var(--muted);opacity:.4;font-size:16px">—</span></td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--accent3);font-size:16px">✓</span></td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--accent3);font-size:16px">✓</span></td>
+        </tr>
+        <tr>
+          <td style="padding:14px 24px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)">2FA для панелей</td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--muted);opacity:.4;font-size:16px">—</span></td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.02)"><span style="color:var(--muted);opacity:.4;font-size:16px">—</span></td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--accent3);font-size:16px">✓</span></td>
+          <td style="text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border)"><span style="color:var(--accent3);font-size:16px">✓</span></td>
         </tr>
 
         <!-- Доп. услуги -->
