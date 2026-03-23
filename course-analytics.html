@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<script>
+window._GATE_TOKENS=["analytics2025","yC8vZ4XfF9Zp!yu"];
+window._GATE_KEY="analytics";
+window.currentLesson = 1;
+try { window.completed = new Set(JSON.parse(localStorage.getItem('analytics_done') || '[]')); } catch(e) { window.completed = new Set(); }
+var completed = window.completed;
+var currentLesson = window.currentLesson;
+(function(){
+  function _ls(op,k,v){try{if(op==="g")return localStorage.getItem(k);if(op==="s")localStorage.setItem(k,v);if(op==="r")localStorage.removeItem(k);}catch(e){}}
+  function _err(el,msg){if(el){el.textContent=msg;el.style.display="block";}}
+  function _checkPwd(){
+    var gi=document.getElementById("gateInput");
+    if(!gi)return;
+    var val=gi.value.trim();
+    var err=document.getElementById("gateError");
+    var tokens=window._GATE_TOKENS||[];
+    var K=window._GATE_KEY||"course";
+    var att=parseInt(_ls("g",K+"_attempts")||"0");
+    var lk=parseInt(_ls("g",K+"_lock")||"0");
+    if(lk&&Date.now()<lk){_err(err,"Подождите "+Math.ceil((lk-Date.now())/60000)+" мин.");return;}
+    if(tokens.includes(val)){
+      _ls("s",K+"_access",val);_ls("r",K+"_attempts");_ls("r",K+"_lock");
+      if(typeof openCourse==="function"){openCourse();}
+      else{var pg=document.getElementById("passwordGate");var cl=document.getElementById("courseLayout");if(pg)pg.style.display="none";if(cl)cl.style.display="grid";}
+    }else{
+      var n=att+1;_ls("s",K+"_attempts",String(n));
+      if(n>=5){_ls("s",K+"_lock",String(Date.now()+15*60*1000));_ls("s",K+"_attempts","0");_err(err,"Слишком много попыток. Подождите 15 минут.");}
+      else{_err(err,"Неверный токен. Попыток осталось: "+(5-n));if(gi)gi.style.borderColor="#ff6b6b";}
+    }
+  }
+  window.checkPassword=_checkPwd;
+  document.addEventListener("DOMContentLoaded",function(){
+    var K=window._GATE_KEY||"analytics";
+    var tokens=window._GATE_TOKENS||[];
+    try{var s=localStorage.getItem(K+"_access");if(s&&tokens.includes(s)){if(typeof openCourse==="function")openCourse();return;}}catch(e){}
+    try{var u=new URLSearchParams(location.search).get("token");if(u&&tokens.includes(u)){try{localStorage.setItem(K+"_access",u);}catch(e){}if(typeof openCourse==="function")openCourse();}}catch(e){}
+  });
+})();
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Курс: Аналитика рассылок — MAILSTACK</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23080a0f'/><rect x='4' y='8' width='24' height='16' rx='2' fill='none' stroke='rgba(255,255,255,.22)' stroke-width='1.2'/><polyline points='4,8 16,18 28,8' fill='none' stroke='%2300e5ff' stroke-width='2' stroke-linejoin='round'/><text x='7' y='26' fill='%2300e5ff' font-family='monospace' font-size='8' font-weight='bold'>›_</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+<style>
+/* ── COURSE LAYOUT ── */
+.course-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 0;
+  min-height: 100vh;
+  padding-top: 61px;
+}
+
+/* Sidebar */
+.course-sidebar {
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  position: sticky;
+  top: 61px;
+  height: calc(100vh - 61px);
+  overflow-y: auto;
+  padding: 32px 0;
+}
+.sidebar-title {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  padding: 0 24px;
+  margin-bottom: 16px;
+}
+.sidebar-module {
+  margin-bottom: 8px;
+}
+.sidebar-module-title {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  padding: 8px 24px;
+  margin-top: 8px;
+}
+.sidebar-lesson {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 24px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .2s;
+  border-left: 2px solid transparent;
+  text-decoration: none;
+}
+.sidebar-lesson:hover { color: var(--text); background: rgba(255,255,255,.03); }
+.sidebar-lesson.active { color: var(--accent); border-left-color: var(--accent); background: rgba(0,229,255,.05); }
+.sidebar-lesson.done { color: var(--accent3); }
+.lesson-num {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+}
+.sidebar-lesson.active .lesson-num { border-color: var(--accent); color: var(--accent); }
+.sidebar-lesson.done .lesson-num { border-color: var(--accent3); background: var(--accent3); color: var(--bg); }
+.sidebar-progress {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  margin-top: 16px;
+}
+.progress-bar-wrap {
+  background: var(--surface);
+  height: 4px;
+  border-radius: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: var(--accent3);
+  border-radius: 2px;
+  transition: width .5s ease;
+}
+
+/* Lesson content */
+.course-content {
+  padding: 48px 64px;
+  max-width: 860px;
+}
+.lesson-header {
+  margin-bottom: 40px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+}
+.lesson-module-tag {
+  font-size: 11px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 12px;
+}
+.lesson-title {
+  font-family: var(--font-head);
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 800;
+  color: var(--heading);
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+  line-height: 1.1;
+}
+.lesson-meta {
+  display: flex;
+  gap: 20px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Content blocks */
+.lesson-body h2 {
+  font-family: var(--font-head);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--heading);
+  margin: 40px 0 16px;
+  letter-spacing: -.5px;
+}
+.lesson-body h3 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--heading);
+  margin: 28px 0 12px;
+}
+.lesson-body p {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+.lesson-body ul, .lesson-body ol {
+  padding-left: 20px;
+  margin-bottom: 16px;
+}
+.lesson-body li {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.8;
+  margin-bottom: 6px;
+}
+
+/* Code blocks */
+.code-block {
+  background: #0a0e18;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  padding: 20px 24px;
+  margin: 20px 0;
+  border-radius: 0;
+  position: relative;
+  overflow-x: auto;
+}
+.code-block pre {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: #c9d1d9;
+  line-height: 1.7;
+  margin: 0;
+  white-space: pre;
+}
+.code-block .comment { color: #6e7681; }
+.code-block .cmd { color: var(--accent); }
+.code-block .str { color: var(--accent3); }
+.code-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+}
+.copy-btn {
+  position: absolute;
+  top: 12px; right: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 11px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  transition: all .2s;
+}
+.copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+/* Note / Warning / Tip blocks */
+.note-block {
+  padding: 16px 20px;
+  margin: 20px 0;
+  border-left: 3px solid;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.note-block.info { border-color: var(--accent); background: rgba(0,229,255,.05); color: var(--text); }
+.note-block.warn { border-color: #f0a500; background: rgba(240,165,0,.05); color: var(--text); }
+.note-block.tip  { border-color: var(--accent3); background: rgba(0,255,136,.05); color: var(--text); }
+.note-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 6px; }
+.note-block.info .note-label { color: var(--accent); }
+.note-block.warn .note-label { color: #f0a500; }
+.note-block.tip  .note-label { color: var(--accent3); }
+
+/* Step counter */
+.steps-list { list-style: none; padding: 0; margin: 20px 0; }
+.steps-list li {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  align-items: flex-start;
+}
+.step-n {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+}
+.step-text { font-size: 14px; color: var(--text); line-height: 1.7; padding-top: 4px; }
+
+/* Nav between lessons */
+.lesson-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 56px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+  gap: 16px;
+}
+.lesson-nav-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 24px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  cursor: pointer;
+  transition: all .2s;
+  text-decoration: none;
+  max-width: 280px;
+}
+.lesson-nav-btn:hover { border-color: var(--accent); background: var(--surface); }
+.nav-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.nav-title { font-size: 14px; color: var(--heading); font-weight: 500; }
+
+/* Password gate */
+#passwordGate {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gate-box {
+  text-align: center;
+  max-width: 420px;
+  padding: 48px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+}
+.gate-logo { margin-bottom: 24px; }
+.gate-title { font-family: var(--font-head); font-size: 24px; font-weight: 800; color: var(--heading); margin-bottom: 8px; }
+.gate-desc { font-size: 13px; color: var(--muted); margin-bottom: 28px; line-height: 1.7; }
+.gate-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px 16px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  margin-bottom: 12px;
+  outline: none;
+  transition: border-color .2s;
+  box-sizing: border-box;
+}
+.gate-input:focus { border-color: var(--accent); }
+.gate-error { font-size: 12px; color: #ff6b6b; margin-bottom: 12px; display: none; }
+.gate-buy { font-size: 13px; color: var(--muted); margin-top: 20px; }
+.gate-buy a { color: var(--accent); text-decoration: none; }
+
+@media (max-width: 900px) {
+  .course-layout { grid-template-columns: 1fr; }
+  .course-sidebar { position: static; height: auto; }
+  .course-content { padding: 32px 24px; }
+}
+
+/* ── Прогресс курса v2 ─────────────────────────────────── */
+.progress-wrap { padding:14px 20px 12px; border-bottom:1px solid var(--border); }
+.progress-label { display:flex; justify-content:space-between; font-size:10px; color:var(--muted); font-family:var(--font-mono); margin-bottom:6px; text-transform:uppercase; letter-spacing:.08em; }
+.progress-fill  { height:3px; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:2px; transition:width .4s; }
+.sidebar-item-done::after { content:'\2713'; position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:10px; color:var(--accent3); }
+.sidebar-lesson  { position:relative; }
+.complete-btn    { display:flex; align-items:center; gap:8px; padding:10px 16px; background:rgba(0,255,136,.05); border:1px solid rgba(0,255,136,.2); color:var(--accent3); font-size:11px; font-family:var(--font-mono); cursor:pointer; width:100%; margin-top:16px; transition:all .15s; }
+.complete-btn:hover { background:rgba(0,255,136,.12); }
+.complete-btn.done  { background:rgba(0,255,136,.1); border-color:var(--accent3); }
+
+/* ── Course Quiz ───────────────────────────────────────── */
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+#courseFinale { animation: fadeIn .5s ease; }
+
+/* ── Course Quiz ─────────────────────────────────────────── */
+.cquiz-wrap    { margin-top: 40px; }
+.cquiz-header  { padding: 20px 24px; background: rgba(123,97,255,.06); border: 1px solid rgba(123,97,255,.2); border-bottom: none; }
+.cquiz-title   { font-family: var(--font-head); font-size: 18px; font-weight: 800; color: var(--heading); margin-bottom: 4px; }
+.cquiz-sub     { font-size: 12px; color: var(--muted); font-family: var(--font-mono); }
+.cquiz-q       { background: var(--bg2); border: 1px solid var(--border); border-top: none; padding: 20px 24px; }
+.cquiz-qtext   { font-size: 15px; color: var(--heading); font-weight: 600; margin-bottom: 14px; line-height: 1.5; }
+.cquiz-qn      { font-size: 10px; color: var(--muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 8px; }
+.cquiz-opts    { display: flex; flex-direction: column; gap: 6px; margin-bottom: 0; }
+.cquiz-opt     { display: flex; gap: 10px; align-items: center; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); cursor: pointer; font-size: 13px; color: var(--text); transition: all .15s; }
+.cquiz-opt:hover    { border-color: var(--accent); }
+.cquiz-opt.correct  { border-color: var(--accent3); background: rgba(0,255,136,.06); color: var(--accent3); }
+.cquiz-opt.wrong    { border-color: #ff6b6b; background: rgba(255,107,107,.05); color: #ff6b6b; }
+.cquiz-opt-key { min-width: 22px; height: 22px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 10px; font-family: var(--font-mono); color: var(--muted); flex-shrink: 0; }
+.cquiz-opt.correct .cquiz-opt-key { border-color: var(--accent3); color: var(--accent3); }
+.cquiz-opt.wrong    .cquiz-opt-key { border-color: #ff6b6b; color: #ff6b6b; }
+.cquiz-explain { margin-top: 10px; padding: 10px 14px; background: var(--surface); border-left: 3px solid var(--accent); font-size: 12px; color: var(--muted); line-height: 1.7; display: none; }
+.cquiz-explain.show { display: block; }
+.cquiz-progress { padding: 14px 24px; background: var(--bg2); border: 1px solid var(--border); border-top: none; display: flex; align-items: center; gap: 14px; }
+.cquiz-bar     { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.cquiz-fill    { height: 100%; background: linear-gradient(90deg, var(--accent3), var(--accent)); border-radius: 2px; transition: width .4s; }
+.cquiz-result  { padding: 24px; background: var(--surface); border: 1px solid rgba(0,229,255,.2); border-top: none; text-align: center; display: none; }
+.cquiz-result.show { display: block; }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="passwordGate">
+  <div class="gate-box">
+    <div class="gate-logo">
+      <svg width="210" height="22" viewBox="0 0 270 28" fill="none">
+        <rect x="1" y="1" width="40" height="26" rx="3" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1"/>
+        <polyline points="1,1 21,14 41,1" fill="none" stroke="#00e5ff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+        <text x="5" y="24" fill="#00e5ff" font-family="'JetBrains Mono', monospace" font-size="12">›_</text>
+        <text x="50" y="21" fill="#ffffff" font-family="'Syne', sans-serif" font-size="20" font-weight="800" letter-spacing="-1">MAIL<tspan fill="#00e5ff">STACK</tspan></text>
+      </svg>
+    </div>
+    <div class="gate-title">Курс: Аналитика</div>
+    <div class="gate-desc">Этот курс доступен после оплаты. Введите токен доступа который вы получили в Telegram после покупки.</div>
+    <input type="password" id="gateInput" class="gate-input" placeholder="Введите токен доступа" onkeydown="if(event.key==='Enter')checkPassword()">
+    <div class="gate-error" id="gateError">Неверный токен. Проверьте сообщение в Telegram или напишите нам.</div>
+    <button onclick="checkPassword()" id="pwBtn" class="btn-primary" style="width:100%">Войти в курс</button>
+    <div class="gate-buy">Нет доступа? <a href="courses.html">Купить курс →</a></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="index.html" class="logo">
+    <svg width="270" height="28" viewBox="0 0 270 28" fill="none">
+      <rect x="1" y="1" width="40" height="26" rx="3" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1"/>
+      <polyline points="1,1 21,14 41,1" fill="none" stroke="#00e5ff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      <text x="5" y="24" fill="#00e5ff" font-family="'JetBrains Mono', monospace" font-size="12">›_</text>
+      <text x="50" y="21" fill="#ffffff" font-family="'Syne', sans-serif" font-size="20" font-weight="800" letter-spacing="-1">MAIL<tspan fill="#00e5ff">STACK</tspan></text>
+    </svg>
+  </a>
+    <ul class="nav-links">
+    <li><a href="index.html">Главная</a></li>
+    <li><a href="services.html">Услуги</a></li>
+    <li><a href="compare.html">Сравнение</a></li>
+    <li><a href="servers.html">Серверы</a></li>
+    <li><a href="courses.html" class="active">Курсы</a></li>
+    <li><a href="workflows.html" style="color:var(--accent3)">Воркфлоу <span style="font-size:9px;background:var(--accent3);color:var(--bg);padding:1px 6px;margin-left:4px;font-weight:600;letter-spacing:.05em">NEW</span></a></li>
+  </ul>
+  <a href="courses.html" class="nav-cta">Все курсы</a>
+  <button class="nav-burger" id="navBurger"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- COURSE LAYOUT -->
+<div class="course-layout" id="courseLayout" style="display:none">
+
+  <!-- SIDEBAR -->
+  <aside class="course-sidebar">
+    <div class="sidebar-title">Аналитика email-рассылок</div>
+    <div class="progress-wrap"><span id="progressText" style="font-size:12px;color:var(--muted);font-family:var(--font-mono)">0 / 0 пройдено</span></div>
+
+    <div class="sidebar-module-title">Модуль 1 · Метрики</div>
+    <a class="sidebar-lesson" data-n="1" onclick="showLesson(1)" href="#">
+      <div class="lesson-num">1</div>Ключевые метрики email-маркетинга
+    </a>
+    <a class="sidebar-lesson" data-n="2" onclick="showLesson(2)" href="#">
+      <div class="lesson-num">2</div>Delivery Rate vs Inbox Placement
+    </a>
+    <a class="sidebar-lesson" data-n="3" onclick="showLesson(3)" href="#">
+      <div class="lesson-num">3</div>ROI email-рассылок — как считать
+    </a>
+    <div class="sidebar-module-title">Модуль 2 · Инструменты</div>
+    <a class="sidebar-lesson" data-n="4" onclick="showLesson(4)" href="#">
+      <div class="lesson-num">4</div>MailWizz аналитика — скрытые возможности
+    </a>
+    <a class="sidebar-lesson" data-n="5" onclick="showLesson(5)" href="#">
+      <div class="lesson-num">5</div>Google Postmaster + Mail.ru Postmaster
+    </a>
+    <a class="sidebar-lesson" data-n="6" onclick="showLesson(6)" href="#">
+      <div class="lesson-num">6</div>Grafana дашборд для email-метрик
+    </a>
+    <div class="sidebar-module-title">Модуль 3 · Оптимизация</div>
+    <a class="sidebar-lesson" data-n="7" onclick="showLesson(7)" href="#">
+      <div class="lesson-num">7</div>A/B тестирование — что и как тестировать
+    </a>
+    <a class="sidebar-lesson" data-n="8" onclick="showLesson(8)" href="#">
+      <div class="lesson-num">8</div>Когортный анализ подписчиков
+    </a>
+    <a class="sidebar-lesson" data-n="9" onclick="showLesson(9)" href="#">
+      <div class="lesson-num">9</div>Автоматические алёрты через n8n
+    </a>
+    <div class="sidebar-module-title">Модуль 4 · Практика</div>
+    <a class="sidebar-lesson" data-n="10" onclick="showLesson(10)" href="#">
+      <div class="lesson-num">10</div>Кейс: дашборд для 100K подписчиков
+    </a>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="course-content" id="lessonContent">
+    <!-- Уроки рендерятся JS-ом -->
+  </main>
+
+</div>
+
+<script src="js/main.js"></script>
+<script>
+function openCourse() {
+  document.getElementById('passwordGate').style.display = 'none';
+  document.getElementById('courseLayout').style.display = 'grid';
+  window._courseOpen = true;
+  if (typeof showLesson === 'function') {
+    showLesson(window.currentLesson || 1);
+  }
+}
+
+// ── PROGRESS SYSTEM ──
+
+function getDone() {
+  try { return JSON.parse(localStorage.getItem(DONE_KEY) || '[]'); } catch(e) { return []; }
+}
+
+function saveDone(arr) {
+  try { localStorage.setItem(DONE_KEY, JSON.stringify(arr)); } catch(e) {}
+}
+
+function markDone(n) {
+  var done = getDone();
+  if (done.indexOf(n) < 0) done.push(n);
+  saveDone(done);
+  refreshProgress();
+}
+
+function refreshProgress() {
+  var done = getDone();
+  var total = Object.keys(lessons).length;
+  var el = document.getElementById('progressText');
+  if (el) el.textContent = done.length + ' / ' + total + ' пройдено';
+  document.querySelectorAll('.sidebar-lesson').forEach(function(item) {
+    var attr = item.getAttribute('onclick') || '';
+    var match = attr.match(/showLesson.(\d+)./);
+    if (!match) return;
+    var num = parseInt(match[1]);
+    if (done.indexOf(num) >= 0) {
+      item.classList.add('done');
+    } else {
+      item.classList.remove('done');
+    }
+  });
+}
+
+function updateProgress() { refreshProgress(); }
+
+function showLesson(n) {
+  if (typeof currentLesson !== 'undefined' && currentLesson !== n && currentLesson >= 1) {
+    markDone(currentLesson);
+  }
+  currentLesson = n;
+  window.currentLesson = n;
+  var lesson = lessons[n];
+  if (!lesson) return;
+
+  refreshProgress();
+  document.querySelectorAll('.sidebar-lesson').forEach(function(el) {
+    var attr = el.getAttribute('onclick') || '';
+    var m = attr.match(/showLesson.(\d+)./);
+    if (!m) return;
+    el.classList.toggle('active', parseInt(m[1]) === n);
+  });
+
+  var total = Object.keys(lessons).length;
+  var prev = n > 1 ? lessons[n-1] : null;
+  var next = n < total ? lessons[n+1] : null;
+
+  var prevBtn = prev
+    ? '<a class="lesson-nav-btn" onclick="showLesson(' + (n-1) + ')" href="#"><div class="nav-label">\u2190 Назад</div><div class="nav-title">' + prev.title + '</div></a>'
+    : '<div></div>';
+  var nextBtn = next
+    ? '<a class="lesson-nav-btn" onclick="showLesson(' + (n+1) + ')" href="#" style="text-align:right"><div class="nav-label">Вперёд \u2192</div><div class="nav-title">' + next.title + '</div></a>'
+    : '<div></div>';
+
+  document.getElementById('lessonContent').innerHTML =
+    '<div class="lesson-header">'
+    + '<div class="lesson-module-tag">' + lesson.module + '</div>'
+    + '<div class="lesson-title">' + lesson.title + '</div>'
+    + '<div class="lesson-meta"><span>\u23F1 ' + lesson.time + '</span><span>Урок ' + n + ' из ' + total + '</span></div>'
+    + '</div>'
+    + '<div class="lesson-body">' + lesson.content + '</div>'
+    + '<div class="lesson-nav">' + prevBtn + nextBtn + '</div>';
+
+  refreshProgress();
+  window.scrollTo(0, 0);
+  if (n === 10) {
+    var qb = document.getElementById("quizBlock");
+    if (qb && typeof quizInit_analytics === "function") quizInit_analytics();
+  }
+}
+
+// ── LESSONS DATA ──
+var lessons = {
+  1: {
+    module: '\u041C\u043E\u0434\u0443\u043B\u044C 1 \u00B7 \u041C\u0435\u0442\u0440\u0438\u043A\u0438',
+    title:  'Ключевые метрики email-маркетинга',
+    time:   '15 мин',
+    content: `
+      <h2>Основные метрики, которые должен знать каждый</h2>
+      <p>Email-маркетинг без аналитики — это стрельба вслепую. Чтобы понимать, работают ли ваши рассылки, нужно отслеживать ключевые показатели. Каждая метрика рассказывает свою историю: от качества базы до релевантности контента. Разберём каждую метрику, её формулу и нормальные значения для B2B cold outreach.</p>
+
+      <h2>Open Rate (OR) — процент открытий</h2>
+      <p>Open Rate показывает, какой процент получателей открыл ваше письмо. Это первый индикатор качества темы письма (subject line) и репутации отправителя. Если OR низкий — либо тема не цепляет, либо письма попадают в спам.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Формула Open Rate</span>
+OR = (Уникальные открытия / Доставленные письма) × 100%
+
+<span class="comment"># Пример</span>
+Отправлено: 10,000
+Доставлено:  9,500
+Открыли:     2,375
+
+OR = (2375 / 9500) × 100% = <span class="str">25%</span>
+
+<span class="comment"># Нормы для cold email:</span>
+<span class="str">Отлично:  > 40%</span>
+<span class="cmd">Хорошо:   25-40%</span>
+Средне:   15-25%
+<span class="comment">Плохо:    < 15%  → проверьте спам, тему, базу</span></pre></div>
+
+      <div class="note-block warn">
+        <div class="note-label">Apple Mail Privacy Protection</div>
+        С iOS 15 Apple предзагружает трекинг-пиксели, искусственно завышая OR. Для Apple Mail пользователей OR может показывать 100%. Учитывайте это при анализе — реальный OR на 10-15% ниже показываемого.
+      </div>
+
+      <h2>CTR и CTOR — клики</h2>
+      <p>Click-Through Rate (CTR) — процент кликов от всех доставленных. Click-To-Open Rate (CTOR) — процент кликов от тех, кто открыл. CTOR показывает качество контента письма, а CTR — общую эффективность.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># CTR — от доставленных</span>
+CTR = (Уникальные клики / Доставленные) × 100%
+
+<span class="comment"># CTOR — от открывших</span>
+CTOR = (Уникальные клики / Уникальные открытия) × 100%
+
+<span class="comment"># Пример</span>
+Доставлено:   9,500
+Открыли:      2,375
+Кликнули:       380
+
+CTR  = (380 / 9500)  × 100% = <span class="str">4.0%</span>
+CTOR = (380 / 2375)  × 100% = <span class="str">16.0%</span></pre></div>
+
+      <h2>Bounce Rate — возвраты</h2>
+      <p>Bounce Rate — процент писем, которые не были доставлены. Hard bounce — адрес не существует (удаляйте сразу). Soft bounce — временная проблема (полный ящик, сервер не отвечает). Высокий bounce rate убивает репутацию домена.</p>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:grid;grid-template-columns:140px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);font-size:12px"><code style="color:var(--accent)">Hard Bounce</code><span style="color:var(--muted)">Адрес не существует, домен мёртв. Удалить из базы немедленно.</span></div>
+        <div style="display:grid;grid-template-columns:140px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent)">Soft Bounce</code><span style="color:var(--muted)">Ящик переполнен, сервер временно недоступен. Повторить через 24-72ч.</span></div>
+        <div style="display:grid;grid-template-columns:140px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent)">Норма</code><span style="color:var(--muted)">&lt; 2% для прогретых доменов. &gt; 5% — стоп, чистите базу.</span></div>
+      </div>
+
+      <h2>Unsubscribe Rate и Spam Complaints</h2>
+      <p>Unsubscribe Rate должен быть ниже 0.5%. Spam Complaint Rate (жалобы на спам) — критически важная метрика. Google блокирует отправителей с complaint rate выше 0.3%. Идеальный показатель — ниже 0.1%.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Формулы</span>
+Unsubscribe Rate = (Отписки / Доставленные) × 100%
+Complaint Rate   = (Жалобы на спам / Доставленные) × 100%
+
+<span class="comment"># Критические пороги</span>
+Complaint Rate > <span class="str">0.1%</span>  → жёлтая зона, снижайте объём
+Complaint Rate > <span class="str">0.3%</span>  → красная зона, Google заблокирует
+Complaint Rate > <span class="str">0.5%</span>  → домен сгорел, нужен новый</pre></div>
+
+      <div class="note-block tip">
+        <div class="note-label">Сводная таблица нормальных значений</div>
+        OR: 25-40% | CTR: 2-5% | CTOR: 10-20% | Bounce: &lt;2% | Unsubscribe: &lt;0.5% | Complaints: &lt;0.1%. Эти значения для B2B cold outreach. Для newsletter-рассылок нормы могут отличаться.
+      </div>`
+  },
+  2: {
+    module: 'Модуль 1 · Метрики',
+    title:  'Delivery Rate vs Inbox Placement — в чём разница',
+    time:   '12 мин',
+    content: `
+      <h2>Доставлено ≠ попало во Входящие</h2>
+      <p>Одна из самых распространённых ошибок в email-аналитике — путать Delivery Rate и Inbox Placement Rate. Delivery Rate показывает, что сервер получателя принял письмо (не вернул bounce). Но принять ≠ положить во Входящие. Письмо может оказаться в спаме, промо-вкладке или вообще в карантине — и при этом считаться «доставленным».</p>
+
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:grid;grid-template-columns:180px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);font-size:12px"><code style="color:var(--accent)">Delivery Rate</code><span style="color:var(--muted)">Процент писем, принятых сервером получателя (не bounce). Обычно 95-99%.</span></div>
+        <div style="display:grid;grid-template-columns:180px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent)">Inbox Placement Rate</code><span style="color:var(--muted)">Процент писем, реально попавших во Входящие (не в спам). Обычно 70-90%.</span></div>
+        <div style="display:grid;grid-template-columns:180px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent)">Разница</code><span style="color:var(--muted)">Может быть 10-30%. DR 98% при IPR 65% = треть писем в спаме!</span></div>
+      </div>
+
+      <h2>Как измерить Inbox Placement</h2>
+      <p>Delivery Rate виден в любой системе рассылок — это просто (отправлено - bounce) / отправлено. А вот Inbox Placement Rate нельзя увидеть напрямую. Для этого существуют специальные инструменты seed testing — вы отправляете письма на контрольные ящики и проверяете, куда они попали.</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Инструменты для seed testing</span>
+
+<span class="cmd">GlockApps</span>       — seed-листы для Gmail, Outlook, Yahoo
+                   Показывает: Inbox / Spam / Missing
+                   Цена: от $59/мес
+
+<span class="cmd">Mail-tester.com</span> — бесплатный (3 теста/день)
+                   Проверяет: SPF, DKIM, контент, blacklists
+                   Оценка: 1-10 баллов
+
+<span class="cmd">InboxAlly</span>       — автоматический warmup + placement test
+                   Интеграция с Mailcow/Postal
+
+<span class="cmd">Mailreach</span>       — warmup + inbox placement мониторинг
+                   Dashboard с трендами по дням</pre></div>
+
+      <h2>Seed Testing — пошаговый процесс</h2>
+      <ol class="steps-list">
+        <li><div class="step-n">1</div><div class="step-text">Создайте seed-лист: 20-30 ящиков на разных провайдерах (Gmail, Outlook, Yahoo, Mail.ru, Yandex). Используйте реальные ящики с историей, не новые.</div></li>
+        <li><div class="step-n">2</div><div class="step-text">Отправьте тестовое письмо на seed-лист тем же способом, что и реальные рассылки (тот же домен, IP, шаблон).</div></li>
+        <li><div class="step-n">3</div><div class="step-text">Подождите 5-10 минут. Проверьте каждый ящик: Inbox, Spam, Promotions, Other.</div></li>
+        <li><div class="step-n">4</div><div class="step-text">Посчитайте IPR = (Inbox / Total seeds) × 100%. Если ниже 80% — есть проблемы.</div></li>
+      </ol>
+
+      <div class="note-block info">
+        <div class="note-label">Автоматизация seed-тестов</div>
+        Для регулярного мониторинга используйте GlockApps API. Настройте автоматический seed-тест каждый день перед основной рассылкой. Если IPR падает ниже 80% — рассылка автоматически ставится на паузу через webhook в n8n.
+      </div>
+
+      <h2>Что влияет на Inbox Placement</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Факторы, убивающие IPR:</span>
+
+<span class="str">1. Репутация домена</span>     → Google Postmaster: Low/Bad = спам
+<span class="str">2. Репутация IP</span>         → Blacklists, shared IP с спамерами
+<span class="str">3. Контент</span>              → Спам-слова, много ссылок, картинок
+<span class="str">4. Engagement</span>           → Низкий OR + нет ответов = спам
+<span class="str">5. Authentication</span>       → Нет SPF/DKIM/DMARC = подозрительно
+<span class="str">6. Sending patterns</span>    → Резкий рост объёма = красный флаг
+<span class="str">7. List quality</span>         → Много bounce = плохая гигиена базы
+
+<span class="comment"># Чек-лист перед рассылкой:</span>
+<span class="cmd">[ ]</span> mail-tester.com score >= 9/10
+<span class="cmd">[ ]</span> SPF, DKIM, DMARC = pass
+<span class="cmd">[ ]</span> Домен не в blacklists
+<span class="cmd">[ ]</span> Seed test IPR >= 85%
+<span class="cmd">[ ]</span> Bounce rate прошлой рассылки < 2%</pre></div>
+
+      <div class="note-block warn">
+        <div class="note-label">Gmail Promotions Tab</div>
+        Попадание в Promotions — это не спам, но OR падает на 30-50%. Gmail классифицирует письма с маркетинговым контентом в Promotions автоматически. Для cold outreach пишите как человек, а не как маркетолог: без HTML-шаблонов, без картинок, простой текст.
+      </div>`
+  },
+  3: {
+    module: 'Модуль 1 · Метрики',
+    title:  'ROI email-рассылок — как считать',
+    time:   '14 мин',
+    content: `
+      <h2>Зачем считать ROI email-рассылок</h2>
+      <p>Email-маркетинг считается каналом с самым высоким ROI — в среднем $36 на каждый потраченный $1 (данные DMA). Но это средняя температура по больнице. Чтобы понимать реальную эффективность именно ваших рассылок, нужно считать ROI точно: учитывая все затраты на инфраструктуру, контент и время.</p>
+
+      <h2>Формула ROI</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Базовая формула ROI</span>
+ROI = ((Доход от рассылки - Затраты) / Затраты) × 100%
+
+<span class="comment"># Пример</span>
+Доход от кампании:  $15,000
+Затраты:            $2,500
+
+ROI = (($15,000 - $2,500) / $2,500) × 100% = <span class="str">500%</span>
+<span class="comment"># На каждый $1 вы заработали $5 чистыми</span></pre></div>
+
+      <h2>Что включать в затраты</h2>
+      <p>Большинство маркетологов считают только стоимость отправки. Но реальные затраты включают инфраструктуру, персонал и инструменты. Вот полный список для честного расчёта:</p>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:grid;grid-template-columns:200px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);font-size:12px"><code style="color:var(--accent)">Серверы</code><span style="color:var(--muted)">VPS (Mailcow, Postal), IP-адреса, SSL — $50-200/мес</span></div>
+        <div style="display:grid;grid-template-columns:200px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent)">Домены</code><span style="color:var(--muted)">10-50 доменов × $10-15/год = $100-750/год</span></div>
+        <div style="display:grid;grid-template-columns:200px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent)">Инструменты</code><span style="color:var(--muted)">MailWizz лицензия, warmup сервисы, GlockApps — $100-300/мес</span></div>
+        <div style="display:grid;grid-template-columns:200px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent)">Время персонала</code><span style="color:var(--muted)">Копирайтинг, настройка, мониторинг — оценивайте в часах × ставку</span></div>
+        <div style="display:grid;grid-template-columns:200px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent)">Базы данных</code><span style="color:var(--muted)">Покупка/обогащение контактов — $0.03-0.10 за контакт</span></div>
+      </div>
+
+      <h2>Revenue Per Email (RPE)</h2>
+      <p>RPE — доход на одно отправленное письмо. Позволяет сравнивать эффективность разных кампаний вне зависимости от объёма. Это одна из самых полезных метрик для принятия решений.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Revenue Per Email</span>
+RPE = Общий доход от кампании / Кол-во отправленных писем
+
+<span class="comment"># Пример сравнения двух кампаний:</span>
+
+<span class="cmd">Кампания A:</span>
+  Отправлено: 50,000 писем
+  Доход:      $8,000
+  RPE = $8,000 / 50,000 = <span class="str">$0.16</span>
+
+<span class="cmd">Кампания B:</span>
+  Отправлено: 10,000 писем
+  Доход:      $3,200
+  RPE = $3,200 / 10,000 = <span class="str">$0.32</span>
+
+<span class="comment"># Кампания B эффективнее в 2 раза!</span>
+<span class="comment"># Лучше масштабировать B, чем увеличивать объём A</span></pre></div>
+
+      <h2>Cost Per Send (CPS)</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Cost Per Send — стоимость одного отправленного письма</span>
+CPS = Все затраты / Кол-во отправленных писем
+
+<span class="comment"># Собственная инфраструктура (Mailcow + Postal):</span>
+Серверы:     $150/мес
+Домены:      $50/мес (аморт.)
+Инструменты: $100/мес
+Объём:       100,000 писем/мес
+
+CPS = $300 / 100,000 = <span class="str">$0.003</span> за письмо
+
+<span class="comment"># Для сравнения — SaaS:</span>
+SendGrid:    ~$0.01-0.03 за письмо
+Mailchimp:   ~$0.02-0.05 за письмо
+<span class="comment"># Своя инфра в 3-10 раз дешевле!</span></pre></div>
+
+      <h2>LTV и Attribution</h2>
+      <p>Для B2B cold outreach важно считать не только первую продажу, но и Lifetime Value (LTV) клиента. Один лид, полученный через email, может приносить доход годами. Attribution — модель, которая определяет, какой канал «владеет» конверсией.</p>
+
+      <div class="note-block tip">
+        <div class="note-label">Простая модель attribution для cold email</div>
+        Используйте UTM-метки в каждой кампании: <code>?utm_source=email&utm_medium=cold&utm_campaign=campaign_name</code>. Привязывайте лиды к кампаниям через CRM. Считайте ROI по каждой кампании отдельно, а не по каналу в целом.
+      </div>
+
+      <div class="note-block info">
+        <div class="note-label">Формула прогнозирования дохода</div>
+        Прогноз = Объём отправки × Delivery Rate × Open Rate × CTR × Conversion Rate × Средний чек. Пример: 10,000 × 0.95 × 0.30 × 0.04 × 0.10 × $500 = $5,700.
+      </div>`
+  },
+  4: {
+    module: 'Модуль 2 · Инструменты',
+    title:  'MailWizz аналитика — скрытые возможности',
+    time:   '18 мин',
+    content: `
+      <h2>Встроенная аналитика MailWizz</h2>
+      <p>MailWizz собирает огромное количество данных, но большинство пользователей видят только Dashboard с общими цифрами. Под капотом есть мощная аналитика: статистика по доменам, активность подписчиков, геолокация, почтовые клиенты и экспорт сырых данных для собственных дашбордов.</p>
+
+      <h2>Campaign Reports — полный разбор</h2>
+      <p>После отправки кампании перейдите в Campaigns → выберите кампанию → вкладка Stats. Здесь есть несколько разделов, которые часто игнорируют:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Разделы статистики кампании в MailWizz</span>
+
+<span class="cmd">Overview</span>          — OR, CTR, bounces, complaints (общие цифры)
+<span class="cmd">Opens</span>             — кто открыл, когда, сколько раз, IP, user-agent
+<span class="cmd">Clicks</span>            — какие ссылки кликали, кто, когда
+<span class="cmd">Unsubscribes</span>      — кто отписался и на каком письме
+<span class="cmd">Bounces</span>           — hard/soft, конкретные адреса и причины
+<span class="cmd">Complaints</span>        — FBL жалобы (кто нажал "спам")
+
+<span class="comment"># Скрытые возможности:</span>
+<span class="str">Domain Stats</span>      — OR/CTR в разбивке по доменам получателей
+<span class="str">Subscriber Activity</span> — временная шкала активности подписчика
+<span class="str">Geo Opens</span>         — карта открытий по странам/городам</pre></div>
+
+      <h2>Domain Stats — анализ по доменам</h2>
+      <p>Это самый недооценённый раздел. Он показывает, как ваши письма работают на разных почтовых провайдерах. Если OR на Gmail 35%, а на Outlook 8% — проблема не в контенте, а в доставляемости на Outlook.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># SQL-запрос для domain stats из БД MailWizz</span>
+<span class="cmd">SELECT</span>
+  SUBSTRING_INDEX(s.email, <span class="str">'@'</span>, -1) AS domain,
+  COUNT(*) AS total,
+  SUM(CASE WHEN t.status = <span class="str">'open'</span> THEN 1 ELSE 0 END) AS opens,
+  ROUND(SUM(CASE WHEN t.status = <span class="str">'open'</span> THEN 1 ELSE 0 END)
+    / COUNT(*) * 100, 1) AS open_rate
+<span class="cmd">FROM</span> mw_campaign_delivery_log d
+<span class="cmd">JOIN</span> mw_list_subscriber s ON d.subscriber_id = s.subscriber_id
+<span class="cmd">LEFT JOIN</span> mw_campaign_track_open t
+  ON t.campaign_id = d.campaign_id
+  AND t.subscriber_id = d.subscriber_id
+<span class="cmd">WHERE</span> d.campaign_id = 123
+<span class="cmd">GROUP BY</span> domain
+<span class="cmd">ORDER BY</span> total DESC
+<span class="cmd">LIMIT</span> 20;</pre></div>
+
+      <h2>Subscriber Activity Timeline</h2>
+      <p>Для каждого подписчика MailWizz хранит полную историю: когда подписался, какие письма получал, что открывал, куда кликал. Это бесценно для понимания engagement и выявления «мёртвых» подписчиков.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Найти неактивных подписчиков (нет открытий за 30 дней)</span>
+<span class="cmd">SELECT</span> s.email, s.date_added,
+  MAX(t.date_added) AS last_open
+<span class="cmd">FROM</span> mw_list_subscriber s
+<span class="cmd">LEFT JOIN</span> mw_campaign_track_open t
+  ON s.subscriber_id = t.subscriber_id
+<span class="cmd">WHERE</span> s.list_id = 1 AND s.status = <span class="str">'confirmed'</span>
+<span class="cmd">GROUP BY</span> s.subscriber_id
+<span class="cmd">HAVING</span> last_open IS NULL
+  OR last_open < DATE_SUB(NOW(), INTERVAL 30 DAY)
+<span class="cmd">ORDER BY</span> last_open ASC;</pre></div>
+
+      <h2>Экспорт данных через API</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># MailWizz API — получить статистику кампании</span>
+<span class="cmd">curl</span> -X GET \\
+  <span class="str">"https://mailwizz.example.com/api/campaigns/CAMPAIGN_UID"</span> \\
+  -H <span class="str">"X-Api-Key: YOUR_API_KEY"</span>
+
+<span class="comment"># Ответ содержит:</span>
+{
+  "data": {
+    "campaign_uid": "abc123",
+    "stats": {
+      "processed_count": 9500,
+      "delivery_success_count": 9310,
+      "opens_count": 2793,
+      "unique_opens_count": 2375,
+      "clicks_count": 512,
+      "unique_clicks_count": 380,
+      "bounces_count": 190,
+      "hard_bounces_count": 45,
+      "soft_bounces_count": 145,
+      "unsubscribes_count": 28
+    }
+  }
+}</pre></div>
+
+      <div class="note-block tip">
+        <div class="note-label">Автоматический сбор статистики</div>
+        Настройте cron-скрипт на Python, который каждый час забирает статистику через API MailWizz и записывает в InfluxDB или PostgreSQL. Оттуда данные подтягиваются в Grafana. Так вы получаете real-time дашборд без ручного мониторинга.
+      </div>
+
+      <div class="note-block warn">
+        <div class="note-label">Лимиты API</div>
+        По умолчанию MailWizz API ограничен 60 запросами в минуту. Для массового экспорта данных используйте прямые SQL-запросы к базе данных — это быстрее и не ограничено rate limiting.
+      </div>`
+  },
+  5: {
+    module: 'Модуль 2 · Инструменты',
+    title:  'Google Postmaster + Mail.ru Postmaster — глубокий разбор',
+    time:   '16 мин',
+    content: `
+      <h2>Google Postmaster Tools</h2>
+      <p>Google Postmaster Tools (GPT) — бесплатный инструмент от Google, который показывает, как Gmail видит ваши домены. Это единственный способ узнать реальную репутацию домена в глазах Gmail — самого популярного почтового провайдера с 1.8 млрд пользователей.</p>
+
+      <h2>Настройка Google Postmaster</h2>
+      <ol class="steps-list">
+        <li><div class="step-n">1</div><div class="step-text">Откройте <strong>postmaster.google.com</strong> и войдите в Google-аккаунт.</div></li>
+        <li><div class="step-n">2</div><div class="step-text">Нажмите «+» и добавьте ваш домен (например, company.com).</div></li>
+        <li><div class="step-n">3</div><div class="step-text">Подтвердите владение доменом — добавьте TXT-запись в DNS.</div></li>
+        <li><div class="step-n">4</div><div class="step-text">Данные начнут появляться через 24-48 часов после первых отправок на Gmail.</div></li>
+      </ol>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># DNS TXT запись для верификации</span>
+<span class="cmd">google-site-verification=xxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+
+<span class="comment"># Добавить через CLI:</span>
+<span class="comment"># Для Timeweb API:</span>
+curl -X POST "https://api.timeweb.cloud/api/v1/domains/company.com/dns-records" \\
+  -H "Authorization: Bearer TOKEN" \\
+  -d '{
+    "type": "TXT",
+    "value": "google-site-verification=xxxxx"
+  }'</pre></div>
+
+      <h2>Дашборд Google Postmaster — что смотреть</h2>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:grid;grid-template-columns:180px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);font-size:12px"><code style="color:var(--accent)">Spam Rate</code><span style="color:var(--muted)">Процент писем, отмеченных как спам пользователями Gmail. Цель: &lt;0.1%</span></div>
+        <div style="display:grid;grid-template-columns:180px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent)">Domain Reputation</code><span style="color:var(--muted)">High / Medium / Low / Bad. Ниже Medium — письма идут в спам.</span></div>
+        <div style="display:grid;grid-template-columns:180px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent)">IP Reputation</code><span style="color:var(--muted)">Аналогично по IP. Shared IP может иметь плохую репутацию от соседей.</span></div>
+        <div style="display:grid;grid-template-columns:180px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent)">Authentication</code><span style="color:var(--muted)">Процент писем, прошедших SPF, DKIM, DMARC. Цель: 100%</span></div>
+        <div style="display:grid;grid-template-columns:180px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent)">Encryption</code><span style="color:var(--muted)">Процент писем, отправленных через TLS. Цель: 100%</span></div>
+        <div style="display:grid;grid-template-columns:180px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent)">Delivery Errors</code><span style="color:var(--muted)">Причины отклонения: rate limit, suspect spam, bad reputation.</span></div>
+      </div>
+
+      <div class="note-block warn">
+        <div class="note-label">Минимальный объём для данных</div>
+        Google Postmaster показывает данные только если вы отправляете минимум 100-200 писем в день на Gmail. При меньшем объёме дашборд будет пустым. Для новых доменов данные появятся через 1-2 недели активных отправок.
+      </div>
+
+      <h2>Mail.ru Postmaster</h2>
+      <p>Для рынка РФ Mail.ru — второй по значимости провайдер после Yandex. Mail.ru Postmaster (postmaster.mail.ru) показывает репутацию, доставляемость и жалобы для вашего домена на почте Mail.ru, Inbox.ru, List.ru и Bk.ru.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Настройка Mail.ru Postmaster</span>
+
+<span class="cmd">1.</span> Зайдите на postmaster.mail.ru
+<span class="cmd">2.</span> Добавьте домен
+<span class="cmd">3.</span> Подтвердите через DNS (TXT или CNAME)
+<span class="cmd">4.</span> Настройте FBL (Feedback Loop):
+   <span class="comment"># Добавьте в DNS:</span>
+   <span class="str">_feedback.company.com  TXT  "v=fbl1; to=fbl@company.com"</span>
+
+<span class="comment"># Доступные метрики:</span>
+- Количество доставленных писем
+- Репутация отправителя (0-100)
+- Процент спам-жалоб
+- Статус SPF/DKIM/DMARC
+- Тренды за 7/30/90 дней</pre></div>
+
+      <h2>Сравнение Postmaster-инструментов</h2>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:10px 14px;background:rgba(0,229,255,.05);border:1px solid var(--border);font-size:11px;font-weight:700;color:var(--heading)"><span>Функция</span><span>Google Postmaster</span><span>Mail.ru Postmaster</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)"><span>Репутация домена</span><span>High/Med/Low/Bad</span><span>Числовой 0-100</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)"><span>Spam Rate</span><span>Да, в %</span><span>Да, в %</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)"><span>FBL</span><span>Через Gmail FBL</span><span>Через DNS запись</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)"><span>API</span><span>Нет публичного API</span><span>Нет публичного API</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)"><span>Мин. объём</span><span>100-200/день</span><span>50-100/день</span></div>
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Мониторинг через скриншоты</div>
+        Поскольку у Postmaster-инструментов нет API, используйте Selenium/Playwright для автоматических скриншотов дашборда каждый день. Скриншоты сохраняйте в папку, и через n8n отправляйте daily digest в Telegram с изображениями.
+      </div>`
+  },
+  6: {
+    module: 'Модуль 2 · Инструменты',
+    title:  'Grafana дашборд для email-метрик',
+    time:   '20 мин',
+    content: `
+      <h2>Зачем нужен Grafana для email</h2>
+      <p>Grafana — open-source платформа для визуализации данных. В контексте email-инфраструктуры Grafana даёт единый дашборд: метрики Postal (очереди, доставка, bounce), статистика MailWizz (OR, CTR по кампаниям), состояние серверов (CPU, RAM, диск). Вместо проверки 5 разных интерфейсов — один экран.</p>
+
+      <h2>Установка Grafana + InfluxDB</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Docker Compose для Grafana + InfluxDB</span>
+<span class="cmd">version</span>: <span class="str">"3.8"</span>
+
+services:
+  <span class="cmd">influxdb</span>:
+    image: influxdb:2.7
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=SecurePassword123
+      - DOCKER_INFLUXDB_INIT_ORG=mailops
+      - DOCKER_INFLUXDB_INIT_BUCKET=email_metrics
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=your-super-secret-token
+
+  <span class="cmd">grafana</span>:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=GrafanaPass123
+    depends_on:
+      - influxdb
+
+volumes:
+  influxdb-data:
+  grafana-data:</pre></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Запуск</span>
+cd /opt/monitoring
+docker compose up -d
+
+<span class="comment"># Проверка</span>
+docker compose ps
+<span class="comment"># Grafana: http://server-ip:3000 (admin / GrafanaPass123)</span>
+<span class="comment"># InfluxDB: http://server-ip:8086</span></pre></div>
+
+      <h2>Datasource — подключение InfluxDB к Grafana</h2>
+      <ol class="steps-list">
+        <li><div class="step-n">1</div><div class="step-text">В Grafana: Configuration → Data Sources → Add data source → InfluxDB</div></li>
+        <li><div class="step-n">2</div><div class="step-text">Query Language: Flux. URL: http://influxdb:8086. Organization: mailops. Token: your-super-secret-token. Default Bucket: email_metrics.</div></li>
+        <li><div class="step-n">3</div><div class="step-text">Нажмите «Save & Test» — должно показать «datasource is working».</div></li>
+      </ol>
+
+      <h2>Сбор метрик Postal</h2>
+      <p>Postal хранит статистику в своей PostgreSQL базе. Напишем скрипт, который извлекает метрики и записывает в InfluxDB:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment">#!/usr/bin/env python3</span>
+<span class="comment"># /opt/scripts/postal_metrics.py</span>
+<span class="comment"># Запускать через cron каждые 5 минут</span>
+
+import psycopg2
+from influxdb_client import InfluxDBClient, Point
+from datetime import datetime, timedelta
+
+<span class="comment"># Postal PostgreSQL</span>
+pg = psycopg2.connect(
+    host=<span class="str">"localhost"</span>, port=5432,
+    dbname=<span class="str">"postal"</span>, user=<span class="str">"postal"</span>,
+    password=<span class="str">"postal_password"</span>
+)
+
+<span class="comment"># InfluxDB</span>
+influx = InfluxDBClient(
+    url=<span class="str">"http://localhost:8086"</span>,
+    token=<span class="str">"your-super-secret-token"</span>,
+    org=<span class="str">"mailops"</span>
+)
+write_api = influx.write_api()
+
+<span class="comment"># Получаем метрики за последние 5 минут</span>
+cur = pg.cursor()
+since = datetime.utcnow() - timedelta(minutes=5)
+
+<span class="comment"># Отправленные</span>
+cur.execute(<span class="str">"""
+  SELECT COUNT(*),
+    SUM(CASE WHEN status='Sent' THEN 1 ELSE 0 END),
+    SUM(CASE WHEN status='Bounced' THEN 1 ELSE 0 END),
+    SUM(CASE WHEN status='HardFail' THEN 1 ELSE 0 END)
+  FROM messages
+  WHERE created_at >= %s
+"""</span>, (since,))
+
+total, sent, bounced, hardfail = cur.fetchone()
+
+point = Point(<span class="str">"postal_delivery"</span>) \\
+    .field(<span class="str">"total"</span>, total or 0) \\
+    .field(<span class="str">"sent"</span>, sent or 0) \\
+    .field(<span class="str">"bounced"</span>, bounced or 0) \\
+    .field(<span class="str">"hardfail"</span>, hardfail or 0)
+
+write_api.write(bucket=<span class="str">"email_metrics"</span>, record=point)
+print(f<span class="str">"Written: {total} total, {sent} sent, {bounced} bounced"</span>)</pre></div>
+
+      <h2>Готовые панели для дашборда</h2>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:grid;grid-template-columns:200px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);font-size:12px"><code style="color:var(--accent)">Delivery Rate</code><span style="color:var(--muted)">Gauge panel, порог: зелёный >95%, жёлтый >90%, красный &lt;90%</span></div>
+        <div style="display:grid;grid-template-columns:200px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent)">Bounce Rate Timeline</code><span style="color:var(--muted)">Time series panel, показывает тренд bounce за 7 дней</span></div>
+        <div style="display:grid;grid-template-columns:200px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent)">Queue Size</code><span style="color:var(--muted)">Stat panel, текущий размер очереди Postal. Алёрт если >1000</span></div>
+        <div style="display:grid;grid-template-columns:200px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent)">OR/CTR by Campaign</code><span style="color:var(--muted)">Bar chart, сравнение метрик последних 10 кампаний</span></div>
+        <div style="display:grid;grid-template-columns:200px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent)">Server Health</code><span style="color:var(--muted)">CPU, RAM, Disk usage. Алёрт если CPU >80% или Disk >90%</span></div>
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Экспорт дашборда</div>
+        Настроенный дашборд можно экспортировать как JSON: Dashboard → Share → Export → Save to file. Этот JSON можно импортировать на другие серверы. Храните JSON дашбордов в git-репозитории для версионирования.
+      </div>`
+  },
+  7: {
+    module: 'Модуль 3 · Оптимизация',
+    title:  'A/B тестирование — что и как тестировать',
+    time:   '16 мин',
+    content: `
+      <h2>Почему A/B тесты необходимы</h2>
+      <p>Без A/B тестирования вы полагаетесь на интуицию. С A/B тестами — на данные. Разница между плохой и отличной темой письма может составлять 2-3x по Open Rate. Разница между удачным и неудачным CTA — 5-10x по CTR. Каждый тест приближает вас к оптимальной кампании.</p>
+
+      <h2>Что тестировать — приоритеты</h2>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:grid;grid-template-columns:50px 160px 1fr;padding:10px 14px;background:rgba(0,229,255,.05);border:1px solid var(--border);font-size:11px;font-weight:700;color:var(--heading)"><span>#</span><span>Элемент</span><span>Влияние</span></div>
+        <div style="display:grid;grid-template-columns:50px 160px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)"><span style="color:var(--accent);font-weight:700">1</span><span>Subject Line</span><span>Максимальное. Определяет OR. Тестируйте первым.</span></div>
+        <div style="display:grid;grid-template-columns:50px 160px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)"><span style="color:var(--accent);font-weight:700">2</span><span>Время отправки</span><span>Высокое. Разница в OR может быть 30-50%.</span></div>
+        <div style="display:grid;grid-template-columns:50px 160px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)"><span style="color:var(--accent);font-weight:700">3</span><span>Имя отправителя</span><span>Высокое. «Иван из Company» vs «Company Team».</span></div>
+        <div style="display:grid;grid-template-columns:50px 160px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)"><span style="color:var(--accent);font-weight:700">4</span><span>CTA (призыв)</span><span>Среднее. Влияет на CTR: «Узнать больше» vs «Получить демо».</span></div>
+        <div style="display:grid;grid-template-columns:50px 160px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)"><span style="color:var(--accent);font-weight:700">5</span><span>Длина письма</span><span>Среднее. Короткое (3 строки) vs длинное (2 абзаца).</span></div>
+        <div style="display:grid;grid-template-columns:50px 160px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)"><span style="color:var(--accent);font-weight:700">6</span><span>Персонализация</span><span>Среднее. {first_name} vs без имени, {company} vs без.</span></div>
+      </div>
+
+      <h2>Настройка A/B теста в MailWizz</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># MailWizz A/B тест — пошагово</span>
+
+<span class="cmd">1.</span> Campaigns → Create → Regular campaign
+<span class="cmd">2.</span> В настройках кампании включите "A/B Testing"
+<span class="cmd">3.</span> Создайте вариант B (другая тема или контент)
+
+<span class="comment"># Параметры теста:</span>
+<span class="str">Test Size:</span>       20-30% от списка (минимум 1000 на вариант)
+<span class="str">Winner Criteria:</span> Open Rate / Click Rate / Custom
+<span class="str">Test Duration:</span>   4-24 часа (зависит от объёма)
+<span class="str">Winner Action:</span>  Автоотправка победителя остальным 70-80%
+
+<span class="comment"># Пример:</span>
+Список: 10,000 подписчиков
+Тест:   2,000 (1,000 на A + 1,000 на B)
+Время:  6 часов
+Победитель → отправляется оставшимся 8,000</pre></div>
+
+      <h2>Статистическая значимость</h2>
+      <p>Самая частая ошибка — делать выводы на малых объёмах. Если A показал OR 25% а B — 27% при 100 письмах на каждый — это НЕ значимая разница. Нужен расчёт statistical significance.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Python — расчёт статистической значимости A/B теста</span>
+from scipy import stats
+
+<span class="comment"># Вариант A</span>
+a_sent = 1000
+a_opens = 250  <span class="comment"># OR = 25%</span>
+
+<span class="comment"># Вариант B</span>
+b_sent = 1000
+b_opens = 310  <span class="comment"># OR = 31%</span>
+
+<span class="comment"># Z-тест для пропорций</span>
+a_rate = a_opens / a_sent
+b_rate = b_opens / b_sent
+pooled = (a_opens + b_opens) / (a_sent + b_sent)
+se = (pooled * (1 - pooled) * (1/a_sent + 1/b_sent)) ** 0.5
+z = (b_rate - a_rate) / se
+p_value = 1 - stats.norm.cdf(z)
+
+print(f<span class="str">"A: {a_rate:.1%}, B: {b_rate:.1%}"</span>)
+print(f<span class="str">"Z-score: {z:.2f}, p-value: {p_value:.4f}"</span>)
+print(f<span class="str">"Significant: {'YES' if p_value < 0.05 else 'NO'}"</span>)
+
+<span class="comment"># Результат: p_value = 0.0018 → значимо!</span>
+<span class="comment"># B лучше A с 95% уверенностью</span></pre></div>
+
+      <h2>Минимальный размер выборки</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Формула минимальной выборки</span>
+<span class="comment"># Для обнаружения разницы в 5% при OR ~25%:</span>
+
+n = (Z² × p × (1-p)) / E²
+
+<span class="comment"># Где:</span>
+Z = 1.96   <span class="comment">(95% confidence)</span>
+p = 0.25   <span class="comment">(текущий OR)</span>
+E = 0.05   <span class="comment">(минимальная разница для обнаружения)</span>
+
+n = (1.96² × 0.25 × 0.75) / 0.05²
+n = <span class="str">288 писем на каждый вариант (минимум)</span>
+
+<span class="comment"># На практике: 500-1000 на вариант для надёжных результатов</span></pre></div>
+
+      <div class="note-block warn">
+        <div class="note-label">Правило одной переменной</div>
+        Тестируйте только ОДИН элемент за раз. Если одновременно меняете тему и текст — невозможно понять, что повлияло на результат. Исключение — multivariate testing, но для него нужны объёмы от 10,000+ на вариант.
+      </div>`
+  },
+  8: {
+    module: 'Модуль 3 · Оптимизация',
+    title:  'Когортный анализ подписчиков',
+    time:   '15 мин',
+    content: `
+      <h2>Что такое когортный анализ</h2>
+      <p>Когортный анализ — это группировка подписчиков по времени подписки и отслеживание их поведения со временем. Когорта — это группа людей, подписавшихся в один период (неделя, месяц). Анализ показывает, как engagement (вовлечённость) меняется с возрастом подписчика.</p>
+
+      <h2>Engagement Decay — затухание активности</h2>
+      <p>Типичный подписчик наиболее активен в первые 1-2 недели после подписки. Затем активность падает. Скорость затухания — ключевая метрика качества вашего контента и частоты рассылок.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Типичный engagement decay для B2B cold email</span>
+
+Неделя 1:  OR <span class="str">45%</span>  ← пик активности
+Неделя 2:  OR <span class="str">35%</span>
+Неделя 3:  OR <span class="str">28%</span>
+Неделя 4:  OR <span class="str">22%</span>
+Месяц 2:   OR <span class="str">15%</span>
+Месяц 3:   OR <span class="str">10%</span>  ← нужна реактивация
+Месяц 6:   OR <span class="str">5%</span>   ← «мёртвые» подписчики
+
+<span class="comment"># Формула decay rate:</span>
+Decay = (OR_week1 - OR_weekN) / OR_week1 × 100%
+
+<span class="comment"># Пример:</span>
+Decay за 4 недели = (45% - 22%) / 45% = <span class="str">51%</span>
+<span class="comment"># Потеряли 51% активности за месяц</span></pre></div>
+
+      <h2>SQL-запрос для когортного анализа</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Когортный анализ из базы MailWizz</span>
+<span class="cmd">SELECT</span>
+  DATE_FORMAT(s.date_added, <span class="str">'%Y-%m'</span>) AS cohort,
+  COUNT(DISTINCT s.subscriber_id) AS cohort_size,
+  <span class="comment">-- Активность через 1 месяц</span>
+  COUNT(DISTINCT CASE
+    WHEN t.date_added BETWEEN s.date_added
+      AND DATE_ADD(s.date_added, INTERVAL 30 DAY)
+    THEN s.subscriber_id END) AS active_month1,
+  <span class="comment">-- Активность через 2 месяца</span>
+  COUNT(DISTINCT CASE
+    WHEN t.date_added BETWEEN
+      DATE_ADD(s.date_added, INTERVAL 30 DAY)
+      AND DATE_ADD(s.date_added, INTERVAL 60 DAY)
+    THEN s.subscriber_id END) AS active_month2,
+  <span class="comment">-- Активность через 3 месяца</span>
+  COUNT(DISTINCT CASE
+    WHEN t.date_added BETWEEN
+      DATE_ADD(s.date_added, INTERVAL 60 DAY)
+      AND DATE_ADD(s.date_added, INTERVAL 90 DAY)
+    THEN s.subscriber_id END) AS active_month3
+<span class="cmd">FROM</span> mw_list_subscriber s
+<span class="cmd">LEFT JOIN</span> mw_campaign_track_open t
+  ON s.subscriber_id = t.subscriber_id
+<span class="cmd">WHERE</span> s.list_id = 1
+<span class="cmd">GROUP BY</span> cohort
+<span class="cmd">ORDER BY</span> cohort DESC;</pre></div>
+
+      <h2>Lifecycle Stages — стадии жизненного цикла</h2>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:grid;grid-template-columns:140px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);font-size:12px"><code style="color:var(--accent3)">New (0-7 дней)</code><span style="color:var(--muted)">Новые подписчики. Максимальный engagement. Welcome-серия.</span></div>
+        <div style="display:grid;grid-template-columns:140px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent)">Active (7-60 дней)</code><span style="color:var(--muted)">Регулярно открывают письма. Основная аудитория для конверсий.</span></div>
+        <div style="display:grid;grid-template-columns:140px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:#f0a500">Fading (60-120 дней)</code><span style="color:var(--muted)">Открытия редеют. Нужна реактивация: спецпредложения, опросы.</span></div>
+        <div style="display:grid;grid-template-columns:140px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:#ff6b6b">Inactive (120+ дней)</code><span style="color:var(--muted)">Не открывали 4+ месяцев. Реактивация или удаление из базы.</span></div>
+      </div>
+
+      <h2>Reactivation Triggers — когда и как реактивировать</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Стратегия реактивации по стадиям</span>
+
+<span class="cmd">Fading (60-120 дней без открытий):</span>
+  → Письмо 1: "Мы заметили, что вы давно не читали наши письма"
+  → Письмо 2 (через 7 дней): Спецпредложение / полезный контент
+  → Письмо 3 (через 14 дней): "Последнее письмо — хотите остаться?"
+
+<span class="cmd">Inactive (120+ дней):</span>
+  → Одно финальное письмо: "Мы удалим вас через 7 дней"
+  → Если нет реакции → перенос в сегмент "archived"
+  → НЕ удалять полностью (blacklist для повторного импорта)
+
+<span class="comment"># Автоматизация через MailWizz:</span>
+<span class="str">Lists → Segments → Create</span>
+  Condition: "Last open date" older than 90 days
+  AND "Status" = confirmed
+  → Автокампания реактивации</pre></div>
+
+      <div class="note-block tip">
+        <div class="note-label">Retention Rate как KPI</div>
+        Считайте Retention Rate для каждой когорты: какой % подписчиков всё ещё открывает письма через 1, 2, 3 месяца. Здоровый показатель: 60% retention после месяца, 40% после двух, 25% после трёх. Если ниже — проблема с контентом или частотой.
+      </div>
+
+      <div class="note-block info">
+        <div class="note-label">Визуализация когорт в Grafana</div>
+        Используйте Heatmap panel в Grafana для визуализации когортного анализа. Ось X — время с момента подписки, ось Y — когорта (месяц подписки), цвет — процент активных. Паттерны затухания видны моментально.
+      </div>`
+  },
+  9: {
+    module: 'Модуль 3 · Оптимизация',
+    title:  'Автоматические алёрты через n8n',
+    time:   '18 мин',
+    content: `
+      <h2>Зачем нужны автоматические алёрты</h2>
+      <p>Проблемы с email-доставляемостью могут развиться за часы. Если bounce rate резко вырос или spam complaints превысили порог — каждый час промедления ухудшает репутацию домена. Автоматические алёрты через n8n позволяют узнать о проблеме мгновенно и среагировать до того, как домен попадёт в blacklist.</p>
+
+      <h2>n8n — workflow для мониторинга</h2>
+      <p>n8n — это open-source альтернатива Zapier с self-hosting. Устанавливается на тот же сервер, где Postal и MailWizz. Преимущество — нет лимитов на количество workflows и executions.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Установка n8n через Docker</span>
+docker run -d --name n8n \\
+  -p 5678:5678 \\
+  -v n8n_data:/home/node/.n8n \\
+  -e N8N_BASIC_AUTH_ACTIVE=true \\
+  -e N8N_BASIC_AUTH_USER=admin \\
+  -e N8N_BASIC_AUTH_PASSWORD=SecureN8nPass \\
+  -e GENERIC_TIMEZONE=Europe/Moscow \\
+  --restart unless-stopped \\
+  n8nio/n8n:latest
+
+<span class="comment"># Доступ: http://server-ip:5678</span></pre></div>
+
+      <h2>Алёрт 1: Bounce Rate Spike</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># n8n Workflow: Bounce Rate Monitor</span>
+<span class="comment"># Trigger: Schedule → каждые 30 минут</span>
+
+<span class="cmd">Шаг 1: HTTP Request</span> → MailWizz API
+  URL: https://mailwizz.example.com/api/campaigns
+  Headers: X-Api-Key: YOUR_KEY
+  → Получаем последние кампании
+
+<span class="cmd">Шаг 2: Function</span> → Расчёт bounce rate
+  const campaigns = $input.all();
+  const alerts = [];
+
+  for (const c of campaigns) {
+    const stats = c.json.data.stats;
+    const bounceRate = stats.bounces_count / stats.processed_count;
+
+    if (bounceRate > 0.05) {  // > 5%
+      alerts.push({
+        campaign: c.json.data.name,
+        bounceRate: (bounceRate * 100).toFixed(1) + '%',
+        hardBounces: stats.hard_bounces_count,
+        severity: bounceRate > 0.10 ? 'CRITICAL' : 'WARNING'
+      });
+    }
+  }
+  return alerts;
+
+<span class="cmd">Шаг 3: IF</span> → alerts.length > 0
+
+<span class="cmd">Шаг 4: Telegram</span> → Отправка алёрта
+  Chat ID: YOUR_CHAT_ID
+  Message: |
+    ⚠️ BOUNCE ALERT
+    Campaign: {{campaign}}
+    Bounce Rate: {{bounceRate}}
+    Hard Bounces: {{hardBounces}}
+    Severity: {{severity}}</pre></div>
+
+      <h2>Алёрт 2: Spam Rate > 0.1%</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># n8n Workflow: Spam Complaint Monitor</span>
+<span class="comment"># Trigger: Webhook от Postal (настроить в Postal → Webhooks)</span>
+
+<span class="cmd">Postal Webhook URL:</span>
+  https://n8n.example.com/webhook/spam-monitor
+
+<span class="cmd">Шаг 1: Webhook</span> → Получаем complaint event
+  {
+    "event": "MessageBounced",
+    "bounce": {
+      "type": "complaint",
+      "message_id": "...",
+      "recipient": "user@gmail.com"
+    }
+  }
+
+<span class="cmd">Шаг 2: Function</span> → Подсчёт complaints за час
+  <span class="comment">// Используем n8n static data для хранения счётчика</span>
+  const staticData = $getWorkflowStaticData('global');
+  const now = Date.now();
+
+  if (!staticData.complaints) staticData.complaints = [];
+  staticData.complaints.push(now);
+
+  <span class="comment">// Удаляем старые (старше 1 часа)</span>
+  staticData.complaints = staticData.complaints
+    .filter(t => now - t < 3600000);
+
+  const hourlyRate = staticData.complaints.length;
+  const totalSent = staticData.totalSent || 1000;
+  const rate = (hourlyRate / totalSent * 100).toFixed(2);
+
+  return [{ hourlyComplaints: hourlyRate, rate: rate + '%' }];
+
+<span class="cmd">Шаг 3: IF</span> → rate > 0.1
+
+<span class="cmd">Шаг 4: Telegram + Pause Campaign</span>
+  → Уведомление в Telegram
+  → HTTP Request: MailWizz API → Pause active campaigns</pre></div>
+
+      <h2>Алёрт 3: Delivery Drop</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># n8n Workflow: Delivery Rate Drop</span>
+<span class="comment"># Trigger: Schedule → каждый час</span>
+
+<span class="cmd">Логика:</span>
+1. Запросить delivery stats за последний час
+2. Сравнить с средним за последние 7 дней
+3. Если текущий DR на 15%+ ниже среднего → алёрт
+
+<span class="comment"># Function node:</span>
+const current = $input.item.json.currentDeliveryRate;  <span class="comment">// e.g., 0.82</span>
+const average = $input.item.json.weeklyAverage;         <span class="comment">// e.g., 0.96</span>
+const drop = ((average - current) / average * 100);
+
+if (drop > 15) {
+  return [{
+    alert: true,
+    currentDR: (current * 100).toFixed(1) + '%',
+    averageDR: (average * 100).toFixed(1) + '%',
+    dropPercent: drop.toFixed(1) + '%',
+    action: drop > 30
+      ? 'PAUSE ALL CAMPAIGNS'
+      : 'Investigate immediately'
+  }];
+}
+return [];</pre></div>
+
+      <h2>Настройка Telegram бота для алёртов</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Создание Telegram бота</span>
+<span class="cmd">1.</span> Найдите @BotFather в Telegram
+<span class="cmd">2.</span> /newbot → имя: EmailAlerts Bot
+<span class="cmd">3.</span> Получите токен: <span class="str">123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11</span>
+<span class="cmd">4.</span> Создайте группу/канал для алёртов
+<span class="cmd">5.</span> Добавьте бота в группу
+<span class="cmd">6.</span> Получите Chat ID:
+   curl https://api.telegram.org/bot{TOKEN}/getUpdates
+
+<span class="comment"># В n8n: Credentials → Telegram API</span>
+<span class="comment"># Access Token: ваш токен бота</span></pre></div>
+
+      <div class="note-block warn">
+        <div class="note-label">Не игнорируйте алёрты</div>
+        Настроить алёрты — полдела. Важнее — реагировать. Создайте playbook: при bounce spike — пауза рассылки + проверка базы. При spam complaint — анализ контента + проверка unsubscribe link. При delivery drop — проверка blacklists + DNS.
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Эскалация</div>
+        Настройте три уровня алёртов: INFO (Telegram), WARNING (Telegram + email), CRITICAL (Telegram + email + SMS через Twilio API в n8n). Critical = автоматическая пауза всех кампаний.
+      </div>`
+  },
+  10: {
+    module: 'Модуль 4 · Практика',
+    title:  'Кейс: дашборд мониторинга для 100K подписчиков',
+    time:   '22 мин',
+    content: `
+      <h2>Задача: полный мониторинг email-инфраструктуры</h2>
+      <p>Представьте: у вас 100,000 подписчиков, 3 домена для отправки, Postal + MailWizz на двух серверах. Вы отправляете 5,000-10,000 писем в день. Без единого дашборда мониторинга вы слепы. В этом кейсе мы построим полный Grafana-дашборд с алёртами, который покрывает все критические метрики.</p>
+
+      <h2>Архитектура мониторинга</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Схема потоков данных</span>
+
+┌─────────────┐     ┌──────────────┐     ┌───────────┐
+│   Postal    │────→│  Collector   │────→│ InfluxDB  │
+│  (SMTP)     │     │  (Python)    │     │  (TSDB)   │
+└─────────────┘     └──────────────┘     └─────┬─────┘
+                                               │
+┌─────────────┐     ┌──────────────┐           │
+│  MailWizz   │────→│  Collector   │───────────┤
+│  (Campaigns)│     │  (Python)    │           │
+└─────────────┘     └──────────────┘     ┌─────▼─────┐
+                                         │  Grafana  │
+┌─────────────┐     ┌──────────────┐     │  (Viz)    │
+│  Server     │────→│  Telegraf    │────→│           │
+│  (HW stats) │     │  (Agent)     │     └─────┬─────┘
+└─────────────┘     └──────────────┘           │
+                                         ┌─────▼─────┐
+                                         │ Alerting  │
+                                         │ (n8n/TG)  │
+                                         └───────────┘</pre></div>
+
+      <h2>Шаг 1 — Docker Compose полного стека</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># /opt/monitoring/docker-compose.yml</span>
+<span class="cmd">version</span>: <span class="str">"3.8"</span>
+
+services:
+  influxdb:
+    image: influxdb:2.7
+    ports: [<span class="str">"8086:8086"</span>]
+    volumes: [influxdb-data:/var/lib/influxdb2]
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: InfluxSecure2025
+      DOCKER_INFLUXDB_INIT_ORG: mailops
+      DOCKER_INFLUXDB_INIT_BUCKET: email_metrics
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: influx-super-token-2025
+
+  grafana:
+    image: grafana/grafana:latest
+    ports: [<span class="str">"3000:3000"</span>]
+    volumes: [grafana-data:/var/lib/grafana]
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: GrafanaSecure2025
+      GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-piechart-panel
+    depends_on: [influxdb]
+
+  telegraf:
+    image: telegraf:latest
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on: [influxdb]
+
+volumes:
+  influxdb-data:
+  grafana-data:</pre></div>
+
+      <h2>Шаг 2 — Collector скрипт</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment">#!/usr/bin/env python3</span>
+<span class="comment"># /opt/monitoring/collector.py</span>
+<span class="comment"># crontab: */5 * * * * /usr/bin/python3 /opt/monitoring/collector.py</span>
+
+import requests
+from influxdb_client import InfluxDBClient, Point
+from datetime import datetime
+
+INFLUX_URL   = <span class="str">"http://localhost:8086"</span>
+INFLUX_TOKEN = <span class="str">"influx-super-token-2025"</span>
+INFLUX_ORG   = <span class="str">"mailops"</span>
+INFLUX_BUCKET = <span class="str">"email_metrics"</span>
+
+MW_URL = <span class="str">"https://mailwizz.example.com/api"</span>
+MW_KEY = <span class="str">"your-mailwizz-api-key"</span>
+
+client = InfluxDBClient(url=INFLUX_URL, token=INFLUX_TOKEN, org=INFLUX_ORG)
+write = client.write_api()
+
+<span class="comment"># --- MailWizz Campaign Stats ---</span>
+headers = {<span class="str">"X-Api-Key"</span>: MW_KEY}
+r = requests.get(f<span class="str">"{MW_URL}/campaigns"</span>, headers=headers)
+campaigns = r.json().get(<span class="str">"data"</span>, {}).get(<span class="str">"records"</span>, [])
+
+for c in campaigns[:10]:  <span class="comment"># последние 10</span>
+    uid = c[<span class="str">"campaign_uid"</span>]
+    detail = requests.get(
+        f<span class="str">"{MW_URL}/campaigns/{uid}"</span>, headers=headers
+    ).json()
+
+    stats = detail.get(<span class="str">"data"</span>, {}).get(<span class="str">"stats"</span>, {})
+    name = detail.get(<span class="str">"data"</span>, {}).get(<span class="str">"name"</span>, uid)
+
+    point = Point(<span class="str">"campaign_stats"</span>) \\
+        .tag(<span class="str">"campaign"</span>, name) \\
+        .field(<span class="str">"sent"</span>, stats.get(<span class="str">"processed_count"</span>, 0)) \\
+        .field(<span class="str">"delivered"</span>, stats.get(<span class="str">"delivery_success_count"</span>, 0)) \\
+        .field(<span class="str">"opens"</span>, stats.get(<span class="str">"unique_opens_count"</span>, 0)) \\
+        .field(<span class="str">"clicks"</span>, stats.get(<span class="str">"unique_clicks_count"</span>, 0)) \\
+        .field(<span class="str">"bounces"</span>, stats.get(<span class="str">"bounces_count"</span>, 0)) \\
+        .field(<span class="str">"complaints"</span>, stats.get(<span class="str">"complaints_count"</span>, 0))
+
+    write.write(bucket=INFLUX_BUCKET, record=point)
+
+print(f<span class="str">"[{datetime.now()}] Collected {len(campaigns)} campaigns"</span>)</pre></div>
+
+      <h2>Шаг 3 — Grafana Dashboard JSON (структура)</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Структура дашборда (6 рядов, 12 панелей)</span>
+
+<span class="cmd">Row 1: Overview (4 Stat panels)</span>
+  ├── Total Sent Today          <span class="comment">| query: sum(sent) last 24h</span>
+  ├── Delivery Rate             <span class="comment">| query: delivered/sent * 100</span>
+  ├── Avg Open Rate             <span class="comment">| query: opens/delivered * 100</span>
+  └── Spam Complaint Rate       <span class="comment">| query: complaints/delivered * 100</span>
+
+<span class="cmd">Row 2: Delivery (2 panels)</span>
+  ├── Delivery Timeline         <span class="comment">| Time Series: sent, delivered, bounced</span>
+  └── Bounce Breakdown          <span class="comment">| Pie Chart: hard vs soft bounces</span>
+
+<span class="cmd">Row 3: Engagement (2 panels)</span>
+  ├── OR/CTR by Campaign        <span class="comment">| Bar Chart: last 10 campaigns</span>
+  └── Opens Heatmap             <span class="comment">| Heatmap: opens by hour/day</span>
+
+<span class="cmd">Row 4: Domain Health (2 panels)</span>
+  ├── DR by Sending Domain      <span class="comment">| Table: domain, sent, DR, OR</span>
+  └── DR by Recipient Domain    <span class="comment">| Bar Chart: gmail, outlook, yahoo</span>
+
+<span class="cmd">Row 5: Server (2 panels)</span>
+  ├── CPU / RAM / Disk          <span class="comment">| Time Series: from Telegraf</span>
+  └── Postal Queue Size         <span class="comment">| Gauge: current queue</span>
+
+<span class="cmd">Row 6: Alerts Log</span>
+  └── Recent Alerts Table       <span class="comment">| Table: time, type, message</span></pre></div>
+
+      <h2>Шаг 4 — Alerting Rules в Grafana</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Grafana Alert Rules</span>
+
+<span class="cmd">Alert 1: High Bounce Rate</span>
+  Condition: bounce_rate > 5% for 15 minutes
+  Severity: Warning
+  Action: Telegram notification
+
+<span class="cmd">Alert 2: Spam Complaint Spike</span>
+  Condition: complaint_rate > 0.1% for 10 minutes
+  Severity: Critical
+  Action: Telegram + auto-pause campaigns
+
+<span class="cmd">Alert 3: Queue Backlog</span>
+  Condition: queue_size > 5000 for 30 minutes
+  Severity: Warning
+  Action: Telegram notification
+
+<span class="cmd">Alert 4: Server Resources</span>
+  Condition: cpu_usage > 85% OR disk_usage > 90%
+  Severity: Critical
+  Action: Telegram notification
+
+<span class="cmd">Alert 5: Delivery Rate Drop</span>
+  Condition: delivery_rate < 85% for 1 hour
+  Severity: Critical
+  Action: Telegram + auto-pause + email to admin
+
+<span class="comment"># Notification Channel: Telegram</span>
+<span class="comment"># Grafana → Alerting → Contact Points → Telegram</span>
+<span class="comment"># Bot Token + Chat ID</span></pre></div>
+
+      <h2>Результат: единый центр управления</h2>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:grid;grid-template-columns:200px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);font-size:12px"><code style="color:var(--accent3)">Real-time метрики</code><span style="color:var(--muted)">OR, CTR, Bounce Rate, Spam Rate — обновление каждые 5 минут</span></div>
+        <div style="display:grid;grid-template-columns:200px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent3)">Автоалёрты</code><span style="color:var(--muted)">5 правил, Telegram-уведомления за секунды после проблемы</span></div>
+        <div style="display:grid;grid-template-columns:200px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent3)">Автопауза</code><span style="color:var(--muted)">При critical алёрте кампании ставятся на паузу автоматически</span></div>
+        <div style="display:grid;grid-template-columns:200px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent3)">История</code><span style="color:var(--muted)">Все метрики хранятся в InfluxDB. Тренды за 7/30/90 дней.</span></div>
+        <div style="display:grid;grid-template-columns:200px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><code style="color:var(--accent3)">Масштабируемость</code><span style="color:var(--muted)">Архитектура работает для 100K и для 1M подписчиков.</span></div>
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Следующий шаг</div>
+        После настройки дашборда добавьте Grafana Public Dashboard для клиентов — они смогут видеть статистику своих кампаний в real-time без доступа к вашей инфраструктуре. Grafana → Dashboard → Share → Public Dashboard.
+      </div>
+
+      <!-- ══ ТЕСТ ══ -->
+      <div id="quizBlock" style="margin-top:40px">
+        <div style="padding:20px 24px;background:rgba(123,97,255,.06);border:1px solid rgba(123,97,255,.25);margin-bottom:20px">
+          <div style="font-size:10px;color:var(--accent2);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Финальный тест</div>
+          <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:6px">Проверьте знания</div>
+          <div style="font-size:13px;color:var(--muted)">5 вопросов — нужно 4 правильных.</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px">
+          <div style="flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden">
+            <div id="quizBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;transition:width .4s"></div>
+          </div>
+          <span id="quizCount" style="font-size:11px;color:var(--muted);font-family:var(--font-mono);min-width:50px;text-align:right">0 из 5</span>
+        </div>
+        <div id="quizQuestions"></div>
+        <div id="quizResult" style="display:none;margin-top:20px;padding:24px;background:var(--surface);border:1px solid rgba(0,229,255,.2);text-align:center"></div>
+      </div>
+      <div id="courseFinale" style="display:none;margin-top:32px;padding:28px;background:var(--surface);border:1px solid rgba(0,229,255,.2)"><div style="font-size:36px;margin-bottom:12px">&#127891;</div><div style="font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--heading);margin-bottom:10px">Курс завершён!</div><div style="font-size:14px;color:var(--muted);line-height:1.9;margin-bottom:20px">Вы прошли все уроки и финальный тест по аналитике email-рассылок.</div><div style="display:flex;gap:12px;flex-wrap:wrap"><a href="courses.html" class="btn-primary">Все курсы</a><a href="courses.html" class="btn-ghost">На главную курсов</a></div></div>`
+  }
+}
+
+
+window.lessons = lessons;
+window.currentLesson = currentLesson;
+
+// quiz:analytics
+var qData_analytics = [{"q": "Open Rate 25% означает, что:", "opts": ["25% писем доставлены", "25% получателей открыли письмо", "25% получателей кликнули ссылку", "25% писем попали в спам"], "c": 1, "e": "Open Rate = Уникальные открытия / Доставленные × 100%. Это процент получателей, которые открыли письмо. Не путать с Delivery Rate (доставка) и CTR (клики)."}, {"q": "Delivery Rate 98% означает, что все письма попали во Входящие?", "opts": ["Да, 98% в Inbox", "Нет, часть может быть в спаме — Delivery Rate не равен Inbox Placement", "Да, если DKIM настроен", "Зависит от провайдера"], "c": 1, "e": "Delivery Rate показывает только, что сервер принял письмо (не bounce). Inbox Placement Rate — отдельная метрика, показывающая реальное попадание во Входящие. DR 98% при IPR 65% = треть в спаме."}, {"q": "Какой максимальный Spam Complaint Rate допускает Google?", "opts": ["1%", "0.5%", "0.3%", "0.1%"], "c": 2, "e": "Google блокирует отправителей с complaint rate выше 0.3%. Идеальный показатель — ниже 0.1%. При 0.3%+ домен попадает в чёрный список Gmail и письма перестают доставляться."}, {"q": "Что показывает CTOR (Click-To-Open Rate)?", "opts": ["Процент кликов от всех отправленных", "Процент кликов от всех доставленных", "Процент кликов от тех, кто открыл письмо", "Процент открытий от тех, кто кликнул"], "c": 2, "e": "CTOR = Клики / Открытия × 100%. Это метрика качества контента письма — какой процент тех, кто открыл, заинтересовался достаточно, чтобы кликнуть. CTR считается от доставленных, CTOR — от открывших."}, {"q": "Когортный анализ подписчиков нужен для:", "opts": ["Подсчёта ROI рассылок", "Настройки DKIM и SPF", "Отслеживания engagement decay и определения момента реактивации", "Создания A/B тестов"], "c": 2, "e": "Когортный анализ группирует подписчиков по дате подписки и показывает, как engagement (открытия, клики) меняется со временем. Это позволяет определить оптимальный момент для реактивации и выявить «мёртвых» подписчиков."}];
+var qAns_analytics = {};
+var qOk_analytics = 0;
+
+function quizInit_analytics() {
+  qAns_analytics = {}; qOk_analytics = 0;
+  var c = document.getElementById("quizQuestions");
+  if (!c) return;
+  var h = "";
+  qData_analytics.forEach(function(q, i) {
+    h += "<div style=\"margin-bottom:12px;padding:20px;background:var(--bg2);border:1px solid var(--border)\">";
+    h += "<div style=\"font-size:11px;color:var(--muted);font-family:var(--font-mono);margin-bottom:8px\">Вопрос " + (i+1) + " из 5</div>";
+    h += "<div style=\"font-size:15px;color:var(--heading);font-weight:600;line-height:1.5;margin-bottom:14px\">" + q.q + "</div>";
+    h += "<div style=\"display:flex;flex-direction:column;gap:6px\">";
+    q.opts.forEach(function(opt, j) {
+      h += "<div id=\"qo_analytics_" + i + "_" + j + "\" onclick=\"quizAns_analytics(" + i + "," + j + ")\" style=\"display:flex;gap:10px;align-items:flex-start;padding:10px 14px;background:var(--bg);border:1px solid var(--border);cursor:pointer;font-size:13px;color:var(--text)\">";
+      h += "<div style=\"min-width:22px;height:22px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-family:var(--font-mono);color:var(--muted);flex-shrink:0\">" + String.fromCharCode(65+j) + "</div>";
+      h += opt + "</div>";
+    });
+    h += "</div>";
+    h += "<div id=\"qe_analytics_" + i + "\" style=\"display:none;margin-top:10px;padding:10px 14px;background:var(--surface);border-left:3px solid var(--accent);font-size:12px;color:var(--muted);line-height:1.7\">" + (q.e||"") + "</div>";
+    h += "</div>";
+  });
+  c.innerHTML = h;
+  var bar = document.getElementById("quizBar");
+  var cnt = document.getElementById("quizCount");
+  if (bar) bar.style.width = "0%";
+  if (cnt) cnt.textContent = "0 из 5";
+  var res = document.getElementById("quizResult");
+  if (res) res.style.display = "none";
+}
+
+window["quizAns_analytics"] = function(qi, oi) {
+  if (qAns_analytics[qi] !== undefined) return;
+  qAns_analytics[qi] = oi;
+  var q = qData_analytics[qi];
+  var correct = (q.c !== undefined) ? q.c : q.correct;
+  var isOk = (oi === correct);
+  if (isOk) qOk_analytics++;
+  q.opts.forEach(function(_, j) {
+    var el = document.getElementById("qo_analytics_" + qi + "_" + j);
+    if (!el) return;
+    el.style.pointerEvents = "none";
+    if (j === correct) { el.style.borderColor = "var(--accent3)"; el.style.background = "rgba(0,255,136,.06)"; }
+    else if (j === oi && !isOk) { el.style.borderColor = "#ff6b6b"; el.style.background = "rgba(255,107,107,.06)"; }
+  });
+  var exp = document.getElementById("qe_analytics_" + qi);
+  if (exp) exp.style.display = "block";
+  var answered = Object.keys(qAns_analytics).length;
+  var bar = document.getElementById("quizBar");
+  var cnt = document.getElementById("quizCount");
+  if (bar) bar.style.width = Math.round(answered/5*100) + "%";
+  if (cnt) cnt.textContent = answered + " из 5";
+
+  if (answered === 5) {
+    setTimeout(function() {
+      var passed = qOk_analytics >= 4;
+      var res = document.getElementById("quizResult");
+      if (!res) return;
+      res.style.display = "block";
+      if (passed) {
+        res.innerHTML = "<div style=\"font-size:36px;margin-bottom:10px\">&#127942;</div>"
+          + "<div style=\"font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--heading);margin-bottom:8px\">Тест пройден! " + qOk_analytics + "/5</div>"
+          + "<div style=\"font-size:13px;color:var(--muted);margin-bottom:16px\">Курс завершён — смотрите финальный блок ниже.</div>";
+        var f = document.getElementById("courseFinale");
+        if (f) { f.style.display = "block"; f.scrollIntoView({behavior:"smooth",block:"nearest"}); }
+        try { localStorage.setItem("analytics_quiz_passed","1"); } catch(e) {}
+      } else {
+        res.innerHTML = "<div style=\"font-size:36px;margin-bottom:10px\">&#128170;</div>"
+          + "<div style=\"font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--heading);margin-bottom:8px\">Почти! " + qOk_analytics + "/5</div>"
+          + "<div style=\"font-size:13px;color:var(--muted);margin-bottom:16px\">Нужно 4 правильных. Попробуйте снова.</div>"
+          + "<button class=\"btn-ghost\" onclick=\"quizInit_analytics()\">Попробовать снова</button>";
+      }
+      res.scrollIntoView({behavior:"smooth",block:"nearest"});
+    }, 400);
+  }
+};
+
+// ── LESSON NAVIGATION ──
+
+
+function copyCode(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.textContent = 'скопировано!';
+    setTimeout(() => btn.textContent = 'копировать', 2000);
+  });
+}
+
+// ── Прогресс курса ──────────────────────────────────────
+const COURSE_KEY = 'course-analytics';
+const DONE_KEY   = 'analytics_done';
+
+
+
+function updateProgress() {
+  var done = getDone();
+  var total = Object.keys(lessons).length;
+  var el = document.getElementById('progressText');
+  if (el) el.textContent = done.length + ' / ' + total + ' pройдено';
+  document.querySelectorAll('.sidebar-lesson').forEach(function(sl) {
+    var attr = sl.getAttribute('onclick') || '';
+    var m = attr.match(/showLesson\((\d+)\)/);
+    if (m) {
+      if (done.indexOf(parseInt(m[1])) >= 0) sl.classList.add('done');
+      else sl.classList.remove('done');
+    }
+  });
+}
+
+function toggleComplete() {
+  const cur  = window._currentLesson || 1;
+  const done = getDone();
+  const idx  = done.indexOf(cur);
+  if (idx >= 0) done.splice(idx, 1); else done.push(cur);
+  saveDone(done);
+  updateProgress();
+}
+
+// Патч showLesson чтобы обновлять кнопку при переходе
+const _origShowLesson = showLesson;
+showLesson = function(n) {
+  _origShowLesson(n);
+  window._currentLesson = n;
+  setTimeout(updateProgress, 50);
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  window._currentLesson = 1;
+  updateProgress();
+});
+
+
+
+
+</script>
+</body>
+</html>

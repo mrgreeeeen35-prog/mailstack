@@ -208,12 +208,12 @@
 
       <div style="display:flex;gap:32px;flex-wrap:wrap;margin-top:32px" class="reveal">
         <div>
-          <div style="font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--heading);letter-spacing:-1px">24</div>
-          <div style="font-size:12px;color:var(--muted);font-family:var(--font-mono)">курса</div>
+          <div style="font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--heading);letter-spacing:-1px">29</div>
+          <div style="font-size:12px;color:var(--muted);font-family:var(--font-mono)">курсов</div>
         </div>
         <div style="width:1px;background:var(--border)"></div>
         <div>
-          <div style="font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--heading);letter-spacing:-1px">298</div>
+          <div style="font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--heading);letter-spacing:-1px">346</div>
           <div style="font-size:12px;color:var(--muted);font-family:var(--font-mono)">уроков</div>
         </div>
         <div style="width:1px;background:var(--border)"></div>
@@ -234,7 +234,7 @@
       <div style="font-size:28px;margin-bottom:10px">🌱</div>
       <div style="font-family:var(--font-head);font-size:15px;font-weight:800;color:var(--heading);margin-bottom:6px;letter-spacing:-.5px">Начинаю с нуля</div>
       <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px">Серверов не трогал. Хочу поднять свою инфраструктуру.</div>
-      <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono)">9 шагов →</div>
+      <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono)">11 шагов →</div>
     </div>
 
     <div style="background:var(--bg);padding:24px 20px;cursor:pointer;transition:background .2s;border-left:1px solid var(--border)" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'" onclick="showPath('marketer')">
@@ -255,14 +255,14 @@
       <div style="font-size:28px;margin-bottom:10px">⚙️</div>
       <div style="font-family:var(--font-head);font-size:15px;font-weight:800;color:var(--heading);margin-bottom:6px;letter-spacing:-.5px">DevOps-инженер</div>
       <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px">Полный технический стек, защита, автоматизация.</div>
-      <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono)">7 шагов →</div>
+      <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono)">9 шагов →</div>
     </div>
 
     <div style="background:var(--bg);padding:24px 20px;cursor:pointer;transition:background .2s;border-left:1px solid var(--border)" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'" onclick="showPath('agency')">
       <div style="font-size:28px;margin-bottom:10px">💼</div>
       <div style="font-family:var(--font-head);font-size:15px;font-weight:800;color:var(--heading);margin-bottom:6px;letter-spacing:-.5px">Запускаю агентство</div>
       <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px">Продавать email-инфраструктуру как услугу клиентам.</div>
-      <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono)">7 шагов →</div>
+      <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono)">9 шагов →</div>
     </div>
 
   </div>
@@ -302,6 +302,7 @@ const PATHS = {
       { n:8, color:'#00ff88', title:'MailWizz', desc:'Платформа рассылок. Сегменты, цепочки, A/B тесты.', link:'course-mailwizz.html', time:'22 урока' },
       { n:9, color:'#00ff88', title:'Обслуживание сервера', desc:'Бэкапы, мониторинг UptimeKuma, алёрты в Telegram.', link:'course-backup.html', time:'13 уроков' },
       { n:10, color:'#00ff88', title:'Диагностика', desc:'Проверяем что всё настроено правильно. mail-tester 10/10.', link:'course-troubleshoot.html', time:'22 урока' },
+      { n:11, color:'#7b61ff', title:'Сервисы прогрева', desc:'Coldy, Smartlead, Instantly — подключаем и мониторим.', link:'course-warmup-services.html', time:'8 уроков' },
     ]
   },
   marketer: {
@@ -316,6 +317,8 @@ const PATHS = {
       { n:6, color:'#7b61ff', title:'Постмастеры: Google + Mail.ru', desc:'Мониторинг репутации у Gmail и Mail.ru.', link:'course-postmaster.html', time:'15 уроков' },
       { n:7, color:'#00ff88', title:'n8n автоматизации', desc:'Webhook, API, брошенная корзина, алёрты.', link:'course-n8n.html', time:'16 уроков' },
       { n:8, color:'#00ff88', title:'Форма подписки', desc:'Tilda, WordPress, double opt-in через n8n.', link:'course-subscription.html', time:'8 уроков' },
+      { n:9, color:'#7b61ff', title:'Сбор и валидация базы', desc:'Откуда брать контакты, валидация, сегментация.', link:'course-list-building.html', time:'10 уроков' },
+      { n:10, color:'#00ff88', title:'Аналитика рассылок', desc:'Метрики, ROI, Grafana, A/B тесты, алёрты.', link:'course-analytics.html', time:'10 уроков' },
     ]
   },
   deliverability: {
@@ -341,6 +344,8 @@ const PATHS = {
       { n:5, color:'#7b61ff', title:'Обслуживание сервера', desc:'Бэкапы 3-2-1, UptimeKuma, Telegram алёрты.', link:'course-backup.html', time:'13 уроков' },
       { n:6, color:'#00ff88', title:'n8n автоматизации', desc:'Webhook, API интеграции, автоматизация ops.', link:'course-n8n.html', time:'16 уроков' },
       { n:7, color:'#00ff88', title:'Диагностика и неполадки', desc:'502, crash loop, DKIM fail — алгоритм решения.', link:'course-troubleshoot.html', time:'22 урока' },
+      { n:8, color:'#7b61ff', title:'IP-ротация и Multi-IP', desc:'Несколько IP, ротация, мониторинг репутации.', link:'course-ip-rotation.html', time:'10 уроков' },
+      { n:9, color:'#7b61ff', title:'Масштабирование: 10K+', desc:'Несколько серверов, балансировка, Grafana.', link:'course-scaling.html', time:'10 уроков' },
     ]
   },
   agency: {
@@ -354,6 +359,8 @@ const PATHS = {
       { n:5, color:'#7b61ff', title:'Blacklist + Bounce + Постмастеры', desc:'Мониторинг репутации и быстрое реагирование.', link:'course-blacklist.html', time:'3 курса' },
       { n:6, color:'#ff6b6b', title:'Миграция с Unisender', desc:'Самый частый клиентский кейс.', link:'course-migration.html', time:'28 уроков' },
       { n:7, color:'#00ff88', title:'Email-агентства', desc:'Ценообразование, договор, масштабирование.', link:'course-agency.html', time:'13 уроков' },
+      { n:8, color:'#7b61ff', title:'IP-ротация и Multi-IP', desc:'Multi-IP для клиентов, ротация.', link:'course-ip-rotation.html', time:'10 уроков' },
+      { n:9, color:'#7b61ff', title:'Масштабирование: 10K+', desc:'Масштаб для клиентских проектов.', link:'course-scaling.html', time:'10 уроков' },
     ]
   }
 };function showPath(key) {
@@ -390,7 +397,7 @@ const PATHS = {
 <section>
   <div class="section-label">Все курсы</div>
   <h2>Выберите<br><em>нужный модуль</em></h2>
-  <p class="section-desc">24 курса · 298+ уроков. Пошаговые инструкции с командами — читайте когда удобно, копируйте одним кликом.</p>
+  <p class="section-desc">29 курсов · 346+ уроков. Пошаговые инструкции с командами — читайте когда удобно, копируйте одним кликом.</p>
 
   <!-- ═══ ПОИСК ════════════════════════════════════════════════ -->
   <div style="margin-bottom:24px;position:relative">
@@ -419,7 +426,7 @@ const PATHS = {
   </div>
 
   <div class="filter-tabs" id="filterTabs">
-    <button class="filter-tab active" data-filter="all">Все курсы (24)</button>
+    <button class="filter-tab active" data-filter="all">Все курсы (29)</button>
     <button class="filter-tab" data-filter="install">🖥 Инфраструктура</button>
     <button class="filter-tab" data-filter="send">📊 Маркетинг</button>
     <button class="filter-tab" data-filter="security">🔐 Доставляемость</button>
@@ -787,6 +794,81 @@ const PATHS = {
           </div>
           <a href="course-cold-email.html?token=coldemail2025" class="course-btn">Открыть курс →</a>
         </div>
+        <div class="course-card" data-category="install">
+          <div class="course-card-header">
+            <span class="course-tag" style="background:rgba(0,229,255,.08);color:var(--accent);border:1px solid rgba(0,229,255,.2)">Инфраструктура</span>
+            <span style="font-size:20px">🔀</span>
+          </div>
+          <h3 class="course-title">IP-ротация и Multi-IP</h3>
+          <p class="course-desc">Несколько IP на сервере, привязка к Postal/Mailcow, стратегии ротации, мониторинг репутации. Обязательно для 10K+/день.</p>
+          <div class="course-meta">
+            <span style="color:var(--muted)">📖 10 уроков</span>
+            <div style="text-align:right">
+              <span style="font-size:14px;font-weight:700;color:var(--heading);font-family:var(--font-mono)">3 900 ₽</span>
+            </div>
+          </div>
+          <a href="course-ip-rotation.html?token=iprotation2025" class="course-btn">Открыть курс →</a>
+        </div>
+        <div class="course-card" data-category="install">
+          <div class="course-card-header">
+            <span class="course-tag" style="background:rgba(0,229,255,.08);color:var(--accent);border:1px solid rgba(0,229,255,.2)">Инфраструктура</span>
+            <span style="font-size:20px">📈</span>
+          </div>
+          <h3 class="course-title">Масштабирование: 10K+</h3>
+          <p class="course-desc">Архитектура для больших объёмов: несколько серверов Postal, балансировка, очереди, тюнинг БД, Grafana мониторинг.</p>
+          <div class="course-meta">
+            <span style="color:var(--muted)">📖 10 уроков</span>
+            <div style="text-align:right">
+              <span style="font-size:14px;font-weight:700;color:var(--heading);font-family:var(--font-mono)">3 900 ₽</span>
+            </div>
+          </div>
+          <a href="course-scaling.html?token=scaling2025" class="course-btn">Открыть курс →</a>
+        </div>
+        <div class="course-card" data-category="send">
+          <div class="course-card-header">
+            <span class="course-tag" style="background:rgba(0,255,136,.08);color:var(--accent3);border:1px solid rgba(0,255,136,.2)">Маркетинг</span>
+            <span style="font-size:20px">📋</span>
+          </div>
+          <h3 class="course-title">Сбор и валидация базы</h3>
+          <p class="course-desc">Источники email-контактов, парсинг, валидация через API, чистка от ловушек, сегментация, автоматический pipeline.</p>
+          <div class="course-meta">
+            <span style="color:var(--muted)">📖 10 уроков</span>
+            <div style="text-align:right">
+              <span style="font-size:14px;font-weight:700;color:var(--heading);font-family:var(--font-mono)">3 900 ₽</span>
+            </div>
+          </div>
+          <a href="course-list-building.html?token=listbuilding2025" class="course-btn">Открыть курс →</a>
+        </div>
+        <div class="course-card" data-category="send">
+          <div class="course-card-header">
+            <span class="course-tag" style="background:rgba(0,255,136,.08);color:var(--accent3);border:1px solid rgba(0,255,136,.2)">Маркетинг</span>
+            <span style="font-size:20px">📊</span>
+          </div>
+          <h3 class="course-title">Аналитика рассылок</h3>
+          <p class="course-desc">Метрики, ROI, Grafana дашборды, A/B тесты, когортный анализ, автоматические алёрты через n8n в Telegram.</p>
+          <div class="course-meta">
+            <span style="color:var(--muted)">📖 10 уроков</span>
+            <div style="text-align:right">
+              <span style="font-size:14px;font-weight:700;color:var(--heading);font-family:var(--font-mono)">3 900 ₽</span>
+            </div>
+          </div>
+          <a href="course-analytics.html?token=analytics2025" class="course-btn">Открыть курс →</a>
+        </div>
+        <div class="course-card" data-category="security">
+          <div class="course-card-header">
+            <span class="course-tag" style="background:rgba(123,97,255,.08);color:var(--accent2);border:1px solid rgba(123,97,255,.2)">Доставляемость</span>
+            <span style="font-size:20px">🔥</span>
+          </div>
+          <h3 class="course-title">Сервисы прогрева</h3>
+          <p class="course-desc">Coldy, Smartlead, Instantly — обзор, настройка, сравнение. Подключение 20 ящиков, мониторинг inbox rate.</p>
+          <div class="course-meta">
+            <span style="color:var(--muted)">📖 8 уроков</span>
+            <div style="text-align:right">
+              <span style="font-size:14px;font-weight:700;color:var(--heading);font-family:var(--font-mono)">2 900 ₽</span>
+            </div>
+          </div>
+          <a href="course-warmup-services.html?token=warmupservices2025" class="course-btn">Открыть курс →</a>
+        </div>
   </div>
 
 <!-- PACKAGES -->
@@ -904,7 +986,7 @@ const PATHS = {
       <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2))"></div>
       <div style="font-size:28px;margin-bottom:10px">🎓</div>
       <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:6px;letter-spacing:-.5px">Всё включено</div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px">Все 24 курса + шаблоны + поддержка в Telegram 30 дней.</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px">Все 29 курсов + шаблоны + поддержка в Telegram 30 дней.</div>
       <div style="display:inline-block;padding:2px 8px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);font-size:10px;color:var(--accent);font-family:var(--font-mono);margin-bottom:14px">скидка 22%</div>
       <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px;flex:1">
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> VPS с нуля</div>
@@ -930,8 +1012,13 @@ const PATHS = {
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Форма подписки</div>
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> 152-ФЗ / GDPR / CAN-SPAM</div>
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Cold Email / B2B Outreach</div>
+        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> IP-ротация и Multi-IP</div>
+        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Масштабирование: 10K+</div>
+        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Сбор и валидация базы</div>
+        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Аналитика рассылок</div>
+        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Сервисы прогрева</div>
       </div>
-      <div style="font-size:12px;color:var(--muted);text-decoration:line-through;margin-bottom:4px">76 700 ₽ по отдельности</div>
+      <div style="font-size:12px;color:var(--muted);text-decoration:line-through;margin-bottom:4px">95 200 ₽ по отдельности</div>
       <div style="font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--heading);margin-bottom:16px;letter-spacing:-1px">59 900 ₽</div>
       <a href="https://t.me/yourusername" class="btn-ghost" style="display:block;text-align:center">Купить пакет</a>
     </div>

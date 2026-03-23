@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<script>
+window._GATE_TOKENS=["listbuilding2025","yC8vZ4XfF9Zp!yu"];
+window._GATE_KEY="listbuilding";
+window.currentLesson = 1;
+try { window.completed = new Set(JSON.parse(localStorage.getItem('listbuilding_done') || '[]')); } catch(e) { window.completed = new Set(); }
+var completed = window.completed;
+var currentLesson = window.currentLesson;
+(function(){
+  function _ls(op,k,v){try{if(op==="g")return localStorage.getItem(k);if(op==="s")localStorage.setItem(k,v);if(op==="r")localStorage.removeItem(k);}catch(e){}}
+  function _err(el,msg){if(el){el.textContent=msg;el.style.display="block";}}
+  function _checkPwd(){
+    var gi=document.getElementById("gateInput");
+    if(!gi)return;
+    var val=gi.value.trim();
+    var err=document.getElementById("gateError");
+    var tokens=window._GATE_TOKENS||[];
+    var K=window._GATE_KEY||"course";
+    var att=parseInt(_ls("g",K+"_attempts")||"0");
+    var lk=parseInt(_ls("g",K+"_lock")||"0");
+    if(lk&&Date.now()<lk){_err(err,"Подождите "+Math.ceil((lk-Date.now())/60000)+" мин.");return;}
+    if(tokens.includes(val)){
+      _ls("s",K+"_access",val);_ls("r",K+"_attempts");_ls("r",K+"_lock");
+      if(typeof openCourse==="function"){openCourse();}
+      else{var pg=document.getElementById("passwordGate");var cl=document.getElementById("courseLayout");if(pg)pg.style.display="none";if(cl)cl.style.display="grid";}
+    }else{
+      var n=att+1;_ls("s",K+"_attempts",String(n));
+      if(n>=5){_ls("s",K+"_lock",String(Date.now()+15*60*1000));_ls("s",K+"_attempts","0");_err(err,"Слишком много попыток. Подождите 15 минут.");}
+      else{_err(err,"Неверный токен. Попыток осталось: "+(5-n));if(gi)gi.style.borderColor="#ff6b6b";}
+    }
+  }
+  window.checkPassword=_checkPwd;
+  document.addEventListener("DOMContentLoaded",function(){
+    var K=window._GATE_KEY||"listbuilding";
+    var tokens=window._GATE_TOKENS||[];
+    try{var s=localStorage.getItem(K+"_access");if(s&&tokens.includes(s)){if(typeof openCourse==="function")openCourse();return;}}catch(e){}
+    try{var u=new URLSearchParams(location.search).get("token");if(u&&tokens.includes(u)){try{localStorage.setItem(K+"_access",u);}catch(e){}if(typeof openCourse==="function")openCourse();}}catch(e){}
+  });
+})();
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Курс: Сбор и валидация email-базы — MAILSTACK</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23080a0f'/><rect x='4' y='8' width='24' height='16' rx='2' fill='none' stroke='rgba(255,255,255,.22)' stroke-width='1.2'/><polyline points='4,8 16,18 28,8' fill='none' stroke='%2300e5ff' stroke-width='2' stroke-linejoin='round'/><text x='7' y='26' fill='%2300e5ff' font-family='monospace' font-size='8' font-weight='bold'>›_</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+<style>
+/* ── COURSE LAYOUT ── */
+.course-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 0;
+  min-height: 100vh;
+  padding-top: 61px;
+}
+
+/* Sidebar */
+.course-sidebar {
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  position: sticky;
+  top: 61px;
+  height: calc(100vh - 61px);
+  overflow-y: auto;
+  padding: 32px 0;
+}
+.sidebar-title {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  padding: 0 24px;
+  margin-bottom: 16px;
+}
+.sidebar-module {
+  margin-bottom: 8px;
+}
+.sidebar-module-title {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  padding: 8px 24px;
+  margin-top: 8px;
+}
+.sidebar-lesson {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 24px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .2s;
+  border-left: 2px solid transparent;
+  text-decoration: none;
+}
+.sidebar-lesson:hover { color: var(--text); background: rgba(255,255,255,.03); }
+.sidebar-lesson.active { color: var(--accent); border-left-color: var(--accent); background: rgba(0,229,255,.05); }
+.sidebar-lesson.done { color: var(--accent3); }
+.lesson-num {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+}
+.sidebar-lesson.active .lesson-num { border-color: var(--accent); color: var(--accent); }
+.sidebar-lesson.done .lesson-num { border-color: var(--accent3); background: var(--accent3); color: var(--bg); }
+.sidebar-progress {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  margin-top: 16px;
+}
+.progress-bar-wrap {
+  background: var(--surface);
+  height: 4px;
+  border-radius: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: var(--accent3);
+  border-radius: 2px;
+  transition: width .5s ease;
+}
+
+/* Lesson content */
+.course-content {
+  padding: 48px 64px;
+  max-width: 860px;
+}
+.lesson-header {
+  margin-bottom: 40px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+}
+.lesson-module-tag {
+  font-size: 11px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 12px;
+}
+.lesson-title {
+  font-family: var(--font-head);
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 800;
+  color: var(--heading);
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+  line-height: 1.1;
+}
+.lesson-meta {
+  display: flex;
+  gap: 20px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Content blocks */
+.lesson-body h2 {
+  font-family: var(--font-head);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--heading);
+  margin: 40px 0 16px;
+  letter-spacing: -.5px;
+}
+.lesson-body h3 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--heading);
+  margin: 28px 0 12px;
+}
+.lesson-body p {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+.lesson-body ul, .lesson-body ol {
+  padding-left: 20px;
+  margin-bottom: 16px;
+}
+.lesson-body li {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.8;
+  margin-bottom: 6px;
+}
+
+/* Code blocks */
+.code-block {
+  background: #0a0e18;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  padding: 20px 24px;
+  margin: 20px 0;
+  border-radius: 0;
+  position: relative;
+  overflow-x: auto;
+}
+.code-block pre {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: #c9d1d9;
+  line-height: 1.7;
+  margin: 0;
+  white-space: pre;
+}
+.code-block .comment { color: #6e7681; }
+.code-block .cmd { color: var(--accent); }
+.code-block .str { color: var(--accent3); }
+.code-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+}
+.copy-btn {
+  position: absolute;
+  top: 12px; right: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 11px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  transition: all .2s;
+}
+.copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+/* Note / Warning / Tip blocks */
+.note-block {
+  padding: 16px 20px;
+  margin: 20px 0;
+  border-left: 3px solid;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.note-block.info { border-color: var(--accent); background: rgba(0,229,255,.05); color: var(--text); }
+.note-block.warn { border-color: #f0a500; background: rgba(240,165,0,.05); color: var(--text); }
+.note-block.tip  { border-color: var(--accent3); background: rgba(0,255,136,.05); color: var(--text); }
+.note-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 6px; }
+.note-block.info .note-label { color: var(--accent); }
+.note-block.warn .note-label { color: #f0a500; }
+.note-block.tip  .note-label { color: var(--accent3); }
+
+/* Step counter */
+.steps-list { list-style: none; padding: 0; margin: 20px 0; }
+.steps-list li {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  align-items: flex-start;
+}
+.step-n {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+}
+.step-text { font-size: 14px; color: var(--text); line-height: 1.7; padding-top: 4px; }
+
+/* Nav between lessons */
+.lesson-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 56px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+  gap: 16px;
+}
+.lesson-nav-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 24px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  cursor: pointer;
+  transition: all .2s;
+  text-decoration: none;
+  max-width: 280px;
+}
+.lesson-nav-btn:hover { border-color: var(--accent); background: var(--surface); }
+.nav-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.nav-title { font-size: 14px; color: var(--heading); font-weight: 500; }
+
+/* Password gate */
+#passwordGate {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gate-box {
+  text-align: center;
+  max-width: 420px;
+  padding: 48px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+}
+.gate-logo { margin-bottom: 24px; }
+.gate-title { font-family: var(--font-head); font-size: 24px; font-weight: 800; color: var(--heading); margin-bottom: 8px; }
+.gate-desc { font-size: 13px; color: var(--muted); margin-bottom: 28px; line-height: 1.7; }
+.gate-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px 16px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  margin-bottom: 12px;
+  outline: none;
+  transition: border-color .2s;
+  box-sizing: border-box;
+}
+.gate-input:focus { border-color: var(--accent); }
+.gate-error { font-size: 12px; color: #ff6b6b; margin-bottom: 12px; display: none; }
+.gate-buy { font-size: 13px; color: var(--muted); margin-top: 20px; }
+.gate-buy a { color: var(--accent); text-decoration: none; }
+
+@media (max-width: 900px) {
+  .course-layout { grid-template-columns: 1fr; }
+  .course-sidebar { position: static; height: auto; }
+  .course-content { padding: 32px 24px; }
+}
+
+/* ── Прогресс курса v2 ─────────────────────────────────── */
+.progress-wrap { padding:14px 20px 12px; border-bottom:1px solid var(--border); }
+.progress-label { display:flex; justify-content:space-between; font-size:10px; color:var(--muted); font-family:var(--font-mono); margin-bottom:6px; text-transform:uppercase; letter-spacing:.08em; }
+.progress-fill  { height:3px; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:2px; transition:width .4s; }
+.sidebar-item-done::after { content:'✓'; position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:10px; color:var(--accent3); }
+.sidebar-lesson  { position:relative; }
+.complete-btn    { display:flex; align-items:center; gap:8px; padding:10px 16px; background:rgba(0,255,136,.05); border:1px solid rgba(0,255,136,.2); color:var(--accent3); font-size:11px; font-family:var(--font-mono); cursor:pointer; width:100%; margin-top:16px; transition:all .15s; }
+.complete-btn:hover { background:rgba(0,255,136,.12); }
+.complete-btn.done  { background:rgba(0,255,136,.1); border-color:var(--accent3); }
+
+/* ── Course Quiz ───────────────────────────────────────── */
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+#courseFinale { animation: fadeIn .5s ease; }
+
+/* ── Course Quiz ─────────────────────────────────────────── */
+.cquiz-wrap    { margin-top: 40px; }
+.cquiz-header  { padding: 20px 24px; background: rgba(123,97,255,.06); border: 1px solid rgba(123,97,255,.2); border-bottom: none; }
+.cquiz-title   { font-family: var(--font-head); font-size: 18px; font-weight: 800; color: var(--heading); margin-bottom: 4px; }
+.cquiz-sub     { font-size: 12px; color: var(--muted); font-family: var(--font-mono); }
+.cquiz-q       { background: var(--bg2); border: 1px solid var(--border); border-top: none; padding: 20px 24px; }
+.cquiz-qtext   { font-size: 15px; color: var(--heading); font-weight: 600; margin-bottom: 14px; line-height: 1.5; }
+.cquiz-qn      { font-size: 10px; color: var(--muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 8px; }
+.cquiz-opts    { display: flex; flex-direction: column; gap: 6px; margin-bottom: 0; }
+.cquiz-opt     { display: flex; gap: 10px; align-items: center; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); cursor: pointer; font-size: 13px; color: var(--text); transition: all .15s; }
+.cquiz-opt:hover    { border-color: var(--accent); }
+.cquiz-opt.correct  { border-color: var(--accent3); background: rgba(0,255,136,.06); color: var(--accent3); }
+.cquiz-opt.wrong    { border-color: #ff6b6b; background: rgba(255,107,107,.05); color: #ff6b6b; }
+.cquiz-opt-key { min-width: 22px; height: 22px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 10px; font-family: var(--font-mono); color: var(--muted); flex-shrink: 0; }
+.cquiz-opt.correct .cquiz-opt-key { border-color: var(--accent3); color: var(--accent3); }
+.cquiz-opt.wrong    .cquiz-opt-key { border-color: #ff6b6b; color: #ff6b6b; }
+.cquiz-explain { margin-top: 10px; padding: 10px 14px; background: var(--surface); border-left: 3px solid var(--accent); font-size: 12px; color: var(--muted); line-height: 1.7; display: none; }
+.cquiz-explain.show { display: block; }
+.cquiz-progress { padding: 14px 24px; background: var(--bg2); border: 1px solid var(--border); border-top: none; display: flex; align-items: center; gap: 14px; }
+.cquiz-bar     { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.cquiz-fill    { height: 100%; background: linear-gradient(90deg, var(--accent3), var(--accent)); border-radius: 2px; transition: width .4s; }
+.cquiz-result  { padding: 24px; background: var(--surface); border: 1px solid rgba(0,229,255,.2); border-top: none; text-align: center; display: none; }
+.cquiz-result.show { display: block; }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="passwordGate">
+  <div class="gate-box">
+    <div class="gate-logo">
+      <svg width="210" height="22" viewBox="0 0 270 28" fill="none">
+        <rect x="1" y="1" width="40" height="26" rx="3" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1"/>
+        <polyline points="1,1 21,14 41,1" fill="none" stroke="#00e5ff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+        <text x="5" y="24" fill="#00e5ff" font-family="'JetBrains Mono', monospace" font-size="12">›_</text>
+        <text x="50" y="21" fill="#ffffff" font-family="'Syne', sans-serif" font-size="20" font-weight="800" letter-spacing="-1">MAIL<tspan fill="#00e5ff">STACK</tspan></text>
+      </svg>
+    </div>
+    <div class="gate-title">Курс: Сбор базы</div>
+    <div class="gate-desc">Этот курс доступен после оплаты. Введите токен доступа который вы получили в Telegram после покупки.</div>
+    <input type="password" id="gateInput" class="gate-input" placeholder="Введите токен доступа" onkeydown="if(event.key==='Enter')checkPassword()">
+    <div class="gate-error" id="gateError">Неверный токен. Проверьте сообщение в Telegram или напишите нам.</div>
+    <button onclick="checkPassword()" id="pwBtn" class="btn-primary" style="width:100%">Войти в курс</button>
+    <div class="gate-buy">Нет доступа? <a href="courses.html">Купить курс →</a></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="index.html" class="logo">
+    <svg width="270" height="28" viewBox="0 0 270 28" fill="none">
+      <rect x="1" y="1" width="40" height="26" rx="3" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1"/>
+      <polyline points="1,1 21,14 41,1" fill="none" stroke="#00e5ff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      <text x="5" y="24" fill="#00e5ff" font-family="'JetBrains Mono', monospace" font-size="12">›_</text>
+      <text x="50" y="21" fill="#ffffff" font-family="'Syne', sans-serif" font-size="20" font-weight="800" letter-spacing="-1">MAIL<tspan fill="#00e5ff">STACK</tspan></text>
+    </svg>
+  </a>
+    <ul class="nav-links">
+    <li><a href="index.html">Главная</a></li>
+    <li><a href="services.html">Услуги</a></li>
+    <li><a href="compare.html">Сравнение</a></li>
+    <li><a href="servers.html">Серверы</a></li>
+    <li><a href="courses.html" class="active">Курсы</a></li>
+    <li><a href="workflows.html" style="color:var(--accent3)">Воркфлоу <span style="font-size:9px;background:var(--accent3);color:var(--bg);padding:1px 6px;margin-left:4px;font-weight:600;letter-spacing:.05em">NEW</span></a></li>
+  </ul>
+  <a href="courses.html" class="nav-cta">Все курсы</a>
+  <button class="nav-burger" id="navBurger"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- COURSE LAYOUT -->
+<div class="course-layout" id="courseLayout" style="display:none">
+
+  <!-- SIDEBAR -->
+  <aside class="course-sidebar">
+    <div class="sidebar-title">Сбор и валидация email-базы</div>
+    <div class="progress-wrap"><span id="progressText" style="font-size:12px;color:var(--muted);font-family:var(--font-mono)">0 / 0 пройдено</span></div>
+
+    <div class="sidebar-module-title">Модуль 1 · Источники</div>
+    <a class="sidebar-lesson" data-n="1" onclick="showLesson(1)" href="#">
+      <div class="lesson-num">1</div>Откуда брать email-базу легально
+    </a>
+    <a class="sidebar-lesson" data-n="2" onclick="showLesson(2)" href="#">
+      <div class="lesson-num">2</div>Парсинг и скрапинг — инструменты и границы
+    </a>
+    <a class="sidebar-lesson" data-n="3" onclick="showLesson(3)" href="#">
+      <div class="lesson-num">3</div>Покупные базы — почему это ловушка
+    </a>
+    <div class="sidebar-module-title">Модуль 2 · Валидация</div>
+    <a class="sidebar-lesson" data-n="4" onclick="showLesson(4)" href="#">
+      <div class="lesson-num">4</div>Email-валидация: зачем и как
+    </a>
+    <a class="sidebar-lesson" data-n="5" onclick="showLesson(5)" href="#">
+      <div class="lesson-num">5</div>Инструменты валидации: ZeroBounce, Reoon, скрипты
+    </a>
+    <a class="sidebar-lesson" data-n="6" onclick="showLesson(6)" href="#">
+      <div class="lesson-num">6</div>Чистка базы перед рассылкой — чеклист
+    </a>
+    <div class="sidebar-module-title">Модуль 3 · Сегментация</div>
+    <a class="sidebar-lesson" data-n="7" onclick="showLesson(7)" href="#">
+      <div class="lesson-num">7</div>Сегментация базы для максимальной доставляемости
+    </a>
+    <a class="sidebar-lesson" data-n="8" onclick="showLesson(8)" href="#">
+      <div class="lesson-num">8</div>Реактивация неактивных подписчиков
+    </a>
+    <div class="sidebar-module-title">Модуль 4 · Практика</div>
+    <a class="sidebar-lesson" data-n="9" onclick="showLesson(9)" href="#">
+      <div class="lesson-num">9</div>Автоматический pipeline: сбор → валидация → сегментация
+    </a>
+    <a class="sidebar-lesson" data-n="10" onclick="showLesson(10)" href="#">
+      <div class="lesson-num">10</div>Кейс: база 50K подписчиков с нуля за 3 месяца
+    </a>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="course-content" id="lessonContent">
+    <!-- Уроки рендерятся JS-ом -->
+  </main>
+
+</div>
+
+<script src="js/main.js"></script>
+<script>
+function openCourse() {
+  document.getElementById('passwordGate').style.display = 'none';
+  document.getElementById('courseLayout').style.display = 'grid';
+  window._courseOpen = true;
+  if (typeof showLesson === 'function') {
+    showLesson(window.currentLesson || 1);
+  }
+}
+
+// ── PROGRESS SYSTEM ──
+
+function getDone() {
+  try { return JSON.parse(localStorage.getItem(DONE_KEY) || '[]'); } catch(e) { return []; }
+}
+
+function saveDone(arr) {
+  try { localStorage.setItem(DONE_KEY, JSON.stringify(arr)); } catch(e) {}
+}
+
+function markDone(n) {
+  var done = getDone();
+  if (done.indexOf(n) < 0) done.push(n);
+  saveDone(done);
+  refreshProgress();
+}
+
+function refreshProgress() {
+  var done = getDone();
+  var total = Object.keys(lessons).length;
+  var el = document.getElementById('progressText');
+  if (el) el.textContent = done.length + ' / ' + total + ' пройдено';
+  document.querySelectorAll('.sidebar-lesson').forEach(function(item) {
+    var attr = item.getAttribute('onclick') || '';
+    var match = attr.match(/showLesson.(\d+)./);
+    if (!match) return;
+    var num = parseInt(match[1]);
+    if (done.indexOf(num) >= 0) {
+      item.classList.add('done');
+    } else {
+      item.classList.remove('done');
+    }
+  });
+}
+
+function updateProgress() { refreshProgress(); }
+
+function showLesson(n) {
+  if (typeof currentLesson !== 'undefined' && currentLesson !== n && currentLesson >= 1) {
+    markDone(currentLesson);
+  }
+  currentLesson = n;
+  window.currentLesson = n;
+  var lesson = lessons[n];
+  if (!lesson) return;
+
+  refreshProgress();
+  document.querySelectorAll('.sidebar-lesson').forEach(function(el) {
+    var attr = el.getAttribute('onclick') || '';
+    var m = attr.match(/showLesson.(\d+)./);
+    if (!m) return;
+    el.classList.toggle('active', parseInt(m[1]) === n);
+  });
+
+  var total = Object.keys(lessons).length;
+  var prev = n > 1 ? lessons[n-1] : null;
+  var next = n < total ? lessons[n+1] : null;
+
+  var prevBtn = prev
+    ? '<a class="lesson-nav-btn" onclick="showLesson(' + (n-1) + ')" href="#"><div class="nav-label">\u2190 Назад</div><div class="nav-title">' + prev.title + '</div></a>'
+    : '<div></div>';
+  var nextBtn = next
+    ? '<a class="lesson-nav-btn" onclick="showLesson(' + (n+1) + ')" href="#" style="text-align:right"><div class="nav-label">Вперёд \u2192</div><div class="nav-title">' + next.title + '</div></a>'
+    : '<div></div>';
+
+  document.getElementById('lessonContent').innerHTML =
+    '<div class="lesson-header">'
+    + '<div class="lesson-module-tag">' + lesson.module + '</div>'
+    + '<div class="lesson-title">' + lesson.title + '</div>'
+    + '<div class="lesson-meta"><span>\u23F1 ' + lesson.time + '</span><span>Урок ' + n + ' из ' + total + '</span></div>'
+    + '</div>'
+    + '<div class="lesson-body">' + lesson.content + '</div>'
+    + '<div class="lesson-nav">' + prevBtn + nextBtn + '</div>';
+
+  refreshProgress();
+  window.scrollTo(0, 0);
+  if (n === 10) {
+    var qb = document.getElementById("quizBlock");
+    if (qb && typeof quizInit_listbuilding === "function") quizInit_listbuilding();
+  }
+}
+
+// ── LESSONS DATA ──
+var lessons = {
+  1: {
+    module: 'Модуль 1 \u00b7 Источники',
+    title:  'Откуда брать email-базу легально',
+    time:   '15 мин',
+    content: `
+      <h2>Зачем собирать базу самостоятельно</h2>
+      <p>Качество email-базы напрямую определяет успех рассылки. Купленная база даёт 30-50% bounce rate и попадание в спам. Собранная вручную — менее 2% bounce и открываемость 25-40%. Каждый email в вашей базе должен быть получен с согласия владельца или из открытых публичных источников.</p>
+
+      <h2>Opt-in формы на сайте</h2>
+      <p>Самый чистый источник подписчиков — формы подписки на вашем сайте. Используйте Double Opt-in: пользователь вводит email, получает письмо с подтверждением, кликает ссылку. Это гарантирует валидность адреса и осознанное согласие.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment">&lt;!-- Пример формы Double Opt-in --&gt;</span>
+&lt;form action="/api/subscribe" method="POST"&gt;
+  &lt;input type="email" name="email"
+         placeholder="Ваш email" required&gt;
+  &lt;input type="hidden" name="list_id" value="main"&gt;
+  &lt;button type="submit"&gt;Подписаться&lt;/button&gt;
+&lt;/form&gt;
+
+<span class="comment"># Серверная логика (Python)</span>
+<span class="cmd">def</span> subscribe(email):
+    token = generate_token(email)
+    send_confirmation(email, token)
+    <span class="comment"># Добавляем в базу только после</span>
+    <span class="comment"># клика по ссылке подтверждения</span>
+    save_pending(email, token, status=<span class="str">"unconfirmed"</span>)</pre></div>
+
+      <h2>Лид-магниты — обмен ценности на email</h2>
+      <p>Лид-магнит — бесплатный материал в обмен на email. Форматы: PDF-гайд, чеклист, шаблон, мини-курс, вебинар. Конверсия формы с лид-магнитом в 3-5 раз выше обычной подписки. Ключевое правило: лид-магнит должен решать конкретную проблему целевой аудитории.</p>
+
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:grid;grid-template-columns:160px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);font-size:12px"><strong style="color:var(--accent)">PDF-гайд</strong><span style="color:var(--muted)">Конверсия 15-25%. Быстро создать, высокая ценность. Пример: "10 шагов настройки DKIM"</span></div>
+        <div style="display:grid;grid-template-columns:160px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><strong style="color:var(--accent)">Вебинар</strong><span style="color:var(--muted)">Конверсия 20-40%. Требует подготовки, но даёт самых тёплых лидов</span></div>
+        <div style="display:grid;grid-template-columns:160px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><strong style="color:var(--accent)">Чеклист</strong><span style="color:var(--muted)">Конверсия 10-20%. Легко потреблять, отлично для B2B</span></div>
+        <div style="display:grid;grid-template-columns:160px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><strong style="color:var(--accent)">Мини-курс</strong><span style="color:var(--muted)">Конверсия 25-35%. Серия из 5-7 писем, выстраивает доверие</span></div>
+      </div>
+
+      <h2>Парсинг открытых данных</h2>
+      <p>Публичные источники email-адресов: сайты компаний (страница "Контакты"), LinkedIn профили, GitHub, реестры доменов (WHOIS), отраслевые каталоги. Важно: парсинг публичных данных легален, но массовая рассылка без согласия — нет. Используйте собранные адреса для персонализированного outreach, не для массовых рассылок.</p>
+
+      <div class="note-block tip">
+        <div class="note-label">Правило 80/20 для базы</div>
+        80% усилий вкладывайте в органический сбор (opt-in формы, лид-магниты, вебинары). 20% — на парсинг и outreach. Органическая база всегда конвертирует лучше и не создаёт проблем с доставляемостью.
+      </div>
+
+      <h2>Вебинары и мероприятия</h2>
+      <p>Регистрация на вебинар — один из самых эффективных способов сбора email. Средняя конверсия landing page вебинара: 30-45%. После вебинара у вас есть не только email, но и данные об интересах (тема вебинара), уровне вовлечённости (присутствовал или нет) и контактная информация для follow-up.</p>
+
+      <div class="note-block warn">
+        <div class="note-label">GDPR и согласие</div>
+        В EU/UK обязательно получить явное согласие на email-рассылку. Галочка "Согласен на рассылку" не должна быть предзаполнена. Храните proof of consent: дату, IP, текст согласия. Штрафы GDPR: до 4% годового оборота.
+      </div>`
+  },
+  2: {
+    module: 'Модуль 1 \u00b7 Источники',
+    title:  'Парсинг и скрапинг — инструменты и границы',
+    time:   '20 мин',
+    content: `
+      <h2>Инструменты поиска email-адресов</h2>
+      <p>Существуют десятки сервисов для поиска корпоративных email. Каждый имеет свою базу данных, точность и ценовую модель. Ключевой показатель — accuracy rate (процент валидных адресов). У лучших сервисов он достигает 95%+.</p>
+
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:grid;grid-template-columns:120px 80px 80px 1fr;padding:10px 14px;background:rgba(0,229,255,.06);border:1px solid var(--accent);font-size:11px;font-weight:700;color:var(--accent)"><span>Сервис</span><span>Accuracy</span><span>Цена</span><span>Особенности</span></div>
+        <div style="display:grid;grid-template-columns:120px 80px 80px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--heading)">Hunter.io</span><span style="color:var(--muted)">92-95%</span><span style="color:var(--muted)">$49/мес</span><span style="color:var(--muted)">Поиск по домену, bulk, API, Chrome ext</span></div>
+        <div style="display:grid;grid-template-columns:120px 80px 80px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--heading)">Apollo.io</span><span style="color:var(--muted)">90-93%</span><span style="color:var(--muted)">$49/мес</span><span style="color:var(--muted)">275M+ контактов, CRM, sequences</span></div>
+        <div style="display:grid;grid-template-columns:120px 80px 80px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--heading)">Snov.io</span><span style="color:var(--muted)">88-92%</span><span style="color:var(--muted)">$39/мес</span><span style="color:var(--muted)">Drip campaigns, LinkedIn finder</span></div>
+        <div style="display:grid;grid-template-columns:120px 80px 80px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--heading)">RocketReach</span><span style="color:var(--muted)">85-90%</span><span style="color:var(--muted)">$53/мес</span><span style="color:var(--muted)">700M профилей, телефоны, API</span></div>
+        <div style="display:grid;grid-template-columns:120px 80px 80px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--heading)">Clearbit</span><span style="color:var(--muted)">90-94%</span><span style="color:var(--muted)">Custom</span><span style="color:var(--muted)">Enrichment API, интеграция с CRM</span></div>
+      </div>
+
+      <h2>Hunter.io — поиск email по домену</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Hunter.io API — поиск всех email домена</span>
+<span class="cmd">curl</span> "https://api.hunter.io/v2/domain-search?\\
+  domain=example.com&\\
+  api_key=YOUR_API_KEY" | <span class="cmd">jq</span> '.data.emails[].value'
+
+<span class="comment"># Python SDK</span>
+<span class="cmd">pip install</span> pyhunter
+
+<span class="cmd">from</span> pyhunter <span class="cmd">import</span> PyHunter
+hunter = PyHunter(<span class="str">'YOUR_API_KEY'</span>)
+
+<span class="comment"># Поиск по домену</span>
+result = hunter.domain_search(<span class="str">'example.com'</span>)
+<span class="cmd">for</span> email <span class="cmd">in</span> result[<span class="str">'emails'</span>]:
+    print(email[<span class="str">'value'</span>], email[<span class="str">'confidence'</span>])</pre></div>
+
+      <h2>LinkedIn — парсинг с ограничениями</h2>
+      <p>LinkedIn — крупнейшая база B2B контактов. Прямой скрапинг запрещён ToS. Используйте официальные инструменты: LinkedIn Sales Navigator ($99/мес), Apollo.io Chrome extension, или Phantombuster для автоматизации. Sales Navigator позволяет фильтровать по должности, компании, индустрии и географии.</p>
+
+      <h2>Собственный скрапер — Python + BeautifulSoup</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Простой скрапер email с веб-страниц</span>
+<span class="cmd">import</span> requests, re
+<span class="cmd">from</span> bs4 <span class="cmd">import</span> BeautifulSoup
+
+<span class="cmd">def</span> scrape_emails(url):
+    <span class="cmd">try</span>:
+        resp = requests.get(url, timeout=10,
+            headers={<span class="str">'User-Agent'</span>: <span class="str">'Mozilla/5.0'</span>})
+        soup = BeautifulSoup(resp.text, <span class="str">'html.parser'</span>)
+        text = soup.get_text() + <span class="str">' '</span> + resp.text
+
+        <span class="comment"># Regex для email</span>
+        pattern = r<span class="str">'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}'</span>
+        emails = set(re.findall(pattern, text))
+
+        <span class="comment"># Фильтруем мусор</span>
+        blacklist = [<span class="str">'example.com'</span>, <span class="str">'test.com'</span>, <span class="str">'domain.com'</span>]
+        emails = {e <span class="cmd">for</span> e <span class="cmd">in</span> emails
+                  <span class="cmd">if not</span> any(b <span class="cmd">in</span> e <span class="cmd">for</span> b <span class="cmd">in</span> blacklist)}
+        <span class="cmd">return</span> emails
+    <span class="cmd">except</span>:
+        <span class="cmd">return</span> set()
+
+<span class="comment"># Использование</span>
+urls = [<span class="str">"https://company.com/contact"</span>, <span class="str">"https://company.com/team"</span>]
+<span class="cmd">for</span> url <span class="cmd">in</span> urls:
+    found = scrape_emails(url)
+    print(f<span class="str">"  {url}: {len(found)} emails"</span>)</pre></div>
+
+      <div class="note-block warn">
+        <div class="note-label">Юридические рамки скрапинга</div>
+        <strong>Легально:</strong> парсинг публичных страниц (контакты, about), WHOIS данных, открытых каталогов.<br>
+        <strong>Серая зона:</strong> автоматический сбор с LinkedIn, Facebook, закрытых профилей.<br>
+        <strong>Нелегально:</strong> обход защиты (CAPTCHA, rate limits), парсинг данных за авторизацией, нарушение robots.txt.<br>
+        В США действует CFAA (Computer Fraud and Abuse Act). В EU — GDPR. Всегда проверяйте ToS сайта.
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Лучшая стратегия</div>
+        Комбинируйте 2-3 сервиса. Hunter.io для поиска по домену + Apollo.io для LinkedIn обогащения + собственный скрапер для нишевых сайтов. Проверяйте каждый email через валидатор перед добавлением в базу.
+      </div>`
+  },
+  3: {
+    module: 'Модуль 1 \u00b7 Источники',
+    title:  'Покупные базы — почему это ловушка',
+    time:   '12 мин',
+    content: `
+      <h2>Почему покупные базы кажутся привлекательными</h2>
+      <p>На первый взгляд покупка базы выглядит выгодно: 100,000 email за $200-500, мгновенный доступ, никакого ожидания. Но реальная стоимость покупной базы измеряется не ценой покупки, а потерями от её использования: заблокированные домены, попадание IP в blacklists, уничтоженная репутация отправителя.</p>
+
+      <h2>Что внутри покупной базы</h2>
+      <ul class="steps-list">
+        <li><div class="step-n">1</div><div class="step-text"><strong>Spam traps (15-30%)</strong> — адреса, созданные почтовыми провайдерами специально для ловли спамеров. Один spam trap = мгновенный blacklist. Два типа: pristine (никогда не были реальными) и recycled (заброшенные адреса, переделанные в ловушки).</div></li>
+        <li><div class="step-n">2</div><div class="step-text"><strong>Dead emails (20-40%)</strong> — несуществующие адреса, генерирующие hard bounce. При bounce rate выше 5% ESP автоматически блокирует ваш аккаунт. Типичная покупная база даёт 25-35% bounce.</div></li>
+        <li><div class="step-n">3</div><div class="step-text"><strong>Role-based адреса (10-20%)</strong> — info@, admin@, sales@ — за ними нет конкретного человека. Низкий engagement, высокий complaint rate. Многие ESP фильтруют такие адреса.</div></li>
+        <li><div class="step-n">4</div><div class="step-text"><strong>Перепроданные списки</strong> — одну базу продают десяткам покупателей. Получатели уже завалены спамом с этих адресов и моментально жмут "Spam".</div></li>
+      </ul>
+
+      <h2>ROI расчёт: покупка vs органический сбор</h2>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:grid;grid-template-columns:1fr 1fr;padding:10px 14px;background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.3);font-size:11px;font-weight:700"><span style="color:#ff6b6b">Покупная база (100K)</span><span style="color:#ff6b6b">Органическая база (10K)</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--muted)">Стоимость: $300</span><span style="color:var(--muted)">Стоимость: $500 (лид-магнит + реклама)</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--muted)">Bounce rate: 30%</span><span style="color:var(--muted)">Bounce rate: 1.5%</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--muted)">Open rate: 2-5%</span><span style="color:var(--muted)">Open rate: 25-40%</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--muted)">Spam complaints: 5-15%</span><span style="color:var(--muted)">Spam complaints: 0.05%</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--muted)">Конверсия: 0.01%</span><span style="color:var(--muted)">Конверсия: 2-5%</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;padding:8px 14px;background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.2);border-top:none;font-size:12px;font-weight:600"><span style="color:#ff6b6b">Итого: 10 лидов + blacklist</span><span style="color:var(--accent3)">Итого: 200-500 лидов</span></div>
+      </div>
+
+      <h2>Последствия использования покупной базы</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Типичный сценарий после рассылки по покупной базе:</span>
+
+День 1: Отправлено 100,000 писем
+        → 30,000 hard bounce (30%)
+        → ESP блокирует аккаунт
+
+День 2: IP попадает в Spamhaus SBL
+        → Все домены на этом IP заблокированы
+        → Письма не доходят даже до лояльных клиентов
+
+День 3-7: Попадание в Barracuda, SpamCop, SORBS
+          → Восстановление репутации: 2-6 месяцев
+          → Стоимость новых IP: $50-200/мес
+
+<span class="comment"># Проверить свой IP в blacklists:</span>
+<span class="cmd">curl</span> "https://api.mxtoolbox.com/api/v1/lookup/\\
+  blacklist/YOUR_IP" -H "Authorization: YOUR_KEY"</pre></div>
+
+      <div class="note-block warn">
+        <div class="note-label">Реальная цена покупной базы</div>
+        $300 за базу + $200/мес за новые IP + 3-6 месяцев на восстановление репутации + потерянные клиенты от недоставленных писем = <strong>$3,000-10,000 реальных потерь</strong>. Органический сбор 10K подписчиков за те же деньги даст в 50 раз больше конверсий.
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Единственный случай когда можно "купить"</div>
+        Покупка компании или её клиентской базы в рамках M&A сделки. При этом обязательно: re-confirmation campaign (запросить повторное согласие), валидация всех адресов, удаление неактивных (6+ месяцев без открытий). Даже в этом случае bounce rate будет 10-15%.
+      </div>`
+  },
+  4: {
+    module: 'Модуль 2 \u00b7 Валидация',
+    title:  'Email-валидация: зачем и как',
+    time:   '15 мин',
+    content: `
+      <h2>Зачем валидировать email-адреса</h2>
+      <p>Каждый невалидный email в вашей базе — это удар по sender reputation. ISP (Gmail, Outlook, Yahoo) отслеживают bounce rate отправителя. При превышении 2% — письма начинают попадать в спам. При 5%+ — полная блокировка. Валидация перед рассылкой — обязательный этап, не опция.</p>
+
+      <h2>Уровни email-валидации</h2>
+      <ul class="steps-list">
+        <li><div class="step-n">1</div><div class="step-text"><strong>Syntax check</strong> — проверка формата: есть @, домен с точкой, нет пробелов и спецсимволов. Отсекает очевидные ошибки: "user@gmailcom", "user @gmail.com". Мгновенная проверка, 0 API запросов.</div></li>
+        <li><div class="step-n">2</div><div class="step-text"><strong>MX record check</strong> — DNS запрос на MX записи домена. Если у домена нет MX записей — он не может принимать почту. Отсекает несуществующие и запаркованные домены. Быстро, бесплатно.</div></li>
+        <li><div class="step-n">3</div><div class="step-text"><strong>SMTP verification</strong> — подключение к почтовому серверу и проверка существования ящика через RCPT TO. Самый точный метод, но некоторые серверы (Gmail, Outlook) всегда отвечают 250 OK (catch-all). Требует корректного PTR/HELO.</div></li>
+        <li><div class="step-n">4</div><div class="step-text"><strong>Disposable detection</strong> — проверка на временные email (guerrillamail, tempmail, 10minutemail). База 30,000+ одноразовых доменов. Такие адреса перестают работать через часы.</div></li>
+      </ul>
+
+      <h2>Python: базовая валидация</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="cmd">import</span> re, dns.resolver, smtplib, socket
+
+<span class="cmd">def</span> validate_email(email):
+    result = {<span class="str">'email'</span>: email, <span class="str">'valid'</span>: False, <span class="str">'reason'</span>: <span class="str">''</span>}
+
+    <span class="comment"># 1. Syntax check</span>
+    pattern = r<span class="str">'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'</span>
+    <span class="cmd">if not</span> re.match(pattern, email):
+        result[<span class="str">'reason'</span>] = <span class="str">'invalid_syntax'</span>
+        <span class="cmd">return</span> result
+
+    domain = email.split(<span class="str">'@'</span>)[1]
+
+    <span class="comment"># 2. MX record check</span>
+    <span class="cmd">try</span>:
+        mx_records = dns.resolver.resolve(domain, <span class="str">'MX'</span>)
+        mx_host = str(mx_records[0].exchange)
+    <span class="cmd">except</span>:
+        result[<span class="str">'reason'</span>] = <span class="str">'no_mx_record'</span>
+        <span class="cmd">return</span> result
+
+    <span class="comment"># 3. SMTP verification</span>
+    <span class="cmd">try</span>:
+        smtp = smtplib.SMTP(mx_host, 25, timeout=10)
+        smtp.helo(<span class="str">'verify.example.com'</span>)
+        smtp.mail(<span class="str">'test@verify.example.com'</span>)
+        code, msg = smtp.rcpt(email)
+        smtp.quit()
+
+        <span class="cmd">if</span> code == 250:
+            result[<span class="str">'valid'</span>] = True
+        <span class="cmd">else</span>:
+            result[<span class="str">'reason'</span>] = f<span class="str">'smtp_rejected_{code}'</span>
+    <span class="cmd">except</span> Exception <span class="cmd">as</span> e:
+        result[<span class="str">'reason'</span>] = f<span class="str">'smtp_error: {e}'</span>
+
+    <span class="cmd">return</span> result
+
+<span class="comment"># Использование</span>
+emails = [<span class="str">"user@gmail.com"</span>, <span class="str">"fake@nonexistent.xyz"</span>]
+<span class="cmd">for</span> e <span class="cmd">in</span> emails:
+    r = validate_email(e)
+    print(f<span class="str">"  {r['email']}: {'OK' if r['valid'] else r['reason']}"</span>)</pre></div>
+
+      <div class="note-block info">
+        <div class="note-label">Catch-all домены</div>
+        Некоторые серверы принимают письма на любой адрес (catch-all). SMTP проверка всегда покажет 250 OK даже для несуществующих ящиков. Для таких доменов используйте отдельную метку "catch-all" и отправляйте с осторожностью — bounce rate может быть выше.
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Регулярность валидации</div>
+        Валидируйте базу минимум раз в 3 месяца. Email-адреса "умирают" со скоростью 2-3% в месяц: люди увольняются, компании закрываются, домены истекают. База без ревалидации за 6 месяцев теряет 15-20% валидных адресов.
+      </div>`
+  },
+  5: {
+    module: 'Модуль 2 \u00b7 Валидация',
+    title:  'Инструменты валидации: ZeroBounce, Reoon, скрипты',
+    time:   '18 мин',
+    content: `
+      <h2>Сравнение сервисов валидации</h2>
+      <p>Выбор валидатора зависит от объёма базы, бюджета и требуемой точности. Все сервисы используют комбинацию MX check, SMTP verify, disposable detection и AI-scoring. Разница — в размере баз spam-traps и скорости обработки.</p>
+
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:grid;grid-template-columns:120px 80px 100px 80px 1fr;padding:10px 14px;background:rgba(0,229,255,.06);border:1px solid var(--accent);font-size:11px;font-weight:700;color:var(--accent)"><span>Сервис</span><span>Точность</span><span>Цена/1000</span><span>API</span><span>Особенности</span></div>
+        <div style="display:grid;grid-template-columns:120px 80px 100px 80px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--heading)">ZeroBounce</span><span style="color:var(--accent3)">98%</span><span style="color:var(--muted)">$1.50</span><span style="color:var(--accent3)">REST</span><span style="color:var(--muted)">AI scoring, abuse detection, append data</span></div>
+        <div style="display:grid;grid-template-columns:120px 80px 100px 80px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--heading)">Reoon</span><span style="color:var(--accent3)">96%</span><span style="color:var(--muted)">$0.50</span><span style="color:var(--accent3)">REST</span><span style="color:var(--muted)">Дёшево, bulk upload, быстрый</span></div>
+        <div style="display:grid;grid-template-columns:120px 80px 100px 80px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--heading)">NeverBounce</span><span style="color:var(--accent3)">97%</span><span style="color:var(--muted)">$3.00</span><span style="color:var(--accent3)">REST</span><span style="color:var(--muted)">Real-time API, интеграции с ESP</span></div>
+        <div style="display:grid;grid-template-columns:120px 80px 100px 80px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--heading)">BriteVerify</span><span style="color:var(--accent3)">96%</span><span style="color:var(--muted)">$4.00</span><span style="color:var(--accent3)">REST</span><span style="color:var(--muted)">Enterprise, real-time forms</span></div>
+        <div style="display:grid;grid-template-columns:120px 80px 100px 80px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--heading)">DIY скрипт</span><span style="color:var(--muted)">80-85%</span><span style="color:var(--accent3)">$0</span><span style="color:var(--muted)">-</span><span style="color:var(--muted)">Бесплатно, но нет spam trap detection</span></div>
+      </div>
+
+      <h2>ZeroBounce API — интеграция</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># ZeroBounce API — валидация одного email</span>
+<span class="cmd">import</span> requests
+
+API_KEY = <span class="str">"YOUR_ZEROBOUNCE_KEY"</span>
+
+<span class="cmd">def</span> validate_zerobounce(email):
+    url = <span class="str">"https://api.zerobounce.net/v2/validate"</span>
+    params = {
+        <span class="str">"api_key"</span>: API_KEY,
+        <span class="str">"email"</span>: email,
+        <span class="str">"ip_address"</span>: <span class="str">""</span>
+    }
+    resp = requests.get(url, params=params)
+    data = resp.json()
+
+    <span class="comment"># Статусы: valid, invalid, catch-all,</span>
+    <span class="comment"># spamtrap, abuse, do_not_mail, unknown</span>
+    <span class="cmd">return</span> {
+        <span class="str">'status'</span>: data[<span class="str">'status'</span>],
+        <span class="str">'sub_status'</span>: data.get(<span class="str">'sub_status'</span>, <span class="str">''</span>),
+        <span class="str">'free_email'</span>: data.get(<span class="str">'free_email'</span>, False),
+        <span class="str">'did_you_mean'</span>: data.get(<span class="str">'did_you_mean'</span>, <span class="str">''</span>)
+    }
+
+<span class="comment"># Bulk валидация — загрузка файла</span>
+<span class="cmd">def</span> bulk_validate(csv_path):
+    url = <span class="str">"https://bulkapi.zerobounce.net/v2/sendfile"</span>
+    <span class="cmd">with</span> open(csv_path, <span class="str">'rb'</span>) <span class="cmd">as</span> f:
+        resp = requests.post(url,
+            data={<span class="str">'api_key'</span>: API_KEY, <span class="str">'email_address_column'</span>: 1},
+            files={<span class="str">'file'</span>: f})
+    <span class="cmd">return</span> resp.json()[<span class="str">'file_id'</span>]  <span class="comment"># Используйте для скачивания результата</span></pre></div>
+
+      <h2>Reoon — бюджетная альтернатива</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Reoon API — дешевле ZeroBounce в 3 раза</span>
+<span class="cmd">import</span> requests
+
+<span class="cmd">def</span> validate_reoon(email):
+    url = <span class="str">"https://emailverifier.reoon.com/api/v1/verify"</span>
+    params = {
+        <span class="str">"email"</span>: email,
+        <span class="str">"key"</span>: <span class="str">"YOUR_REOON_KEY"</span>,
+        <span class="str">"mode"</span>: <span class="str">"power"</span>  <span class="comment"># quick | power | bounce</span>
+    }
+    resp = requests.get(url, params=params)
+    data = resp.json()
+
+    <span class="comment"># status: valid, invalid, disposable,</span>
+    <span class="comment"># role_account, unknown</span>
+    <span class="cmd">return</span> data[<span class="str">'status'</span>], data.get(<span class="str">'is_disposable'</span>, False)</pre></div>
+
+      <h2>Собственный валидатор — полный скрипт</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># full_validator.py — бесплатная валидация</span>
+<span class="cmd">import</span> csv, re, dns.resolver, smtplib, sys
+
+DISPOSABLE_FILE = <span class="str">"disposable_domains.txt"</span>
+<span class="comment"># Скачать: github.com/disposable-email-domains/</span>
+
+<span class="cmd">def</span> load_disposable():
+    <span class="cmd">try</span>:
+        <span class="cmd">with</span> open(DISPOSABLE_FILE) <span class="cmd">as</span> f:
+            <span class="cmd">return</span> set(line.strip() <span class="cmd">for</span> line <span class="cmd">in</span> f)
+    <span class="cmd">except</span>: <span class="cmd">return</span> set()
+
+<span class="cmd">def</span> validate_batch(input_csv, output_csv):
+    disposable = load_disposable()
+    results = []
+
+    <span class="cmd">with</span> open(input_csv) <span class="cmd">as</span> f:
+        <span class="cmd">for</span> row <span class="cmd">in</span> csv.reader(f):
+            email = row[0].strip().lower()
+            status = check_email(email, disposable)
+            results.append([email, status])
+            print(f<span class="str">"  {email}: {status}"</span>)
+
+    <span class="cmd">with</span> open(output_csv, <span class="str">'w'</span>, newline=<span class="str">''</span>) <span class="cmd">as</span> f:
+        w = csv.writer(f)
+        w.writerow([<span class="str">'email'</span>, <span class="str">'status'</span>])
+        w.writerows(results)
+
+<span class="comment"># Запуск: python full_validator.py input.csv output.csv</span></pre></div>
+
+      <div class="note-block tip">
+        <div class="note-label">Оптимальная стратегия</div>
+        Для баз до 5K — DIY скрипт + ручная проверка подозрительных. Для 5K-50K — Reoon ($25-50). Для 50K+ — ZeroBounce (spam trap detection критичен на больших объёмах). Всегда валидируйте перед каждой рассылкой, даже если база "свежая".
+      </div>`
+  },
+  6: {
+    module: 'Модуль 2 \u00b7 Валидация',
+    title:  'Чистка базы перед рассылкой — чеклист',
+    time:   '12 мин',
+    content: `
+      <h2>Полный чеклист очистки базы</h2>
+      <p>Перед каждой рассылкой база должна пройти 7 этапов очистки. Пропуск любого этапа может стоить вам sender reputation. Порядок важен — каждый следующий шаг работает с результатом предыдущего.</p>
+
+      <ul class="steps-list">
+        <li><div class="step-n">1</div><div class="step-text"><strong>Удаление дубликатов</strong> — case-insensitive сравнение. User@Gmail.com и user@gmail.com — один адрес. Типичная экономия: 3-8% базы.</div></li>
+        <li><div class="step-n">2</div><div class="step-text"><strong>Syntax cleanup</strong> — удаление пробелов, невидимых символов (\\u200b), проверка формата. Автокоррекция: gmial.com → gmail.com, yahooo.com → yahoo.com.</div></li>
+        <li><div class="step-n">3</div><div class="step-text"><strong>Удаление role-based адресов</strong> — info@, admin@, support@, webmaster@, noreply@. За ними нет человека, высокий complaint rate.</div></li>
+        <li><div class="step-n">4</div><div class="step-text"><strong>Удаление disposable email</strong> — 10minutemail, guerrillamail, tempmail. 30,000+ доменов в базе.</div></li>
+        <li><div class="step-n">5</div><div class="step-text"><strong>MX + SMTP валидация</strong> — проверка существования домена и ящика. Удаление hard bounce адресов.</div></li>
+        <li><div class="step-n">6</div><div class="step-text"><strong>Удаление hard bounce history</strong> — если адрес bounced в прошлых рассылках — удалить навсегда. Повторная отправка на bounced адрес ухудшает репутацию.</div></li>
+        <li><div class="step-n">7</div><div class="step-text"><strong>Catch-all маркировка</strong> — пометить адреса на catch-all доменах. Отправлять в отдельном потоке с мониторингом bounce.</div></li>
+      </ul>
+
+      <h2>Python-скрипт полной очистки</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># clean_list.py — полная очистка email базы</span>
+<span class="cmd">import</span> csv, re
+
+ROLE_PREFIXES = [
+    <span class="str">'info'</span>, <span class="str">'admin'</span>, <span class="str">'support'</span>, <span class="str">'sales'</span>,
+    <span class="str">'webmaster'</span>, <span class="str">'postmaster'</span>, <span class="str">'noreply'</span>,
+    <span class="str">'no-reply'</span>, <span class="str">'abuse'</span>, <span class="str">'help'</span>, <span class="str">'contact'</span>,
+    <span class="str">'office'</span>, <span class="str">'billing'</span>, <span class="str">'marketing'</span>
+]
+
+TYPO_FIXES = {
+    <span class="str">'gmial.com'</span>: <span class="str">'gmail.com'</span>,
+    <span class="str">'gamil.com'</span>: <span class="str">'gmail.com'</span>,
+    <span class="str">'gmai.com'</span>: <span class="str">'gmail.com'</span>,
+    <span class="str">'yahooo.com'</span>: <span class="str">'yahoo.com'</span>,
+    <span class="str">'yaho.com'</span>: <span class="str">'yahoo.com'</span>,
+    <span class="str">'hotmal.com'</span>: <span class="str">'hotmail.com'</span>,
+    <span class="str">'outlok.com'</span>: <span class="str">'outlook.com'</span>,
+}
+
+<span class="cmd">def</span> clean_email(email):
+    <span class="comment"># Lowercase + strip</span>
+    email = email.strip().lower()
+    email = email.replace(<span class="str">'\\u200b'</span>, <span class="str">''</span>)  <span class="comment"># zero-width space</span>
+
+    <span class="comment"># Typo correction</span>
+    <span class="cmd">if</span> <span class="str">'@'</span> <span class="cmd">in</span> email:
+        local, domain = email.split(<span class="str">'@'</span>, 1)
+        domain = TYPO_FIXES.get(domain, domain)
+        email = f<span class="str">"{local}@{domain}"</span>
+    <span class="cmd">return</span> email
+
+<span class="cmd">def</span> is_role_based(email):
+    local = email.split(<span class="str">'@'</span>)[0]
+    <span class="cmd">return</span> local <span class="cmd">in</span> ROLE_PREFIXES
+
+<span class="cmd">def</span> clean_list(input_file, output_file):
+    seen = set()
+    clean = []
+    stats = {<span class="str">'total'</span>: 0, <span class="str">'dupes'</span>: 0, <span class="str">'syntax'</span>: 0,
+             <span class="str">'role'</span>: 0, <span class="str">'clean'</span>: 0}
+
+    <span class="cmd">with</span> open(input_file) <span class="cmd">as</span> f:
+        <span class="cmd">for</span> row <span class="cmd">in</span> csv.reader(f):
+            stats[<span class="str">'total'</span>] += 1
+            email = clean_email(row[0])
+
+            <span class="cmd">if</span> email <span class="cmd">in</span> seen:
+                stats[<span class="str">'dupes'</span>] += 1; <span class="cmd">continue</span>
+            seen.add(email)
+
+            <span class="cmd">if not</span> re.match(
+                r<span class="str">'^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$'</span>, email):
+                stats[<span class="str">'syntax'</span>] += 1; <span class="cmd">continue</span>
+
+            <span class="cmd">if</span> is_role_based(email):
+                stats[<span class="str">'role'</span>] += 1; <span class="cmd">continue</span>
+
+            clean.append(email)
+            stats[<span class="str">'clean'</span>] += 1
+
+    <span class="cmd">with</span> open(output_file, <span class="str">'w'</span>) <span class="cmd">as</span> f:
+        <span class="cmd">for</span> e <span class="cmd">in</span> clean:
+            f.write(e + <span class="str">'\\n'</span>)
+
+    print(f<span class="str">"Итого: {stats}"</span>)
+
+<span class="comment"># Запуск</span>
+clean_list(<span class="str">"raw_emails.csv"</span>, <span class="str">"clean_emails.txt"</span>)</pre></div>
+
+      <div class="note-block info">
+        <div class="note-label">Автокоррекция доменов</div>
+        Опечатки в доменах — частая причина bounce. "gmial.com" вместо "gmail.com" встречается в 1-3% форм подписки. Автоматическая коррекция 10 самых частых опечаток спасает 500-1500 адресов на каждые 100K.
+      </div>
+
+      <div class="note-block warn">
+        <div class="note-label">Hard bounce = удалить навсегда</div>
+        Если email вернул hard bounce (550 User not found) — удалите его из базы <strong>навсегда</strong>. Не "на время", не "попробуем позже". Повторная отправка на hard bounce адрес — сигнал для ISP что вы не управляете своей базой. Ведите глобальный suppression list.
+      </div>`
+  },
+  7: {
+    module: 'Модуль 3 \u00b7 Сегментация',
+    title:  'Сегментация базы для максимальной доставляемости',
+    time:   '15 мин',
+    content: `
+      <h2>Зачем сегментировать базу</h2>
+      <p>Отправка одного письма всей базе — главная ошибка email-маркетинга. Сегментация увеличивает open rate на 14%, click rate на 100% и снижает unsubscribe на 9% (данные Mailchimp). Для sender reputation сегментация критична: отправка релевантного контента = меньше spam complaints = лучше inbox placement.</p>
+
+      <h2>4 типа сегментации</h2>
+
+      <h3>1. По домену провайдера</h3>
+      <p>Gmail, Outlook, Yahoo используют разные алгоритмы фильтрации. Разделяйте потоки: отдельная кампания для @gmail.com, отдельная для @outlook.com. Это позволяет настраивать throttling и контент под каждый ISP.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Сегментация по домену</span>
+<span class="cmd">def</span> segment_by_domain(emails):
+    segments = {
+        <span class="str">'gmail'</span>: [],
+        <span class="str">'outlook'</span>: [],  <span class="comment"># + hotmail, live, msn</span>
+        <span class="str">'yahoo'</span>: [],    <span class="comment"># + aol, ymail</span>
+        <span class="str">'corporate'</span>: [],
+        <span class="str">'other'</span>: []
+    }
+
+    GMAIL = {<span class="str">'gmail.com'</span>, <span class="str">'googlemail.com'</span>}
+    OUTLOOK = {<span class="str">'outlook.com'</span>, <span class="str">'hotmail.com'</span>, <span class="str">'live.com'</span>, <span class="str">'msn.com'</span>}
+    YAHOO = {<span class="str">'yahoo.com'</span>, <span class="str">'aol.com'</span>, <span class="str">'ymail.com'</span>}
+    FREE = GMAIL | OUTLOOK | YAHOO
+
+    <span class="cmd">for</span> email <span class="cmd">in</span> emails:
+        domain = email.split(<span class="str">'@'</span>)[1]
+        <span class="cmd">if</span> domain <span class="cmd">in</span> GMAIL: segments[<span class="str">'gmail'</span>].append(email)
+        <span class="cmd">elif</span> domain <span class="cmd">in</span> OUTLOOK: segments[<span class="str">'outlook'</span>].append(email)
+        <span class="cmd">elif</span> domain <span class="cmd">in</span> YAHOO: segments[<span class="str">'yahoo'</span>].append(email)
+        <span class="cmd">elif</span> domain <span class="cmd">not in</span> FREE: segments[<span class="str">'corporate'</span>].append(email)
+        <span class="cmd">else</span>: segments[<span class="str">'other'</span>].append(email)
+
+    <span class="cmd">for</span> seg, lst <span class="cmd">in</span> segments.items():
+        print(f<span class="str">"  {seg}: {len(lst)} emails"</span>)
+    <span class="cmd">return</span> segments</pre></div>
+
+      <h3>2. По активности (engagement)</h3>
+      <p>Разделяйте подписчиков на 4 группы по engagement за последние 90 дней:</p>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:grid;grid-template-columns:140px 1fr;padding:8px 14px;background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.2);font-size:12px"><strong style="color:var(--accent3)">Hot (открыл 3+)</strong><span style="color:var(--muted)">Основной сегмент. Отправлять первым для разогрева IP. 2-3 раза в неделю.</span></div>
+        <div style="display:grid;grid-template-columns:140px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><strong style="color:var(--accent)">Warm (открыл 1-2)</strong><span style="color:var(--muted)">Вовлечённые, но не активные. 1 раз в неделю. Персонализация важна.</span></div>
+        <div style="display:grid;grid-template-columns:140px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><strong style="color:var(--muted)">Cold (0 открытий)</strong><span style="color:var(--muted)">Не открывали 90 дней. Re-engagement campaign или удаление.</span></div>
+        <div style="display:grid;grid-template-columns:140px 1fr;padding:8px 14px;background:rgba(255,107,107,.05);border:1px solid rgba(255,107,107,.2);border-top:none;font-size:12px"><strong style="color:#ff6b6b">Dead (0 за 180д)</strong><span style="color:var(--muted)">Удалить из базы. Отправка снижает sender reputation.</span></div>
+      </div>
+
+      <h3>3. По источнику подписки</h3>
+      <p>Подписчики из разных источников имеют разный уровень вовлечённости. Opt-in с сайта — самые тёплые. Парсинг LinkedIn — самые холодные. Сегментируйте по источнику и адаптируйте тон и содержание писем.</p>
+
+      <h3>4. По корпоративному домену</h3>
+      <p>B2B сегментация: группируйте подписчиков по компании (домен). Если у вас 5 контактов из одной компании — не отправляйте всем одновременно. Распределите по дням. Множественные spam complaints от одного домена = быстрый blacklist.</p>
+
+      <div class="note-block tip">
+        <div class="note-label">Правило первого письма</div>
+        Новую кампанию всегда начинайте с Hot сегмента. Высокий open rate на первых 1000 писем "разогревает" IP и домен. Затем Warm, затем Cold. Никогда не начинайте с холодного сегмента — это прямой путь в спам.
+      </div>`
+  },
+  8: {
+    module: 'Модуль 3 \u00b7 Сегментация',
+    title:  'Реактивация неактивных подписчиков',
+    time:   '14 мин',
+    content: `
+      <h2>Когда подписчик считается неактивным</h2>
+      <p>Неактивный подписчик — тот, кто не открывал и не кликал ваши письма 90+ дней. В среднем базе теряет 25-30% активных подписчиков каждый год. Важно: не все "неактивные" мертвы — некоторые читают письма без загрузки картинок (что не трекается как open). До удаления дайте последний шанс через re-engagement кампанию.</p>
+
+      <h2>Sunset Policy — правила вывода из базы</h2>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:grid;grid-template-columns:120px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);font-size:12px"><strong style="color:var(--accent)">90 дней</strong><span style="color:var(--muted)">Перевести в сегмент Cold. Снизить частоту до 1 раз в 2 недели.</span></div>
+        <div style="display:grid;grid-template-columns:120px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><strong style="color:var(--accent)">120 дней</strong><span style="color:var(--muted)">Запустить re-engagement кампанию (серия из 3 писем).</span></div>
+        <div style="display:grid;grid-template-columns:120px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><strong style="color:var(--accent)">150 дней</strong><span style="color:var(--muted)">Последнее предупреждение: "Мы удалим вас из рассылки через 7 дней".</span></div>
+        <div style="display:grid;grid-template-columns:120px 1fr;padding:8px 14px;background:rgba(255,107,107,.05);border:1px solid rgba(255,107,107,.2);border-top:none;font-size:12px"><strong style="color:#ff6b6b">180 дней</strong><span style="color:var(--muted)">Удаление из активной базы. Перенос в архив (не удалять совсем — для аналитики).</span></div>
+      </div>
+
+      <h2>Re-engagement кампания — 3 письма</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Серия из 3 писем для реактивации</span>
+
+<span class="comment"># Письмо 1 (день 0): "Мы соскучились"</span>
+Subject: <span class="str">"{name}, давно не виделись — у нас новое для вас"</span>
+<span class="comment"># Персонализация + ценный контент</span>
+<span class="comment"># CTA: ссылка на лучшую статью/ресурс</span>
+
+<span class="comment"># Письмо 2 (день 5): "Специальное предложение"</span>
+Subject: <span class="str">"Только для вас: {скидка/бонус} — действует 48ч"</span>
+<span class="comment"># Эксклюзивная ценность для реактивации</span>
+<span class="comment"># CTA: воспользоваться предложением</span>
+
+<span class="comment"># Письмо 3 (день 12): "Последний шанс"</span>
+Subject: <span class="str">"Мы удалим вас из рассылки через 7 дней"</span>
+<span class="comment"># Прямое предупреждение + кнопка "Остаться"</span>
+<span class="comment"># CTA: "Да, продолжайте отправлять" (ссылка-подтверждение)</span>
+
+<span class="comment"># Статистика реактивации:</span>
+<span class="comment"># Письмо 1: открывают 8-12%</span>
+<span class="comment"># Письмо 2: открывают 5-8% (кумулятивно 13-18%)</span>
+<span class="comment"># Письмо 3: открывают 3-5% (кумулятивно 15-22%)</span>
+<span class="comment"># Итого: 15-22% реактивация = 15-22% базы спасено</span></pre></div>
+
+      <h2>Автоматизация Sunset Policy в MailWizz</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># MailWizz API — выгрузка неактивных подписчиков</span>
+<span class="cmd">import</span> requests
+<span class="cmd">from</span> datetime <span class="cmd">import</span> datetime, timedelta
+
+MW_URL = <span class="str">"https://mailwizz.example.com/api"</span>
+MW_KEY = <span class="str">"YOUR_MAILWIZZ_API_KEY"</span>
+
+<span class="cmd">def</span> get_inactive(list_uid, days=90):
+    cutoff = (datetime.now() - timedelta(days=days)).strftime(<span class="str">'%Y-%m-%d'</span>)
+
+    resp = requests.get(
+        f<span class="str">"{MW_URL}/lists/{list_uid}/subscribers"</span>,
+        params={<span class="str">'page_size'</span>: 1000, <span class="str">'status'</span>: <span class="str">'confirmed'</span>},
+        headers={<span class="str">'X-Api-Key'</span>: MW_KEY}
+    )
+
+    subscribers = resp.json()[<span class="str">'data'</span>][<span class="str">'records'</span>]
+    inactive = []
+
+    <span class="cmd">for</span> sub <span class="cmd">in</span> subscribers:
+        last_open = sub.get(<span class="str">'last_open'</span>, <span class="str">''</span>)
+        <span class="cmd">if not</span> last_open <span class="cmd">or</span> last_open < cutoff:
+            inactive.append(sub[<span class="str">'EMAIL'</span>])
+
+    print(f<span class="str">"  Неактивных ({days}д): {len(inactive)}/{len(subscribers)}"</span>)
+    <span class="cmd">return</span> inactive</pre></div>
+
+      <div class="note-block warn">
+        <div class="note-label">Не бойтесь удалять</div>
+        Удаление 20% базы звучит страшно, но это улучшает метрики оставшихся 80%. Меньше отправлено → выше open rate → лучше sender reputation → больше писем в inbox. База 10K активных > база 50K мёртвых.
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Текстовое письмо для реактивации</div>
+        Re-engagement письма лучше отправлять в plain text формате (без HTML). Текстовые письма проходят спам-фильтры лучше и выглядят как личное сообщение. Open rate текстовых писем на 25% выше HTML.
+      </div>`
+  },
+  9: {
+    module: 'Модуль 4 \u00b7 Практика',
+    title:  'Автоматический pipeline: сбор → валидация → сегментация',
+    time:   '20 мин',
+    content: `
+      <h2>Архитектура pipeline</h2>
+      <p>Автоматический pipeline устраняет ручную работу: новый email попадает в систему через форму или API, проходит валидацию, получает метки качества и автоматически распределяется в нужный сегмент. Весь процесс занимает 5-30 секунд вместо ручной обработки.</p>
+
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:grid;grid-template-columns:40px 1fr;padding:10px 14px;background:rgba(0,229,255,.06);border:1px solid var(--accent);font-size:12px;align-items:center"><span style="color:var(--accent);font-weight:700;font-family:var(--font-mono)">1</span><span style="color:var(--heading)"><strong>Сбор</strong> — Opt-in форма / API / CSV upload → webhook в n8n</span></div>
+        <div style="display:grid;grid-template-columns:40px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;align-items:center"><span style="color:var(--accent);font-weight:700;font-family:var(--font-mono)">2</span><span style="color:var(--heading)"><strong>Очистка</strong> — Syntax fix, dedupe, role-based filter</span></div>
+        <div style="display:grid;grid-template-columns:40px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;align-items:center"><span style="color:var(--accent);font-weight:700;font-family:var(--font-mono)">3</span><span style="color:var(--heading)"><strong>Валидация</strong> — ZeroBounce/Reoon API → valid/invalid/catch-all</span></div>
+        <div style="display:grid;grid-template-columns:40px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;align-items:center"><span style="color:var(--accent);font-weight:700;font-family:var(--font-mono)">4</span><span style="color:var(--heading)"><strong>Обогащение</strong> — Clearbit/Apollo → имя, компания, должность</span></div>
+        <div style="display:grid;grid-template-columns:40px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;align-items:center"><span style="color:var(--accent);font-weight:700;font-family:var(--font-mono)">5</span><span style="color:var(--heading)"><strong>Сегментация</strong> — По домену + источнику → нужный лист в MailWizz</span></div>
+        <div style="display:grid;grid-template-columns:40px 1fr;padding:10px 14px;background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.2);border-top:none;font-size:12px;align-items:center"><span style="color:var(--accent3);font-weight:700;font-family:var(--font-mono)">6</span><span style="color:var(--heading)"><strong>Доставка</strong> — Автоматическое добавление в MailWizz/Smartlead через API</span></div>
+      </div>
+
+      <h2>n8n Workflow — полный pipeline</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># n8n workflow JSON (импортировать через UI)</span>
+<span class="comment"># Webhook → Clean → Validate → Enrich → Segment → Add to ESP</span>
+
+<span class="comment"># Нода 1: Webhook Trigger</span>
+<span class="comment"># URL: https://n8n.example.com/webhook/new-email</span>
+<span class="comment"># Method: POST</span>
+<span class="comment"># Body: { "email": "user@example.com", "source": "website" }</span>
+
+<span class="comment"># Нода 2: Function — Очистка</span>
+const email = $input.first().json.email
+  .trim().toLowerCase()
+  .replace(/\\u200b/g, <span class="str">''</span>);
+
+<span class="comment">// Typo fix</span>
+const fixes = {<span class="str">'gmial.com'</span>:<span class="str">'gmail.com'</span>, <span class="str">'hotmal.com'</span>:<span class="str">'hotmail.com'</span>};
+const [local, domain] = email.split(<span class="str">'@'</span>);
+const fixed = fixes[domain] || domain;
+const cleanEmail = local + <span class="str">'@'</span> + fixed;
+
+<span class="comment">// Role-based check</span>
+const roles = [<span class="str">'info'</span>,<span class="str">'admin'</span>,<span class="str">'support'</span>,<span class="str">'noreply'</span>,<span class="str">'webmaster'</span>];
+<span class="cmd">if</span> (roles.includes(local)) {
+  <span class="cmd">return</span> [{json: {skip: true, reason: <span class="str">'role_based'</span>}}];
+}
+<span class="cmd">return</span> [{json: {email: cleanEmail, source: $input.first().json.source}}];
+
+<span class="comment"># Нода 3: HTTP Request — ZeroBounce</span>
+<span class="comment"># GET https://api.zerobounce.net/v2/validate</span>
+<span class="comment"># ?api_key=KEY&email={{$json.email}}</span>
+
+<span class="comment"># Нода 4: IF — status === "valid"</span>
+<span class="comment"># True → продолжить, False → лог + стоп</span>
+
+<span class="comment"># Нода 5: HTTP Request — MailWizz API</span>
+<span class="comment"># POST /api/lists/{list_uid}/subscribers</span>
+<span class="comment"># Body: { "EMAIL": email, "FNAME": name }</span></pre></div>
+
+      <h2>Python-версия pipeline</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># pipeline.py — автономный pipeline</span>
+<span class="cmd">import</span> requests, csv, json, time
+
+CONFIG = {
+    <span class="str">'zerobounce_key'</span>: <span class="str">'YOUR_KEY'</span>,
+    <span class="str">'mailwizz_url'</span>: <span class="str">'https://mw.example.com/api'</span>,
+    <span class="str">'mailwizz_key'</span>: <span class="str">'YOUR_MW_KEY'</span>,
+    <span class="str">'lists'</span>: {
+        <span class="str">'gmail'</span>: <span class="str">'list_uid_gmail'</span>,
+        <span class="str">'outlook'</span>: <span class="str">'list_uid_outlook'</span>,
+        <span class="str">'corporate'</span>: <span class="str">'list_uid_corp'</span>,
+        <span class="str">'other'</span>: <span class="str">'list_uid_other'</span>
+    }
+}
+
+<span class="cmd">def</span> pipeline(input_csv):
+    <span class="cmd">with</span> open(input_csv) <span class="cmd">as</span> f:
+        emails = [row[0].strip().lower() <span class="cmd">for</span> row <span class="cmd">in</span> csv.reader(f)]
+
+    print(f<span class="str">"  Загружено: {len(emails)}"</span>)
+
+    <span class="comment"># Этап 1: Очистка</span>
+    clean = dedupe_and_clean(emails)
+    print(f<span class="str">"  После очистки: {len(clean)}"</span>)
+
+    <span class="comment"># Этап 2: Валидация</span>
+    valid = []
+    <span class="cmd">for</span> email <span class="cmd">in</span> clean:
+        status = validate_zerobounce(email)
+        <span class="cmd">if</span> status <span class="cmd">in</span> (<span class="str">'valid'</span>, <span class="str">'catch-all'</span>):
+            valid.append((email, status))
+        time.sleep(0.1)  <span class="comment"># Rate limit</span>
+    print(f<span class="str">"  Валидных: {len(valid)}"</span>)
+
+    <span class="comment"># Этап 3: Сегментация + добавление</span>
+    <span class="cmd">for</span> email, status <span class="cmd">in</span> valid:
+        segment = get_segment(email)
+        list_uid = CONFIG[<span class="str">'lists'</span>].get(segment)
+        <span class="cmd">if</span> list_uid:
+            add_to_mailwizz(email, list_uid)
+
+    print(<span class="str">"  Pipeline завершён!"</span>)
+
+pipeline(<span class="str">"new_leads.csv"</span>)</pre></div>
+
+      <div class="note-block info">
+        <div class="note-label">Стоимость автоматизации</div>
+        n8n (self-hosted): $0. ZeroBounce: $1.50/1000 проверок. MailWizz API: бесплатно. Общая стоимость обработки 10,000 email: ~$15. Ручная обработка того же объёма: 8-12 часов работы.
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Webhook для real-time валидации</div>
+        Подключите валидацию прямо к форме подписки. Пользователь вводит email → webhook в n8n → ZeroBounce проверка → если invalid — показать "Проверьте email" ещё до отправки формы. Это предотвращает попадание мусора в базу.
+      </div>`
+  },
+  10: {
+    module: 'Модуль 4 \u00b7 Практика',
+    title:  'Кейс: база 50K подписчиков с нуля за 3 месяца',
+    time:   '18 мин',
+    content: `
+      <h2>Исходные данные</h2>
+      <p>Задача: собрать базу из 50,000 B2B email-подписчиков для SaaS-продукта в нише email-маркетинга за 3 месяца. Бюджет: $2,000. Целевая аудитория: маркетологи, владельцы бизнеса, email-администраторы в компаниях 10-500 сотрудников.</p>
+
+      <h2>Стратегия по месяцам</h2>
+
+      <h3>Месяц 1 — Фундамент (цель: 8,000)</h3>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:grid;grid-template-columns:160px 60px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);font-size:12px"><strong style="color:var(--accent)">Лид-магнит PDF</strong><span style="color:var(--accent3)">3,200</span><span style="color:var(--muted)">"Email Deliverability Checklist" — 32 страницы, $200 на дизайн</span></div>
+        <div style="display:grid;grid-template-columns:160px 60px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><strong style="color:var(--accent)">Вебинар</strong><span style="color:var(--accent3)">1,800</span><span style="color:var(--muted)">"SPF/DKIM за 60 минут" — 400 регистраций, $0 стоимость</span></div>
+        <div style="display:grid;grid-template-columns:160px 60px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><strong style="color:var(--accent)">Apollo.io парсинг</strong><span style="color:var(--accent3)">2,500</span><span style="color:var(--muted)">Фильтр: Marketing Manager, 50-200 employees, $49/мес</span></div>
+        <div style="display:grid;grid-template-columns:160px 60px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><strong style="color:var(--accent)">Guest posting</strong><span style="color:var(--accent3)">500</span><span style="color:var(--muted)">3 статьи с CTA на лид-магнит, бесплатно</span></div>
+      </div>
+
+      <h3>Месяц 2 — Масштабирование (цель: 20,000)</h3>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:grid;grid-template-columns:160px 60px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);font-size:12px"><strong style="color:var(--accent)">Facebook Ads</strong><span style="color:var(--accent3)">6,000</span><span style="color:var(--muted)">Lead Ads на лид-магнит, $500 бюджет, CPL $0.08</span></div>
+        <div style="display:grid;grid-template-columns:160px 60px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><strong style="color:var(--accent)">LinkedIn Ads</strong><span style="color:var(--accent3)">2,000</span><span style="color:var(--muted)">Sponsored content, $400 бюджет, CPL $0.20</span></div>
+        <div style="display:grid;grid-template-columns:160px 60px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><strong style="color:var(--accent)">Мини-курс email</strong><span style="color:var(--accent3)">4,500</span><span style="color:var(--muted)">"7 дней email-маркетинга" — серия из 7 писем, viral loop</span></div>
+        <div style="display:grid;grid-template-columns:160px 60px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><strong style="color:var(--accent)">Hunter.io + скрапер</strong><span style="color:var(--accent3)">5,000</span><span style="color:var(--muted)">Парсинг 500 доменов конкурентов, $49/мес</span></div>
+        <div style="display:grid;grid-template-columns:160px 60px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><strong style="color:var(--accent)">Вебинар #2</strong><span style="color:var(--accent3)">2,500</span><span style="color:var(--muted)">"Cold Email без попадания в спам" — 600 регистраций</span></div>
+      </div>
+
+      <h3>Месяц 3 — Оптимизация (цель: 22,000)</h3>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Результаты месяца 3</span>
+
+Источник              Собрано   Валидных   Bounce%
+─────────────────────────────────────────────────
+Referral program       5,200     5,100      1.9%
+Content upgrade        4,800     4,650      3.1%
+Retargeting ads        3,500     3,300      5.7%
+Snov.io LinkedIn       4,000     3,600     10.0%
+Community (Slack)      2,200     2,150      2.3%
+Партнёрский обмен      2,300     2,100      8.7%
+─────────────────────────────────────────────────
+ИТОГО месяц 3:       22,000    20,900      5.0%
+
+<span class="comment"># Общий итог 3 месяца:</span>
+Собрано всего:        50,000
+После валидации:      45,200  (90.4%)
+После сегментации:
+  - Hot (engaged):    12,800  (28.3%)
+  - Warm:             18,400  (40.7%)
+  - Cold:             10,500  (23.2%)
+  - Catch-all:         3,500  ( 7.7%)</pre></div>
+
+      <h2>Бюджет и ROI</h2>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:grid;grid-template-columns:1fr 100px;padding:10px 14px;background:rgba(0,229,255,.06);border:1px solid var(--accent);font-size:11px;font-weight:700;color:var(--accent)"><span>Статья расходов</span><span style="text-align:right">Сумма</span></div>
+        <div style="display:grid;grid-template-columns:1fr 100px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--muted)">Facebook Ads</span><span style="color:var(--muted);text-align:right">$500</span></div>
+        <div style="display:grid;grid-template-columns:1fr 100px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--muted)">LinkedIn Ads</span><span style="color:var(--muted);text-align:right">$400</span></div>
+        <div style="display:grid;grid-template-columns:1fr 100px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--muted)">Apollo.io (3 мес)</span><span style="color:var(--muted);text-align:right">$147</span></div>
+        <div style="display:grid;grid-template-columns:1fr 100px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--muted)">Hunter.io (2 мес)</span><span style="color:var(--muted);text-align:right">$98</span></div>
+        <div style="display:grid;grid-template-columns:1fr 100px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--muted)">Snov.io (1 мес)</span><span style="color:var(--muted);text-align:right">$39</span></div>
+        <div style="display:grid;grid-template-columns:1fr 100px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--muted)">ZeroBounce валидация</span><span style="color:var(--muted);text-align:right">$75</span></div>
+        <div style="display:grid;grid-template-columns:1fr 100px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--muted)">Дизайн лид-магнита</span><span style="color:var(--muted);text-align:right">$200</span></div>
+        <div style="display:grid;grid-template-columns:1fr 100px;padding:8px 14px;background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.2);border-top:none;font-size:12px;font-weight:600"><span style="color:var(--accent3)">ИТОГО</span><span style="color:var(--accent3);text-align:right">$1,459</span></div>
+      </div>
+      <p><strong>CPL (cost per lead):</strong> $1,459 / 45,200 = <strong>$0.032 за валидный email</strong>. Для сравнения: покупка базы 50K обошлась бы в $300-500, но дала бы 25K валидных (50%) с 20% spam traps. Наша база: 45,200 валидных, 0 spam traps, bounce rate 1.8%.</p>
+
+      <div class="note-block tip">
+        <div class="note-label">Ключевые takeaways</div>
+        1. Лид-магнит + вебинар — самые дешёвые источники с лучшим качеством.<br>
+        2. Валидация каждого email до добавления в базу — обязательна.<br>
+        3. Парсинг (Apollo, Hunter) дополняет, но не заменяет органический сбор.<br>
+        4. Referral program даёт лучший CPL после запуска.<br>
+        5. Сегментация с первого дня экономит время на 3-й месяц.
+      </div>
+
+      <!-- ══ ТЕСТ ══ -->
+      <div id="quizBlock" style="margin-top:40px">
+        <div style="padding:20px 24px;background:rgba(123,97,255,.06);border:1px solid rgba(123,97,255,.25);margin-bottom:20px">
+          <div style="font-size:10px;color:var(--accent2);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Финальный тест</div>
+          <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:6px">Проверьте знания</div>
+          <div style="font-size:13px;color:var(--muted)">5 вопросов — нужно 4 правильных.</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px">
+          <div style="flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden">
+            <div id="quizBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;transition:width .4s"></div>
+          </div>
+          <span id="quizCount" style="font-size:11px;color:var(--muted);font-family:var(--font-mono);min-width:50px;text-align:right">0 из 5</span>
+        </div>
+        <div id="quizQuestions"></div>
+        <div id="quizResult" style="display:none;margin-top:20px;padding:24px;background:var(--surface);border:1px solid rgba(0,229,255,.2);text-align:center"></div>
+      </div>
+      <div id="courseFinale" style="display:none;margin-top:32px;padding:28px;background:var(--surface);border:1px solid rgba(0,229,255,.2)"><div style="font-size:36px;margin-bottom:12px">&#127891;</div><div style="font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--heading);margin-bottom:10px">Курс завершён!</div><div style="font-size:14px;color:var(--muted);line-height:1.9;margin-bottom:20px">Вы прошли все уроки и финальный тест. Теперь вы знаете как собирать, валидировать и сегментировать email-базу профессионально.</div><div style="display:flex;gap:12px;flex-wrap:wrap"><a href="courses.html" class="btn-primary">Все курсы</a><a href="course-warmup.html" class="btn-ghost">Следующий: Прогрев домена →</a></div></div>`
+  }
+}
+
+
+window.lessons = lessons;
+window.currentLesson = currentLesson;
+
+// quiz:listbuilding
+var qData_listbuilding = [{"q": "Какой bounce rate покупной базы типичен?", "opts": ["1-2%", "5-10%", "25-35%", "50-60%"], "c": 2, "e": "Покупные базы содержат 20-40% dead emails, что даёт bounce rate 25-35%. При bounce rate выше 5% ESP автоматически блокирует аккаунт. Органическая база даёт менее 2% bounce."}, {"q": "Что такое Double Opt-in?", "opts": ["Двойная проверка пароля", "Пользователь подписывается и подтверждает email через ссылку в письме", "Подписка через два разных канала", "Двойная оплата за подписку"], "c": 1, "e": "Double Opt-in: 1) пользователь вводит email в форму, 2) получает письмо с ссылкой подтверждения, 3) кликает ссылку. Это гарантирует валидность адреса и осознанное согласие. Стандарт для GDPR."}, {"q": "SMTP verification проверяет:", "opts": ["Скорость отправки", "Существование почтового ящика через команду RCPT TO", "SSL сертификат сервера", "Размер почтового ящика"], "c": 1, "e": "SMTP verification подключается к MX серверу домена и отправляет RCPT TO <email>. Код 250 = ящик существует. 550 = не существует. Но catch-all серверы (Gmail) отвечают 250 на любой адрес."}, {"q": "Sunset Policy — когда удалять подписчика из базы?", "opts": ["Через 30 дней без открытий", "Через 90 дней без открытий", "После 180 дней без активности + неуспешной re-engagement кампании", "Никогда не удалять"], "c": 2, "e": "180 дней — стандартный порог для удаления. До этого: 90д — снижение частоты, 120д — re-engagement кампания, 150д — последнее предупреждение. Удаление неактивных улучшает метрики оставшейся базы."}, {"q": "Оптимальный порядок отправки по сегментам:", "opts": ["Cold → Warm → Hot", "Все одновременно", "Hot → Warm → Cold", "Случайный порядок"], "c": 2, "e": "Всегда начинайте с Hot сегмента. Высокий open rate первых 1000 писем разогревает IP и домен, улучшая inbox placement для следующих сегментов. Cold сегмент отправляется последним."}];
+var qAns_listbuilding = {};
+var qOk_listbuilding = 0;
+
+function quizInit_listbuilding() {
+  qAns_listbuilding = {}; qOk_listbuilding = 0;
+  var c = document.getElementById("quizQuestions");
+  if (!c) return;
+  var h = "";
+  qData_listbuilding.forEach(function(q, i) {
+    h += "<div style=\"margin-bottom:12px;padding:20px;background:var(--bg2);border:1px solid var(--border)\">";
+    h += "<div style=\"font-size:11px;color:var(--muted);font-family:var(--font-mono);margin-bottom:8px\">Вопрос " + (i+1) + " из 5</div>";
+    h += "<div style=\"font-size:15px;color:var(--heading);font-weight:600;line-height:1.5;margin-bottom:14px\">" + q.q + "</div>";
+    h += "<div style=\"display:flex;flex-direction:column;gap:6px\">";
+    q.opts.forEach(function(opt, j) {
+      h += "<div id=\"qo_listbuilding_" + i + "_" + j + "\" onclick=\"quizAns_listbuilding(" + i + "," + j + ")\" style=\"display:flex;gap:10px;align-items:flex-start;padding:10px 14px;background:var(--bg);border:1px solid var(--border);cursor:pointer;font-size:13px;color:var(--text)\">";
+      h += "<div style=\"min-width:22px;height:22px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-family:var(--font-mono);color:var(--muted);flex-shrink:0\">" + String.fromCharCode(65+j) + "</div>";
+      h += opt + "</div>";
+    });
+    h += "</div>";
+    h += "<div id=\"qe_listbuilding_" + i + "\" style=\"display:none;margin-top:10px;padding:10px 14px;background:var(--surface);border-left:3px solid var(--accent);font-size:12px;color:var(--muted);line-height:1.7\">" + (q.e||"") + "</div>";
+    h += "</div>";
+  });
+  c.innerHTML = h;
+  var bar = document.getElementById("quizBar");
+  var cnt = document.getElementById("quizCount");
+  if (bar) bar.style.width = "0%";
+  if (cnt) cnt.textContent = "0 из 5";
+  var res = document.getElementById("quizResult");
+  if (res) res.style.display = "none";
+}
+
+window["quizAns_listbuilding"] = function(qi, oi) {
+  if (qAns_listbuilding[qi] !== undefined) return;
+  qAns_listbuilding[qi] = oi;
+  var q = qData_listbuilding[qi];
+  var correct = (q.c !== undefined) ? q.c : q.correct;
+  var isOk = (oi === correct);
+  if (isOk) qOk_listbuilding++;
+  q.opts.forEach(function(_, j) {
+    var el = document.getElementById("qo_listbuilding_" + qi + "_" + j);
+    if (!el) return;
+    el.style.pointerEvents = "none";
+    if (j === correct) { el.style.borderColor = "var(--accent3)"; el.style.background = "rgba(0,255,136,.06)"; }
+    else if (j === oi && !isOk) { el.style.borderColor = "#ff6b6b"; el.style.background = "rgba(255,107,107,.06)"; }
+  });
+  var exp = document.getElementById("qe_listbuilding_" + qi);
+  if (exp) exp.style.display = "block";
+  var answered = Object.keys(qAns_listbuilding).length;
+  var bar = document.getElementById("quizBar");
+  var cnt = document.getElementById("quizCount");
+  if (bar) bar.style.width = Math.round(answered/5*100) + "%";
+  if (cnt) cnt.textContent = answered + " из 5";
+  if (answered === 5) {
+    setTimeout(function() {
+      var passed = qOk_listbuilding >= 4;
+      var res = document.getElementById("quizResult");
+      if (!res) return;
+      res.style.display = "block";
+      if (passed) {
+        res.innerHTML = "<div style=\"font-size:36px;margin-bottom:10px\">&#127942;</div>"
+          + "<div style=\"font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--heading);margin-bottom:8px\">Тест пройден! " + qOk_listbuilding + "/5</div>"
+          + "<div style=\"font-size:13px;color:var(--muted);margin-bottom:16px\">Курс завершён — смотрите финальный блок ниже.</div>";
+        var f = document.getElementById("courseFinale");
+        if (f) { f.style.display = "block"; f.scrollIntoView({behavior:"smooth",block:"nearest"}); }
+        try { localStorage.setItem("listbuilding_quiz_passed","1"); } catch(e) {}
+      } else {
+        res.innerHTML = "<div style=\"font-size:36px;margin-bottom:10px\">&#128170;</div>"
+          + "<div style=\"font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--heading);margin-bottom:8px\">Почти! " + qOk_listbuilding + "/5</div>"
+          + "<div style=\"font-size:13px;color:var(--muted);margin-bottom:16px\">Нужно 4 правильных. Попробуйте снова.</div>"
+          + "<button class=\"btn-ghost\" onclick=\"quizInit_listbuilding()\">Попробовать снова</button>";
+      }
+      res.scrollIntoView({behavior:"smooth",block:"nearest"});
+    }, 400);
+  }
+};
+
+// ── LESSON NAVIGATION ──
+// currentLesson initialized in head
+
+
+
+
+function copyCode(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.textContent = 'скопировано!';
+    setTimeout(() => btn.textContent = 'копировать', 2000);
+  });
+}
+
+// ── Прогресс курса ──────────────────────────────────────
+const COURSE_KEY = window.location.pathname.replace(/.*\//, '').replace('.html','');
+const DONE_KEY   = 'listbuilding_done';
+
+
+
+
+function updateProgress() {
+  var done = getDone();
+  var total = Object.keys(lessons).length;
+  var el = document.getElementById('progressText');
+  if (el) el.textContent = done.length + ' / ' + total + ' pройдено';
+  document.querySelectorAll('.sidebar-lesson').forEach(function(sl) {
+    var attr = sl.getAttribute('onclick') || '';
+    var m = attr.match(/showLesson\((\d+)\)/);
+    if (m) {
+      if (done.indexOf(parseInt(m[1])) >= 0) sl.classList.add('done');
+      else sl.classList.remove('done');
+    }
+  });
+}
+
+function toggleComplete() {
+  const cur  = window._currentLesson || 1;
+  const done = getDone();
+  const idx  = done.indexOf(cur);
+  if (idx >= 0) done.splice(idx, 1); else done.push(cur);
+  saveDone(done);
+  updateProgress();
+}
+
+// Патч showLesson чтобы обновлять кнопку при переходе
+const _origShowLesson = showLesson;
+showLesson = function(n) {
+  _origShowLesson(n);
+  window._currentLesson = n;
+  setTimeout(updateProgress, 50);
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  window._currentLesson = 1;
+  updateProgress();
+});
+
+
+
+
+</script>
+</body>
+</html>
