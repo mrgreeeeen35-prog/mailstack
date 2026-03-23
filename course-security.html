@@ -792,16 +792,22 @@ footer {
     <a class="sidebar-lesson" data-n="5" onclick="showLesson(5)" href="#">
       <div class="lesson-num">5</div>Firewall — правильная настройка UFW
     </a>
-    <div class="sidebar-module-title">Модуль 3 · Обновления</div>
     <a class="sidebar-lesson" data-n="6" onclick="showLesson(6)" href="#">
-      <div class="lesson-num">6</div>Аудит безопасности — чеклист
+      <div class="lesson-num">6</div>SSL/TLS сертификаты — настройка и автообновление
     </a>
-    <div class="sidebar-module-title">Модуль 4 · Мониторинг угроз</div>
+    <div class="sidebar-module-title">Модуль 3 · Продвинутая защита</div>
     <a class="sidebar-lesson" data-n="7" onclick="showLesson(7)" href="#">
-      <div class="lesson-num">7</div>Как обнаружить взлом — признаки и инструменты
+      <div class="lesson-num">7</div>Docker-безопасность для email-стека
     </a>
     <a class="sidebar-lesson" data-n="8" onclick="showLesson(8)" href="#">
-      <div class="lesson-num">8</div>Автоматические алёрты безопасности через n8n
+      <div class="lesson-num">8</div>Автоматические обновления — unattended-upgrades
+    </a>
+    <div class="sidebar-module-title">Модуль 4 · Мониторинг и реагирование</div>
+    <a class="sidebar-lesson" data-n="9" onclick="showLesson(9)" href="#">
+      <div class="lesson-num">9</div>Как обнаружить взлом — признаки и инструменты
+    </a>
+    <a class="sidebar-lesson" data-n="10" onclick="showLesson(10)" href="#">
+      <div class="lesson-num">10</div>Аудит и алёрты — чеклист + Telegram
     </a>
   </aside>
 
@@ -985,310 +991,767 @@ var lessons = {
         </div>
       </div>
       <h2>Реальные угрозы для вашего сервера</h2>
+      <p>Email-сервер — это один из самых атакуемых типов серверов в интернете. У вас открыт порт 25 (SMTP), который сканируют тысячи ботов каждый день. Один неверный шаг — и ваш IP в чёрных списках, а через ваш сервер рассылается спам. В этом курсе — конкретные шаги чтобы этого не допустить.</p>
+
       <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0">
         <div style="padding:12px 16px;background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.2);display:grid;grid-template-columns:200px 1fr;gap:12px">
           <div style="font-size:12px;color:#ff6b6b;font-weight:600">Брутфорс SSH</div>
-          <div style="font-size:12px;color:var(--muted)">Тысячи попыток подбора пароля в день. Самая распространённая угроза. Решается fail2ban.</div>
+          <div style="font-size:12px;color:var(--muted)">Тысячи попыток подбора пароля в день. Самая распространённая угроза. Боты сканируют порт 22 массово. Решается fail2ban + SSH-ключи за 10 минут.</div>
         </div>
         <div style="padding:12px 16px;background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.2);display:grid;grid-template-columns:200px 1fr;gap:12px">
           <div style="font-size:12px;color:#ff6b6b;font-weight:600">Open Relay</div>
-          <div style="font-size:12px;color:var(--muted)">Неправильно настроенный Postal позволяет чужим рассылать через ваш сервер. Вы в Spamhaus за час.</div>
+          <div style="font-size:12px;color:var(--muted)">Неправильно настроенный Postal/Postfix позволяет чужим рассылать через ваш сервер. Вы в Spamhaus за час. Спамеры находят такие серверы автоматически — проверяйте себя регулярно.</div>
         </div>
         <div style="padding:12px 16px;background:rgba(240,165,0,.06);border:1px solid rgba(240,165,0,.2);display:grid;grid-template-columns:200px 1fr;gap:12px">
           <div style="font-size:12px;color:#f0a500;font-weight:600">Слабые пароли</div>
-          <div style="font-size:12px;color:var(--muted)">admin/admin, root/123456 — взламываются за минуты. Используйте сложные пароли и SSH-ключи.</div>
+          <div style="font-size:12px;color:var(--muted)">admin/admin, root/123456 — взламываются за минуты. Если вы используете пароли вместо SSH-ключей — это вопрос времени. Также опасны слабые пароли на Mailcow, Postal, n8n панелях.</div>
         </div>
         <div style="padding:12px 16px;background:rgba(240,165,0,.06);border:1px solid rgba(240,165,0,.2);display:grid;grid-template-columns:200px 1fr;gap:12px">
           <div style="font-size:12px;color:#f0a500;font-weight:600">Устаревшее ПО</div>
-          <div style="font-size:12px;color:var(--muted)">Необновлённый Docker, Mailcow, PHP с уязвимостями. Настройте автообновления пакетов.</div>
+          <div style="font-size:12px;color:var(--muted)">Необновлённый Docker, Mailcow, PHP с уязвимостями. CVE выходят регулярно. Автообновления пакетов ОС + регулярный docker pull — минимум который нужен.</div>
         </div>
+        <div style="padding:12px 16px;background:rgba(240,165,0,.06);border:1px solid rgba(240,165,0,.2);display:grid;grid-template-columns:200px 1fr;gap:12px">
+          <div style="font-size:12px;color:#f0a500;font-weight:600">Просроченные SSL-сертификаты</div>
+          <div style="font-size:12px;color:var(--muted)">Certbot перестал обновлять сертификат — HTTPS и SMTP/TLS ломаются. Почта перестаёт отправляться, панели недоступны. Мониторинг cron + dry-run обязателен.</div>
+        </div>
+      </div>
+
+      <h2>Модель угроз для email-инфраструктуры</h2>
+      <p>Подходите к безопасности системно. Вот три уровня защиты которые мы настроим в этом курсе:</p>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:16px 0">
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent)">1</span><span style="font-size:12px;color:var(--text)"><strong>Периметр</strong> — SSH-ключи, fail2ban, UFW firewall. Не дать войти.</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent)">2</span><span style="font-size:12px;color:var(--text)"><strong>Сервисы</strong> — Open Relay, SSL/TLS, Docker-изоляция, обновления. Не дать навредить.</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent)">3</span><span style="font-size:12px;color:var(--text)"><strong>Мониторинг</strong> — аудит, алёрты, обнаружение взлома. Узнать если что-то пошло не так.</span></div>
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Минимальная безопасность за 30 минут</div>
+        Если у вас совсем нет времени — сделайте хотя бы три вещи: <strong>SSH-ключи + запрет паролей</strong> (урок 2), <strong>fail2ban</strong> (урок 3) и <strong>проверку на Open Relay</strong> (урок 4). Это закроет 90% угроз.
       </div>`
-  }
+  },
   2: {
     module: 'Модуль 1 · Основы',
     title:  'SSH — безопасная настройка',
     time:   '18 мин',
     content: `
       <h2>SSH — первая линия защиты</h2>
-      <p>SSH — основной способ доступа к серверу. Правильная настройка закрывает 90% угроз.</p>
-      <h2>SSH-ключи вместо паролей</h2>
-      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># На вашем компьютере генерируем ключ:</span>
+      <p>SSH — единственный способ управлять сервером удалённо. Если атакующий получит доступ по SSH — у него полный контроль над сервером, вашими доменами, почтовыми ящиками. Правильная настройка SSH закрывает 90% угроз. Неправильная — открывает всё.</p>
+
+      <h2>Шаг 1: генерируем SSH-ключ (на вашем компьютере)</h2>
+      <p>SSH-ключ — это пара файлов: приватный (хранится у вас, никому не передавать) и публичный (копируется на сервер). Вместо пароля сервер проверяет наличие ключа. Подобрать ключ невозможно — это 256 бит энтропии.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># На вашем ЛОКАЛЬНОМ компьютере (не на сервере!):</span>
+
+<span class="comment"># Генерируем ключ Ed25519 (самый современный алгоритм):</span>
 ssh-keygen -t ed25519 -C "mailstack-server"
 <span class="comment"># Сохраните в ~/.ssh/mailstack_ed25519</span>
+<span class="comment"># Passphrase — дополнительный пароль к ключу (рекомендуется)</span>
+
+<span class="comment"># Результат — два файла:</span>
+<span class="comment"># ~/.ssh/mailstack_ed25519       — ПРИВАТНЫЙ (никуда не копировать!)</span>
+<span class="comment"># ~/.ssh/mailstack_ed25519.pub   — ПУБЛИЧНЫЙ (копируем на сервер)</span>
 
 <span class="comment"># Копируем публичный ключ на сервер:</span>
 ssh-copy-id -i ~/.ssh/mailstack_ed25519.pub root@ВАШ_IP
 
 <span class="comment"># Проверяем что вход по ключу работает:</span>
-ssh -i ~/.ssh/mailstack_ed25519 root@ВАШ_IP</pre></div>
-      <h2>Усиление конфига SSH</h2>
-      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Редактируем /etc/ssh/sshd_config:</span>
+ssh -i ~/.ssh/mailstack_ed25519 root@ВАШ_IP
+<span class="comment"># Должен пустить без запроса пароля сервера</span></pre></div>
+
+      <h2>Шаг 2: настраиваем SSH config для удобства</h2>
+      <p>Чтобы не вводить длинные команды каждый раз, создайте конфиг на локальном компьютере:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># ~/.ssh/config (на локальном компьютере)</span>
+Host mailserver
+    HostName 65.21.123.45
+    User root
+    Port 22
+    IdentityFile ~/.ssh/mailstack_ed25519
+
+<span class="comment"># Теперь вход одной командой:</span>
+ssh mailserver</pre></div>
+
+      <h2>Шаг 3: усиление конфига SSH на сервере</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Редактируем /etc/ssh/sshd_config на СЕРВЕРЕ:</span>
 nano /etc/ssh/sshd_config
 
-<span class="comment"># Изменяем эти параметры:</span>
-Port 2222                    <span class="comment"># нестандартный порт (не обязательно)</span>
-PermitRootLogin no           <span class="comment"># запрет входа root (создайте отдельного юзера)</span>
+<span class="comment"># Изменяем/добавляем эти параметры:</span>
+Port 2222                    <span class="comment"># нестандартный порт (снижает сканирование на 99%)</span>
+PermitRootLogin prohibit-password  <span class="comment"># root только по ключу</span>
 PasswordAuthentication no    <span class="comment"># ТОЛЬКО ключи, пароли запрещены</span>
-PubkeyAuthentication yes
-MaxAuthTries 3
-LoginGraceTime 30
+PubkeyAuthentication yes     <span class="comment"># разрешить ключи</span>
+MaxAuthTries 3               <span class="comment"># макс 3 попытки на подключение</span>
+LoginGraceTime 30            <span class="comment"># 30 сек на аутентификацию</span>
+ClientAliveInterval 300      <span class="comment"># пинговать клиента каждые 5 мин</span>
+ClientAliveCountMax 2        <span class="comment"># отключить после 2 пропусков</span>
+AllowAgentForwarding no      <span class="comment"># отключить если не нужно</span>
+X11Forwarding no             <span class="comment"># отключить X11</span>
 
-<span class="comment"># Перезапускаем (не закрывайте текущую сессию!):</span>
+<span class="comment"># Проверяем конфиг на синтаксические ошибки:</span>
+sshd -t
+<span class="comment"># Если ошибок нет — перезапускаем:</span>
+systemctl reload sshd</pre></div>
+
+      <div class="note-block warn">
+        <div class="note-label">Золотое правило: НЕ закрывайте текущую SSH сессию</div>
+        После изменения sshd_config откройте <strong>НОВУЮ</strong> вкладку терминала и попробуйте войти. Если что-то не работает — у вас есть открытое соединение чтобы откатить изменения. Если закроете единственную сессию и что-то сломали — доступ через SSH потерян навсегда (только через консоль хостинга).
+      </div>
+
+      <h2>Шаг 4: отключаем вход по паролю (только после проверки ключей!)</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Чеклист перед отключением паролей:</span>
+<span class="comment"># 1. SSH-ключ скопирован на сервер ✓</span>
+<span class="comment"># 2. Вход по ключу проверен из новой вкладки ✓</span>
+<span class="comment"># 3. Текущая сессия НЕ закрыта ✓</span>
+
+<span class="comment"># Только теперь безопасно отключать пароли:</span>
+sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
+sed -i 's/^#*ChallengeResponseAuthentication.*/ChallengeResponseAuthentication no/' /etc/ssh/sshd_config
 systemctl reload sshd
 
-<span class="comment"># Из НОВОЙ вкладки проверьте что можете войти</span></pre></div>
-      <div class="note-block warn"><div class="note-label">⚠ Не закрывайте текущую SSH сессию при изменении конфига</div>Если что-то пошло не так — у вас есть открытое соединение чтобы исправить. Открывайте новую вкладку и тестируйте вход оттуда.</div>`
-  }
+<span class="comment"># Проверяем из НОВОЙ вкладки что всё работает:</span>
+ssh -i ~/.ssh/mailstack_ed25519 root@ВАШ_IP -p 2222</pre></div>`
+  },
   3: {
     module: 'Модуль 1 · Основы',
     title:  'fail2ban — защита от брутфорса',
     time:   '15 мин',
     content: `
-      <h2>Что такое fail2ban</h2>
-      <p>fail2ban следит за логами: если с одного IP приходит слишком много неудачных попыток входа — блокирует его через iptables. Автоматически и навсегда (или на заданное время).</p>
-      <h2>Установка</h2>
-      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre>apt install fail2ban -y
+      <h2>Что такое fail2ban и зачем он нужен</h2>
+      <p>Даже с SSH-ключами боты продолжают стучаться в ваш сервер. fail2ban следит за лог-файлами: если с одного IP приходит слишком много неудачных попыток — автоматически блокирует его через iptables. Это как охранник который банит после 3 неудачных попыток.</p>
+      <p>На типичном сервере fail2ban блокирует от 50 до 500 IP в сутки. Без него эти боты создают шум в логах, нагружают CPU обработкой аутентификации и теоретически могут подобрать слабый пароль.</p>
+
+      <h2>Установка и запуск</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre>apt update && apt install fail2ban -y
 systemctl enable fail2ban
-systemctl start fail2ban</pre></div>
-      <h2>Настройка для SSH и Postfix</h2>
+systemctl start fail2ban
+
+<span class="comment"># Проверяем что работает:</span>
+fail2ban-client status
+<span class="comment"># Должно показать: Number of jail: 1 (sshd)</span></pre></div>
+
+      <h2>Настройка: SSH + Postfix + Dovecot</h2>
+      <p>Важно: не редактируйте <code>jail.conf</code> напрямую — он перезапишется при обновлении. Создавайте <code>jail.local</code> — он имеет приоритет:</p>
       <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Создаём /etc/fail2ban/jail.local</span>
 cat > /etc/fail2ban/jail.local << 'EOF'
 [DEFAULT]
 bantime  = 3600       <span class="comment"># блокировать на 1 час</span>
-findtime = 600        <span class="comment"># окно в 10 минут</span>
-maxretry = 5          <span class="comment"># 5 попыток</span>
-ignoreip = 127.0.0.1  <span class="comment"># не блокировать localhost</span>
+findtime = 600        <span class="comment"># окно наблюдения 10 минут</span>
+maxretry = 5          <span class="comment"># 5 попыток за findtime = бан</span>
+ignoreip = 127.0.0.1/8 ::1  <span class="comment"># не блокировать localhost</span>
+banaction = iptables-multiport
+action = %(action_mwl)s      <span class="comment"># уведомлять по email (опционально)</span>
 
 [sshd]
-enabled = true
-port    = ssh,2222    <span class="comment"># ваш SSH порт</span>
-logpath = /var/log/auth.log
-maxretry = 3          <span class="comment"># для SSH — жёстче</span>
+enabled  = true
+port     = ssh,2222   <span class="comment"># все SSH порты</span>
+logpath  = /var/log/auth.log
+maxretry = 3          <span class="comment"># для SSH — жёстче, 3 попытки</span>
 bantime  = 86400      <span class="comment"># блокировать на 24 часа</span>
 
 [postfix]
-enabled = true
-logpath = /var/log/mail.log
+enabled  = true
+logpath  = /var/log/mail.log
 maxretry = 5
 
 [postfix-sasl]
-enabled = true
-logpath = /var/log/mail.log
+enabled  = true
+logpath  = /var/log/mail.log
 maxretry = 3
+
+[dovecot]
+enabled  = true
+logpath  = /var/log/mail.log
+maxretry = 5
 EOF
 
+<span class="comment"># Применяем:</span>
 systemctl restart fail2ban
 fail2ban-client status</pre></div>
+
+      <h2>Рецидивисты — прогрессивный бан</h2>
+      <p>Если IP блокируется повторно — увеличиваем время бана. Добавьте в jail.local:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Рецидивисты — если IP банится 3 раза за сутки,</span>
+<span class="comment"># блокируем на неделю:</span>
+[recidive]
+enabled  = true
+logpath  = /var/log/fail2ban.log
+banaction = iptables-allports
+bantime  = 604800     <span class="comment"># 7 дней</span>
+findtime = 86400      <span class="comment"># наблюдаем за сутки</span>
+maxretry = 3          <span class="comment"># 3 бана = рецидивист</span></pre></div>
+
       <h2>Полезные команды fail2ban</h2>
       <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Статус всех jail</span>
 fail2ban-client status
 
-<span class="comment"># Статус конкретного jail</span>
+<span class="comment"># Статус конкретного jail + список забаненных IP</span>
 fail2ban-client status sshd
+
+<span class="comment"># Забанить IP вручную</span>
+fail2ban-client set sshd banip 123.45.67.89
 
 <span class="comment"># Разблокировать IP (если заблокировали себя)</span>
 fail2ban-client set sshd unbanip ВАШ_IP
 
-<span class="comment"># Лог событий</span>
-tail -f /var/log/fail2ban.log</pre></div>`
-  }
+<span class="comment"># Лог событий fail2ban</span>
+tail -f /var/log/fail2ban.log
+
+<span class="comment"># Сколько IP забанено прямо сейчас:</span>
+fail2ban-client status sshd | grep "Currently banned"
+
+<span class="comment"># Все забаненные IP по всем jail:</span>
+fail2ban-client banned</pre></div>
+
+      <div class="note-block warn">
+        <div class="note-label">Если заблокировали себя</div>
+        Добавьте ваш IP в <code>ignoreip</code> в jail.local. Если уже заблокированы — зайдите через консоль хостинга (VNC/IPMI) и выполните <code>fail2ban-client set sshd unbanip ВАШ_IP</code>. Или полный сброс: <code>fail2ban-client unban --all</code>.
+      </div>`
+  },
   4: {
     module: 'Модуль 2 · Защита сервисов',
     title:  'Проверка на Open Relay — критически важно',
-    time:   '12 мин',
+    time:   '15 мин',
     content: `
       <h2>Open Relay — почему это катастрофа</h2>
-      <p>Open relay — это когда ваш SMTP сервер принимает и пересылает письма от кого угодно кому угодно. Спамеры находят такие серверы автоматически и начинают рассылать через них. За несколько часов ваш IP в Spamhaus, а сервер шлёт миллионы спам-писем.</p>
-      <h2>Проверка на open relay</h2>
-      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Онлайн проверка:</span>
-mxtoolbox.com/diagnostic.aspx
-<span class="comment"># Введите ваш IP или домен -> проверит на open relay</span>
+      <p>Open relay — когда ваш SMTP сервер принимает и пересылает письма от кого угодно кому угодно. Это самая опасная уязвимость email-сервера. Спамеры сканируют интернет 24/7 в поисках открытых relay. Нашли ваш — через час вы в Spamhaus, а через ваш сервер улетают миллионы спам-писем.</p>
+      <p>Последствия: все IP адреса сервера в чёрных списках, все ваши домены помечены как спам, репутация уничтожена. Восстановление занимает недели. Это единственная ошибка которая может убить вашу инфраструктуру за часы.</p>
 
-<span class="comment"># Ручная проверка через telnet:</span>
-telnet postal.yourdomain.com 25
+      <h2>Проверка на Open Relay — 3 способа</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Способ 1: Онлайн проверка (самый простой)</span>
+<span class="comment"># Откройте: mxtoolbox.com/diagnostic.aspx</span>
+<span class="comment"># Введите ваш IP или домен → Test Email Server</span>
+<span class="comment"># Ищите строку "Open Relay" — должно быть PASS</span>
+
+<span class="comment"># Способ 2: telnet из другого сервера</span>
+telnet ваш-postal.com 25
 EHLO test.com
-MAIL FROM: &lt;test@external.com&gt;
-RCPT TO: &lt;test@another-external.com&gt;
-<span class="comment"># Если получили "250 OK" — open relay! Срочно исправить</span>
-<span class="comment"># Если "550 relay not permitted" — всё хорошо</span></pre></div>
-      <h2>Закрытие Open Relay в Postal</h2>
-      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Postal по умолчанию закрыт для чужих</span>
-<span class="comment"># Но проверьте настройки организации:</span>
-<span class="comment"># Organizations -> ваша org -> Settings</span>
-<span class="comment"># Убедитесь что нет wildcard (*) в Allowed Senders</span>
+MAIL FROM: &lt;fake@external.com&gt;
+RCPT TO: &lt;victim@gmail.com&gt;
+<span class="comment"># Если получили "250 OK" — OPEN RELAY! Срочно исправить!</span>
+<span class="comment"># Если "550 relay not permitted" — всё хорошо</span>
+<span class="comment"># Если "530 authentication required" — тоже хорошо</span>
+QUIT
 
-<span class="comment"># В Mailcow проверьте mynetworks в Postfix:</span>
+<span class="comment"># Способ 3: nmap (продвинутый)</span>
+nmap --script smtp-open-relay -p 25 ВАШ_IP</pre></div>
+
+      <h2>Как закрыть Open Relay</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># ═══ Postal ═══</span>
+<span class="comment"># Postal по умолчанию закрыт, но проверьте:</span>
+<span class="comment"># UI → Organizations → ваша org → Settings</span>
+<span class="comment"># Убедитесь что нет wildcard (*) в Allowed Senders</span>
+<span class="comment"># Каждый домен должен быть явно добавлен</span>
+
+<span class="comment"># ═══ Mailcow (Postfix) ═══</span>
+<span class="comment"># Проверяем mynetworks:</span>
 docker exec mailcowdockerized-postfix-mailcow-1 postconf mynetworks
-<span class="comment"># Должно быть только: 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128</span>
-<span class="comment"># Если видите широкие сети (10.0.0.0/8 и т.д.) — это проблема</span></pre></div>`
-  }
+<span class="comment"># Должно быть ТОЛЬКО:</span>
+<span class="comment"># 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 172.22.1.0/24</span>
+<span class="comment"># 172.22.1.0/24 — это внутренняя Docker сеть, это нормально</span>
+<span class="comment"># Если видите 0.0.0.0/0 или широкие сети — это проблема!</span>
+
+<span class="comment"># Проверяем relay restrictions:</span>
+docker exec mailcowdockerized-postfix-mailcow-1 postconf smtpd_relay_restrictions
+<span class="comment"># Должно содержать: reject_unauth_destination</span></pre></div>
+
+      <h2>Когда проверять</h2>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:flex;gap:10px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">После первоначальной настройки сервера</span></div>
+        <div style="display:flex;gap:10px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">После обновления Postal/Mailcow</span></div>
+        <div style="display:flex;gap:10px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">После добавления новых доменов</span></div>
+        <div style="display:flex;gap:10px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">Ежемесячно в рамках аудита безопасности</span></div>
+      </div>
+
+      <div class="note-block warn">
+        <div class="note-label">Экстренная реакция если нашли Open Relay</div>
+        1. Немедленно остановите Postal/Postfix: <code>docker compose stop</code><br>
+        2. Проверьте очередь: <code>docker exec ... postqueue -p</code> — удалите спам<br>
+        3. Исправьте конфигурацию<br>
+        4. Проверьте IP в чёрных списках: <code>mxtoolbox.com/blacklists</code><br>
+        5. Запросите delisting если попали
+      </div>`
+  },
   5: {
     module: 'Модуль 2 · Защита сервисов',
     title:  'Firewall — правильная настройка UFW',
-    time:   '12 мин',
+    time:   '15 мин',
     content: `
       <h2>Принцип минимальных привилегий</h2>
-      <p>Открывайте только те порты которые нужны. Всё остальное — закрыто по умолчанию.</p>
-      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Сброс всех правил и новая настройка:</span>
+      <p>Firewall — это дверь вашего сервера. По умолчанию она должна быть закрыта, и вы открываете только те порты которые реально нужны. На email-сервере это: SSH, HTTP/HTTPS (для панелей и Let's Encrypt), SMTP-порты (25, 465, 587) и IMAP (993). Всё остальное — закрыто.</p>
+      <p>UFW (Uncomplicated Firewall) — это удобная обёртка над iptables. Простой синтаксис, предсказуемое поведение, стандарт для Ubuntu.</p>
+
+      <h2>Настройка UFW с нуля</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Сброс всех правил и чистая настройка:</span>
 ufw --force reset
 
-<span class="comment"># По умолчанию всё запрещено:</span>
+<span class="comment"># По умолчанию: входящие запрещены, исходящие разрешены</span>
 ufw default deny incoming
 ufw default allow outgoing
 
-<span class="comment"># Разрешаем только нужное:</span>
-ufw allow 22/tcp    <span class="comment"># SSH (или ваш нестандартный порт)</span>
-ufw allow 80/tcp    <span class="comment"># HTTP (для Let's Encrypt)</span>
-ufw allow 443/tcp   <span class="comment"># HTTPS</span>
-ufw allow 25/tcp    <span class="comment"># SMTP входящий</span>
-ufw allow 465/tcp   <span class="comment"># SMTPS</span>
-ufw allow 587/tcp   <span class="comment"># Submission</span>
-ufw allow 993/tcp   <span class="comment"># IMAPS</span>
-ufw allow 4190/tcp  <span class="comment"># Sieve</span>
+<span class="comment"># ═══ Обязательные порты ═══</span>
+ufw allow 22/tcp comment 'SSH'           <span class="comment"># или ваш кастомный порт</span>
+ufw allow 80/tcp comment 'HTTP/LE'       <span class="comment"># HTTP для Let's Encrypt</span>
+ufw allow 443/tcp comment 'HTTPS'        <span class="comment"># HTTPS для панелей</span>
 
-<span class="comment"># Включаем:</span>
+<span class="comment"># ═══ Email порты ═══</span>
+ufw allow 25/tcp comment 'SMTP'          <span class="comment"># входящая почта</span>
+ufw allow 465/tcp comment 'SMTPS'        <span class="comment"># SMTP over TLS</span>
+ufw allow 587/tcp comment 'Submission'   <span class="comment"># отправка через авторизацию</span>
+ufw allow 993/tcp comment 'IMAPS'        <span class="comment"># получение почты</span>
+
+<span class="comment"># ═══ Опционально ═══</span>
+ufw allow 4190/tcp comment 'Sieve'       <span class="comment"># фильтры почты</span>
+<span class="comment"># ufw allow 143/tcp  — НЕ нужно, используйте 993 (IMAPS)</span>
+
+<span class="comment"># Включаем firewall:</span>
 ufw enable
 ufw status verbose</pre></div>
-      <h2>Ограничение доступа к панелям</h2>
-      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Mailcow UI (порт 443) доступен всем — это нормально</span>
-<span class="comment"># Но Postal UI на отдельном порту можно ограничить:</span>
 
-<span class="comment"># Разрешить Postal UI только с вашего IP:</span>
-ufw allow from ВАШ_IP to any port 443
-<span class="comment"># (если Postal на отдельном домене и VPS)</span>
+      <h2>Ограничение доступа к панелям управления</h2>
+      <p>Mailcow, Postal, n8n — все работают через HTTPS (порт 443). Если вы хотите ограничить доступ к ним только для вашего IP:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Вариант 1: UFW — ограничить конкретные порты</span>
+<span class="comment"># Разрешить n8n (порт 5678) только с вашего IP:</span>
+ufw allow from ВАШ_СТАТИЧЕСКИЙ_IP to any port 5678 comment 'n8n admin'
 
-<span class="comment"># Или используйте Nginx basic auth для дополнительной защиты</span></pre></div>`
-  }
+<span class="comment"># Вариант 2: Nginx basic auth (лучше для HTTPS)</span>
+<span class="comment"># Добавьте в Nginx location блок:</span>
+apt install apache2-utils -y
+htpasswd -c /etc/nginx/.htpasswd admin
+<span class="comment"># В nginx конфиге:</span>
+<span class="comment"># auth_basic "Admin Area";</span>
+<span class="comment"># auth_basic_user_file /etc/nginx/.htpasswd;</span></pre></div>
+
+      <h2>Rate limiting через UFW</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Ограничить SSH подключения (6 за 30 сек = блок)</span>
+ufw limit 22/tcp comment 'SSH rate limit'
+
+<span class="comment"># Это дополнительная защита поверх fail2ban</span>
+<span class="comment"># UFW блокирует на уровне ядра, fail2ban — по логам</span></pre></div>
+
+      <h2>Диагностика UFW</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Текущие правила с номерами:</span>
+ufw status numbered
+
+<span class="comment"># Удалить правило по номеру:</span>
+ufw delete 5
+
+<span class="comment"># Логирование заблокированных подключений:</span>
+ufw logging on
+tail -f /var/log/ufw.log
+
+<span class="comment"># Проверить что порт открыт снаружи:</span>
+<span class="comment"># С другого сервера:</span>
+nc -zv ВАШ_IP 25
+nc -zv ВАШ_IP 443</pre></div>
+
+      <div class="note-block warn">
+        <div class="note-label">UFW + Docker: важный нюанс</div>
+        Docker по умолчанию <strong>обходит UFW</strong> и добавляет свои правила напрямую в iptables. Порты контейнеров будут открыты даже если UFW их блокирует. Решение: в <code>/etc/docker/daemon.json</code> добавьте <code>{"iptables": false}</code> или привязывайте порты к 127.0.0.1 в docker-compose (<code>127.0.0.1:8080:8080</code>).
+      </div>`
+  },
   6: {
-    module: 'Модуль 3 · Обновления',
-    title:  'Аудит безопасности — чеклист',
+    module: 'Модуль 2 · Защита сервисов',
+    title:  'SSL/TLS сертификаты — настройка и автообновление',
+    time:   '18 мин',
+    content: `
+      <h2>Зачем нужен SSL/TLS для email-сервера</h2>
+      <p>SSL/TLS — не только про HTTPS. На email-сервере сертификаты нужны для: HTTPS панелей (Mailcow, Postal, n8n), SMTP TLS (шифрование при отправке почты), IMAPS (шифрование при получении почты). Без валидного сертификата другие серверы могут отклонять ваши письма или понижать вашу репутацию.</p>
+
+      <h2>Let's Encrypt + Certbot — бесплатные сертификаты</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Установка Certbot:</span>
+apt install certbot python3-certbot-nginx -y
+
+<span class="comment"># Получаем сертификат для домена:</span>
+certbot --nginx -d mail.yourdomain.com -d postal.yourdomain.com
+
+<span class="comment"># Или standalone (если Nginx не используется):</span>
+certbot certonly --standalone -d mail.yourdomain.com
+
+<span class="comment"># Wildcard сертификат (для всех поддоменов):</span>
+certbot certonly --manual --preferred-challenges dns -d "*.yourdomain.com"
+<span class="comment"># Потребует добавить TXT запись в DNS</span></pre></div>
+
+      <h2>Где хранятся сертификаты</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Certbot сохраняет сертификаты в:</span>
+/etc/letsencrypt/live/mail.yourdomain.com/
+├── fullchain.pem   <span class="comment"># сертификат + цепочка (для Nginx)</span>
+├── privkey.pem     <span class="comment"># приватный ключ</span>
+├── cert.pem        <span class="comment"># только сертификат</span>
+└── chain.pem       <span class="comment"># только цепочка</span>
+
+<span class="comment"># Для Nginx используйте fullchain.pem + privkey.pem:</span>
+<span class="comment"># ssl_certificate /etc/letsencrypt/live/domain/fullchain.pem;</span>
+<span class="comment"># ssl_certificate_key /etc/letsencrypt/live/domain/privkey.pem;</span></pre></div>
+
+      <h2>Автообновление — настройка и проверка</h2>
+      <p>Сертификаты Let's Encrypt действуют 90 дней. Certbot обновляет их автоматически за 30 дней до истечения — но только если cron/systemd timer работает:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Проверяем что автообновление настроено:</span>
+systemctl list-timers | grep certbot
+<span class="comment"># Или:</span>
+crontab -l | grep certbot
+cat /etc/cron.d/certbot
+
+<span class="comment"># Тестовый прогон (без реального обновления):</span>
+certbot renew --dry-run
+<span class="comment"># Должно вывести: "Congratulations, all simulated renewals succeeded"</span>
+
+<span class="comment"># Если нет таймера — добавьте в cron:</span>
+echo "0 3 * * * root certbot renew --quiet --deploy-hook 'systemctl reload nginx'" | tee /etc/cron.d/certbot-renew</pre></div>
+
+      <h2>Проверка SSL сертификата</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Проверяем срок действия:</span>
+echo | openssl s_client -connect mail.yourdomain.com:443 -servername mail.yourdomain.com 2>/dev/null | openssl x509 -noout -dates
+<span class="comment"># Покажет notBefore и notAfter</span>
+
+<span class="comment"># Проверяем SMTP TLS:</span>
+echo | openssl s_client -connect mail.yourdomain.com:25 -starttls smtp 2>/dev/null | openssl x509 -noout -dates
+
+<span class="comment"># Онлайн проверка:</span>
+<span class="comment"># ssllabs.com/ssltest/ — полный анализ HTTPS</span>
+<span class="comment"># checktls.com — проверка SMTP TLS</span></pre></div>
+
+      <div class="note-block tip">
+        <div class="note-label">Mailcow и SSL</div>
+        Mailcow управляет сертификатами через ACME (встроенный Let's Encrypt клиент). Проверьте в <code>mailcow.conf</code>: <code>SKIP_LETS_ENCRYPT=n</code>. Если используете внешний Nginx — настройте проброс ACME challenge или используйте <code>SKIP_LETS_ENCRYPT=y</code> с внешним Certbot.
+      </div>`
+  },
+  7: {
+    module: 'Модуль 3 · Продвинутая защита',
+    title:  'Docker-безопасность для email-стека',
+    time:   '18 мин',
+    content: `
+      <h2>Почему Docker-безопасность важна</h2>
+      <p>Mailcow, Postal, n8n — все работают в Docker контейнерах. Docker упрощает деплой, но создаёт свои риски: контейнеры с root-правами, открытые порты мимо firewall, устаревшие образы с уязвимостями, секреты в переменных окружения. Правильная настройка Docker — это третий уровень защиты после SSH и firewall.</p>
+
+      <h2>Принцип 1: минимизация привилегий</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Проверяем какие контейнеры работают от root:</span>
+docker ps --format "{{.Names}}: {{.Status}}" | while read line; do
+  name=$(echo "$line" | cut -d: -f1)
+  user=$(docker inspect --format '{{.Config.User}}' "$name" 2>/dev/null)
+  echo "$name: user=\${user:-root}"
+done
+
+<span class="comment"># В docker-compose.yml для своих сервисов:</span>
+<span class="comment"># user: "1000:1000"  # запуск от обычного пользователя</span>
+<span class="comment"># read_only: true    # файловая система только для чтения</span>
+<span class="comment"># security_opt:</span>
+<span class="comment">#   - no-new-privileges:true  # запрет эскалации привилегий</span></pre></div>
+
+      <h2>Принцип 2: изоляция сетей</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Проверяем Docker сети:</span>
+docker network ls
+docker network inspect bridge
+
+<span class="comment"># Mailcow и Postal должны быть в разных сетях.</span>
+<span class="comment"># В docker-compose.yml:</span>
+<span class="comment"># networks:</span>
+<span class="comment">#   mailcow-net:</span>
+<span class="comment">#     internal: true  # нет доступа в интернет</span>
+<span class="comment">#   proxy-net:        # только для Nginx</span>
+
+<span class="comment"># Контейнеры в разных сетях не видят друг друга</span>
+<span class="comment"># Это ограничивает распространение при взломе</span></pre></div>
+
+      <h2>Принцип 3: привязка портов к localhost</h2>
+      <p>Docker по умолчанию открывает порты на 0.0.0.0 (все интерфейсы), обходя UFW. Решение:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># ПЛОХО — доступен всему интернету:</span>
+<span class="comment"># ports:</span>
+<span class="comment">#   - "8080:8080"</span>
+
+<span class="comment"># ХОРОШО — доступен только через Nginx:</span>
+<span class="comment"># ports:</span>
+<span class="comment">#   - "127.0.0.1:8080:8080"</span>
+
+<span class="comment"># Проверяем текущие привязки:</span>
+docker ps --format "{{.Names}}: {{.Ports}}"
+<span class="comment"># Ищите 0.0.0.0:ПОРТ — это потенциальная проблема</span>
+
+<span class="comment"># Глобальная настройка Docker:</span>
+<span class="comment"># /etc/docker/daemon.json:</span>
+<span class="comment"># { "ip": "127.0.0.1", "iptables": false }</span>
+<span class="comment"># systemctl restart docker</span></pre></div>
+
+      <h2>Принцип 4: обновление образов</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Проверяем когда образы были скачаны:</span>
+docker images --format "{{.Repository}}:{{.Tag}} - {{.CreatedSince}}"
+
+<span class="comment"># Обновление Mailcow:</span>
+cd /opt/mailcow-dockerized
+./update.sh
+
+<span class="comment"># Обновление Postal:</span>
+cd /opt/postal
+docker compose pull
+docker compose up -d
+
+<span class="comment"># Общее обновление всех образов:</span>
+docker compose pull && docker compose up -d
+
+<span class="comment"># Очистка старых образов (экономия места):</span>
+docker image prune -a --filter "until=720h"  <span class="comment"># старше 30 дней</span></pre></div>
+
+      <h2>Секреты и переменные окружения</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Убедитесь что .env файлы защищены:</span>
+chmod 600 /opt/mailcow-dockerized/mailcow.conf
+chmod 600 /opt/postal/.env
+chown root:root /opt/mailcow-dockerized/mailcow.conf
+
+<span class="comment"># Проверяем что секреты не в docker-compose.yml:</span>
+grep -i "password\|secret\|token\|key" docker-compose.yml
+<span class="comment"># Если нашлись — перенесите в .env файл</span></pre></div>
+
+      <div class="note-block tip">
+        <div class="note-label">Docker Scout — сканер уязвимостей</div>
+        <code>docker scout cves mailcow/mailcow</code> — покажет известные CVE в образе. Запускайте перед обновлениями чтобы понимать критичность.
+      </div>`
+  },
+  8: {
+    module: 'Модуль 3 · Продвинутая защита',
+    title:  'Автоматические обновления — unattended-upgrades',
     time:   '12 мин',
     content: `
-      <h2>Ежемесячный аудит безопасности</h2>
-      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;padding:6px 14px;background:var(--surface);border:1px solid var(--border)">SSH и доступ</div>
-        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">PasswordAuthentication no в sshd_config</span></div>
-        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">fail2ban активен, статистика блокировок</span></div>
-        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Нет лишних пользователей в /etc/passwd</span></div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;padding:6px 14px;background:var(--surface);border:1px solid var(--border);margin-top:8px">Email сервисы</div>
-        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Open Relay тест — mxtoolbox.com</span></div>
-        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Все панели с сильными паролями</span></div>
-        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">SSL сертификаты не истекают в ближайшие 30 дней</span></div>
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;padding:6px 14px;background:var(--surface);border:1px solid var(--border);margin-top:8px">Обновления</div>
-        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">apt upgrade выполнен</span></div>
-        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Mailcow, n8n, Postal обновлены до актуальных версий</span></div>
-      </div>
-      
-      <!-- ══ ТЕСТ КУРСА ═══════════════════════════════════════════ -->
-      
-          <div id="cq-status" style="font-size:11px;color:var(--muted);font-family:var(--font-mono)"></div>
-        </div>
+      <h2>Зачем нужны автоматические обновления</h2>
+      <p>Каждый месяц для Ubuntu выходят десятки security-патчей. Если не обновлять — на сервере накапливаются известные уязвимости которые легко эксплуатируются. unattended-upgrades решает это автоматически: ставит только пакеты безопасности, не трогает основное ПО, не ломает систему.</p>
 
-        <div id="cq-questions"></div>
+      <h2>Установка и настройка</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Установка:</span>
+apt install unattended-upgrades apt-listchanges -y
 
-        <div id="cq-result" style="display:none;margin-top:20px;padding:20px;background:var(--surface);border:1px solid rgba(0,229,255,.2);text-align:center">
-          <div id="cq-result-icon" style="font-size:36px;margin-bottom:10px">🎯</div>
-          <div id="cq-result-title" style="font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--heading);margin-bottom:6px"></div>
-          <div id="cq-result-text" style="font-size:13px;color:var(--muted);margin-bottom:16px"></div>
-          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-            <button id="cq-retry-btn" onclick="cqRetry()" class="btn-ghost" style="display:none">Попробовать снова</button>
-          </div>
-        </div>
-      </div>
-      <!-- ══ КОНЕЦ ТЕСТА ══════════════════════════════════════════ -->
+<span class="comment"># Включение:</span>
+dpkg-reconfigure -plow unattended-upgrades
+<span class="comment"># Выберите "Yes"</span>
 
-      <script>
-      (function() {
-        const CQ = [{"q": "fail2ban мониторит логи и блокирует IP после:", "opts": ["Любого подключения", "Заданного числа неудачных попыток аутентификации", "Превышения трафика", "Изменения файлов"], "c": 1, "e": "fail2ban читает лог-файлы (auth.log, nginx/error.log) и при обнаружении паттерна (например 5 неудачных SSH входов) добавляет IP в iptables/ufw правила блокировки."}, {"q": "Что нужно сделать ПЕРЕД тем как отключить вход по паролю в SSH?", "opts": ["Перезагрузить сервер", "Убедиться что SSH ключ добавлен и вход по нему работает", "Изменить порт SSH", "Установить fail2ban"], "c": 1, "e": "Строго обязательно: сначала добавьте публичный ключ в ~/.ssh/authorized_keys, затем откройте новую сессию и проверьте что вход по ключу работает. Только потом отключайте PasswordAuthentication."}, {"q": "Команда для проверки что сервер не является Open Relay:", "opts": ["dig MX yourdomain.com", "mxtoolbox.com/diagnostic и тест relay", "netstat -an", "postfix check"], "c": 1, "e": "Open Relay — сервер пересылающий почту для кого угодно. Спамеры ищут такие серверы. Проверяйте через mxtoolbox.com/diagnostic. Mailcow закрывает relay по умолчанию."}, {"q": "Зачем нужны автоматические security обновления (unattended-upgrades)?", "opts": ["Для обновления Docker образов", "Автоматически устанавливают только патчи безопасности ОС", "Для обновления Mailcow", "Для резервного копирования"], "c": 1, "e": "unattended-upgrades устанавливает только пакеты из security репозитория Ubuntu. Не трогает основные пакеты (не сломает систему), но закрывает известные уязвимости автоматически."}, {"q": "certbot renew --dry-run нужно запускать:", "opts": ["Только когда сертификат истёк", "Ежемесячно для проверки что автообновление настроено правильно", "После каждого изменения Nginx", "Только один раз при настройке"], "c": 1, "e": "Регулярный --dry-run убеждает что механизм автообновления работает. Certbot обновляет за 30 дней до истечения — но лучше знать заранее что всё в порядке, чем узнать в день Х что обновление сломалось."}];
-        const CQ_KEY = 'security_quiz_passed';
-        let cqAnswered = {};
-        let cqCorrect  = 0;
+<span class="comment"># Или вручную:</span>
+cat > /etc/apt/apt.conf.d/20auto-upgrades << 'EOF'
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Unattended-Upgrade "1";
+APT::Periodic::Download-Upgradeable-Packages "1";
+APT::Periodic::AutocleanInterval "7";
+EOF</pre></div>
 
-        function cqRender() {
-          cqAnswered = {}; cqCorrect = 0;
-          const el = document.getElementById('cq-questions');
-          if (!el) return;
-          el.innerHTML = CQ.map((q, i) => `
-  }
-  7: {
-    module: 'Модуль 4 · Мониторинг угроз',
+      <h2>Что обновляется автоматически</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Проверяем конфиг:</span>
+cat /etc/apt/apt.conf.d/50unattended-upgrades
+
+<span class="comment"># По умолчанию обновляются только security пакеты:</span>
+<span class="comment"># "origin=Debian,codename=\${distro_codename}-security";</span>
+<span class="comment"># "origin=Ubuntu,archive=\${distro_codename}-security";</span>
+
+<span class="comment"># НЕ обновляются: Docker, Nginx из сторонних репо,</span>
+<span class="comment"># Mailcow, Postal — их обновлять вручную</span></pre></div>
+
+      <h2>Настройка уведомлений и перезагрузки</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Добавьте в /etc/apt/apt.conf.d/50unattended-upgrades:</span>
+
+<span class="comment"># Email уведомления (если настроен MTA):</span>
+Unattended-Upgrade::Mail "admin@yourdomain.com";
+Unattended-Upgrade::MailReport "on-change";
+
+<span class="comment"># Автоматическая перезагрузка (осторожно!):</span>
+Unattended-Upgrade::Automatic-Reboot "true";
+Unattended-Upgrade::Automatic-Reboot-Time "04:00";
+<span class="comment"># Перезагрузка в 4 утра если требуется ядром</span>
+
+<span class="comment"># Удалять неиспользуемые зависимости:</span>
+Unattended-Upgrade::Remove-Unused-Dependencies "true";
+Unattended-Upgrade::Remove-New-Unused-Dependencies "true";</pre></div>
+
+      <h2>Проверка и логи</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Тестовый прогон (показывает что будет обновлено):</span>
+unattended-upgrade --dry-run --debug
+
+<span class="comment"># Логи обновлений:</span>
+cat /var/log/unattended-upgrades/unattended-upgrades.log
+cat /var/log/unattended-upgrades/unattended-upgrades-dpkg.log
+
+<span class="comment"># Последнее обновление:</span>
+ls -la /var/log/unattended-upgrades/
+
+<span class="comment"># Какие пакеты ждут обновления:</span>
+apt list --upgradable</pre></div>
+
+      <div class="note-block tip">
+        <div class="note-label">Что обновлять вручную</div>
+        unattended-upgrades покрывает ОС. Остальное обновляйте по расписанию вручную: <strong>Docker</strong> (<code>apt upgrade docker-ce</code>), <strong>Mailcow</strong> (<code>./update.sh</code>), <strong>Postal</strong> (<code>docker compose pull</code>), <strong>n8n</strong> (<code>docker pull n8nio/n8n</code>). Ставьте напоминание раз в 2 недели.
+      </div>`
+  },
+  9: {
+    module: 'Модуль 4 · Мониторинг и реагирование',
     title:  'Как обнаружить взлом — признаки и инструменты',
     time:   '20 мин',
     content: `
       <h2>Признаки что сервер скомпрометирован</h2>
+      <p>Обнаружение взлома — это навык который спасает инфраструктуру. Чем раньше вы заметите проблему, тем меньше ущерб. Вот на что смотреть:</p>
       <div style="display:flex;flex-direction:column;gap:6px;margin:16px 0">
-        <div style="padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.2)"><div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:2px">Нагрузка CPU/RAM без причины</div><div style="font-size:12px;color:var(--muted)">top / htop — незнакомый процесс потребляет ресурсы (майнер, ботнет)</div></div>
-        <div style="padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.2)"><div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:2px">Исходящий трафик вырос</div><div style="font-size:12px;color:var(--muted)">vnstat -d — сервер отправляет гигабайты без рассылок</div></div>
-        <div style="padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.2)"><div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:2px">Незнакомые пользователи или процессы</div><div style="font-size:12px;color:var(--muted)">who / ps aux — кто залогинен, что запущено</div></div>
-        <div style="padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.2)"><div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:2px">Письма улетают без вашего ведома</div><div style="font-size:12px;color:var(--muted)">Postal logs — тысячи писем которых вы не отправляли</div></div>
+        <div style="padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.2)"><div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:2px">Нагрузка CPU/RAM без причины</div><div style="font-size:12px;color:var(--muted)">top / htop — незнакомый процесс потребляет ресурсы. Часто это криптомайнер — один из самых популярных payload после взлома. Ищите процессы с подозрительными именами: kdevtmpfsi, xmrig, или случайные буквы.</div></div>
+        <div style="padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.2)"><div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:2px">Исходящий трафик вырос</div><div style="font-size:12px;color:var(--muted)">vnstat -d — сервер отправляет гигабайты без ваших рассылок. Может быть участие в DDoS ботнете или массовый спам через Open Relay.</div></div>
+        <div style="padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.2)"><div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:2px">Незнакомые пользователи или cron задачи</div><div style="font-size:12px;color:var(--muted)">who / crontab -l / cat /etc/passwd — новые пользователи, скрытые cron задачи скачивающие скрипты. Атакующие закрепляются через cron.</div></div>
+        <div style="padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.2)"><div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:2px">Письма улетают без вашего ведома</div><div style="font-size:12px;color:var(--muted)">Postal logs показывают тысячи писем которых вы не отправляли. Очередь Postfix переполнена. IP появился в чёрных списках.</div></div>
+        <div style="padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.2)"><div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:2px">Изменения в системных файлах</div><div style="font-size:12px;color:var(--muted)">Модифицированные /etc/ssh/sshd_config, новые ключи в authorized_keys, изменённые бинарники в /usr/bin. Атакующие оставляют бэкдоры.</div></div>
       </div>
 
-      <h2>Базовый аудит за 5 минут</h2>
-      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Кто сейчас залогинен</span>
-who
-last | head -20
+      <h2>Экспресс-аудит за 5 минут</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># ═══ Кто на сервере ═══</span>
+who                           <span class="comment"># кто сейчас залогинен</span>
+last | head -20               <span class="comment"># последние входы</span>
+lastb | head -20              <span class="comment"># неудачные попытки входа</span>
 
-<span class="comment"># Незнакомые процессы</span>
-ps aux --sort=-%cpu | head -20
+<span class="comment"># ═══ Подозрительные процессы ═══</span>
+ps aux --sort=-%cpu | head -20    <span class="comment"># по CPU</span>
+ps aux --sort=-%mem | head -15    <span class="comment"># по памяти</span>
+<span class="comment"># Ищите незнакомые процессы с высоким потреблением</span>
 
-<span class="comment"># Открытые соединения</span>
-ss -tlnp
-netstat -an | grep ESTABLISHED | head -20
+<span class="comment"># ═══ Открытые соединения ═══</span>
+ss -tlnp                     <span class="comment"># слушающие порты</span>
+ss -tnp | grep ESTABLISHED | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -rn | head
+<span class="comment"># Показывает IP с наибольшим числом соединений</span>
 
-<span class="comment"># Изменённые файлы за последние 24 часа</span>
-find /etc /usr/bin /usr/sbin -mtime -1 -type f 2>/dev/null
+<span class="comment"># ═══ Изменённые файлы за 24 часа ═══</span>
+find /etc /usr/bin /usr/sbin /root -mtime -1 -type f 2>/dev/null
+<span class="comment"># Если видите изменения которые не делали — тревога</span>
 
-<span class="comment"># Неудачные попытки входа</span>
+<span class="comment"># ═══ SSH логи ═══</span>
 grep "Failed password" /var/log/auth.log | tail -20
+grep "Accepted" /var/log/auth.log | tail -20
+<span class="comment"># Успешные входы с незнакомых IP — подозрительно</span>
 
-<span class="comment"># Успешные входы (подозрительные)</span>
-grep "Accepted" /var/log/auth.log | tail -20</pre></div>
+<span class="comment"># ═══ Cron на бэкдоры ═══</span>
+crontab -l                    <span class="comment"># текущий пользователь</span>
+ls -la /etc/cron.d/           <span class="comment"># системные cron файлы</span>
+for user in $(cut -f1 -d: /etc/passwd); do echo "=== $user ==="; crontab -u $user -l 2>/dev/null; done</pre></div>
 
       <h2>Rootkit проверка</h2>
-      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre>sudo apt install rkhunter chkrootkit -y
-sudo rkhunter --check --skip-keypress
-sudo chkrootkit</pre></div>`
-  }
-  8: {
-    module: 'Модуль 4 · Мониторинг угроз',
-    title:  'Автоматические алёрты безопасности через n8n',
-    time:   '15 мин',
-    content: `
-      <h2>Что мониторить автоматически</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Установка сканеров:</span>
+apt install rkhunter chkrootkit lynis -y
+
+<span class="comment"># Быстрая проверка:</span>
+chkrootkit
+
+<span class="comment"># Подробная проверка:</span>
+rkhunter --update
+rkhunter --check --skip-keypress
+
+<span class="comment"># Полный аудит безопасности системы:</span>
+lynis audit system
+<span class="comment"># Выдаст отчёт с рекомендациями и оценкой</span></pre></div>
+
+      <h2>Что делать если нашли следы взлома</h2>
       <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
-        <div style="display:flex;gap:10px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">Новые SSH логины — особенно с незнакомых IP</span></div>
-        <div style="display:flex;gap:10px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">Количество Failed password попыток (> 50 за час = атака)</span></div>
-        <div style="display:flex;gap:10px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">Исходящий трафик > X GB — аномалия</span></div>
-        <div style="display:flex;gap:10px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">Postal: очередь > 1000 писем — вероятно спам-рассылка</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.15)"><span style="color:#ff6b6b;font-weight:700">1</span><span style="font-size:12px;color:var(--text)"><strong>Не паникуйте</strong> — зафиксируйте что видите (скриншоты, логи)</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.15)"><span style="color:#ff6b6b;font-weight:700">2</span><span style="font-size:12px;color:var(--text)"><strong>Изолируйте</strong> — остановите подозрительные процессы, закройте порты</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.15)"><span style="color:#ff6b6b;font-weight:700">3</span><span style="font-size:12px;color:var(--text)"><strong>Смените пароли</strong> — все: SSH ключи, Mailcow, Postal, БД, API ключи</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.15)"><span style="color:#ff6b6b;font-weight:700">4</span><span style="font-size:12px;color:var(--text)"><strong>Восстановите из бэкапа</strong> — если есть чистый бэкап, проще пересоздать</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.15)"><span style="color:#ff6b6b;font-weight:700">5</span><span style="font-size:12px;color:var(--text)"><strong>Усильте защиту</strong> — примените все рекомендации из этого курса</span></div>
+      </div>`
+  },
+  10: {
+    module: 'Модуль 4 · Мониторинг и реагирование',
+    title:  'Аудит и алёрты — чеклист + Telegram',
+    time:   '18 мин',
+    content: `
+      <h2>Ежемесячный аудит безопасности — чеклист</h2>
+      <p>Безопасность — не одноразовая настройка, а процесс. Раз в месяц проходите по этому чеклисту — 15 минут которые могут спасти вашу инфраструктуру.</p>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;padding:6px 14px;background:var(--surface);border:1px solid var(--border)">SSH и доступ</div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">PasswordAuthentication no в sshd_config</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">fail2ban активен: <code>fail2ban-client status</code></span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Нет лишних пользователей: <code>cat /etc/passwd | grep -v nologin | grep -v false</code></span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Нет подозрительных cron задач: <code>crontab -l</code> + <code>ls /etc/cron.d/</code></span></div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;padding:6px 14px;background:var(--surface);border:1px solid var(--border);margin-top:8px">Email сервисы</div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Open Relay тест пройден: mxtoolbox.com/diagnostic</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Все панели с сильными паролями (> 16 символов)</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">SSL сертификаты не истекают: <code>certbot renew --dry-run</code></span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">IP не в чёрных списках: mxtoolbox.com/blacklists</span></div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;padding:6px 14px;background:var(--surface);border:1px solid var(--border);margin-top:8px">Обновления и ресурсы</div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)"><code>apt upgrade</code> выполнен, нет pending security updates</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Docker образы обновлены: <code>docker compose pull</code></span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none"><span style="color:var(--accent3)">✓</span><span style="font-size:12px;color:var(--text)">Место на диске > 20%: <code>df -h</code></span></div>
       </div>
 
-      <h2>Bash-скрипт + cron + Telegram алёрт</h2>
+      <h2>Скрипт аудита одной командой</h2>
       <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment">#!/bin/bash</span>
-<span class="comment"># /opt/security-check.sh</span>
-BOT_TOKEN="ваш_токен"
+<span class="comment"># /opt/security-audit.sh — запускайте раз в месяц</span>
+echo "═══ SECURITY AUDIT $(date) ═══"
+echo ""
+echo "--- SSH Config ---"
+grep -E "PasswordAuth|PermitRoot|PubkeyAuth" /etc/ssh/sshd_config
+echo ""
+echo "--- fail2ban ---"
+fail2ban-client status 2>/dev/null || echo "NOT RUNNING!"
+echo ""
+echo "--- Open ports ---"
+ss -tlnp | grep -v "127.0.0.1"
+echo ""
+echo "--- Users with shell ---"
+grep -v "nologin\|false\|sync\|halt" /etc/passwd
+echo ""
+echo "--- Disk usage ---"
+df -h / | tail -1
+echo ""
+echo "--- SSL expiry ---"
+for cert in /etc/letsencrypt/live/*/fullchain.pem; do
+  domain=$(echo "$cert" | cut -d/ -f5)
+  expiry=$(openssl x509 -enddate -noout -in "$cert" 2>/dev/null | cut -d= -f2)
+  echo "$domain: $expiry"
+done
+echo ""
+echo "--- Docker images age ---"
+docker images --format "{{.Repository}}:{{.Tag}} {{.CreatedSince}}" | head -10
+echo ""
+echo "═══ END AUDIT ═══"</pre></div>
+
+      <h2>Telegram алёрты — мгновенные уведомления</h2>
+      <p>Не ждите пока посмотрите логи — пусть сервер сам пришлёт вам в Telegram если что-то не так:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment">#!/bin/bash</span>
+<span class="comment"># /opt/security-alert.sh</span>
+<span class="comment"># Запускать через cron: */5 * * * * root /opt/security-alert.sh</span>
+
+BOT_TOKEN="ваш_токен_от_BotFather"
 CHAT_ID="ваш_chat_id"
 HOSTNAME=$(hostname)
 
 send_alert() {
-  curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage"     -d "chat_id=${CHAT_ID}"     -d "text=🚨 ${HOSTNAME}: $1"
+  curl -s -X POST "https://api.telegram.org/bot\${BOT_TOKEN}/sendMessage" \
+    -d "chat_id=\${CHAT_ID}" \
+    -d "parse_mode=HTML" \
+    -d "text=<b>🚨 \${HOSTNAME}</b>%0A\$1" > /dev/null
 }
 
-<span class="comment"># Проверяем Failed password за последний час</span>
-FAILED=$(grep "Failed password" /var/log/auth.log |   awk -v d="$(date -d '1 hour ago' '+%b %d %H')" '$0 > d' | wc -l)
-[ "$FAILED" -gt 50 ] && send_alert "Брутфорс SSH: ${FAILED} попыток за час"
+<span class="comment"># 1. Брутфорс SSH (> 50 попыток за час)</span>
+FAILED=$(grep "Failed password" /var/log/auth.log | \
+  awk -v d="$(date -d '1 hour ago' '+%b %d %H')" '$0 > d' | wc -l)
+[ "\$FAILED" -gt 50 ] && send_alert "Брутфорс SSH: \${FAILED} попыток за час"
 
-<span class="comment"># Проверяем новые логины</span>
-NEW_LOGINS=$(grep "Accepted" /var/log/auth.log |   awk -v d="$(date -d '5 minutes ago' '+%b %d %H:%M')" '$0 > d')
-[ -n "$NEW_LOGINS" ] && send_alert "Новый SSH вход: ${NEW_LOGINS}"
+<span class="comment"># 2. Новые SSH входы за последние 5 минут</span>
+NEW_LOGINS=$(grep "Accepted" /var/log/auth.log | \
+  awk -v d="$(date -d '5 minutes ago' '+%b %d %H:%M')" '$0 > d')
+[ -n "\$NEW_LOGINS" ] && send_alert "Новый SSH вход: \${NEW_LOGINS}"
 
-<span class="comment"># Запускаем каждые 5 минут</span>
-<span class="comment"># */5 * * * * root /opt/security-check.sh</span></pre></div>
-      
-        
-      
-      
-        
-      </div>
+<span class="comment"># 3. Диск заполнен > 90%</span>
+DISK_USE=$(df / | tail -1 | awk '{print $5}' | tr -d '%')
+[ "\$DISK_USE" -gt 90 ] && send_alert "Диск заполнен на \${DISK_USE}%"
+
+<span class="comment"># 4. fail2ban остановлен</span>
+systemctl is-active --quiet fail2ban || send_alert "fail2ban НЕ РАБОТАЕТ!"
+
+<span class="comment"># 5. Высокая нагрузка</span>
+LOAD=$(cat /proc/loadavg | awk '{print $1}')
+CORES=$(nproc)
+if (( $(echo "\$LOAD > \$CORES * 2" | bc -l) )); then
+  send_alert "Нагрузка CPU: \${LOAD} (ядер: \${CORES})"
+fi</pre></div>
+
+      <h2>Настройка cron для алёртов</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Сделать скрипт исполняемым:</span>
+chmod +x /opt/security-alert.sh
+
+<span class="comment"># Добавить в cron (каждые 5 минут):</span>
+echo "*/5 * * * * root /opt/security-alert.sh >> /var/log/security-alert.log 2>&1" | \
+  tee /etc/cron.d/security-alert
+
+<span class="comment"># Тестовый запуск:</span>
+/opt/security-alert.sh
+<span class="comment"># Должны получить тест в Telegram если есть триггеры</span></pre></div>
+
+      <!-- ══ ТЕСТ ══ -->
       <div id="quizBlock" style="margin-top:40px">
         <div style="padding:20px 24px;background:rgba(123,97,255,.06);border:1px solid rgba(123,97,255,.25);margin-bottom:20px">
           <div style="font-size:10px;color:var(--accent2);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Финальный тест</div>
@@ -1311,7 +1774,7 @@ window.lessons = lessons;
 window.currentLesson = currentLesson;
 
 // quiz:security
-var qData_security = [{"q": "fail2ban мониторит логи и блокирует IP после:", "opts": ["Любого подключения", "Заданного числа неудачных попыток аутентификации", "Превышения трафика", "Изменения файлов"], "c": 1, "e": "fail2ban читает лог-файлы (auth.log, nginx/error.log) и при обнаружении паттерна (например 5 неудачных SSH входов) добавляет IP в iptables/ufw правила блокировки."}, {"q": "Что нужно сделать ПЕРЕД тем как отключить вход по паролю в SSH?", "opts": ["Перезагрузить сервер", "Убедиться что SSH ключ добавлен и вход по нему работает", "Изменить порт SSH", "Установить fail2ban"], "c": 1, "e": "Строго обязательно: сначала добавьте публичный ключ в ~/.ssh/authorized_keys, затем откройте новую сессию и проверьте что вход по ключу работает. Только потом отключайте PasswordAuthentication."}, {"q": "Команда для проверки что сервер не является Open Relay:", "opts": ["dig MX yourdomain.com", "mxtoolbox.com/diagnostic и тест relay", "netstat -an", "postfix check"], "c": 1, "e": "Open Relay — сервер пересылающий почту для кого угодно. Спамеры ищут такие серверы. Проверяйте через mxtoolbox.com/diagnostic. Mailcow закрывает relay по умолчанию."}, {"q": "Зачем нужны автоматические security обновления (unattended-upgrades)?", "opts": ["Для обновления Docker образов", "Автоматически устанавливают только патчи безопасности ОС", "Для обновления Mailcow", "Для резервного копирования"], "c": 1, "e": "unattended-upgrades устанавливает только пакеты из security репозитория Ubuntu. Не трогает основные пакеты (не сломает систему), но закрывает известные уязвимости автоматически."}, {"q": "certbot renew --dry-run нужно запускать:", "opts": ["Только когда сертификат истёк", "Ежемесячно для проверки что автообновление настроено правильно", "После каждого изменения Nginx", "Только один раз при настройке"], "c": 1, "e": "Регулярный --dry-run убеждает что механизм автообновления работает. Certbot обновляет за 30 дней до истечения — но лучше знать заранее что всё в порядке, чем узнать в день Х что обновление сломалось."}];
+var qData_security = [{"q": "fail2ban мониторит логи и блокирует IP после:", "opts": ["Любого подключения", "Заданного числа неудачных попыток аутентификации", "Превышения трафика", "Изменения файлов"], "c": 1, "e": "fail2ban читает лог-файлы (auth.log, nginx/error.log) и при обнаружении паттерна (например 3-5 неудачных SSH входов за findtime) добавляет IP в iptables правила блокировки на заданное bantime."}, {"q": "Что нужно сделать ПЕРЕД тем как отключить вход по паролю в SSH?", "opts": ["Перезагрузить сервер", "Убедиться что SSH ключ добавлен и вход по нему работает из НОВОЙ вкладки", "Изменить порт SSH", "Установить fail2ban"], "c": 1, "e": "Строго обязательно: сначала добавьте публичный ключ, затем откройте НОВУЮ SSH сессию и проверьте что вход по ключу работает. НЕ закрывайте текущую сессию. Только после успешной проверки отключайте PasswordAuthentication."}, {"q": "Docker по умолчанию обходит UFW firewall. Как это исправить?", "opts": ["Удалить Docker", "Привязать порты к 127.0.0.1 и/или добавить iptables:false в daemon.json", "Перезапустить UFW", "Открыть все порты"], "c": 1, "e": "Docker добавляет свои правила напрямую в iptables, обходя UFW. Решение: привязывайте порты к 127.0.0.1 (127.0.0.1:8080:8080) и добавьте {\"iptables\": false} в /etc/docker/daemon.json."}, {"q": "Зачем нужны автоматические security обновления (unattended-upgrades)?", "opts": ["Для обновления Docker образов", "Автоматически устанавливают только патчи безопасности ОС", "Для обновления Mailcow", "Для резервного копирования"], "c": 1, "e": "unattended-upgrades устанавливает только пакеты из security репозитория Ubuntu. Не трогает основные пакеты и Docker — не сломает систему, но закрывает известные уязвимости ОС автоматически."}, {"q": "Open Relay на email-сервере — это когда:", "opts": ["SSL сертификат просрочен", "Сервер пересылает почту от кого угодно кому угодно без авторизации", "fail2ban не настроен", "Порт 25 закрыт"], "c": 1, "e": "Open Relay — SMTP сервер принимающий и пересылающий письма без аутентификации. Спамеры находят такие серверы за минуты и начинают рассылку. Ваш IP в Spamhaus за часы. Проверяйте через mxtoolbox.com/diagnostic."}];
 var qAns_security = {};
 var qOk_security = 0;
 
