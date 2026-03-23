@@ -978,148 +978,760 @@ var lessons = {
   1: {
     module: 'Модуль 1 · Основы',
     title:  'Что такое reverse proxy и зачем он нужен',
-    time:   '10 мин',
+    time:   '15 мин',
     content: `
-      <h2>Зачем нужен reverse proxy</h2>
-      <p>Один IP, несколько сервисов. Nginx принимает входящие запросы и направляет к нужному сервису по домену.</p>`
+      <h2>Что такое reverse proxy</h2>
+      <p>Представьте себе ресепшн в большом офисном здании. Посетитель приходит и говорит: «Мне нужен отдел продаж». Ресепшионист не пускает его бродить по этажам — он направляет гостя в нужный кабинет. Reverse proxy работает точно так же: он принимает входящие HTTP/HTTPS запросы на один IP-адрес и направляет их к нужному внутреннему сервису в зависимости от доменного имени.</p>
+
+      <p>Зачем это нужно именно для email-стека? На одном сервере у вас работают сразу несколько сервисов, и каждый слушает свой порт:</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Архитектура email-стека на одном сервере</span>
+┌──────────────────────────────────────────────────┐
+│               NGINX (порты 80 / 443)             │
+│                  Reverse Proxy                   │
+├──────────────────────────────────────────────────┤
+│                                                  │
+│  mail.domain.com   → Mailcow    (127.0.0.1:8443) │
+│  send.domain.com   → MailWizz   (127.0.0.1:8001) │
+│  auto.domain.com   → n8n        (127.0.0.1:5678) │
+│  postal.domain.com → Postal     (127.0.0.1:5001) │
+│  chat.domain.com   → Chatwoot   (127.0.0.1:3000) │
+│                                                  │
+└──────────────────────────────────────────────────┘</pre></div>
+
+      <p>Без reverse proxy вам пришлось бы указывать порт в URL: <code>https://yourserver.com:8443</code> для Mailcow, <code>https://yourserver.com:8001</code> для MailWizz. Это неудобно, небезопасно и непрофессионально. Nginx позволяет обращаться к каждому сервису по красивому домену на стандартном порту 443.</p>
+
+      <p>Важно понимать разницу между forward proxy и reverse proxy. Forward proxy (например, корпоративный прокси или VPN) стоит на стороне клиента и скрывает его IP от внешних серверов. Reverse proxy стоит на стороне сервера и скрывает внутреннюю инфраструктуру от клиента. Клиент вообще не знает, что за Nginx стоят отдельные сервисы.</p>
+
+      <p>Помимо маршрутизации, Nginx как reverse proxy даёт ещё несколько критически важных преимуществ:</p>
+      <ul>
+        <li><strong>SSL-терминация</strong> — один раз настраиваете сертификат на Nginx, а внутренние сервисы работают по HTTP</li>
+        <li><strong>Security headers</strong> — централизованно добавляете заголовки безопасности (HSTS, X-Frame-Options)</li>
+        <li><strong>Rate limiting</strong> — защита от брутфорса и DDoS на уровне Nginx</li>
+        <li><strong>Кэширование</strong> — статические файлы отдаются быстрее</li>
+        <li><strong>Load balancing</strong> — при масштабировании можно распределять нагрузку на несколько бэкендов</li>
+      </ul>
+
+      <div class="note-block info"><div class="note-label">Когда НЕ нужен Nginx</div>Если вы используете Docker с Traefik или Caddy в качестве встроенного reverse proxy — дополнительный Nginx не нужен. Traefik автоматически обнаруживает контейнеры и настраивает маршрутизацию через Docker labels. Caddy автоматически получает SSL-сертификаты. Однако в классической схеме Mailcow + Postal + MailWizz на одном VPS — Nginx остаётся стандартом.</div>
+
+      <p>Проверить, нужен ли вам Nginx, просто: если у вас несколько веб-сервисов на одном IP и вы хотите обращаться к ним по разным доменам через стандартные порты 80/443 — да, нужен. Именно эту задачу мы будем решать в этом курсе.</p>
+
+      <div class="note-block tip"><div class="note-label">Совет</div>Перед установкой Nginx убедитесь, что порты 80 и 443 не заняты другими процессами. Команда <code>sudo ss -tlnp | grep -E ':80|:443'</code> покажет, кто слушает эти порты.</div>`
   }
 ,
   2: {
     module: 'Модуль 1 · Основы',
     title:  'Установка Nginx на Ubuntu',
-    time:   '10 мин',
+    time:   '15 мин',
     content: `
-      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre>sudo apt update && sudo apt install nginx -y
-sudo systemctl enable nginx && sudo systemctl start nginx
-curl -I http://localhost</pre></div>`
+      <h2>Установка и запуск Nginx</h2>
+      <p>Установка Nginx на Ubuntu/Debian максимально проста — пакет доступен в стандартных репозиториях. Одна команда — и у вас рабочий веб-сервер. Но важно понимать, что происходит после установки, и правильно настроить автозапуск.</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Обновляем список пакетов и устанавливаем Nginx</span>
+sudo apt update
+sudo apt install nginx -y
+
+<span class="comment"># Включаем автозапуск при перезагрузке сервера</span>
+sudo systemctl enable nginx
+
+<span class="comment"># Запускаем Nginx</span>
+sudo systemctl start nginx
+
+<span class="comment"># Проверяем статус</span>
+sudo systemctl status nginx</pre></div>
+
+      <p>После установки Nginx автоматически создаёт дефолтную страницу «Welcome to nginx!». Убедитесь, что она доступна:</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Проверяем ответ Nginx локально</span>
+curl -I http://localhost
+
+<span class="comment"># Ожидаемый результат:</span>
+# HTTP/1.1 200 OK
+# Server: nginx/1.24.0
+# Content-Type: text/html</pre></div>
+
+      <p>Если вы видите <code>HTTP/1.1 200 OK</code> — Nginx работает. Теперь разберёмся в структуре каталогов. Это критически важно для дальнейшей работы:</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Структура каталогов Nginx</span>
+/etc/nginx/
+├── nginx.conf              # Главный конфиг (events, http блоки)
+├── sites-available/        # Все конфиги виртуальных хостов
+│   └── default             # Дефолтный сайт (удалить!)
+├── sites-enabled/          # Симлинки на активные конфиги
+│   └── default → ../sites-available/default
+├── conf.d/                 # Альтернативная папка для конфигов
+├── snippets/               # Переиспользуемые фрагменты конфигов
+└── mime.types              # Типы файлов
+
+/var/log/nginx/
+├── access.log              # Лог всех запросов
+└── error.log               # Лог ошибок (смотреть ПЕРВЫМ!)</pre></div>
+
+      <p>Файл <code>nginx.conf</code> — это главный конфигурационный файл. Он содержит два основных блока: <code>events</code> (параметры соединений) и <code>http</code> (настройки веб-сервера). Внутри блока <code>http</code> он подключает все конфиги из <code>sites-enabled/</code> через директиву <code>include</code>. Вы почти никогда не редактируете <code>nginx.conf</code> напрямую — вместо этого создаёте отдельные файлы в <code>sites-available/</code>.</p>
+
+      <p>Первое, что нужно сделать после установки — удалить дефолтный сайт. Он не нужен и может мешать:</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Удаляем дефолтный сайт</span>
+sudo rm /etc/nginx/sites-enabled/default
+
+<span class="comment"># Проверяем конфигурацию</span>
+sudo nginx -t
+
+<span class="comment"># Перезагружаем Nginx</span>
+sudo systemctl reload nginx</pre></div>
+
+      <div class="note-block warn"><div class="note-label">Частая ошибка: порт 80 уже занят</div>Если при запуске Nginx вы видите <code>bind() to 0.0.0.0:80 failed (98: Address already in use)</code> — значит порт 80 занят другим процессом (Apache, другой Nginx, или даже Mailcow). Найдите процесс командой <code>sudo ss -tlnp | grep :80</code> и остановите его. Чаще всего это Apache: <code>sudo systemctl stop apache2 && sudo systemctl disable apache2</code>.</div>
+
+      <p>Логи Nginx — ваш главный инструмент диагностики. При любой проблеме первым делом смотрите <code>/var/log/nginx/error.log</code>. Команда <code>sudo tail -f /var/log/nginx/error.log</code> покажет ошибки в реальном времени — держите её открытой в отдельном терминале при настройке.</p>
+
+      <div class="note-block tip"><div class="note-label">Совет</div>Запомните две команды, которые вы будете использовать постоянно: <code>sudo nginx -t</code> (проверка синтаксиса) и <code>sudo systemctl reload nginx</code> (применение изменений без остановки). Никогда не делайте <code>reload</code> без предварительного <code>nginx -t</code>!</div>`
   }
 ,
   3: {
     module: 'Модуль 1 · Основы',
     title:  'Первый виртуальный хост',
-    time:   '15 мин',
+    time:   '20 мин',
     content: `
+      <h2>Создание server-блока</h2>
+      <p>Виртуальный хост (server block) — это конфигурация, которая говорит Nginx: «когда приходит запрос на домен X, направь его на сервис Y». Каждый сервис вашего email-стека получает свой файл конфигурации. Давайте создадим первый.</p>
+
+      <p>Создайте файл конфигурации в <code>sites-available</code>. Каждая директива выполняет конкретную задачу:</p>
+
       <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># /etc/nginx/sites-available/app.conf</span>
 server {
-    listen 80;
-    server_name app.yourdomain.com;
-    location / {
-        proxy_pass http://127.0.0.1:8080;
+    listen 80;                          # Слушаем порт 80
+    server_name app.yourdomain.com;     # Реагируем только на этот домен
+
+    location / {                        # Для всех запросов (/)
+        proxy_pass http://127.0.0.1:8080;   # Направляем на бэкенд
+
+        <span class="comment"># Заголовки — передаём реальную информацию о клиенте</span>
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
-}
+}</pre></div>
+
+      <p>Разберём каждую директиву подробно:</p>
+      <ul>
+        <li><code>listen 80</code> — Nginx слушает порт 80 (HTTP). Позже мы добавим <code>listen 443 ssl</code> для HTTPS.</li>
+        <li><code>server_name</code> — домен, на который реагирует этот блок. Nginx сравнивает заголовок Host запроса с этим значением.</li>
+        <li><code>proxy_pass</code> — куда перенаправлять запрос. Указываем адрес и порт внутреннего сервиса.</li>
+        <li><code>proxy_set_header Host $host</code> — передаёт оригинальный домен бэкенду (иначе бэкенд увидит 127.0.0.1).</li>
+        <li><code>X-Real-IP</code> — передаёт реальный IP клиента (иначе бэкенд увидит 127.0.0.1 как адрес клиента).</li>
+        <li><code>X-Forwarded-For</code> — цепочка прокси, через которые прошёл запрос.</li>
+        <li><code>X-Forwarded-Proto</code> — протокол (http или https), чтобы бэкенд знал, через HTTPS ли пришёл запрос.</li>
+      </ul>
+
+      <p>Теперь активируем конфигурацию. Nginx использует механизм симлинков: файл лежит в <code>sites-available</code>, а в <code>sites-enabled</code> создаётся ссылка на него. Это позволяет быстро включать/выключать сайты без удаления конфигов.</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Создаём симлинк (активируем конфиг)</span>
 sudo ln -s /etc/nginx/sites-available/app.conf /etc/nginx/sites-enabled/
-sudo nginx -t && sudo systemctl reload nginx</pre></div>`
+
+<span class="comment"># ОБЯЗАТЕЛЬНО: проверяем синтаксис</span>
+sudo nginx -t
+<span class="comment"># nginx: configuration file /etc/nginx/nginx.conf test is successful</span>
+
+<span class="comment"># Применяем изменения (без остановки Nginx)</span>
+sudo systemctl reload nginx</pre></div>
+
+      <p>Для проверки не обязательно иметь настроенный DNS. Можно протестировать локально, передав заголовок Host вручную:</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Тестируем локально без DNS</span>
+curl -I -H "Host: app.yourdomain.com" http://localhost
+
+<span class="comment"># Если бэкенд работает — увидите HTTP/1.1 200 OK</span>
+<span class="comment"># Если бэкенд не запущен — HTTP/1.1 502 Bad Gateway</span>
+
+<span class="comment"># Тест с внешней машины (когда DNS настроен)</span>
+curl -I http://app.yourdomain.com</pre></div>
+
+      <div class="note-block warn"><div class="note-label">Частые ошибки</div>1. <strong>Забыли создать симлинк</strong> — конфиг лежит в sites-available, но не подключён в sites-enabled. Nginx его игнорирует.<br>2. <strong>Опечатка в server_name</strong> — написали <code>app.youdomain.com</code> вместо <code>app.yourdomain.com</code>. Nginx не сопоставит домен и вернёт дефолтный сервер (или 404).<br>3. <strong>Не сделали nginx -t перед reload</strong> — если в конфиге ошибка, reload молча провалится и Nginx продолжит работать со старым конфигом.</div>
+
+      <div class="note-block tip"><div class="note-label">Совет</div>Называйте файлы конфигов по имени домена: <code>mail.yourdomain.com.conf</code>, <code>send.yourdomain.com.conf</code>. Когда у вас 10+ доменов, это сильно упрощает навигацию.</div>`
   }
 ,
   4: {
     module: 'Модуль 2 · SSL',
-    title:  'Что такое SSL и почему без него нельзя',
-    time:   '10 мин',
+    title:  'SSL/TLS — что это и зачем обязательно',
+    time:   '15 мин',
     content: `
-      <h2>Почему SSL обязателен</h2>
-      <div style="display:flex;flex-direction:column;gap:6px;margin:16px 0">
-        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">Mailcow, MailWizz, n8n требуют HTTPS для работы</span></div>
-        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">Let's Encrypt — бесплатно, автообновление каждые 90 дней</span></div>
-      </div>
-      <div class="note-block warn"><div class="note-label">Требование</div>A-запись домена должна указывать на IP сервера до запуска certbot.</div>`
+      <h2>Как работает HTTPS</h2>
+      <p>SSL/TLS — это протокол шифрования трафика между браузером пользователя и сервером. Когда вы видите замочек в адресной строке — это значит, что соединение зашифровано и никто не может перехватить данные «по пути». Упрощённо процесс выглядит так: браузер и сервер обмениваются ключами (TLS handshake), договариваются о методе шифрования, и дальше весь трафик идёт в зашифрованном виде.</p>
+
+      <p>Почему для email-стека SSL обязателен без исключений? Потому что вы вводите пароли. Каждый день вы заходите в Mailcow, MailWizz, n8n через веб-интерфейс. Без HTTPS ваш логин и пароль передаются <strong>открытым текстом</strong>. Любой, кто находится между вами и сервером (провайдер, Wi-Fi точка, промежуточный маршрутизатор), может их перехватить.</p>
+
+      <p>Помимо защиты паролей, SSL необходим по ряду других причин:</p>
+      <ul>
+        <li>Браузеры помечают HTTP-сайты как «Не защищено» — это отпугивает и выглядит непрофессионально</li>
+        <li>Многие API и веб-хуки (n8n, Chatwoot) требуют HTTPS для работы</li>
+        <li>Google учитывает HTTPS при ранжировании (хоть для внутренних панелей это не критично)</li>
+        <li>HSTS (HTTP Strict Transport Security) предотвращает downgrade-атаки</li>
+      </ul>
+
+      <p>Есть два варианта получения SSL-сертификатов: платные (DigiCert, Sectigo) и бесплатные (Let's Encrypt). Для нашего email-стека бесплатный Let's Encrypt — идеальный выбор. Он автоматически выдаёт и обновляет сертификаты, поддерживается всеми браузерами и не уступает платным по уровню шифрования.</p>
+
+      <p>Сертификат состоит из нескольких файлов:</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Файлы сертификата Let's Encrypt</span>
+/etc/letsencrypt/live/yourdomain.com/
+├── fullchain.pem    # Сертификат + промежуточный сертификат (используем в Nginx)
+├── privkey.pem      # Приватный ключ (используем в Nginx)
+├── cert.pem         # Только сертификат домена
+└── chain.pem        # Только промежуточный сертификат CA
+
+<span class="comment"># В Nginx указываем именно fullchain.pem и privkey.pem</span></pre></div>
+
+      <p>Сертификат Let's Encrypt действует 90 дней. Это сделано специально для безопасности — чем короче срок, тем меньше окно для компрометации. Certbot автоматически обновляет сертификаты через systemd таймер, так что вам не нужно следить за сроками вручную.</p>
+
+      <p>Проверить текущий SSL-сертификат любого домена можно командой openssl:</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Проверка SSL-сертификата домена</span>
+echo | openssl s_client -servername mail.yourdomain.com \
+  -connect mail.yourdomain.com:443 2>/dev/null | openssl x509 -noout -dates
+
+<span class="comment"># Результат:</span>
+# notBefore=Mar  1 00:00:00 2026 GMT
+# notAfter=May 30 23:59:59 2026 GMT
+
+<span class="comment"># Детальная информация</span>
+echo | openssl s_client -servername mail.yourdomain.com \
+  -connect mail.yourdomain.com:443 2>/dev/null | openssl x509 -noout -text | head -20</pre></div>
+
+      <div class="note-block warn"><div class="note-label">Что произойдёт без SSL</div>Без HTTPS ваш пароль от Mailcow (admin-панель с полным доступом к почте) передаётся в открытом виде. Если вы заходите через кафе-Wi-Fi или мобильный интернет — любой может перехватить ваши учётные данные утилитой вроде Wireshark. Это не теория — это ежедневная практика злоумышленников.</div>
+
+      <div class="note-block tip"><div class="note-label">Совет</div>После настройки SSL проверьте свой домен на <code>ssllabs.com/ssltest</code> — сервис покажет оценку от A+ до F и укажет на слабые места в конфигурации.</div>`
   }
 ,
   5: {
     module: 'Модуль 2 · SSL',
-    title:  'Certbot — установка и получение сертификата',
+    title:  'Certbot — получение и автообновление SSL',
     time:   '20 мин',
     content: `
-      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre>sudo apt install certbot python3-certbot-nginx -y
+      <h2>Установка Certbot</h2>
+      <p>Certbot — это официальный клиент Let's Encrypt для автоматического получения и обновления SSL-сертификатов. С плагином <code>python3-certbot-nginx</code> он может автоматически модифицировать конфигурацию Nginx, добавляя SSL-директивы. Это самый простой способ получить HTTPS.</p>
 
-<span class="comment"># Получение сертификата</span>
+      <p>Перед установкой убедитесь, что выполнены два обязательных условия: DNS A-запись домена уже указывает на IP вашего сервера, и порт 80 открыт и доступен извне. Let's Encrypt проверяет владение доменом через HTTP challenge — отправляет запрос на <code>http://yourdomain.com/.well-known/acme-challenge/</code>.</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Установка Certbot с плагином для Nginx</span>
+sudo apt install certbot python3-certbot-nginx -y
+
+<span class="comment"># Получение сертификата для одного домена</span>
 sudo certbot --nginx -d mail.yourdomain.com
 
-<span class="comment"># Несколько доменов</span>
-sudo certbot --nginx -d mail.yourdomain.com -d send.yourdomain.com
+<span class="comment"># Получение сертификата для нескольких доменов сразу</span>
+sudo certbot --nginx -d mail.yourdomain.com -d send.yourdomain.com -d auto.yourdomain.com
 
-<span class="comment"># Проверка автообновления</span>
+<span class="comment"># Certbot спросит email для уведомлений и согласие с ToS</span>
+<span class="comment"># После получения автоматически обновит конфиг Nginx</span></pre></div>
+
+      <p>После успешного получения сертификата Certbot автоматически добавит SSL-директивы в ваш server-блок Nginx: <code>ssl_certificate</code>, <code>ssl_certificate_key</code>, и создаст redirect с HTTP на HTTPS. Вам не нужно делать это вручную.</p>
+
+      <p>Проверьте, что сертификаты получены и настроено автообновление:</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Список всех полученных сертификатов</span>
+sudo certbot certificates
+
+<span class="comment"># Пример вывода:</span>
+# Certificate Name: mail.yourdomain.com
+# Domains: mail.yourdomain.com
+# Expiry Date: 2026-06-21 (VALID: 89 days)
+# Certificate Path: /etc/letsencrypt/live/mail.yourdomain.com/fullchain.pem
+# Private Key Path: /etc/letsencrypt/live/mail.yourdomain.com/privkey.pem
+
+<span class="comment"># Проверка автообновления (dry-run — без реального обновления)</span>
 sudo certbot renew --dry-run
-sudo certbot certificates</pre></div>`
+
+<span class="comment"># Проверка таймера автообновления</span>
+sudo systemctl status certbot.timer
+<span class="comment"># Должен показать active (waiting)</span>
+
+<span class="comment"># Проверка SSL с помощью openssl</span>
+echo | openssl s_client -servername mail.yourdomain.com \
+  -connect mail.yourdomain.com:443 2>/dev/null | openssl x509 -noout -dates</pre></div>
+
+      <p>Certbot обновляет сертификаты автоматически через systemd таймер (обычно дважды в день проверяет, и обновляет если до истечения осталось менее 30 дней). Однако после обновления сертификата Nginx нужно перезагрузить, чтобы он подхватил новый файл. Certbot делает это автоматически через deploy-hook.</p>
+
+      <div class="note-block warn"><div class="note-label">Типичные ошибки при получении сертификата</div>
+        <strong>Connection refused</strong> — DNS ещё не пропагировался. Проверьте: <code>dig +short A mail.yourdomain.com</code> — должен вернуть IP вашего сервера. Пропагация DNS может занять от 5 минут до 48 часов.<br><br>
+        <strong>Port 80 is blocked</strong> — файрвол блокирует порт 80. Проверьте: <code>sudo ufw allow 80/tcp</code> или <code>sudo iptables -L -n | grep 80</code>.<br><br>
+        <strong>Too many certificates</strong> — Let's Encrypt имеет rate limit: 5 сертификатов на домен в неделю. Используйте <code>--staging</code> для тестирования.
+      </div>
+
+      <p>Для продвинутых случаев — wildcard-сертификат (*.yourdomain.com). Он требует DNS challenge вместо HTTP:</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Wildcard-сертификат через DNS challenge (Cloudflare)</span>
+sudo apt install python3-certbot-dns-cloudflare -y
+
+<span class="comment"># Создаём файл с API-ключом Cloudflare</span>
+sudo mkdir -p /etc/letsencrypt
+echo "dns_cloudflare_api_token = YOUR_CF_API_TOKEN" | sudo tee /etc/letsencrypt/cf.ini
+sudo chmod 600 /etc/letsencrypt/cf.ini
+
+<span class="comment"># Получаем wildcard-сертификат</span>
+sudo certbot certonly --dns-cloudflare \
+  --dns-cloudflare-credentials /etc/letsencrypt/cf.ini \
+  -d "*.yourdomain.com" -d "yourdomain.com"</pre></div>
+
+      <div class="note-block tip"><div class="note-label">Совет</div>Если у вас много доменов (10+), wildcard-сертификат значительно упрощает управление. Один сертификат на <code>*.yourdomain.com</code> покрывает mail.yourdomain.com, send.yourdomain.com, auto.yourdomain.com и все остальные субдомены.</div>`
   }
 ,
   6: {
     module: 'Модуль 3 · Proxy для email-стека',
     title:  'Nginx proxy для Mailcow',
-    time:   '15 мин',
+    time:   '20 мин',
     content: `
-      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre>server {
-    listen 443 ssl;
+      <h2>Полная конфигурация Nginx для Mailcow</h2>
+      <p>Mailcow — центральный компонент email-стека. Его веб-интерфейс по умолчанию доступен на порту 8443 (HTTPS с самоподписанным сертификатом). Наша задача — настроить Nginx так, чтобы <code>mail.yourdomain.com</code> на стандартном порту 443 проксировал запросы на Mailcow.</p>
+
+      <p>Ключевой нюанс: Mailcow использует HTTPS (самоподписанный сертификат) на порту 8443. Поэтому в <code>proxy_pass</code> мы указываем <code>https://</code>, а не <code>http://</code>. И обязательно добавляем <code>proxy_ssl_verify off</code> — иначе Nginx откажется подключаться к бэкенду с самоподписанным сертификатом.</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># /etc/nginx/sites-available/mail.yourdomain.com.conf</span>
+
+<span class="comment"># Редирект HTTP → HTTPS</span>
+server {
+    listen 80;
     server_name mail.yourdomain.com;
+    return 301 https://$host$request_uri;
+}
+
+<span class="comment"># Основной HTTPS блок</span>
+server {
+    listen 443 ssl http2;
+    server_name mail.yourdomain.com;
+
+    <span class="comment"># SSL-сертификат (Let's Encrypt)</span>
     ssl_certificate     /etc/letsencrypt/live/mail.yourdomain.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/mail.yourdomain.com/privkey.pem;
+
+    <span class="comment"># Современные SSL-параметры</span>
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 1d;
+
     location / {
         proxy_pass https://127.0.0.1:8443;
+        proxy_ssl_verify off;              <span class="comment"># Mailcow использует самоподписанный сертификат</span>
+
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_buffering off;               <span class="comment"># Отключаем буферизацию для SOGo</span>
+        client_max_body_size 50M;           <span class="comment"># Для вложений в веб-почте</span>
     }
-}
-server { listen 80; server_name mail.yourdomain.com; return 301 https://$host$request_uri; }</pre></div>`
+}</pre></div>
+
+      <p>Обратите внимание на несколько важных деталей. Директива <code>ssl_protocols TLSv1.2 TLSv1.3</code> отключает устаревшие TLSv1.0 и TLSv1.1, которые уязвимы к атакам. Директива <code>http2</code> включает HTTP/2 для лучшей производительности. <code>proxy_buffering off</code> важен для SOGo (веб-почта Mailcow), иначе могут быть задержки при загрузке интерфейса.</p>
+
+      <p>Активируем конфиг и проверяем:</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Активируем конфиг</span>
+sudo ln -s /etc/nginx/sites-available/mail.yourdomain.com.conf /etc/nginx/sites-enabled/
+
+<span class="comment"># Проверяем синтаксис</span>
+sudo nginx -t
+
+<span class="comment"># Применяем</span>
+sudo systemctl reload nginx
+
+<span class="comment"># Тестируем</span>
+curl -I https://mail.yourdomain.com
+<span class="comment"># Должен вернуть HTTP/2 200</span>
+
+<span class="comment"># Проверяем редирект HTTP → HTTPS</span>
+curl -I http://mail.yourdomain.com
+<span class="comment"># Должен вернуть 301 Moved Permanently → https://</span></pre></div>
+
+      <div class="note-block warn"><div class="note-label">Troubleshooting</div>
+        <strong>502 Bad Gateway</strong> — Mailcow не запущен или слушает другой порт. Проверьте: <code>sudo docker ps | grep nginx-mailcow</code> и <code>curl -k https://127.0.0.1:8443</code>.<br><br>
+        <strong>Mixed Content</strong> — браузер блокирует HTTP-ресурсы на HTTPS-странице. Убедитесь, что X-Forwarded-Proto передаётся и Mailcow использует его.<br><br>
+        <strong>Certificate mismatch</strong> — Nginx показывает сертификат Mailcow вместо Let's Encrypt. Значит Nginx не перехватывает запрос — проверьте server_name и порт listen.
+      </div>
+
+      <div class="note-block info"><div class="note-label">Важно</div>В файле <code>mailcow.conf</code> убедитесь, что <code>HTTP_BIND=127.0.0.1</code> и <code>HTTPS_BIND=127.0.0.1</code> — иначе Mailcow будет доступен напрямую по порту 8443, минуя Nginx. Это брешь в безопасности.</div>`
   }
 ,
   7: {
     module: 'Модуль 3 · Proxy для email-стека',
-    title:  'Nginx proxy для Postal, MailWizz и n8n',
-    time:   '15 мин',
+    title:  'Proxy для Postal, MailWizz и n8n',
+    time:   '20 мин',
     content: `
-      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre>server {
-    listen 443 ssl;
+      <h2>Три сервиса — три server-блока</h2>
+      <p>Помимо Mailcow, на вашем сервере работают ещё как минимум три сервиса: Postal (отправка писем), MailWizz (управление рассылками) и n8n (автоматизация). Каждому нужен свой домен и свой server-блок в Nginx. Разберём конфигурацию для каждого.</p>
+
+      <p><strong>Postal</strong> — это MTA (Mail Transfer Agent) с веб-интерфейсом на порту 5001. Postal работает по обычному HTTP, поэтому в proxy_pass указываем <code>http://</code> (в отличие от Mailcow, где <code>https://</code>).</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># /etc/nginx/sites-available/postal.yourdomain.com.conf</span>
+
+server {
+    listen 80;
+    server_name postal.yourdomain.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name postal.yourdomain.com;
+
+    ssl_certificate     /etc/letsencrypt/live/postal.yourdomain.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/postal.yourdomain.com/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+
+    location / {
+        proxy_pass http://127.0.0.1:5001;      <span class="comment"># Postal — обычный HTTP</span>
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}</pre></div>
+
+      <p><strong>MailWizz</strong> — платформа email-маркетинга на порту 8001. Важная особенность: через MailWizz загружают CSV-файлы со списками подписчиков, которые могут весить десятки мегабайт. Поэтому обязательно увеличиваем <code>client_max_body_size</code>.</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># /etc/nginx/sites-available/send.yourdomain.com.conf</span>
+
+server {
+    listen 80;
+    server_name send.yourdomain.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name send.yourdomain.com;
+
+    ssl_certificate     /etc/letsencrypt/live/send.yourdomain.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/send.yourdomain.com/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+
+    client_max_body_size 100M;                  <span class="comment"># Для загрузки CSV-файлов</span>
+
+    location / {
+        proxy_pass http://127.0.0.1:8001;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_connect_timeout 300;              <span class="comment"># Импорт списков может быть долгим</span>
+        proxy_send_timeout 300;
+        proxy_read_timeout 300;
+    }
+}</pre></div>
+
+      <p><strong>n8n</strong> — платформа автоматизации на порту 5678. Это самый «капризный» сервис из всех, потому что n8n использует WebSocket для реального времени (обновление статуса workflow, live-логи). Без специальных заголовков WebSocket через Nginx не пройдёт, и n8n будет терять соединение.</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># /etc/nginx/sites-available/auto.yourdomain.com.conf</span>
+
+server {
+    listen 80;
     server_name auto.yourdomain.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name auto.yourdomain.com;
+
     ssl_certificate     /etc/letsencrypt/live/auto.yourdomain.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/auto.yourdomain.com/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+
     location / {
         proxy_pass http://127.0.0.1:5678;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
+        proxy_http_version 1.1;                 <span class="comment"># ОБЯЗАТЕЛЬНО для WebSocket</span>
+        proxy_set_header Upgrade $http_upgrade;  <span class="comment"># ОБЯЗАТЕЛЬНО для WebSocket</span>
+        proxy_set_header Connection "upgrade";   <span class="comment"># ОБЯЗАТЕЛЬНО для WebSocket</span>
+
         proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_read_timeout 86400;               <span class="comment"># 24 часа — для длительных workflow</span>
+        proxy_buffering off;                     <span class="comment"># Для streaming-ответов</span>
     }
-}</pre></div>`
+}</pre></div>
+
+      <p>Три ключевые строки для WebSocket: <code>proxy_http_version 1.1</code>, <code>proxy_set_header Upgrade</code> и <code>proxy_set_header Connection "upgrade"</code>. Без любой из них n8n будет работать, но с постоянными разрывами соединений и ошибками в интерфейсе.</p>
+
+      <p>После создания всех трёх конфигов активируйте их и проверьте:</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Активируем все три конфига</span>
+sudo ln -s /etc/nginx/sites-available/postal.yourdomain.com.conf /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/send.yourdomain.com.conf /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/auto.yourdomain.com.conf /etc/nginx/sites-enabled/
+
+<span class="comment"># Проверяем синтаксис ВСЕХ конфигов разом</span>
+sudo nginx -t
+
+<span class="comment"># Применяем</span>
+sudo systemctl reload nginx
+
+<span class="comment"># Тестируем каждый сервис</span>
+curl -I https://postal.yourdomain.com
+curl -I https://send.yourdomain.com
+curl -I https://auto.yourdomain.com</pre></div>
+
+      <div class="note-block warn"><div class="note-label">Почему n8n «ломается» без WebSocket</div>n8n использует WebSocket для обновления интерфейса в реальном времени: статусы workflow, live-логи выполнения, уведомления. Без WebSocket страница загрузится, но вы увидите бесконечный спиннер при запуске workflow, ошибки «connection lost» и невозможность редактировать ноды. Это самая частая проблема при настройке n8n за Nginx.</div>
+
+      <div class="note-block tip"><div class="note-label">Совет</div>Если у вас все домены — субдомены одного домена (mail.example.com, send.example.com, auto.example.com), используйте wildcard SSL-сертификат. Тогда в каждом server-блоке указываете один и тот же файл сертификата, и обновлять нужно только один сертификат.</div>`
   }
 ,
   8: {
     module: 'Модуль 3 · Proxy для email-стека',
-    title:  'WebSocket и загрузка файлов — частые проблемы',
+    title:  'WebSocket, загрузка файлов и таймауты',
     time:   '15 мин',
     content: `
-      <h2>WebSocket — n8n и Chatwoot не работают</h2>
-      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre>proxy_http_version 1.1;
-proxy_set_header Upgrade $http_upgrade;
-proxy_set_header Connection "upgrade";
-proxy_read_timeout 86400;</pre></div>
-      <h2>413 — файл слишком большой</h2>
-      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre>client_max_body_size 100M;</pre></div>`
+      <h2>Почему WebSocket ломается через Nginx</h2>
+      <p>WebSocket — это протокол, который позволяет серверу и браузеру держать постоянное двустороннее соединение. В отличие от обычного HTTP (запрос → ответ → соединение закрыто), WebSocket остаётся открытым: сервер может в любой момент отправить данные клиенту без запроса. Это используется для live-чатов (Chatwoot), реального времени в n8n, уведомлений.</p>
+
+      <p>Проблема в том, что WebSocket начинается как обычный HTTP-запрос с заголовком <code>Upgrade: websocket</code>. Сервер отвечает <code>101 Switching Protocols</code>, и соединение «апгрейдится» до WebSocket. Nginx по умолчанию НЕ передаёт заголовок Upgrade бэкенду — он его просто отбрасывает. Результат: бэкенд никогда не получает запрос на апгрейд, и WebSocket не устанавливается.</p>
+
+      <p>Вот минимальный набор директив для поддержки WebSocket:</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Обязательные директивы для WebSocket</span>
+location / {
+    proxy_pass http://127.0.0.1:5678;
+
+    <span class="comment"># Три строки, без которых WebSocket не работает</span>
+    proxy_http_version 1.1;                 <span class="comment"># WebSocket требует HTTP/1.1</span>
+    proxy_set_header Upgrade $http_upgrade;  <span class="comment"># Передаём заголовок Upgrade</span>
+    proxy_set_header Connection "upgrade";   <span class="comment"># Сообщаем о смене протокола</span>
+
+    <span class="comment"># Критично: таймаут для длительных соединений</span>
+    proxy_read_timeout 86400;               <span class="comment"># 24 часа (по умолчанию 60 секунд!)</span>
+}</pre></div>
+
+      <p>Почему <code>proxy_read_timeout 86400</code> так важен? По умолчанию Nginx закрывает соединение, если бэкенд не отправлял данных 60 секунд. Для обычных HTTP-запросов это нормально. Но WebSocket может молчать минутами (пока пользователь просто смотрит на экран) — и через 60 секунд Nginx разорвёт соединение. Значение 86400 (24 часа) гарантирует, что соединение будет жить, пока пользователь держит вкладку открытой.</p>
+
+      <h2>Загрузка больших файлов</h2>
+      <p>По умолчанию Nginx ограничивает размер тела запроса значением 1M (1 мегабайт). Если вы загружаете CSV-файл с подписчиками в MailWizz или attachment в Mailcow — получите ошибку <code>413 Request Entity Too Large</code>. Решение простое:</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Увеличиваем лимит загрузки файлов</span>
+server {
+    ...
+    client_max_body_size 100M;       <span class="comment"># Для MailWizz (CSV-импорт)</span>
+
+    <span class="comment"># Можно установить разные лимиты для разных location</span>
+    location /upload {
+        client_max_body_size 200M;   <span class="comment"># Больше для страницы загрузки</span>
+    }
+
+    location /api {
+        client_max_body_size 10M;    <span class="comment"># Меньше для API</span>
+    }
+}</pre></div>
+
+      <h2>Таймауты для долгих операций</h2>
+      <p>Помимо <code>proxy_read_timeout</code>, есть ещё два таймаута, которые могут вызвать проблемы:</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Все таймауты проксирования</span>
+proxy_connect_timeout 60;    <span class="comment"># Время на установку соединения с бэкендом</span>
+proxy_send_timeout 300;      <span class="comment"># Время на отправку запроса бэкенду</span>
+proxy_read_timeout 300;      <span class="comment"># Время ожидания ответа от бэкенда</span>
+
+<span class="comment"># Для WebSocket-сервисов (n8n, Chatwoot):</span>
+proxy_read_timeout 86400;    <span class="comment"># 24 часа</span>
+
+<span class="comment"># Отключение буферизации (для streaming/SSE):</span>
+proxy_buffering off;         <span class="comment"># Данные передаются сразу, без накопления в буфере</span></pre></div>
+
+      <p>Реальный сценарий: n8n workflow, который обрабатывает 10 000 строк из Google Sheets, выполняется 5 минут. При стандартном <code>proxy_read_timeout 60</code> Nginx разорвёт соединение через минуту, и вы увидите <code>504 Gateway Timeout</code>. Workflow продолжит работу на бэкенде, но вы потеряете контроль через интерфейс.</p>
+
+      <div class="note-block warn"><div class="note-label">Как тестировать WebSocket</div>Откройте DevTools в браузере (F12) → вкладка Network → фильтр WS. При открытии n8n или Chatwoot вы должны видеть WebSocket-соединение со статусом 101. Если видите 200 или ошибку — WebSocket не настроен. Альтернатива из терминала: <code>npm install -g wscat && wscat -c wss://auto.yourdomain.com</code>.</div>
+
+      <div class="note-block info"><div class="note-label">Важно</div>Chatwoot тоже использует WebSocket для live-чата. Если агенты жалуются, что сообщения приходят с задержкой или приходится обновлять страницу — 99% что отсутствует WebSocket-конфигурация. Добавьте те же три строки (proxy_http_version, Upgrade, Connection) в server-блок Chatwoot.</div>`
   }
 ,
   9: {
-    module: 'Модуль 4 · Оптимизация',
-    title:  'Безопасность Nginx — базовая защита',
+    module: 'Модуль 4 · Защита и оптимизация',
+    title:  'Security headers и rate limiting',
     time:   '15 мин',
     content: `
-      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre>server_tokens off;
-add_header X-Frame-Options "SAMEORIGIN";
-add_header X-Content-Type-Options "nosniff";
-add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-limit_req_zone $binary_remote_addr zone=login:10m rate=5r/m;</pre></div>`
+      <h2>Заголовки безопасности</h2>
+      <p>По умолчанию Nginx отдаёт минимум информации о безопасности. Это значит, что ваши панели управления уязвимы к clickjacking, MIME-sniffing атакам и downgrade-атакам. Несколько строк конфигурации закрывают эти уязвимости.</p>
+
+      <p>Первое и самое простое — скрыть версию Nginx. По умолчанию заголовок <code>Server: nginx/1.24.0</code> показывает точную версию. Атакующий может найти CVE для этой версии и использовать известный эксплойт:</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># /etc/nginx/nginx.conf (в блоке http)</span>
+http {
+    <span class="comment"># Скрываем версию Nginx</span>
+    server_tokens off;
+
+    <span class="comment"># Заголовки безопасности (применяются ко всем server-блокам)</span>
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+}</pre></div>
+
+      <p>Разберём каждый заголовок: <code>X-Frame-Options SAMEORIGIN</code> запрещает встраивать вашу страницу в iframe на чужих сайтах (защита от clickjacking). <code>X-Content-Type-Options nosniff</code> запрещает браузеру «угадывать» тип контента (защита от MIME-sniffing). <code>HSTS</code> заставляет браузер всегда использовать HTTPS, даже если пользователь набрал http:// в адресной строке.</p>
+
+      <h2>Rate Limiting — защита от брутфорса</h2>
+      <p>Rate limiting ограничивает количество запросов с одного IP-адреса за единицу времени. Это критически важно для страниц логина — без ограничения атакующий может перебирать пароли тысячами попыток в секунду.</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># /etc/nginx/nginx.conf (в блоке http)</span>
+http {
+    <span class="comment"># Зоны rate limiting</span>
+    limit_req_zone $binary_remote_addr zone=login:10m rate=5r/m;
+    limit_req_zone $binary_remote_addr zone=api:10m rate=30r/m;
+    limit_conn_zone $binary_remote_addr zone=connlimit:10m;
+}
+
+<span class="comment"># В server-блоке Mailcow:</span>
+server {
+    ...
+    <span class="comment"># Ограничение для страницы логина: 5 запросов в минуту</span>
+    location /admin {
+        limit_req zone=login burst=3 nodelay;
+        limit_conn connlimit 10;
+        proxy_pass https://127.0.0.1:8443;
+        ...
+    }
+}</pre></div>
+
+      <p>Параметр <code>burst=3</code> позволяет кратковременное превышение лимита (3 запроса сверх нормы). <code>nodelay</code> означает, что запросы сверх лимита сразу отклоняются (статус 503), а не ставятся в очередь.</p>
+
+      <h2>IP Whitelist и Basic Auth</h2>
+      <p>Для особо чувствительных панелей (MailWizz admin, n8n) можно ограничить доступ по IP или добавить дополнительный пароль на уровне Nginx:</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># IP whitelist — разрешаем доступ только с определённых IP</span>
+location /admin {
+    allow 185.100.50.25;         <span class="comment"># Ваш офис</span>
+    allow 92.168.1.0/24;         <span class="comment"># Ваша VPN-подсеть</span>
+    deny all;                    <span class="comment"># Всем остальным — 403</span>
+    proxy_pass http://127.0.0.1:8001;
+}
+
+<span class="comment"># Basic Auth — дополнительный пароль</span>
+<span class="comment"># Создаём файл с паролем:</span>
+<span class="comment"># sudo apt install apache2-utils -y</span>
+<span class="comment"># sudo htpasswd -c /etc/nginx/.htpasswd admin</span>
+
+location / {
+    auth_basic "Restricted Access";
+    auth_basic_user_file /etc/nginx/.htpasswd;
+    proxy_pass http://127.0.0.1:8001;
+}
+
+<span class="comment"># Блокировка ботов по User-Agent</span>
+if ($http_user_agent ~* (SemrushBot|AhrefsBot|MJ12bot|DotBot)) {
+    return 403;
+}</pre></div>
+
+      <p>Проверяем, что заголовки безопасности работают:</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Проверяем заголовки ответа</span>
+curl -I https://mail.yourdomain.com
+
+<span class="comment"># Ожидаемый результат:</span>
+# X-Frame-Options: SAMEORIGIN
+# X-Content-Type-Options: nosniff
+# Strict-Transport-Security: max-age=31536000; includeSubDomains
+# Server: nginx            ← без версии (server_tokens off)</pre></div>
+
+      <div class="note-block warn"><div class="note-label">Осторожно с rate limiting</div>Слишком агрессивный rate limit может заблокировать легитимных пользователей. Mailcow отправляет множество AJAX-запросов при работе — не ставьте rate limit на <code>location /</code>, только на <code>/admin</code> или <code>/login</code>. Начинайте с мягких лимитов (10r/m) и ужесточайте по необходимости.</div>
+
+      <div class="note-block tip"><div class="note-label">Совет</div>Создайте файл <code>/etc/nginx/snippets/security-headers.conf</code> со всеми заголовками и подключайте его через <code>include snippets/security-headers.conf;</code> в каждом server-блоке. Так вы избежите дублирования и сможете менять настройки в одном месте.</div>`
   }
 ,
   10: {
-    module: 'Модуль 4 · Оптимизация',
-    title:  'Итог — полная карта доменов email-стека',
-    time:   '10 мин',
+    module: 'Модуль 4 · Защита и оптимизация',
+    title:  'Полная карта доменов и итоговый чеклист',
+    time:   '15 мин',
     content: `
-      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
-        <div style="display:grid;grid-template-columns:240px 80px 1fr;padding:8px 14px;background:var(--surface);border:1px solid var(--border);font-size:10px;color:var(--muted)"><span>Домен</span><span>Порт</span><span>Сервис</span></div>
-        <div style="display:grid;grid-template-columns:240px 80px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--accent)">mail.yourdomain.com</span><span>8443</span><span>Mailcow</span></div>
-        <div style="display:grid;grid-template-columns:240px 80px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--accent)">send.yourdomain.com</span><span>8001</span><span>MailWizz</span></div>
-        <div style="display:grid;grid-template-columns:240px 80px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--accent)">auto.yourdomain.com</span><span>5678</span><span>n8n</span></div>
+      <h2>Полная карта доменов email-стека</h2>
+      <p>К этому моменту вы настроили Nginx как reverse proxy для всех компонентов email-стека. Давайте соберём полную карту — какой домен ведёт на какой сервис. Эта таблица должна висеть у вас перед глазами при настройке нового сервера:</p>
+
+      <div style="display:flex;flex-direction:column;gap:0;margin:16px 0">
+        <div style="display:grid;grid-template-columns:220px 80px 120px 1fr;padding:10px 14px;background:var(--surface);border:1px solid var(--border);font-size:10px;color:var(--muted);font-weight:600"><span>Домен</span><span>Порт</span><span>Сервис</span><span>Особенности</span></div>
+        <div style="display:grid;grid-template-columns:220px 80px 120px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--accent)">mail.domain.com</span><span>8443</span><span>Mailcow</span><span>HTTPS backend, proxy_ssl_verify off</span></div>
+        <div style="display:grid;grid-template-columns:220px 80px 120px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--accent)">send.domain.com</span><span>8001</span><span>MailWizz</span><span>client_max_body_size 100M</span></div>
+        <div style="display:grid;grid-template-columns:220px 80px 120px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--accent)">auto.domain.com</span><span>5678</span><span>n8n</span><span>WebSocket + timeout 86400</span></div>
+        <div style="display:grid;grid-template-columns:220px 80px 120px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--accent)">postal.domain.com</span><span>5001</span><span>Postal</span><span>Стандартный HTTP proxy</span></div>
+        <div style="display:grid;grid-template-columns:220px 80px 120px 1fr;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--accent)">chat.domain.com</span><span>3000</span><span>Chatwoot</span><span>WebSocket для live-чата</span></div>
       </div>
+
+      <h2>Pre-flight чеклист</h2>
+      <p>Перед тем как объявить настройку завершённой, пройдите по этому чеклисту. Каждый пункт — это реальная ошибка, которая может стоить часов дебага:</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># 1. DNS — все домены указывают на IP сервера?</span>
+for domain in mail send auto postal chat; do
+  echo "$domain.yourdomain.com → $(dig +short A $domain.yourdomain.com)"
+done
+
+<span class="comment"># 2. Порты — все сервисы запущены?</span>
+sudo ss -tlnp | grep -E ':(8443|8001|5678|5001|3000)\s'
+
+<span class="comment"># 3. SSL — все сертификаты валидны?</span>
+sudo certbot certificates
+
+<span class="comment"># 4. Nginx — конфигурация корректна?</span>
+sudo nginx -t
+
+<span class="comment"># 5. Тест каждого домена</span>
+for domain in mail send auto postal chat; do
+  echo -n "$domain.yourdomain.com: "
+  curl -s -o /dev/null -w "%{http_code}" https://$domain.yourdomain.com
+  echo
+done</pre></div>
+
+      <h2>Мониторинг и логи</h2>
+      <p>Nginx пишет два лога: access.log (все запросы) и error.log (ошибки). Настоятельно рекомендую разделить логи по доменам — это упрощает анализ, когда у вас 5+ сервисов:</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># В каждом server-блоке указывайте отдельные логи</span>
+server {
+    server_name mail.yourdomain.com;
+    access_log /var/log/nginx/mail.access.log;
+    error_log  /var/log/nginx/mail.error.log;
+    ...
+}
+
+<span class="comment"># Анализ логов — самые частые IP</span>
+awk '{print $1}' /var/log/nginx/mail.access.log | sort | uniq -c | sort -rn | head -20
+
+<span class="comment"># Самые частые ошибки</span>
+grep -c "502" /var/log/nginx/mail.error.log
+grep -c "504" /var/log/nginx/mail.error.log
+
+<span class="comment"># Логи в реальном времени</span>
+sudo tail -f /var/log/nginx/mail.error.log</pre></div>
+
+      <h2>Оптимизация производительности</h2>
+      <p>Несколько простых настроек, которые заметно ускорят работу Nginx:</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># /etc/nginx/nginx.conf</span>
+worker_processes auto;               <span class="comment"># Авто = количество CPU ядер</span>
+worker_connections 1024;             <span class="comment"># Макс. соединений на worker</span>
+
+http {
+    <span class="comment"># Gzip-сжатие (ускоряет загрузку)</span>
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1000;
+    gzip_types text/plain text/css application/json application/javascript text/xml;
+
+    <span class="comment"># Keep-alive соединения с бэкендом</span>
+    upstream mailcow_backend {
+        server 127.0.0.1:8443;
+        keepalive 32;
+    }
+
+    <span class="comment"># Логротация настроена автоматически</span>
+    <span class="comment"># Проверьте: cat /etc/logrotate.d/nginx</span>
+}</pre></div>
+
+      <div class="note-block info"><div class="note-label">Важно</div>Log rotation для Nginx настроена автоматически при установке (файл <code>/etc/logrotate.d/nginx</code>). Логи ротируются ежедневно и хранятся 14 дней. Если ваш сервер обрабатывает много трафика — убедитесь, что логи не съедают весь диск: <code>du -sh /var/log/nginx/</code>.</div>
+
+      <div class="note-block tip"><div class="note-label">Итоговый совет</div>Сохраните все ваши конфиги Nginx в Git-репозиторий. Команда <code>sudo cp -r /etc/nginx /opt/nginx-backup</code> перед каждым изменением — это минимум. В идеале — используйте Ansible или простой bash-скрипт для автоматического деплоя конфигурации на новые серверы. Когда у вас 5+ серверов, ручная настройка каждого — путь к ошибкам.</div>
+
       <div id="quizBlock" style="margin-top:40px">
         <div style="padding:20px 24px;background:rgba(123,97,255,.06);border:1px solid rgba(123,97,255,.25);margin-bottom:20px">
           <div style="font-size:10px;color:var(--accent2);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Финальный тест</div>

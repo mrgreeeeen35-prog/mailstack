@@ -1382,6 +1382,478 @@ rclone copy /root/backups/ b2:mailstack-backups/configs/ --include "configs-*.ta
 3. docker compose restart
 4. Проверить логи: docker compose logs --tail 50</pre></div>`
   }
+  8: {
+    module: 'Модуль 2 · Мониторинг',
+    title:  'Установка и первая настройка UptimeKuma',
+    time:   '25 мин',
+    content: `
+      <h2>Зачем нужен UptimeKuma</h2>
+      <p>Когда у вас работает почтовый стек из Mailcow, Postal, MailWizz и n8n — любой из этих сервисов может упасть. Без мониторинга вы узнаете об этом только когда клиент напишет «почта не приходит». UptimeKuma — бесплатный self-hosted инструмент мониторинга, который проверяет доступность ваших сервисов каждые 30-60 секунд и мгновенно уведомляет о проблемах.</p>
+      <p>UptimeKuma поддерживает десятки типов проверок: HTTP(s), TCP Port, DNS, Docker Container, SMTP и другие. Для почтового стека нам нужны в первую очередь HTTPS-проверки веб-интерфейсов и TCP-проверки портов SMTP/IMAP.</p>
+
+      <h2>Установка через Docker</h2>
+      <p>UptimeKuma устанавливается одной командой. Рекомендуем выделить для него отдельный порт (например 3001) и поставить на тот же сервер, где работает основной стек, или на отдельный VPS для изоляции.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Создаём том для данных и запускаем контейнер</span>
+docker volume create uptime-kuma
+
+docker run -d \\
+  --name uptime-kuma \\
+  --restart=always \\
+  -p 3001:3001 \\
+  -v uptime-kuma:/app/data \\
+  louislam/uptime-kuma:latest</pre></div>
+      <p>После запуска откройте в браузере <code>http://ваш-ip:3001</code>. При первом входе система попросит создать администратора — задайте надёжный логин и пароль. Этот интерфейс будет вашим центром управления мониторингом.</p>
+
+      <h2>Добавляем мониторы для почтового стека</h2>
+      <p>Нажмите «Add New Monitor» и создайте проверки для каждого компонента. Вот рекомендуемая конфигурация для типичного почтового стека:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Мониторы для почтового стека:</span>
+
+<span class="comment"># 1. Mailcow (веб-интерфейс)</span>
+Тип: HTTP(s)
+URL: https://mail.yourdomain.com
+Интервал: 30 сек (критический сервис)
+Ожидаемый код: 200
+
+<span class="comment"># 2. Postal (веб-интерфейс)</span>
+Тип: HTTP(s)
+URL: https://postal.yourdomain.com
+Интервал: 30 сек
+Ожидаемый код: 200
+
+<span class="comment"># 3. MailWizz</span>
+Тип: HTTP(s)
+URL: https://mailwizz.yourdomain.com
+Интервал: 60 сек
+Ожидаемый код: 200
+
+<span class="comment"># 4. n8n</span>
+Тип: HTTP(s)
+URL: https://n8n.yourdomain.com
+Интервал: 60 сек
+Ожидаемый код: 200
+
+<span class="comment"># 5. SMTP порт Mailcow</span>
+Тип: TCP Port
+Хост: mail.yourdomain.com
+Порт: 465
+Интервал: 60 сек
+
+<span class="comment"># 6. IMAP порт Mailcow</span>
+Тип: TCP Port
+Хост: mail.yourdomain.com
+Порт: 993
+Интервал: 60 сек</pre></div>
+
+      <h2>Типы мониторов и когда их использовать</h2>
+      <p><strong>HTTP(s)</strong> — основной тип для веб-интерфейсов. Проверяет что страница отвечает нужным кодом (200). Если сервис вернёт 502 или 503 — монитор сработает. Поддерживает проверку SSL-сертификата и оповещение об истечении.</p>
+      <p><strong>TCP Port</strong> — проверяет что порт открыт и принимает соединения. Идеально для SMTP (25, 465, 587), IMAP (993), POP3 (995). Не проверяет содержимое ответа — только доступность.</p>
+      <p><strong>Docker Container</strong> — если UptimeKuma на том же сервере, можно мониторить контейнеры напрямую. Для этого при запуске добавьте Docker socket:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Запуск с доступом к Docker (для мониторинга контейнеров)</span>
+docker run -d \\
+  --name uptime-kuma \\
+  --restart=always \\
+  -p 3001:3001 \\
+  -v uptime-kuma:/app/data \\
+  -v /var/run/docker.sock:/var/run/docker.sock:ro \\
+  louislam/uptime-kuma:latest</pre></div>
+
+      <h2>Настройка интервалов проверки</h2>
+      <p>По умолчанию UptimeKuma проверяет каждые 60 секунд. Для критических сервисов (Mailcow, Postal) рекомендуем 30 секунд — так вы узнаете о падении максимум через полминуты. Для менее критичных (MailWizz, n8n) достаточно 60 секунд. Параметр «Retries» задаёт количество повторных проверок перед отправкой алёрта — поставьте 2-3, чтобы избежать ложных срабатываний при кратковременных сбоях сети.</p>
+      <div class="note-block tip"><div class="note-label">Heartbeat и Retry</div>Heartbeat Interval = как часто проверять. Retries = сколько раз перепроверить перед алёртом. При интервале 30 сек и 3 retries — алёрт придёт через 90 секунд после реального падения. Это оптимальный баланс между скоростью и надёжностью.</div>
+
+      <p>На дашборде UptimeKuma вы увидите статус всех мониторов в реальном времени: зелёный — работает, красный — недоступен, жёлтый — медленный ответ. Среднее время отклика, процент аптайма за 24 часа, 7 дней и 30 дней. Эта информация поможет выявлять деградацию до того, как сервис полностью упадёт.</p>
+      <div class="note-block warn"><div class="note-label">Не ставьте интервал меньше 20 секунд</div>Слишком частые проверки создают лишнюю нагрузку и могут быть расценены как DDoS некоторыми сервисами. 30 секунд для критических и 60 для остальных — оптимально.</div>`
+  }
+  9: {
+    module: 'Модуль 2 · Мониторинг',
+    title:  'Настройка уведомлений в Telegram',
+    time:   '20 мин',
+    content: `
+      <h2>Telegram-бот для алёртов: зачем и как</h2>
+      <p>Email-уведомления о падении почтового сервера — ирония. Если Mailcow лежит, вы не получите письмо о том, что он лежит. Поэтому Telegram — идеальный канал для алёртов: мгновенная доставка, работает на телефоне, можно настроить разные чаты для разных команд.</p>
+      <p>Весь процесс занимает 10 минут: создать бота, получить chat_id, подключить в UptimeKuma. После этого любое падение сервиса = сообщение в Telegram через 30-90 секунд.</p>
+
+      <h2>Шаг 1: Создаём бота через @BotFather</h2>
+      <p>Откройте Telegram и найдите <code>@BotFather</code>. Это официальный бот Telegram для создания других ботов. Отправьте ему команды:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Диалог с @BotFather:</span>
+
+/newbot
+
+<span class="comment"># BotFather спросит имя бота:</span>
+MailOps Monitor
+
+<span class="comment"># BotFather спросит username (должен заканчиваться на bot):</span>
+mailops_monitor_bot
+
+<span class="comment"># BotFather ответит токеном:</span>
+Done! Use this token to access the HTTP Bot API:
+7123456789:AAHxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+<span class="comment"># Сохраните этот токен — он понадобится дальше</span></pre></div>
+
+      <h2>Шаг 2: Получаем chat_id</h2>
+      <p>Chat_id — это идентификатор чата (личного или группового), куда бот будет отправлять уведомления. Самый простой способ его узнать:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># 1. Напишите вашему боту любое сообщение в Telegram</span>
+<span class="comment"># 2. Откройте в браузере (подставив свой токен):</span>
+
+curl -s "https://api.telegram.org/bot7123456789:AAHxxxxxx/getUpdates" | jq .
+
+<span class="comment"># В ответе найдите chat.id:</span>
+{
+  "result": [{
+    "message": {
+      "chat": {
+        "id": 123456789,        <span class="comment"># ← это ваш chat_id</span>
+        "type": "private"
+      }
+    }
+  }]
+}
+
+<span class="comment"># Для группового чата: добавьте бота в группу, </span>
+<span class="comment"># напишите сообщение в группе и снова вызовите getUpdates.</span>
+<span class="comment"># Chat_id группы будет отрицательным: -1001234567890</span></pre></div>
+
+      <h2>Шаг 3: Подключаем Telegram в UptimeKuma</h2>
+      <p>В UptimeKuma перейдите в Settings → Notifications → Setup Notification. Заполните поля:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Настройка уведомления в UptimeKuma:</span>
+
+Notification Type: Telegram
+Friendly Name: Ops Team Alerts
+Bot Token: 7123456789:AAHxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Chat ID: 123456789
+
+<span class="comment"># Опции:</span>
+☑ Default enabled (включено для всех мониторов)
+☑ Apply on all existing monitors
+
+<span class="comment"># Нажмите "Test" — бот должен отправить тестовое сообщение</span>
+<span class="comment"># Если сообщение пришло — нажмите "Save"</span></pre></div>
+      <div class="note-block tip"><div class="note-label">Тестируйте сразу</div>Кнопка «Test» отправит тестовое уведомление в указанный чат. Если сообщение не приходит — проверьте: 1) правильный ли токен, 2) написали ли вы боту первое сообщение, 3) правильный ли chat_id. Частая ошибка — забыть написать боту /start перед настройкой.</div>
+
+      <h2>Несколько каналов уведомлений</h2>
+      <p>В реальной работе удобно разделить алёрты. Создайте два канала уведомлений: один для технической команды (ops team) с подробными алёртами, второй для руководства (management) только с критическими инцидентами. В UptimeKuma можно создать несколько Telegram-уведомлений и назначать их разным мониторам.</p>
+      <p>Для канала руководства создайте отдельного бота или отдельную группу в Telegram. Назначайте это уведомление только на критические мониторы (Mailcow, Postal), но не на второстепенные (n8n, MailWizz).</p>
+
+      <h2>Эскалация: 3 неудачные проверки → алёрт</h2>
+      <p>Настройте в каждом мониторе параметр «Retries Before Notification» = 3. Это означает: UptimeKuma выполнит 3 проверки подряд, и только если все 3 неудачные — отправит алёрт. При интервале 30 секунд алёрт придёт через 90 секунд после реального падения.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Пример сценария:</span>
+
+12:00:00 — Mailcow упал (контейнер OOM killed)
+12:00:30 — Проверка #1: FAIL (502 Bad Gateway)
+12:01:00 — Проверка #2: FAIL (Connection Refused)
+12:01:30 — Проверка #3: FAIL (Connection Refused)
+12:01:30 — 🚨 Telegram: "Mailcow DOWN — mail.yourdomain.com"
+
+<span class="comment"># Общее время от падения до алёрта: 90 секунд</span>
+<span class="comment"># Вы уже знаете о проблеме и можете начать восстановление</span></pre></div>
+      <div class="note-block warn"><div class="note-label">Не делайте Retries = 0</div>При нулевых retry каждый сетевой глюк (пинг пропал на секунду) будет генерировать алёрт. Вы быстро начнёте игнорировать уведомления — а это опаснее, чем не иметь мониторинга вообще. 2-3 retry — оптимально.</div>`
+  }
+  10: {
+    module: 'Модуль 2 · Мониторинг',
+    title:  'Мониторинг ресурсов через n8n',
+    time:   '30 мин',
+    content: `
+      <h2>Зачем мониторить ресурсы сервера</h2>
+      <p>UptimeKuma проверяет доступность сервисов снаружи: отвечает ли веб-интерфейс, открыт ли порт. Но сервис может работать и при этом деградировать: диск заполнен на 95%, RAM забита, CPU в потолке. В какой-то момент контейнер упадёт с OOM, или Postal перестанет принимать письма из-за нехватки места. Мониторинг ресурсов предупреждает об этом заранее.</p>
+      <p>Мы используем n8n для создания workflow, который каждые 5 минут проверяет состояние сервера и отправляет алёрт в Telegram при превышении пороговых значений.</p>
+
+      <h2>Workflow: проверка диска, RAM, Docker</h2>
+      <p>Создайте новый workflow в n8n с тремя ключевыми узлами: Cron Trigger → Execute Command → IF → Telegram.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Узел 1: Cron Trigger</span>
+<span class="comment"># Запуск каждые 5 минут</span>
+Mode: Every X Minutes
+Minutes: 5
+
+<span class="comment"># Узел 2: Execute Command — сбор метрик</span>
+<span class="comment"># Команда собирает всё в одном вызове:</span>
+
+echo "DISK:$(df -h / | tail -1 | awk '{print $5}' | tr -d '%')"
+echo "RAM:$(free -m | awk '/Mem:/ {printf "%.0f", $3/$2*100}')"
+echo "CONTAINERS:$(docker ps --format '{{.Names}} {{.Status}}' | grep -v 'Up' | wc -l)"
+echo "DOCKER_PS:$(docker ps --format '{{.Names}}: {{.Status}}')"
+
+<span class="comment"># Узел 3: Function — парсинг результатов</span>
+const lines = $input.first().json.stdout.split('\\n');
+const disk = parseInt(lines.find(l => l.startsWith('DISK:')).split(':')[1]);
+const ram = parseInt(lines.find(l => l.startsWith('RAM:')).split(':')[1]);
+const downContainers = parseInt(lines.find(l => l.startsWith('CONTAINERS:')).split(':')[1]);
+
+return [{
+  json: {
+    disk, ram, downContainers,
+    alert: disk > 85 || ram > 90 || downContainers > 0,
+    dockerPs: lines.find(l => l.startsWith('DOCKER_PS:')).split(':').slice(1).join(':')
+  }
+}];</pre></div>
+
+      <h2>Настройка условий и отправка алёрта</h2>
+      <p>После парсинга добавьте узел IF: если <code>alert === true</code> — отправить сообщение в Telegram. Формат сообщения должен содержать конкретные цифры и рекомендации:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Узел 4: Telegram — текст алёрта</span>
+
+⚠️ Сервер: mail.yourdomain.com
+
+📊 Ресурсы:
+💾 Диск: {{ $json.disk }}% использовано {{ $json.disk > 85 ? '🔴' : '🟢' }}
+🧠 RAM: {{ $json.ram }}% использовано {{ $json.ram > 90 ? '🔴' : '🟢' }}
+🐳 Упавшие контейнеры: {{ $json.downContainers }}
+
+<span class="comment"># Если диск > 85%:</span>
+🔧 Действия:
+- docker system prune -a --volumes
+- journalctl --vacuum-size=100M
+- find /var/log -name "*.log" -size +100M
+
+<span class="comment"># Если RAM > 90%:</span>
+🔧 Действия:
+- docker stats --no-stream
+- Найти процесс: top -b -n 1 | head -20
+- Рестарт тяжёлого контейнера</pre></div>
+      <div class="note-block tip"><div class="note-label">Пороговые значения</div>Диск > 85% — предупреждение, > 95% — критично (Postal перестанет писать логи). RAM > 90% — предупреждение (OOM killer начнёт убивать процессы). Контейнер не в статусе Up — немедленный алёрт.</div>
+
+      <h2>Альтернатива: bash-скрипт + cron</h2>
+      <p>Если n8n нет или вы хотите максимально простое решение — используйте bash-скрипт с cron. Он делает то же самое, но без визуального интерфейса:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment">#!/bin/bash</span>
+<span class="comment"># /opt/scripts/server-monitor.sh</span>
+<span class="comment"># Проверка ресурсов сервера + алёрт в Telegram</span>
+
+BOT_TOKEN="7123456789:AAHxxxxxx"
+CHAT_ID="123456789"
+HOSTNAME=$(hostname)
+
+DISK_USAGE=$(df -h / | tail -1 | awk '{print $5}' | tr -d '%')
+RAM_USAGE=$(free -m | awk '/Mem:/ {printf "%.0f", $3/$2*100}')
+DOWN=$(docker ps --format '{{.Names}} {{.Status}}' | grep -cv 'Up')
+
+<span class="comment"># Алёрт если превышены пороги</span>
+if [ "$DISK_USAGE" -gt 85 ] || [ "$RAM_USAGE" -gt 90 ] || [ "$DOWN" -gt 0 ]; then
+  MSG="⚠️ ${HOSTNAME}%0A💾 Диск: ${DISK_USAGE}%%%0A🧠 RAM: ${RAM_USAGE}%%%0A🐳 Down: ${DOWN}"
+  curl -s "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \\
+    -d "chat_id=${CHAT_ID}&text=${MSG}&parse_mode=HTML" > /dev/null
+fi
+
+<span class="comment"># Добавить в cron:</span>
+<span class="comment"># crontab -e</span>
+<span class="comment"># */5 * * * * /opt/scripts/server-monitor.sh</span></pre></div>
+
+      <h2>Мониторинг размера логов</h2>
+      <p>Логи Docker-контейнеров — частая причина переполнения диска. Postal и Mailcow генерируют гигабайты логов. Добавьте в скрипт мониторинга проверку размера логов и настройте ротацию:</p>
+      <p>В файле <code>/etc/docker/daemon.json</code> ограничьте размер логов контейнеров. Без этой настройки один контейнер может занять весь диск за несколько дней при высокой нагрузке.</p>
+      <div class="note-block warn"><div class="note-label">Логи Docker могут съесть весь диск</div>Без ограничений контейнер Postal при 50k писем/день генерирует 1-2 GB логов в сутки. Через месяц — 30-60 GB. Обязательно настройте log rotation в Docker daemon: max-size 50m, max-file 3.</div>`
+  }
+  11: {
+    module: 'Модуль 2 · Мониторинг',
+    title:  'Статусная страница для клиентов',
+    time:   '20 мин',
+    content: `
+      <h2>Зачем нужна публичная статусная страница</h2>
+      <p>Когда вы управляете почтовой инфраструктурой для клиентов (агентство, аутсорс, SaaS), вопрос «а всё ли работает?» возникает регулярно. Вместо того чтобы каждый раз отвечать вручную — дайте клиентам ссылку на статусную страницу. UptimeKuma умеет создавать такие страницы из коробки: красивые, информативные и обновляющиеся в реальном времени.</p>
+      <p>Статусная страница показывает текущий статус каждого сервиса, историю аптайма за 90 дней и информацию об инцидентах. Клиенты видят, что инфраструктура работает, а при сбоях — что вы уже в курсе и решаете проблему.</p>
+
+      <h2>Создание статусной страницы в UptimeKuma</h2>
+      <p>В UptimeKuma перейдите в раздел «Status Pages» и нажмите «New Status Page». Укажите название и URL-slug:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Настройка статусной страницы:</span>
+
+Title: Email Infrastructure Status
+Slug: status
+<span class="comment"># Страница будет доступна: http://ваш-ip:3001/status/status</span>
+
+<span class="comment"># Добавляем группы мониторов:</span>
+Group 1: "Email Services"
+  - Mailcow Webmail
+  - SMTP (port 465)
+  - IMAP (port 993)
+
+Group 2: "Sending Infrastructure"
+  - Postal Web UI
+  - Postal SMTP
+
+Group 3: "Management"
+  - MailWizz
+  - n8n Automations</pre></div>
+      <p>Группировка помогает клиентам быстро понять, какой именно компонент затронут. Не добавляйте на публичную страницу внутренние мониторы (Docker containers, server resources) — клиентам это не нужно и создаёт лишние вопросы.</p>
+
+      <h2>Кастомизация дизайна</h2>
+      <p>UptimeKuma позволяет настроить внешний вид статусной страницы: загрузить логотип компании, изменить описание, добавить ссылки на документацию. В разделе настроек страницы:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Кастомизация статусной страницы:</span>
+
+Logo: /upload/your-logo.png
+Description: "Статус почтовой инфраструктуры компании"
+Footer: "По вопросам: ops@yourdomain.com"
+Theme: Auto (Light/Dark по системным настройкам)
+
+<span class="comment"># Кастомный CSS (вставляется в настройках):</span>
+.badge.up { background: #00ff88 !important; }
+.badge.down { background: #ff4444 !important; }
+.overall-status.up { color: #00ff88; }
+
+<span class="comment"># Скрыть историю пингов (только статус):</span>
+Show Powered By: false
+Show Certificate Expiry: false</pre></div>
+
+      <h2>Управление инцидентами</h2>
+      <p>Когда происходит сбой, важно не просто показать красный индикатор, но и объяснить клиентам что происходит. В UptimeKuma есть встроенная система инцидентов:</p>
+      <p>Нажмите «Create Incident» на статусной странице. Укажите заголовок, описание проблемы и текущий статус. По мере решения обновляйте инцидент — клиенты видят хронологию в реальном времени. После решения закройте инцидент с финальным комментарием.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Пример жизненного цикла инцидента:</span>
+
+<span class="comment"># 14:00 — Создание инцидента</span>
+Title: "Задержки в доставке email"
+Content: "Обнаружены задержки в доставке писем.
+Команда разбирается с проблемой."
+Style: ⚠️ Warning
+
+<span class="comment"># 14:30 — Обновление</span>
+Content: "Причина установлена: переполнение очереди Postal.
+Выполняется очистка и перезапуск."
+
+<span class="comment"># 15:00 — Закрытие</span>
+Content: "Проблема решена. Доставка восстановлена.
+Причина: превышение лимита очереди из-за
+спайка трафика. Применены лимиты."
+Style: ✅ Resolved</pre></div>
+      <div class="note-block tip"><div class="note-label">Прозрачность = доверие</div>Клиенты ценят честность. Если сбой случился — лучше показать инцидент на статусной странице с описанием действий, чем скрывать проблему. Это повышает доверие к вашему сервису.</div>
+
+      <h2>Кастомный домен через Nginx</h2>
+      <p>Вместо <code>http://ip:3001/status</code> настройте красивый домен <code>status.yourdomain.com</code> через Nginx reverse proxy:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># /etc/nginx/sites-available/status.yourdomain.com</span>
+
+server {
+    listen 80;
+    server_name status.yourdomain.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+<span class="comment"># Активировать и получить SSL:</span>
+sudo ln -s /etc/nginx/sites-available/status.yourdomain.com \\
+  /etc/nginx/sites-enabled/
+sudo nginx -t && sudo systemctl reload nginx
+sudo certbot --nginx -d status.yourdomain.com</pre></div>
+      <div class="note-block warn"><div class="note-label">WebSocket обязателен</div>UptimeKuma использует WebSocket для обновления статуса в реальном времени. Без заголовков Upgrade и Connection в Nginx-конфиге страница загрузится, но не будет обновляться. Убедитесь что proxy_set_header Upgrade и Connection настроены.</div>`
+  }
+  12: {
+    module: 'Модуль 2 · Мониторинг',
+    title:  'Умные алёрты — не спам а сигнал',
+    time:   '25 мин',
+    content: `
+      <h2>Alert fatigue — главный враг мониторинга</h2>
+      <p>Настроить мониторинг — просто. Сделать так, чтобы он приносил пользу, а не раздражал — сложнее. Alert fatigue (усталость от алёртов) — это когда уведомлений так много, что вы начинаете их игнорировать. В итоге критический алёрт о падении Postal теряется среди 50 предупреждений о кратковременных скачках CPU. Это опаснее, чем отсутствие мониторинга.</p>
+      <p>Решение — умные алёрты: классификация по уровням важности, группировка связанных событий, правильные пороговые значения и тихие часы. В этом уроке настроим систему, где каждый алёрт — это реальная проблема, требующая действий.</p>
+
+      <h2>Уровни важности: Critical, Warning, Info</h2>
+      <p>Разделите все мониторы на три уровня. Critical — немедленное действие, будит ночью. Warning — разобраться в рабочее время. Info — для статистики, не генерирует алёрт.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Классификация алёртов для почтового стека:</span>
+
+<span class="comment"># 🔴 CRITICAL — немедленная реакция:</span>
+- Mailcow недоступен (HTTPS) — без почты клиенты теряют деньги
+- Postal недоступен (HTTPS) — рассылки не уходят
+- SMTP порт 465 закрыт — почта не отправляется
+- Диск > 95% — запись прекращена, логи не пишутся
+- Bounce rate > 5% — домены попадут в блеклисты
+
+<span class="comment"># 🟡 WARNING — разобраться в рабочее время:</span>
+- Диск > 80% — есть время почистить
+- RAM > 85% — начинается свопинг
+- CPU > 90% дольше 5 минут — деградация
+- Очередь Postal > 1000 писем — замедление доставки
+- SSL сертификат истекает через 7 дней
+
+<span class="comment"># 🔵 INFO — для дашборда, без алёрта:</span>
+- Время ответа веб-интерфейса > 2 сек
+- Размер базы данных > 10 GB
+- Количество Docker volumes</pre></div>
+
+      <h2>Группировка связанных алёртов</h2>
+      <p>Когда сервер падает, все сервисы на нём становятся недоступны. Без группировки вы получите 6 отдельных алёртов (Mailcow, Postal, MailWizz, n8n, SMTP, IMAP). С группировкой — один алёрт «Сервер mail.yourdomain.com недоступен — все сервисы затронуты».</p>
+      <p>В UptimeKuma группировка реализуется через теги и группы мониторов. Но для продвинутой группировки используйте n8n workflow, который анализирует несколько падений и объединяет их в один алёрт:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># n8n workflow: группировка алёртов</span>
+<span class="comment"># Webhook от UptimeKuma → буфер 2 минуты → анализ → Telegram</span>
+
+<span class="comment"># Узел 1: Webhook (принимает алёрты от UptimeKuma)</span>
+Path: /webhook/uptimekuma-alert
+Method: POST
+
+<span class="comment"># Узел 2: Function — буферизация</span>
+<span class="comment"># Собираем алёрты за 2 минуты в staticData</span>
+const alerts = $getWorkflowStaticData('global');
+if (!alerts.buffer) alerts.buffer = [];
+alerts.buffer.push({
+  monitor: $json.monitor,
+  status: $json.heartbeat.status,
+  time: new Date().toISOString()
+});
+
+<span class="comment"># Узел 3: Wait 2 minutes</span>
+
+<span class="comment"># Узел 4: Function — анализ буфера</span>
+const alerts = $getWorkflowStaticData('global');
+const buf = alerts.buffer || [];
+alerts.buffer = [];  <span class="comment">// Очистить буфер</span>
+
+if (buf.length >= 3) {
+  return [{ json: {
+    type: 'SERVER_DOWN',
+    msg: '🔴 Сервер недоступен — затронуто ' + buf.length + ' сервисов'
+  }}];
+} else {
+  return buf.map(a => ({ json: {
+    type: 'SINGLE',
+    msg: '⚠️ ' + a.monitor + ' — ' + (a.status === 0 ? 'DOWN' : 'UP')
+  }}));
+}</pre></div>
+      <div class="note-block tip"><div class="note-label">Webhook в UptimeKuma</div>UptimeKuma поддерживает Webhook-уведомления. В Settings → Notifications создайте Webhook, указав URL вашего n8n webhook. Тип: application/json. Это позволяет передавать алёрты в n8n для умной обработки.</div>
+
+      <h2>Тихие часы и подавление повторов</h2>
+      <p>Не все алёрты нужны в 3 часа ночи. Warning-алёрты (диск 82%, RAM 87%) могут подождать до утра. Настройте quiet hours в n8n: с 23:00 до 08:00 отправлять только Critical-алёрты. Warning и Info — складывать в буфер и отправлять сводку в 08:00.</p>
+      <p>Подавление повторов: если Mailcow лежит уже 2 часа, не нужно получать алёрт каждые 30 секунд. Настройте в UptimeKuma «Resend Notification» — повторный алёрт через 1 час, если проблема не решена. Или отключите повторы и полагайтесь на статусную страницу.</p>
+
+      <h2>n8n workflow с маршрутизацией по severity</h2>
+      <p>Финальный workflow, который объединяет всё: классификация → группировка → маршрутизация → отправка в правильный канал:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Полный n8n workflow: умные алёрты</span>
+
+<span class="comment"># 1. Webhook ← UptimeKuma</span>
+<span class="comment"># 2. Function: определить severity</span>
+const monitor = $json.monitor.name.toLowerCase();
+const status = $json.heartbeat.status;  <span class="comment">// 0=DOWN, 1=UP</span>
+
+let severity = 'info';
+if (monitor.includes('mailcow') || monitor.includes('postal')
+    || monitor.includes('smtp')) {
+  severity = 'critical';
+} else if (monitor.includes('mailwizz') || monitor.includes('n8n')) {
+  severity = 'warning';
+}
+
+const hour = new Date().getHours();
+const quietHours = hour >= 23 || hour < 8;
+
+return [{ json: {
+  severity,
+  quietHours,
+  monitor: $json.monitor.name,
+  status: status === 0 ? 'DOWN' : 'UP'
+}}];
+
+<span class="comment"># 3. Switch: маршрутизация</span>
+<span class="comment"># critical → Telegram (ops + management) — всегда</span>
+<span class="comment"># warning + не quiet hours → Telegram (ops) </span>
+<span class="comment"># warning + quiet hours → буфер (сводка утром)</span>
+<span class="comment"># info → только лог</span>
+
+<span class="comment"># 4. Telegram: разные чаты</span>
+<span class="comment"># Ops Team: -1001234567890</span>
+<span class="comment"># Management: -1009876543210</span></pre></div>
+      <div class="note-block warn"><div class="note-label">Правило: каждый алёрт = конкретное действие</div>Если получив алёрт вы не знаете что делать — это плохой алёрт. Добавляйте в текст уведомления конкретные шаги: «ssh root@IP → docker compose ps → docker compose restart». Алёрт без инструкции — это просто стресс.</div>`
+  }
   13: {
     module: 'Модуль 2 · Мониторинг',
     title:  'Итог — полная система мониторинга',
