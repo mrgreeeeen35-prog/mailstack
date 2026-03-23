@@ -208,7 +208,7 @@
 
       <div style="display:flex;gap:32px;flex-wrap:wrap;margin-top:32px" class="reveal">
         <div>
-          <div style="font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--heading);letter-spacing:-1px">29</div>
+          <div style="font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--heading);letter-spacing:-1px">30</div>
           <div style="font-size:12px;color:var(--muted);font-family:var(--font-mono)">курсов</div>
         </div>
         <div style="width:1px;background:var(--border)"></div>
@@ -398,7 +398,7 @@ const PATHS = {
 <section>
   <div class="section-label">Все курсы</div>
   <h2>Выберите<br><em>нужный модуль</em></h2>
-  <p class="section-desc">29 курсов · 364+ уроков. Пошаговые инструкции с командами — читайте когда удобно, копируйте одним кликом.</p>
+  <p class="section-desc">30 курсов · 364+ уроков. Пошаговые инструкции с командами — читайте когда удобно, копируйте одним кликом.</p>
 
   <!-- ═══ ПОИСК ════════════════════════════════════════════════ -->
   <div style="margin-bottom:24px;position:relative">
@@ -427,7 +427,7 @@ const PATHS = {
   </div>
 
   <div class="filter-tabs" id="filterTabs">
-    <button class="filter-tab active" data-filter="all">Все курсы (29)</button>
+    <button class="filter-tab active" data-filter="all">Все курсы (30)</button>
     <button class="filter-tab" data-filter="install">🖥 Инфраструктура</button>
     <button class="filter-tab" data-filter="send">📊 Маркетинг</button>
     <button class="filter-tab" data-filter="security">🔐 Доставляемость</button>
@@ -510,7 +510,7 @@ const PATHS = {
           </div>
           <a href="course-nginx.html?token=nginx2025" class="course-btn">Открыть курс →</a>
         </div>
-        <div class="course-card" data-category="security">
+        <div class="course-card" data-category="install">
           <div class="course-card-header">
             <span class="course-tag" style="background:rgba(0,229,255,.08);color:var(--accent);border:1px solid rgba(0,229,255,.2)">Инфраструктура</span>
             <span style="font-size:20px">🔐</span>
@@ -870,6 +870,21 @@ const PATHS = {
           </div>
           <a href="course-warmup-services.html?token=warmupservices2025" class="course-btn">Открыть курс →</a>
         </div>
+        <div class="course-card" data-category="send">
+          <div class="course-card-header">
+            <span class="course-tag" style="background:rgba(0,255,136,.08);color:var(--accent3);border:1px solid rgba(0,255,136,.2)">Маркетинг</span>
+            <span style="font-size:20px">📊</span>
+          </div>
+          <h3 class="course-title">Отчётность и дашборды</h3>
+          <p class="course-desc">Метрики рассылок, Google Sheets дашборды, шаблоны отчётов для клиентов, автоматизация сбора данных через n8n и API.</p>
+          <div class="course-meta">
+            <span style="color:var(--muted)">📖 10 уроков</span>
+            <div style="text-align:right">
+              <span style="font-size:14px;font-weight:700;color:var(--heading);font-family:var(--font-mono)">2 900 ₽</span>
+            </div>
+          </div>
+          <a href="course-reporting.html?token=reporting2025" class="course-btn">Открыть курс →</a>
+        </div>
   </div>
 
 <!-- PACKAGES -->
@@ -879,12 +894,12 @@ const PATHS = {
   <p class="section-desc">Пакеты дешевле покупки отдельных курсов на 20–40%.</p>
 
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border)" class="reveal">
+    <!-- Старт -->
     <div style="background:var(--bg2);padding:28px;display:flex;flex-direction:column;position:relative;">
-      
       <div style="font-size:28px;margin-bottom:10px">🌱</div>
-      <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:6px;letter-spacing:-.5px">Старт с нуля</div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px">От нуля до работающей, защищённой и автоматически обслуживаемой инфраструктуры.</div>
-      <div style="display:inline-block;padding:2px 8px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);font-size:10px;color:var(--accent);font-family:var(--font-mono);margin-bottom:14px">скидка 32%</div>
+      <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:6px;letter-spacing:-.5px">Старт</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px">Поднять инфраструктуру с нуля: сервер, почта, аутентификация, прогрев. 11 курсов.</div>
+      <div style="display:inline-block;padding:2px 8px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);font-size:10px;color:var(--accent);font-family:var(--font-mono);margin-bottom:14px;width:fit-content">скидка 40%</div>
       <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px;flex:1">
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Linux для начинающих</div>
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> VPS с нуля</div>
@@ -894,143 +909,61 @@ const PATHS = {
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Безопасность сервера</div>
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Обслуживание сервера</div>
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Mailcow + Postal</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> SPF / DKIM / DMARC / BIMI</div>
+        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> SPF / DKIM / DMARC</div>
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Прогрев домена</div>
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Сервисы прогрева</div>
       </div>
-      <div style="font-size:12px;color:var(--muted);text-decoration:line-through;margin-bottom:4px">32 000 ₽ по отдельности</div>
+      <div style="font-size:12px;color:var(--muted);text-decoration:line-through;margin-bottom:4px">33 000 ₽ по отдельности</div>
       <div style="font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--heading);margin-bottom:16px;letter-spacing:-1px">19 900 ₽</div>
       <a href="https://t.me/yourusername" class="btn-ghost" style="display:block;text-align:center">Купить пакет</a>
     </div>
-    <div style="background:var(--bg2);padding:28px;display:flex;flex-direction:column;position:relative;">
-      
-      <div style="font-size:28px;margin-bottom:10px">🔐</div>
-      <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:6px;letter-spacing:-.5px">Доставляемость</div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px">Письма в спаме или репутация упала. Полный курс по доставляемости.</div>
-      <div style="display:inline-block;padding:2px 8px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);font-size:10px;color:var(--accent);font-family:var(--font-mono);margin-bottom:14px">скидка 21%</div>
-      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px;flex:1">
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> SPF / DKIM / DMARC / BIMI</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Прогрев домена</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Постмастеры: Google + Mail.ru</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Blacklist</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Bounce и FBL</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Диагностика и устранение неполадок</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Mailcow + Postal</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Сервисы прогрева</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Аналитика рассылок</div>
-      </div>
-      <div style="font-size:12px;color:var(--muted);text-decoration:line-through;margin-bottom:4px">32 100 ₽ по отдельности</div>
-      <div style="font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--heading);margin-bottom:16px;letter-spacing:-1px">19 900 ₽</div>
-      <a href="https://t.me/yourusername" class="btn-ghost" style="display:block;text-align:center">Купить пакет</a>
-    </div>
-    <div style="background:var(--bg2);padding:28px;display:flex;flex-direction:column;position:relative;">
-      
-      <div style="font-size:28px;margin-bottom:10px">📊</div>
-      <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:6px;letter-spacing:-.5px">Email-маркетолог</div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px">Рассылки, автоматизации, аналитика. Понимаете весь цикл — от формы до отчёта.</div>
-      <div style="display:inline-block;padding:2px 8px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);font-size:10px;color:var(--accent);font-family:var(--font-mono);margin-bottom:14px">скидка 22%</div>
-      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px;flex:1">
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> MailWizz</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> HTML-шаблоны писем</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Копирайтинг для email</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Форма подписки</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> n8n автоматизации</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Постмастеры: Google + Mail.ru</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Прогрев домена</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Bounce и FBL</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Сбор и валидация базы</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Аналитика рассылок</div>
-      </div>
-      <div style="font-size:12px;color:var(--muted);text-decoration:line-through;margin-bottom:4px">36 000 ₽ по отдельности</div>
-      <div style="font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--heading);margin-bottom:16px;letter-spacing:-1px">21 900 ₽</div>
-      <a href="https://t.me/yourusername" class="btn-ghost" style="display:block;text-align:center">Купить пакет</a>
-    </div>
-    <div style="background:var(--bg2);padding:28px;display:flex;flex-direction:column;position:relative;">
-      
-      <div style="font-size:28px;margin-bottom:10px">⚙️</div>
-      <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:6px;letter-spacing:-.5px">DevOps-инженер</div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px">Полный технический стек: настроить, защитить, автоматизировать.</div>
-      <div style="display:inline-block;padding:2px 8px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);font-size:10px;color:var(--accent);font-family:var(--font-mono);margin-bottom:14px">скидка 17%</div>
-      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px;flex:1">
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> VPS с нуля</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> DNS для email</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Docker</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Nginx + SSL</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Безопасность сервера</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Обслуживание сервера</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Mailcow + Postal</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> SPF / DKIM / DMARC / BIMI</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> n8n автоматизации</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> IP-ротация и Multi-IP</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Масштабирование: 10K+</div>
-      </div>
-      <div style="font-size:12px;color:var(--muted);text-decoration:line-through;margin-bottom:4px">37 900 ₽ по отдельности</div>
-      <div style="font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--heading);margin-bottom:16px;letter-spacing:-1px">24 900 ₽</div>
-      <a href="https://t.me/yourusername" class="btn-ghost" style="display:block;text-align:center">Купить пакет</a>
-    </div>
-    <div style="background:var(--bg2);padding:28px;display:flex;flex-direction:column;position:relative;">
-      
-      <div style="font-size:28px;margin-bottom:10px">💼</div>
-      <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:6px;letter-spacing:-.5px">Email-агентство</div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px">Продавать настройку email-инфраструктуры как услугу.</div>
-      <div style="display:inline-block;padding:2px 8px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);font-size:10px;color:var(--accent);font-family:var(--font-mono);margin-bottom:14px">скидка 25%</div>
-      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px;flex:1">
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> MailWizz</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> n8n автоматизации</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Chatwoot</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Миграция с Unisender</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Email-агентства</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> SPF / DKIM / DMARC / BIMI</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Прогрев домена</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Постмастеры: Google + Mail.ru</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Blacklist</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> 152-ФЗ / GDPR / CAN-SPAM</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> IP-ротация и Multi-IP</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Масштабирование: 10K+</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Аналитика рассылок</div>
-      </div>
-      <div style="font-size:12px;color:var(--muted);text-decoration:line-through;margin-bottom:4px">48 700 ₽ по отдельности</div>
-      <div style="font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--heading);margin-bottom:16px;letter-spacing:-1px">27 900 ₽</div>
-      <a href="https://t.me/yourusername" class="btn-ghost" style="display:block;text-align:center">Купить пакет</a>
-    </div>
+    <!-- Профессионал -->
     <div style="background:var(--bg2);padding:28px;display:flex;flex-direction:column;position:relative;overflow:hidden;">
       <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2))"></div>
-      <div style="font-size:28px;margin-bottom:10px">🎓</div>
-      <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:6px;letter-spacing:-.5px">Всё включено</div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px">Все 29 курсов + шаблоны + поддержка в Telegram 30 дней.</div>
-      <div style="display:inline-block;padding:2px 8px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);font-size:10px;color:var(--accent);font-family:var(--font-mono);margin-bottom:14px">скидка 22%</div>
+      <div style="font-size:28px;margin-bottom:10px">🚀</div>
+      <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:6px;letter-spacing:-.5px">Профессионал</div>
+      <div style="display:inline-block;padding:2px 8px;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.25);font-size:10px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:8px;width:fit-content;font-weight:600">САМЫЙ ПОПУЛЯРНЫЙ</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px">Инфраструктура + рассылки + доставляемость + аналитика. Всё что нужно для работы. 23 курса.</div>
+      <div style="display:inline-block;padding:2px 8px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);font-size:10px;color:var(--accent);font-family:var(--font-mono);margin-bottom:14px;width:fit-content">скидка 54%</div>
       <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px;flex:1">
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> VPS с нуля</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> DNS для email</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Docker</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Nginx + SSL</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Безопасность сервера</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Обслуживание сервера</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Mailcow + Postal</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> SPF / DKIM / DMARC / BIMI</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Прогрев домена</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Постмастеры: Google + Mail.ru</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Blacklist</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Bounce и FBL</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Диагностика и устранение неполадок</div>
+        <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono);margin-bottom:2px">Всё из «Старт» плюс:</div>
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> MailWizz</div>
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> HTML-шаблоны писем</div>
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Копирайтинг для email</div>
+        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Форма подписки</div>
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> n8n автоматизации</div>
+        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Постмастеры: Google + Mail.ru</div>
+        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Blacklist</div>
+        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Bounce и FBL</div>
+        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Диагностика</div>
+        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Сбор и валидация базы</div>
+        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Аналитика рассылок</div>
+        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Отчётность и дашборды</div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);text-decoration:line-through;margin-bottom:4px">76 600 ₽ по отдельности</div>
+      <div style="font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--accent);margin-bottom:16px;letter-spacing:-1px">34 900 ₽</div>
+      <a href="https://t.me/yourusername" class="btn-ghost" style="display:block;text-align:center;background:rgba(0,229,255,.08);border-color:var(--accent)">Купить пакет</a>
+    </div>
+    <!-- Всё включено -->
+    <div style="background:var(--bg2);padding:28px;display:flex;flex-direction:column;position:relative;">
+      <div style="font-size:28px;margin-bottom:10px">🎓</div>
+      <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:6px;letter-spacing:-.5px">Всё включено</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px">Все 30 курсов + шаблоны + поддержка в Telegram 30 дней. Для агентств и масштабирования.</div>
+      <div style="display:inline-block;padding:2px 8px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);font-size:10px;color:var(--accent);font-family:var(--font-mono);margin-bottom:14px;width:fit-content">скидка 48%</div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px;flex:1">
+        <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono);margin-bottom:2px">Всё из «Профессионал» плюс:</div>
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Chatwoot</div>
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Миграция с Unisender</div>
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Email-агентства</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Форма подписки</div>
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> 152-ФЗ / GDPR / CAN-SPAM</div>
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Cold Email / B2B Outreach</div>
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> IP-ротация и Multi-IP</div>
         <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Масштабирование: 10K+</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Сбор и валидация базы</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Аналитика рассылок</div>
-        <div style="font-size:12px;color:var(--text);display:flex;gap:6px"><span style="color:var(--accent3)">✓</span> Сервисы прогрева</div>
+        <div style="font-size:12px;color:var(--muted);display:flex;gap:6px;margin-top:8px;border-top:1px solid var(--border);padding-top:8px"><span style="color:var(--accent2)">★</span> Поддержка в Telegram 30 дней</div>
+        <div style="font-size:12px;color:var(--muted);display:flex;gap:6px"><span style="color:var(--accent2)">★</span> Готовые шаблоны и чеклисты</div>
       </div>
       <div style="font-size:12px;color:var(--muted);text-decoration:line-through;margin-bottom:4px">95 200 ₽ по отдельности</div>
-      <div style="font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--heading);margin-bottom:16px;letter-spacing:-1px">59 900 ₽</div>
+      <div style="font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--heading);margin-bottom:16px;letter-spacing:-1px">49 900 ₽</div>
       <a href="https://t.me/yourusername" class="btn-ghost" style="display:block;text-align:center">Купить пакет</a>
     </div>
   </div>
@@ -1046,144 +979,50 @@ const PATHS = {
     <thead>
       <tr>
         <th style="padding:12px 14px;text-align:left;color:var(--muted);font-weight:500;border-bottom:1px solid var(--border);min-width:200px">Курс</th>
-        <th style="padding:12px 8px;text-align:center;color:var(--accent);font-family:var(--font-mono);font-size:11px;border-bottom:1px solid var(--border)">🌱<br>Старт</th>
-        <th style="padding:12px 8px;text-align:center;color:var(--accent2);font-family:var(--font-mono);font-size:11px;border-bottom:1px solid var(--border)">🔐<br>Достав.</th>
-        <th style="padding:12px 8px;text-align:center;color:var(--accent);font-family:var(--font-mono);font-size:11px;border-bottom:1px solid var(--border)">📊<br>Маркетолог</th>
-        <th style="padding:12px 8px;text-align:center;color:var(--accent);font-family:var(--font-mono);font-size:11px;border-bottom:1px solid var(--border)">⚙️<br>DevOps</th>
-        <th style="padding:12px 8px;text-align:center;color:var(--accent2);font-family:var(--font-mono);font-size:11px;border-bottom:1px solid var(--border)">💼<br>Агентство</th>
-        <th style="padding:12px 8px;text-align:center;color:var(--accent);font-family:var(--font-mono);font-size:11px;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">🎓<br>Всё</th>
+        <th style="padding:12px 16px;text-align:center;color:var(--accent);font-family:var(--font-mono);font-size:11px;border-bottom:1px solid var(--border)">🌱<br>Старт</th>
+        <th style="padding:12px 16px;text-align:center;color:var(--accent);font-family:var(--font-mono);font-size:11px;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">🚀<br>Профессионал</th>
+        <th style="padding:12px 16px;text-align:center;color:var(--accent);font-family:var(--font-mono);font-size:11px;border-bottom:1px solid var(--border)">🎓<br>Всё включено</th>
       </tr>
     </thead>
     <tbody>
-      
       <tr>
         <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Linux для начинающих</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border)">✓</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border)">✓</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td>
-      </tr><tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">VPS с нуля</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
+        <td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td>
       </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">DNS для email</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Docker</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Nginx + SSL</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Безопасность сервера</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Обслуживание сервера</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Mailcow + Postal</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">SPF / DKIM / DMARC / BIMI</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Прогрев домена</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Постмастеры: Google + Mail.ru</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Blacklist</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Bounce и FBL</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Диагностика и неполадки</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">MailWizz</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">HTML-шаблоны писем</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Копирайтинг для email</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Форма подписки</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">n8n автоматизации</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Chatwoot</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Миграция с Unisender</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Email-агентства</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">152-ФЗ / GDPR</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Cold Email / B2B Outreach</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">IP-ротация и Multi-IP</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Масштабирование: 10K+</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Сбор и валидация базы</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Аналитика рассылок</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Сервисы прогрева</td>
-        <td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);">✓</td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);"><span style="color:var(--border)">—</span></td><td style="padding:8px 8px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04);">✓</td>
-      </tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">VPS с нуля</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">DNS для email</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Docker</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Nginx + SSL</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Безопасность сервера</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Обслуживание сервера</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Mailcow + Postal</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">SPF / DKIM / DMARC</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Прогрев домена</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Сервисы прогрева</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">MailWizz</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">HTML-шаблоны писем</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Копирайтинг для email</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Форма подписки</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">n8n автоматизации</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Постмастеры: Google + Mail.ru</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Blacklist</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Bounce и FBL</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Диагностика</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Сбор и валидация базы</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Аналитика рассылок</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Отчётность и дашборды</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)">✓</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Chatwoot</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Миграция с Unisender</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Email-агентства</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">152-ФЗ / GDPR / CAN-SPAM</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Cold Email / B2B Outreach</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">IP-ротация и Multi-IP</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
+      <tr><td style="padding:8px 14px;color:var(--text);font-size:12px;border-bottom:1px solid var(--border)">Масштабирование: 10K+</td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border);background:rgba(0,229,255,.04)"><span style="color:var(--border)">—</span></td><td style="padding:8px 16px;text-align:center;border-bottom:1px solid var(--border)">✓</td></tr>
       <tr style="background:var(--surface)">
         <td style="padding:12px 14px;color:var(--muted);font-family:var(--font-mono);font-size:11px;font-weight:600;border-top:1px solid var(--accent)">ЦЕНА</td>
-        <td style="padding:12px 8px;text-align:center;font-weight:700;color:var(--heading);font-family:var(--font-mono);font-size:12px;border-top:1px solid var(--accent)">19 900 ₽</td>
-        <td style="padding:12px 8px;text-align:center;font-weight:700;color:var(--heading);font-family:var(--font-mono);font-size:12px;border-top:1px solid var(--accent)">19 900 ₽</td>
-        <td style="padding:12px 8px;text-align:center;font-weight:700;color:var(--heading);font-family:var(--font-mono);font-size:12px;border-top:1px solid var(--accent)">21 900 ₽</td>
-        <td style="padding:12px 8px;text-align:center;font-weight:700;color:var(--heading);font-family:var(--font-mono);font-size:12px;border-top:1px solid var(--accent)">24 900 ₽</td>
-        <td style="padding:12px 8px;text-align:center;font-weight:700;color:var(--heading);font-family:var(--font-mono);font-size:12px;border-top:1px solid var(--accent)">27 900 ₽</td>
-        <td style="padding:12px 8px;text-align:center;font-weight:700;color:var(--accent);font-family:var(--font-mono);font-size:13px;background:rgba(0,229,255,.04);border-top:1px solid var(--accent)">59 900 ₽</td>
+        <td style="padding:12px 16px;text-align:center;font-weight:700;color:var(--heading);font-family:var(--font-mono);font-size:13px;border-top:1px solid var(--accent)">19 900 ₽</td>
+        <td style="padding:12px 16px;text-align:center;font-weight:700;color:var(--accent);font-family:var(--font-mono);font-size:14px;background:rgba(0,229,255,.04);border-top:1px solid var(--accent)">34 900 ₽</td>
+        <td style="padding:12px 16px;text-align:center;font-weight:700;color:var(--heading);font-family:var(--font-mono);font-size:13px;border-top:1px solid var(--accent)">49 900 ₽</td>
       </tr>
     </tbody>
   </table>
@@ -1222,49 +1061,57 @@ const PATHS = {
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:32px" class="reveal">
 
     <div style="background:var(--bg);padding:28px">
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:4px">Системный архитектор</div>
+      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Дмитрий Волков</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Системный архитектор</div>
       <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono);margin-bottom:12px">Инфраструктура · VPS · Docker · Nginx</div>
       <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">8 лет в DevOps. Обслуживает email-инфраструктуру для 40+ агентств. Автор блоков по VPS, Docker, Nginx, безопасности и резервному копированию.</p>
     </div>
 
     <div style="background:var(--bg);padding:28px">
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:4px">Специалист по доставляемости</div>
+      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Александр Петров</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Специалист по доставляемости</div>
       <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono);margin-bottom:12px">SPF · DKIM · DMARC · Прогрев</div>
       <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">Вывел из спама более 200 доменов. Работал с базами от 10 000 до 3 млн подписчиков. Автор курсов по аутентификации, прогреву и постмастерам.</p>
     </div>
 
     <div style="background:var(--bg);padding:28px">
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:4px">Email-маркетолог</div>
+      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Мария Соколова</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Email-маркетолог</div>
       <div style="font-size:11px;color:var(--accent2);font-family:var(--font-mono);margin-bottom:12px">MailWizz · Копирайтинг · A/B тесты</div>
       <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">7 лет в email-маркетинге. Средний Open Rate клиентов — 28–34%. Автор курсов по MailWizz, HTML-шаблонам, копирайтингу и сегментации.</p>
     </div>
 
     <div style="background:var(--bg);padding:28px">
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:4px">Инженер автоматизации</div>
+      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Игорь Михайлов</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Инженер автоматизации</div>
       <div style="font-size:11px;color:var(--accent2);font-family:var(--font-mono);margin-bottom:12px">n8n · Chatwoot · API интеграции</div>
       <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">Построил 150+ workflow автоматизации для email-агентств. Сократил ручную работу клиентов на 80%. Автор курсов по n8n и Chatwoot.</p>
     </div>
 
     <div style="background:var(--bg);padding:28px">
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:4px">Специалист по Postal и Mailcow</div>
+      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Андрей Козлов</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Специалист по Postal и Mailcow</div>
       <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono);margin-bottom:12px">Mailcow · Postal · SMTP · Ротация IP</div>
       <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">Установил и настроил 80+ почтовых серверов на базе Mailcow+Postal. Знает все edge cases и типичные ошибки. Автор курса Mailcow + Postal.</p>
     </div>
 
     <div style="background:var(--bg);padding:28px">
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:4px">Эксперт по B2B outreach</div>
+      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Кирилл Новиков</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Эксперт по B2B outreach</div>
       <div style="font-size:11px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:12px">Cold Email · Instantly · Lemlist</div>
       <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">Провёл 300+ cold email кампаний с Reply Rate выше 8%. Строил outreach-инфраструктуры для SaaS и агентств с нуля. Автор курса Cold Email / B2B.</p>
     </div>
 
     <div style="background:var(--bg);padding:28px">
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:4px">Юрист по персональным данным</div>
+      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Елена Громова</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Юрист по персональным данным</div>
       <div style="font-size:11px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:12px">152-ФЗ · GDPR · CAN-SPAM</div>
       <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">Специализируется на защите данных и email-маркетинге. Консультировал 50+ агентств по выстраиванию юридически чистых процессов рассылок. Автор курса 152-ФЗ/GDPR.</p>
     </div>
 
     <div style="background:var(--bg);padding:28px">
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:4px">Руководитель email-агентства</div>
+      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Сергей Ильин</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Руководитель email-агентства</div>
       <div style="font-size:11px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:12px">Агентство · Клиенты · Масштабирование</div>
       <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">Управляет агентством с 15+ клиентами. Прошёл путь от первого клиента до стабильного бизнеса на email-инфраструктуре. Автор курса Email-агентства.</p>
     </div>
@@ -1322,12 +1169,7 @@ const PATHS = {
       <div class="faq-a">Да, каждый модуль продаётся отдельно. Если уже знаете Mailcow — купите только курс по MailWizz или прогреву. Полный пакет выгоднее на 30%.</div>
     </div>
 
-    <div class="faq-item">
-      <button class="faq-q">Есть ли поддержка если что-то не получается?<span class="icon">+</span></button>
-      <div class="faq-a">В полном пакете — поддержка в Telegram 30 дней. В отдельных модулях поддержки нет, но есть закрытый чат студентов где можно задать вопрос.</div>
-    </div>
 
-  
     <div class="faq-item">
       <button class="faq-q">Нужны ли знания программирования?<span class="icon">+</span></button>
       <div class="faq-a">Нет. Курсы рассчитаны на людей без опыта в разработке. Все команды объясняются построчно, каждый шаг показан с нуля. Если умеете копировать и вставлять текст в терминале — этого достаточно для старта.</div>
@@ -1341,11 +1183,6 @@ const PATHS = {
     <div class="faq-item">
       <button class="faq-q">Как обновляются курсы?<span class="icon">+</span></button>
       <div class="faq-a">При изменении инструментов или появлении новых решений — курсы обновляются. Уведомление приходит в Telegram. Доступ к обновлённым урокам через тот же токен — никаких повторных покупок.</div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q">Можно ли купить один курс без пакета?<span class="icon">+</span></button>
-      <div class="faq-a">Да. Каждый курс продаётся отдельно — найдите нужный в каталоге выше и купите через Telegram. Пакеты выгоднее на 20–36% если нужно несколько курсов, но ограничений на покупку по одному нет.</div>
     </div>
 
     <div class="faq-item">
@@ -1530,6 +1367,43 @@ showPath = function(key) {
   timeEl.innerHTML = '<span style="font-size:18px">⏱</span><span style="font-size:12px;color:var(--muted)">Общее время на блок: <strong style="color:var(--heading)">' + info.hours + ' часов</strong> · при 2 часа в день: <strong style="color:var(--accent)">' + Math.ceil(info.hours/2) + ' дней</strong></span>';
   block.parentNode.insertBefore(timeEl, block.nextSibling);
 };
+
+// ── Level badges ──
+(function(){
+  const levels = {
+    'Linux для начинающих':'beginner','VPS с нуля':'beginner','DNS для email':'beginner',
+    'Docker':'beginner','Nginx + SSL':'beginner','Форма подписки':'beginner',
+    '152-ФЗ / GDPR / CAN-SPAM':'beginner',
+    'Безопасность сервера':'medium','Обслуживание сервера':'medium','Mailcow + Postal':'medium',
+    'SPF / DKIM / DMARC':'medium','Прогрев домена':'medium','Сервисы прогрева':'medium',
+    'MailWizz':'medium','HTML-шаблоны писем':'medium','Копирайтинг для email':'medium',
+    'Постмастеры: Google + Mail.ru':'medium','Blacklist — выход и профилактика':'medium',
+    'Bounce и FBL':'medium','Диагностика и устранение неполадок':'medium',
+    'n8n автоматизации':'medium','Chatwoot':'medium','Миграция с Unisender':'medium',
+    'Cold Email / B2B Outreach':'medium','Сбор и валидация базы':'medium',
+    'Аналитика рассылок':'medium','Отчётность и дашборды':'medium',
+    'IP-ротация и Multi-IP':'advanced','Масштабирование: 10K+':'advanced',
+    'Email-агентства':'advanced'
+  };
+  const cfg = {
+    beginner:  {label:'Начальный',  bg:'rgba(0,255,136,.08)', color:'var(--accent3)', border:'rgba(0,255,136,.2)'},
+    medium:    {label:'Средний',    bg:'rgba(0,229,255,.08)', color:'var(--accent)',  border:'rgba(0,229,255,.2)'},
+    advanced:  {label:'Продвинутый',bg:'rgba(123,97,255,.08)',color:'var(--accent2)', border:'rgba(123,97,255,.2)'}
+  };
+  document.querySelectorAll('.course-card').forEach(function(card){
+    var title = card.querySelector('.course-title');
+    if(!title) return;
+    var lvl = levels[title.textContent.trim()];
+    if(!lvl) return;
+    var c = cfg[lvl];
+    var meta = card.querySelector('.course-meta');
+    if(!meta) return;
+    var b = document.createElement('span');
+    b.style.cssText = 'font-size:9px;padding:2px 6px;font-family:var(--font-mono);letter-spacing:.04em;background:'+c.bg+';color:'+c.color+';border:1px solid '+c.border;
+    b.textContent = c.label;
+    meta.appendChild(b);
+  });
+})();
 </script>
 </body>
 </html>
