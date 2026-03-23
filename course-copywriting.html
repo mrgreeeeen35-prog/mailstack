@@ -780,28 +780,31 @@ footer {
       <div class="lesson-num">1</div>Почему тема решает всё
     </a>
     <a class="sidebar-lesson" data-n="2" onclick="showLesson(2)" href="#">
-      <div class="lesson-num">2</div>30 формул для темы письма
+      <div class="lesson-num">2</div>Формулы тем письма — часть 1
+    </a>
+    <a class="sidebar-lesson" data-n="3" onclick="showLesson(3)" href="#">
+      <div class="lesson-num">3</div>Формулы тем письма — часть 2 + A/B тесты
     </a>
     <div class="sidebar-module-title">Модуль 2 · Текст письма</div>
-    <a class="sidebar-lesson" data-n="3" onclick="showLesson(3)" href="#">
-      <div class="lesson-num">3</div>Структура письма — что и в каком порядке
-    </a>
     <a class="sidebar-lesson" data-n="4" onclick="showLesson(4)" href="#">
-      <div class="lesson-num">4</div>Preheader — второй шанс зацепить внимание
+      <div class="lesson-num">4</div>Структура письма — что и в каком порядке
+    </a>
+    <a class="sidebar-lesson" data-n="5" onclick="showLesson(5)" href="#">
+      <div class="lesson-num">5</div>Preheader — второй шанс зацепить внимание
     </a>
     <div class="sidebar-module-title">Модуль 3 · CTA и конверсия</div>
-    <a class="sidebar-lesson" data-n="5" onclick="showLesson(5)" href="#">
-      <div class="lesson-num">5</div>Кнопка призыва к действию — как написать и оформить
-    </a>
     <a class="sidebar-lesson" data-n="6" onclick="showLesson(6)" href="#">
-      <div class="lesson-num">6</div>P.S. — самый читаемый элемент письма
+      <div class="lesson-num">6</div>Кнопка призыва к действию — как написать и оформить
+    </a>
+    <a class="sidebar-lesson" data-n="7" onclick="showLesson(7)" href="#">
+      <div class="lesson-num">7</div>P.S. — самый читаемый элемент письма
     </a>
     <div class="sidebar-module-title">Модуль 4 · Практика</div>
-    <a class="sidebar-lesson" data-n="7" onclick="showLesson(7)" href="#">
-      <div class="lesson-num">7</div>Разбор реальных примеров — хорошие и плохие письма
-    </a>
     <a class="sidebar-lesson" data-n="8" onclick="showLesson(8)" href="#">
-      <div class="lesson-num">8</div>Итог — система написания писем
+      <div class="lesson-num">8</div>Разбор реальных примеров — хорошие и плохие письма
+    </a>
+    <a class="sidebar-lesson" data-n="9" onclick="showLesson(9)" href="#">
+      <div class="lesson-num">9</div>Итог — система написания писем
     </a>
   </aside>
 
@@ -961,7 +964,7 @@ function showLesson(n) {
 
   refreshProgress();
   window.scrollTo(0, 0);
-  if (n === 8) {
+  if (n === 9) {
     var qb = document.getElementById("quizBlock");
     if (qb && typeof quizInit_copywriting === "function") quizInit_copywriting();
   }
@@ -1005,28 +1008,61 @@ var lessons = {
   },
   2: {
     module: 'Модуль 1 · Тема письма',
-    title: '30 формул для темы письма',
-    time: '15 мин',
+    title: 'Формулы тем письма — часть 1',
+    time: '10 мин',
     content: `
+      <h2>Зачем нужны формулы</h2>
+      <p>Писать темы «из головы» каждый раз — медленно и непредсказуемо. Формулы дают каркас: вы подставляете свой продукт или оффер и получаете тему которая уже проверена на тысячах рассылок. В этом и следующем уроке — набор формул по категориям.</p>
+
       <h2>Формулы которые работают</h2>
       <div style="display:flex;flex-direction:column;gap=4px;margin:16px 0">
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;padding:6px 14px;background:var(--surface);border:1px solid var(--border)">Польза + конкретика</div>
         <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«Как [результат] за [время/способ]» — «Как удвоить Open Rate за 2 недели»</div>
         <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«[Цифра] способов [сделать что-то]» — «7 способов не попасть в спам»</div>
         <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«Почему [проблема] и что с ней делать»</div>
+        <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«[Результат] без [нежелательного]» — «Рост базы без спама и покупных списков»</div>
+        <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«Что я узнал за [период] о [теме]» — «Что я узнал за 3 года в email-маркетинге»</div>
 
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;padding:6px 14px;background:var(--surface);border:1px solid var(--border);margin-top:8px">Любопытство</div>
         <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«Вы делаете эту ошибку в рассылках?»</div>
         <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«Кое-что важное о вашей базе подписчиков»</div>
         <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«Это изменило всё в нашей email-стратегии»</div>
+        <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«Одна вещь которую делают все — и зря»</div>
+        <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«Вы точно не знали это о [тема]»</div>
 
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;padding:6px 14px;background:var(--surface);border:1px solid var(--border);margin-top:8px">Персонализация</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;padding:6px 14px;background:var(--surface);border:1px solid var(--border);margin-top:8px">Вопрос-провокация</div>
+        <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«Ваши письма читают — или удаляют?»</div>
+        <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«Сколько денег вы теряете на плохих темах?»</div>
+        <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«Почему 80% ваших писем никто не открывает?»</div>
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Продолжение в следующем уроке</div>
+        Во второй части — формулы персонализации, срочности, социального доказательства, а также что категорически нельзя использовать и как проводить A/B тесты тем.
+      </div>`
+  },
+  3: {
+    module: 'Модуль 1 · Тема письма',
+    title: 'Формулы тем письма — часть 2 + A/B тесты',
+    time: '10 мин',
+    content: `
+      <h2>Продолжение формул</h2>
+      <div style="display:flex;flex-direction:column;gap=4px;margin:16px 0">
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;padding:6px 14px;background:var(--surface);border:1px solid var(--border)">Персонализация</div>
         <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«[FNAME], у меня для вас кое-что интересное»</div>
         <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«[FNAME], вы просили об этом»</div>
+        <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«[FNAME], посмотрите что мы подготовили»</div>
+        <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«Специально для [COMPANY] — короткий разбор»</div>
 
         <div style="font-size:10px;color:var(--muted);text-transform:uppercase;padding:6px 14px;background:var(--surface);border:1px solid var(--border);margin-top:8px">Срочность (без кликбейта)</div>
         <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«Предложение заканчивается в пятницу»</div>
         <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«Осталось 48 часов»</div>
+        <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«Последний день — потом цена x2»</div>
+
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;padding:6px 14px;background:var(--surface);border:1px solid var(--border);margin-top:8px">Социальное доказательство</div>
+        <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«Почему 500+ компаний перешли на [решение]»</div>
+        <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«Как [клиент] увеличил конверсию на 40%»</div>
+        <div style="padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px;color:var(--text)">«Что говорят наши клиенты о [продукт]»</div>
       </div>
 
       <h2>Что категорически не использовать</h2>
@@ -1036,9 +1072,32 @@ var lessons = {
         <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.15)"><span style="color:#ff6b6b">✗</span><span style="font-size:12px;color:var(--text)">«Срочно», «Бесплатно», «100% гарантия» — спам-слова</span></div>
         <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.15)"><span style="color:#ff6b6b">✗</span><span style="font-size:12px;color:var(--text)">«Re:» или «Fwd:» в рекламном письме — обманывает</span></div>
         <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.15)"><span style="color:#ff6b6b">✗</span><span style="font-size:12px;color:var(--text)">Тема длиннее 60 символов — обрезается на мобильном</span></div>
+      </div>
+
+      <h2>A/B тестирование тем</h2>
+      <p>Даже лучшая формула не гарантирует результат для вашей аудитории. Единственный способ узнать что работает — тестировать.</p>
+
+      <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0">
+        <div style="padding:12px 16px;background:var(--bg2);border:1px solid rgba(0,229,255,.2);border-left:3px solid var(--accent)">
+          <div style="font-size:13px;color:var(--heading);font-weight:600;margin-bottom:4px">Шаг 1: Две темы — одна идея</div>
+          <div style="font-size:12px;color:var(--muted)">Тестируйте формулировку, не содержание. Пример: «7 способов...» vs «Почему вы теряете...» — одно и то же письмо.</div>
+        </div>
+        <div style="padding:12px 16px;background:var(--bg2);border:1px solid rgba(123,97,255,.2);border-left:3px solid var(--accent2)">
+          <div style="font-size:13px;color:var(--heading);font-weight:600;margin-bottom:4px">Шаг 2: Выборка 10-20% базы</div>
+          <div style="font-size:12px;color:var(--muted)">Отправьте вариант A 10% базы и вариант B другим 10%. Через 2-4 часа — победитель идёт остальным 80%.</div>
+        </div>
+        <div style="padding:12px 16px;background:var(--bg2);border:1px solid rgba(0,255,136,.2);border-left:3px solid var(--accent3)">
+          <div style="font-size:13px;color:var(--heading);font-weight:600;margin-bottom:4px">Шаг 3: Записывайте результаты</div>
+          <div style="font-size:12px;color:var(--muted)">Ведите таблицу: тема / Open Rate / дата / сегмент. Через 10-20 тестов у вас будет своя библиотека работающих формул.</div>
+        </div>
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">В MailWizz A/B тест настраивается в Campaign → Subject line split test</div>
+        Задайте 2-3 варианта темы, размер тестовой выборки и время ожидания. MailWizz автоматически отправит победителя остальной базе.
       </div>`
   },
-  3: {
+  4: {
     module: 'Модуль 2 · Текст письма',
     title: 'Структура письма — что и в каком порядке',
     time: '15 мин',
@@ -1071,7 +1130,7 @@ var lessons = {
         <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--muted);min-width:140px;font-size:12px">Длинный текст</span><span style="font-size:12px;color:var(--muted)">Работает только для лояльной аудитории с высоким Open Rate. Не для первых писем.</span></div>
       </div>`
   },
-  4: {
+  5: {
     module: 'Модуль 2 · Текст письма',
     title: 'Preheader — второй шанс зацепить внимание',
     time: '10 мин',
@@ -1106,7 +1165,7 @@ var lessons = {
         <div style="display:flex;gap:10px;padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.15)"><span style="color:#ff6b6b">✗</span><span style="font-size:12px;color:var(--text)">Не оставляйте preheader пустым — тогда покажется первый текст из письма</span></div>
       </div>`
   },
-  5: {
+  6: {
     module: 'Модуль 3 · CTA и конверсия',
     title: 'Кнопка призыва к действию — как написать и оформить',
     time: '15 мин',
@@ -1142,7 +1201,7 @@ var lessons = {
         </div>
       </div>`
   },
-  6: {
+  7: {
     module: 'Модуль 3 · CTA и конверсия',
     title: 'P.S. — самый читаемый элемент письма',
     time: '8 мин',
@@ -1171,7 +1230,7 @@ var lessons = {
         P.S. — дефицитный элемент. Не тратьте его на «Если у вас есть вопросы — напишите нам». Только что-то ценное или важное.
       </div>`
   },
-  7: {
+  8: {
     module: 'Модуль 4 · Практика',
     title: 'Разбор реальных примеров — хорошие и плохие письма',
     time: '20 мин',
@@ -1211,7 +1270,7 @@ var lessons = {
         </div>
       </div>`
   },
-  8: {
+  9: {
     module: 'Модуль 4 · Практика',
     title: 'Итог — система написания писем',
     time: '10 мин',

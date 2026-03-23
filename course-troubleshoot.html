@@ -1030,7 +1030,7 @@ var lessons = {
         <div style="display:flex;gap:14px;margin-bottom:14px"><div style="width:32px;height:32px;border-radius:50%;background:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0">4</div><div><div style="font-size:13px;color:var(--heading);font-weight:600">Изолируем компонент</div><div style="font-size:12px;color:var(--muted);margin-top:3px">Проблема в Nginx? В Postal? В DNS? Тестируем каждый слой отдельно.</div></div></div>
         <div style="display:flex;gap:14px"><div style="width:32px;height:32px;border-radius:50%;background:var(--accent3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--bg);flex-shrink:0">5</div><div><div style="font-size:13px;color:var(--heading);font-weight:600">Исправляем и проверяем</div><div style="font-size:12px;color:var(--muted);margin-top:3px">Одно изменение за раз. Проверяем после каждого.</div></div></div>
       </div>`
-  }
+  },
   2: {
     module: 'Модуль 2 · Инфраструктура',
     title:  'Mailcow не запускается',
@@ -1075,7 +1075,7 @@ docker compose down
 docker compose pull           <span class="comment"># обновить образы</span>
 docker compose up -d
 docker compose ps             <span class="comment"># проверить статус</span></pre></div>`
-  }
+  },
   3: {
     module: 'Модуль 2 · Инфраструктура',
     title:  'Nginx выдаёт 502 Bad Gateway',
@@ -1116,7 +1116,7 @@ proxy_send_timeout    300s;
 proxy_read_timeout    300s;
 
 nginx -t && systemctl reload nginx</pre></div>`
-  }
+  },
   4: {
     module: 'Модуль 2 · Инфраструктура',
     title:  'Письма не отправляются — Postal',
@@ -1155,7 +1155,7 @@ swaks --to test@gmail.com       --from noreply@yourdomain.com       --server pos
 
 <span class="comment"># 250 2.0.0 OK — письмо принято</span>
 <span class="comment"># Если ошибка — swaks покажет точный SMTP ответ</span></pre></div>`
-  }
+  },
   5: {
     module: 'Модуль 2 · Инфраструктура',
     title:  'Письма не доходят — диагностика доставки',
@@ -1197,7 +1197,7 @@ dig TXT yourdomain.com +short | grep spf
 <span class="comment"># Domain Reputation: Low или Bad → письма идут в спам</span>
 <span class="comment"># Spam Rate > 0.3% → Gmail начинает блокировать</span>
 <span class="comment"># IP Reputation: Bad → конкретный IP заблокирован</span></pre></div>`
-  }
+  },
   6: {
     module: 'Модуль 3 · SSL и DNS',
     title:  'SSL сертификат не обновляется',
@@ -1233,7 +1233,7 @@ certbot renew --cert-name mail.yourdomain.com</pre></div>
           <div style="font-size:12px;color:var(--muted)">5 попыток за 1 час для одного домена. Подождите час и попробуйте снова.</div>
         </div>
       </div>`
-  }
+  },
   7: {
     module: 'Модуль 3 · SSL и DNS',
     title:  'DNS не работает — разбираем причины',
@@ -1272,7 +1272,7 @@ dig TXT mail._domainkey.yourdomain.com +short
 <span class="comment"># Где взять DKIM запись для Postal:</span>
 <span class="comment"># Postal Web UI → Domains → yourdomain.com → DKIM</span>
 <span class="comment"># Скопируйте запись и добавьте в DNS</span></pre></div>`
-  }
+  },
   8: {
     module: 'Модуль 4 · Docker и сервисы',
     title:  'Docker контейнер в crash loop — перезапускается',
@@ -1315,7 +1315,7 @@ docker run --rm имя_образа bash
 
 <span class="comment"># Проверить docker-compose.yml</span>
 docker compose config    <span class="comment"># валидация конфига</span></pre></div>`
-  }
+  },
   9: {
     module: 'Модуль 4 · Docker и сервисы',
     title:  'n8n workflow не срабатывает',
@@ -1351,7 +1351,7 @@ curl -X POST https://n8n.yourdomain.com/webhook/ваш-путь   -H "Content-Ty
 nc -zv postal.yourdomain.com 587
 <span class="comment"># Connection succeeded → порт доступен</span>
 <span class="comment"># Connection refused → Postal не запущен или порт закрыт</span></pre></div>`
-  }
+  },
   10: {
     module: 'Модуль 5 · Email и репутация',
     title:  'DKIM проверка не проходит',
@@ -1381,7 +1381,7 @@ dig TXT mail._domainkey.yourdomain.com +short
 <span class="comment"># "Regenerate DKIM Key" → скопировать новую запись</span>
 <span class="comment"># Обновить TXT запись в DNS</span>
 <span class="comment"># Подождать распространение DNS (до 24 часов)</span></pre></div>`
-  }
+  },
   11: {
     module: 'Модуль 5 · Email и репутация',
     title:  'SPF fail — письма отклоняются',
@@ -1412,7 +1412,7 @@ curl ifconfig.me
         <div class="note-label">⚠ Максимум 10 DNS запросов в SPF</div>
         Каждый include: в SPF — это DNS запрос. Если их больше 10 — SPF автоматически fail. Используйте ip4: вместо include: где возможно. Проверить: mxtoolbox.com/spf.aspx показывает число lookups.
       </div>`
-  }
+  },
   12: {
     module: 'Модуль 6 · Чеклист и шпаргалка',
     title:  'Быстрая диагностика — за 5 минут понять в чём проблема',
@@ -1443,7 +1443,7 @@ echo ""
 echo "--- Последние ошибки Nginx ---"
 tail -5 /var/log/nginx/error.log 2>/dev/null || echo "Лог пустой"</pre></div>
       <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre>chmod +x /root/quick-diag.sh && /root/quick-diag.sh</pre></div>`
-  }
+  },
   13: {
     module: 'Модуль 6 · Чеклист и шпаргалка',
     title:  'Итог — шпаргалка по устранению неполадок',
@@ -1487,7 +1487,129 @@ tail -5 /var/log/nginx/error.log 2>/dev/null || echo "Лог пустой"</pre>
 
       <h2>Главный инструмент — mail-tester.com</h2>
       <p>Сервис mail-tester.com — это 95% диагностики в одном месте. Он проверяет SPF, DKIM, DMARC, IP в блэклистах, содержимое письма, HTML и даёт оценку от 1 до 10. Цель: 9 или 10.</p>`
-  }
+  },
+  14: {
+    module: 'Модуль 2 · Аудит и диагностика',
+    title:  'Как понять что инфраструктура настроена правильно',
+    time:   '25 мин',
+    content: `
+      <h2>Три уровня проверки инфраструктуры</h2>
+      <p>После того как вы развернули Mailcow, Postal, настроили DNS и отправили первые тестовые письма — возникает главный вопрос: «Всё ли работает правильно?» Ответ на него нельзя получить одной командой. Нужна системная проверка на трёх уровнях: <strong>DNS-уровень</strong> (записи корректны и пропагированы), <strong>репутационный уровень</strong> (IP и домен чистые) и <strong>практический уровень</strong> (письма реально попадают в инбокс). Если хотя бы один из уровней провален — вся инфраструктура под угрозой.</p>
+
+      <p>Этот урок — ваш полный чеклист. Пройдите каждый блок по порядку. Если на каком-то шаге результат не совпадает с ожидаемым — остановитесь и исправьте проблему до перехода к следующему уровню. Именно такой подход экономит десятки часов отладки в будущем.</p>
+
+      <h2>Уровень 1 — DNS: SPF, DKIM, DMARC, rDNS</h2>
+      <p>DNS — это фундамент. Если записи настроены неправильно, всё остальное бессмысленно. Почтовый сервер получателя в первую очередь проверяет SPF, DKIM и DMARC ещё до анализа содержимого письма. Ошибка на этом этапе — гарантированный спам или отклонение. Используйте скрипт ниже для проверки всех критических записей одной командой:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre>#!/bin/bash
+<span class="comment"># Полная проверка DNS для почтового домена</span>
+DOMAIN="yourdomain.com"
+IP="65.21.123.45"
+
+echo "=== SPF ==="
+dig +short TXT "$DOMAIN" | grep "v=spf1"
+<span class="comment"># Ожидаем: "v=spf1 ip4:$IP -all"</span>
+
+echo "=== DKIM ==="
+dig +short TXT "mail._domainkey.$DOMAIN"
+<span class="comment"># Ожидаем: длинный ключ "v=DKIM1; k=rsa; p=MIIBIjAN..."</span>
+
+echo "=== DMARC ==="
+dig +short TXT "_dmarc.$DOMAIN"
+<span class="comment"># Ожидаем: "v=DMARC1; p=quarantine; ..." или p=reject</span>
+
+echo "=== MX ==="
+dig +short MX "$DOMAIN"
+<span class="comment"># Ожидаем: 10 mail.yourdomain.com.</span>
+
+echo "=== rDNS (PTR) ==="
+dig +short -x "$IP"
+<span class="comment"># Ожидаем: mail.yourdomain.com.</span></pre></div>
+
+      <div class="note-block info">
+        <div class="note-label">ℹ Критерий успеха для DNS</div>
+        SPF должен содержать IP вашего сервера и заканчиваться на <code>-all</code> (hard fail), не <code>~all</code>. DKIM-ключ должен совпадать с тем, что указан в Postal. DMARC с политикой <code>p=quarantine</code> или <code>p=reject</code>. MX указывает на ваш mail-сервер. PTR (rDNS) обязательно совпадает с hostname сервера — без этого Gmail сразу отклонит письмо.
+      </div>
+
+      <h2>Уровень 2 — Репутация IP и домена</h2>
+      <p>Чистый DNS — это необходимое, но недостаточное условие. Если ваш IP находится в блэклистах или домен имеет плохую историю — письма всё равно уйдут в спам. Репутационная проверка показывает, как почтовые провайдеры «видят» вашу инфраструктуру. Проверяйте IP через MXToolbox и Spamhaus, а для домена — используйте Google Postmaster Tools (регистрируйтесь заранее, данные появляются через 3–5 дней после начала отправок).</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Проверка IP в основных блэклистах</span>
+<span class="comment"># Перевернуть IP: 65.21.123.45 → 45.123.21.65</span>
+REVERSED="45.123.21.65"
+
+<span class="comment"># Spamhaus ZEN (объединяет SBL, XBL, PBL)</span>
+dig +short "$REVERSED.zen.spamhaus.org"
+<span class="comment"># Пусто = чисто. 127.0.0.x = в списке</span>
+
+<span class="comment"># Barracuda</span>
+dig +short "$REVERSED.b.barracudacentral.org"
+
+<span class="comment"># SpamCop</span>
+dig +short "$REVERSED.bl.spamcop.net"
+
+<span class="comment"># SORBS</span>
+dig +short "$REVERSED.dnsbl.sorbs.net"
+
+<span class="comment"># Если любой ответ 127.x.x.x — IP в блэклисте!</span>
+echo "Если ответы пустые — IP чист"</pre></div>
+
+      <div class="note-block warn">
+        <div class="note-label">⚠ Новый IP — не значит чистый IP</div>
+        Даже если вы только что получили IP от хостинга, предыдущий владелец мог использовать его для спама. Всегда проверяйте IP перед началом отправок. Если IP в блэклисте — подавайте запрос на delisting через сайт конкретного блэклиста (у Spamhaus — автоматическая форма, у Barracuda — ручная заявка). Процесс может занять от 2 часов до 7 дней.
+      </div>
+
+      <h2>Уровень 3 — Практический тест доставки</h2>
+      <p>Финальный и самый важный уровень — реальная доставка. DNS может быть идеален, IP чист, но письмо всё равно попадёт в спам из-за контента, заголовков или отсутствия прогрева. Отправьте тестовые письма на свои ящики в Gmail, Yandex и Mail.ru. Проверьте, попали ли они в инбокс. Откройте заголовки письма и убедитесь, что все проверки пройдены:</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Отправка тестового письма через swaks</span>
+swaks \\
+  --to test@gmail.com \\
+  --from hello@yourdomain.com \\
+  --server mail.yourdomain.com \\
+  --port 587 \\
+  --auth LOGIN \\
+  --auth-user hello@yourdomain.com \\
+  --auth-password "YourPassword" \\
+  --tls \\
+  --header "Subject: Infrastructure Test $(date +%s)" \\
+  --body "This is a deliverability test message."
+
+<span class="comment"># В Gmail: откройте письмо → ⋮ → Показать оригинал</span>
+<span class="comment"># Ожидаем:</span>
+<span class="comment">#   SPF: PASS</span>
+<span class="comment">#   DKIM: PASS</span>
+<span class="comment">#   DMARC: PASS</span></pre></div>
+
+      <p>В заголовках письма Gmail показывает результаты аутентификации в секции <code>Authentication-Results</code>. Все три проверки — SPF, DKIM и DMARC — должны показывать <code>pass</code>. Если хотя бы одна проверка failed или softfail — вернитесь к Уровню 1 и исправьте DNS. Для Яндекса и Mail.ru заголовки проверяются аналогично, но DMARC у них менее строгий.</p>
+
+      <div class="note-block tip">
+        <div class="note-label">✓ Автоматизируйте проверку</div>
+        Создайте cron-задачу, которая раз в день запускает скрипт проверки DNS и блэклистов, и отправляет результат в Telegram-бот или на email. Так вы узнаете о проблемах до того, как они повлияют на рассылки. Пример: <code>0 8 * * * /opt/scripts/dns-audit.sh | mail -s "DNS Audit" admin@yourdomain.com</code>
+      </div>
+
+      <h2>Чеклист финальной проверки</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># ═══ ЧЕКЛИСТ: Инфраструктура готова к работе ═══</span>
+
+<span class="comment"># DNS (все должны быть ✓)</span>
+# [ ] SPF — содержит IP, заканчивается -all
+# [ ] DKIM — ключ совпадает с Postal, dig возвращает запись
+# [ ] DMARC — p=quarantine или p=reject
+# [ ] MX — указывает на mail.yourdomain.com
+# [ ] PTR (rDNS) — обратная запись совпадает с hostname
+# [ ] A-запись mail.yourdomain.com → IP сервера
+
+<span class="comment"># Репутация (все должны быть чисты)</span>
+# [ ] Spamhaus ZEN — пусто
+# [ ] Barracuda — пусто
+# [ ] SpamCop — пусто
+# [ ] Google Postmaster — домен добавлен, статус зелёный
+
+<span class="comment"># Доставка (все должны быть inbox)</span>
+# [ ] Gmail — инбокс, SPF/DKIM/DMARC = pass
+# [ ] Yandex — инбокс
+# [ ] Mail.ru — инбокс
+# [ ] mail-tester.com — оценка 9/10 или 10/10</pre></div>
+
+      <p>Если все пункты чеклиста пройдены — ваша инфраструктура готова к продуктивным рассылкам. Но помните: это не одноразовая проверка. DNS-записи могут слететь при обновлении панели, IP может попасть в блэклист из-за всплеска bounce-ов, а SSL-сертификат — протухнуть. Запланируйте повторную проверку минимум раз в неделю, а лучше — настройте автоматический мониторинг по инструкции из блока выше.</p>`
+  },
   15: {
     module: 'Модуль 2 · Аудит и диагностика',
     title:  'mail-tester.com — полный разбор отчёта',
@@ -1532,7 +1654,7 @@ tail -5 /var/log/nginx/error.log 2>/dev/null || echo "Лог пустой"</pre>
 <span class="comment"># -0.5: Нет текстовой версии письма → добавить text/plain часть</span>
 <span class="comment"># -0.5: SPF soft fail (~all) → изменить на -all если уверены</span>
 <span class="comment"># -0.5: Много картинок мало текста → добавить текстовый контент</span></pre></div>`
-  }
+  },
   16: {
     module: 'Модуль 2 · Аудит и диагностика',
     title:  'Проверка DNS — все записи за 2 минуты',
@@ -1603,7 +1725,7 @@ dig -x $IP +short && echo "PTR:   OK" || echo "PTR:   ✗"
 dig ${REV}.zen.spamhaus.org A +short &>/dev/null   && echo "BLACKLIST: НАЙДЕН В SPAMHAUS!" || echo "Spamhaus: чисто"</pre></div>
       <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre>chmod +x /root/dns-audit.sh && /root/dns-audit.sh yourdomain.com</pre></div>
     `
-  }
+  },
   17: {
     module: 'Модуль 2 · Аудит и диагностика',
     title:  'Как читать заголовки письма',
@@ -1642,7 +1764,7 @@ Authentication-Results: mx.google.com;
 X-Spam-Status: No, score=-2.3
 X-Spam-Score: -2.3
 <span class="comment"># Отрицательный score = хорошо. Положительный > 5 = спам</span></pre></div>`
-  }
+  },
   18: {
     module: 'Модуль 2 · Аудит и диагностика',
     title:  'Письмо в спаме — алгоритм диагностики',
@@ -1684,7 +1806,7 @@ X-Spam-Score: -2.3
 <span class="comment"># Слишком много ссылок (более 20 в письме)</span>
 <span class="comment"># Ссылки ведут на HTTP (не HTTPS)</span>
 <span class="comment"># HTML больше 102KB (Gmail обрежет)</span></pre></div>`
-  }
+  },
   19: {
     module: 'Модуль 2 · Аудит и диагностика',
     title:  'MXToolbox — полный аудит за один раз',
@@ -1715,7 +1837,7 @@ SMTP Test:         yourdomain.com   → проверка SMTP соединени
         <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><code style="color:var(--accent);min-width:200px">glockapps.com</code><span style="font-size:12px;color:var(--muted)">Тест инбокса + spam score у 30+ провайдеров</span></div>
         <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><code style="color:var(--accent);min-width:200px">whatismyipaddress.com</code><span style="font-size:12px;color:var(--muted)">Быстро узнать IP сервера</span></div>
       </div>`
-  }
+  },
   20: {
     module: 'Модуль 2 · Аудит и диагностика',
     title:  'Диагностика через командную строку',
@@ -1757,7 +1879,7 @@ ID(s) verified: header.d=yourdomain.com
 DMARC check details:
 ----------------------------------------------------------
 Result:         pass</pre></div>`
-  }
+  },
   21: {
     module: 'Модуль 2 · Аудит и диагностика',
     title:  'Ежемесячный аудит инфраструктуры — чеклист',
@@ -1790,7 +1912,7 @@ Result:         pass</pre></div>`
 <span class="comment"># 2. HTTP Request → Postmaster API → Spam Rate</span>
 <span class="comment"># 3. Bash → certbot certificates → даты истечения</span>
 <span class="comment"># 4. Telegram → сводный отчёт всего аудита</span></pre></div>`
-  }
+  },
   22: {
     module: 'Модуль 2 · Аудит и диагностика',
     title:  'Итог — ваша система диагностики',

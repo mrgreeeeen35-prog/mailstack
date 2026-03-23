@@ -456,36 +456,39 @@ var currentLesson = window.currentLesson;
       <div class="lesson-num">5</div>Telegram
     </a>
     <a class="sidebar-lesson" data-n="6"" onclick="showLesson(6)" href="#">
-      <div class="lesson-num">6</div>WhatsApp
+      <div class="lesson-num">6</div>WhatsApp — основы
+    </a>
+    <a class="sidebar-lesson" data-n="7"" onclick="showLesson(7)" href="#">
+      <div class="lesson-num">7</div>WhatsApp — шаблоны
     </a>
     <div class="sidebar-module-title">Модуль 3 · Команда</div>
-    <a class="sidebar-lesson" data-n="7"" onclick="showLesson(7)" href="#">
-      <div class="lesson-num">7</div>Агенты и роли
-    </a>
     <a class="sidebar-lesson" data-n="8"" onclick="showLesson(8)" href="#">
-      <div class="lesson-num">8</div>Автоправила и боты
+      <div class="lesson-num">8</div>Агенты и роли
     </a>
     <a class="sidebar-lesson" data-n="9"" onclick="showLesson(9)" href="#">
-      <div class="lesson-num">9</div>Виджет для сайта
+      <div class="lesson-num">9</div>Автоправила и боты
     </a>
     <a class="sidebar-lesson" data-n="10"" onclick="showLesson(10)" href="#">
-      <div class="lesson-num">10</div>Метки и история
+      <div class="lesson-num">10</div>Виджет для сайта
+    </a>
+    <a class="sidebar-lesson" data-n="11"" onclick="showLesson(11)" href="#">
+      <div class="lesson-num">11</div>Метки и история
     </a>
     <div class="sidebar-module-title">Модуль 4 · Продвинутое</div>
-    <a class="sidebar-lesson" data-n="11"" onclick="showLesson(11)" href="#">
-      <div class="lesson-num">11</div>Интеграция с n8n
-    </a>
     <a class="sidebar-lesson" data-n="12"" onclick="showLesson(12)" href="#">
-      <div class="lesson-num">12</div>Отчёты и аналитика
+      <div class="lesson-num">12</div>Интеграция с n8n
     </a>
     <a class="sidebar-lesson" data-n="13"" onclick="showLesson(13)" href="#">
-      <div class="lesson-num">13</div>Что дальше
+      <div class="lesson-num">13</div>Отчёты и аналитика
+    </a>
+    <a class="sidebar-lesson" data-n="14"" onclick="showLesson(14)" href="#">
+      <div class="lesson-num">14</div>Что дальше
     </a>
 
     <div class="sidebar-progress">
       <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted)">
         <span>Прогресс</span>
-        <span id="progressText">0 / 13</span>
+        <span id="progressText">0 / 14</span>
       </div>
       <div class="progress-bar-wrap">
         <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
@@ -597,7 +600,7 @@ function showLesson(n) {
 
   refreshProgress();
   window.scrollTo(0, 0);
-  if (n === 13) {
+  if (n === 14) {
     var qb = document.getElementById("quizBlock");
     if (qb && typeof quizInit_chatwoot === "function") quizInit_chatwoot();
   }
@@ -1099,8 +1102,8 @@ curl https://api.telegram.org/botВАШ_ТОКЕН/getWebhookInfo
   },
   6: {
     module: 'Модуль 2 · Каналы',
-    title: 'WhatsApp через Twilio или 360dialog',
-    time: '15 мин',
+    title: 'WhatsApp через Twilio — основы',
+    time: '8 мин',
     content: `
       <h2>Два способа подключить WhatsApp</h2>
       <p>WhatsApp Business API требует официального провайдера. Chatwoot поддерживает два: Twilio и 360dialog. Оба платные, но 360dialog дешевле для небольших объёмов.</p>
@@ -1133,8 +1136,40 @@ curl https://api.telegram.org/botВАШ_ТОКЕН/getWebhookInfo
         Meta (Facebook) проверяет бизнес перед выдачей доступа к WhatsApp API. Подготовьте сайт компании и документы. Процесс занимает от 3 до 7 рабочих дней.
       </div>
 
+      <h2>Что выбрать — Twilio или 360dialog</h2>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:16px 0">
+        <div style="padding:14px;background:var(--bg2);border:1px solid rgba(0,229,255,.2)">
+          <div style="font-size:13px;color:var(--accent);font-weight:600;margin-bottom:6px">360dialog — для старта</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.7">Фиксированная плата €49/мес + стоимость сообщений WhatsApp. Проще в настройке. Быстрее верификация. Подходит для малого и среднего объёма.</div>
+        </div>
+        <div style="padding:14px;background:var(--bg2);border:1px solid var(--border)">
+          <div style="font-size:13px;color:var(--muted);font-weight:600;margin-bottom:6px">Twilio — для больших объёмов</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.7">$0.005 за сообщение + WhatsApp сборы. Выгоднее при 10К+ сообщений в месяц. Более надёжная инфраструктура.</div>
+        </div>
+      </div>
+
       <h2>Альтернатива: Telegram вместо WhatsApp</h2>
       <p>Если WhatsApp Business API кажется сложным — начните с Telegram. В России и СНГ Telegram часто более популярен. Подключение занимает 5 минут (урок 5) против недели верификации WhatsApp.</p>
+    `
+  },
+  7: {
+    module: 'Модуль 2 · Каналы',
+    title: 'WhatsApp — шаблоны и автоматизация',
+    time: '8 мин',
+    content: `
+      <h2>Пошаговая инструкция по верификации WhatsApp Business</h2>
+      <ul class="steps-list">
+        <li><div class="step-n">1</div><div class="step-text">Создайте Business Manager на business.facebook.com</div></li>
+        <li><div class="step-n">2</div><div class="step-text">Добавьте номер телефона который будет использоваться для WhatsApp</div></li>
+        <li><div class="step-n">3</div><div class="step-text">Зарегистрируйтесь на 360dialog.com -> подключите Business Manager</div></li>
+        <li><div class="step-n">4</div><div class="step-text">Meta проверит ваш бизнес: 3-7 рабочих дней</div></li>
+        <li><div class="step-n">5</div><div class="step-text">После одобрения: получите API ключ -> добавьте в Chatwoot</div></li>
+      </ul>
+
+      <div class="note-block info">
+        <div class="note-label">Что нужно для верификации</div>
+        Работающий сайт компании, страница в Facebook (или Instagram), ИНН/ОГРН для российских компаний. Meta проверяет что это реальный бизнес.
+      </div>
 
       <h2>Альтернативные каналы — без сложной верификации</h2>
       <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0">
@@ -1152,18 +1187,6 @@ curl https://api.telegram.org/botВАШ_ТОКЕН/getWebhookInfo
         </div>
       </div>
 
-      <h2>Что выбрать — Twilio или 360dialog</h2>
-      <div style="display:flex;flex-direction:column;gap:6px;margin:16px 0">
-        <div style="padding:14px;background:var(--bg2);border:1px solid rgba(0,229,255,.2)">
-          <div style="font-size:13px;color:var(--accent);font-weight:600;margin-bottom:6px">360dialog — для старта</div>
-          <div style="font-size:12px;color:var(--muted);line-height:1.7">Фиксированная плата €49/мес + стоимость сообщений WhatsApp. Проще в настройке. Быстрее верификация. Подходит для малого и среднего объёма.</div>
-        </div>
-        <div style="padding:14px;background:var(--bg2);border:1px solid var(--border)">
-          <div style="font-size:13px;color:var(--muted);font-weight:600;margin-bottom:6px">Twilio — для больших объёмов</div>
-          <div style="font-size:12px;color:var(--muted);line-height:1.7">$0.005 за сообщение + WhatsApp сборы. Выгоднее при 10К+ сообщений в месяц. Более надёжная инфраструктура.</div>
-        </div>
-      </div>
-
       <h2>Альтернатива: начните с Telegram</h2>
       <p>WhatsApp Business API требует 3-7 дней верификации и стоит денег. Если ваша аудитория активна в Telegram — начните с него. Подключение занимает 5 минут, это бесплатно, и функционал практически одинаковый.</p>
 
@@ -1171,22 +1194,9 @@ curl https://api.telegram.org/botВАШ_ТОКЕН/getWebhookInfo
         <div class="note-label">ℹ Российская специфика</div>
         В России и СНГ Telegram часто популярнее WhatsApp для деловых коммуникаций. Для B2C можно начать с Telegram, а WhatsApp добавить позже когда понадобится.
       </div>
-
-      <h2>Пошаговая инструкция по верификации WhatsApp Business</h2>
-      <ul class="steps-list">
-        <li><div class="step-n">1</div><div class="step-text">Создайте Business Manager на business.facebook.com</div></li>
-        <li><div class="step-n">2</div><div class="step-text">Добавьте номер телефона который будет использоваться для WhatsApp</div></li>
-        <li><div class="step-n">3</div><div class="step-text">Зарегистрируйтесь на 360dialog.com -> подключите Business Manager</div></li>
-        <li><div class="step-n">4</div><div class="step-text">Meta проверит ваш бизнес: 3-7 рабочих дней</div></li>
-        <li><div class="step-n">5</div><div class="step-text">После одобрения: получите API ключ -> добавьте в Chatwoot</div></li>
-      </ul>
-      <div class="note-block info">
-        <div class="note-label">Что нужно для верификации</div>
-        Работающий сайт компании, страница в Facebook (или Instagram), ИНН/ОГРН для российских компаний. Meta проверяет что это реальный бизнес.
-      </div>
     `
   },
-  7: {
+  8: {
     module: 'Модуль 3 · Команда',
     title: 'Агенты и роли',
     time: '12 мин',
@@ -1272,7 +1282,7 @@ curl https://api.telegram.org/botВАШ_ТОКЕН/getWebhookInfo
       </div>
     `
   },
-  8: {
+  9: {
     module: 'Модуль 3 · Команда',
     title: 'Автоматические правила и боты',
     time: '20 мин',
@@ -1351,7 +1361,7 @@ Condition: Status = Open AND Created At > 4 hours ago
 Action: Assign Agent -> Руководитель</pre></div>
     `
   },
-  9: {
+  10: {
     module: 'Модуль 3 · Команда',
     title: 'Виджет чата для сайта',
     time: '12 мин',
@@ -1464,7 +1474,7 @@ $hash = hash_hmac('sha256', $identifier, $secret);
       </div>
     `
   },
-  10: {
+  11: {
     module: 'Модуль 3 · Команда',
     title: 'Метки, заметки и история переписки',
     time: '10 мин',
@@ -1542,7 +1552,7 @@ Headers: api_access_token: ВАШ_ТОКЕН
 <span class="comment"># Contacts → Export → скачать CSV</span></pre></div>
     `
   },
-  11: {
+  12: {
     module: 'Модуль 4 · Продвинутое',
     title: 'Интеграция с n8n',
     time: '20 мин',
@@ -1647,7 +1657,7 @@ POST /api/v1/accounts/{id}/conversations/{conv_id}/messages
 { "content": "Вы успешно отписаны от рассылок." }</pre></div>
     `
   },
-  12: {
+  13: {
     module: 'Модуль 4 · Продвинутое',
     title: 'Отчёты и аналитика',
     time: '12 мин',
@@ -1746,7 +1756,7 @@ Headers: api_access_token: ВАШ_ТОКЕН
       </div>
     `
   },
-  13: {
+  14: {
     module: 'Модуль 4 · Продвинутое',
     title: 'Что дальше — интеграция в email-стек',
     time: '10 мин',

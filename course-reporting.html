@@ -1,0 +1,2121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<script>
+window._GATE_TOKENS=["reporting2025","yC8vZ4XfF9Zp!yu"];
+window._GATE_KEY="reporting";
+window.currentLesson = 1;
+try { window.completed = new Set(JSON.parse(localStorage.getItem('reporting_done') || '[]')); } catch(e) { window.completed = new Set(); }
+var completed = window.completed;
+var currentLesson = window.currentLesson;
+(function(){
+  function _ls(op,k,v){try{if(op==="g")return localStorage.getItem(k);if(op==="s")localStorage.setItem(k,v);if(op==="r")localStorage.removeItem(k);}catch(e){}}
+  function _err(el,msg){if(el){el.textContent=msg;el.style.display="block";}}
+  function _checkPwd(){
+    var gi=document.getElementById("gateInput");
+    if(!gi)return;
+    var val=gi.value.trim();
+    var err=document.getElementById("gateError");
+    var tokens=window._GATE_TOKENS||[];
+    var K=window._GATE_KEY||"course";
+    var att=parseInt(_ls("g",K+"_attempts")||"0");
+    var lk=parseInt(_ls("g",K+"_lock")||"0");
+    if(lk&&Date.now()<lk){_err(err,"Подождите "+Math.ceil((lk-Date.now())/60000)+" мин.");return;}
+    if(tokens.includes(val)){
+      _ls("s",K+"_access",val);_ls("r",K+"_attempts");_ls("r",K+"_lock");
+      if(typeof openCourse==="function"){openCourse();}
+      else{var pg=document.getElementById("passwordGate");var cl=document.getElementById("courseLayout");if(pg)pg.style.display="none";if(cl)cl.style.display="grid";}
+    }else{
+      var n=att+1;_ls("s",K+"_attempts",String(n));
+      if(n>=5){_ls("s",K+"_lock",String(Date.now()+15*60*1000));_ls("s",K+"_attempts","0");_err(err,"Слишком много попыток. Подождите 15 минут.");}
+      else{_err(err,"Неверный токен. Попыток осталось: "+(5-n));if(gi)gi.style.borderColor="#ff6b6b";}
+    }
+  }
+  window.checkPassword=_checkPwd;
+  document.addEventListener("DOMContentLoaded",function(){
+    var K=window._GATE_KEY||"reporting";
+    var tokens=window._GATE_TOKENS||[];
+    try{var s=localStorage.getItem(K+"_access");if(s&&tokens.includes(s)){if(typeof openCourse==="function")openCourse();return;}}catch(e){}
+    try{var u=new URLSearchParams(location.search).get("token");if(u&&tokens.includes(u)){try{localStorage.setItem(K+"_access",u);}catch(e){}if(typeof openCourse==="function")openCourse();}}catch(e){}
+  });
+})();
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Курс: Отчётность для клиентов — MAILSTACK</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23080a0f'/><rect x='4' y='8' width='24' height='16' rx='2' fill='none' stroke='rgba(255,255,255,.22)' stroke-width='1.2'/><polyline points='4,8 16,18 28,8' fill='none' stroke='%2300e5ff' stroke-width='2' stroke-linejoin='round'/><text x='7' y='26' fill='%2300e5ff' font-family='monospace' font-size='8' font-weight='bold'>›_</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+<style>
+/* ── COURSE LAYOUT ── */
+.course-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 0;
+  min-height: 100vh;
+  padding-top: 61px;
+}
+
+/* Sidebar */
+.course-sidebar {
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  position: sticky;
+  top: 61px;
+  height: calc(100vh - 61px);
+  overflow-y: auto;
+  padding: 32px 0;
+}
+.sidebar-title {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  padding: 0 24px;
+  margin-bottom: 16px;
+}
+.sidebar-module {
+  margin-bottom: 8px;
+}
+.sidebar-module-title {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  padding: 8px 24px;
+  margin-top: 8px;
+}
+.sidebar-lesson {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 24px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .2s;
+  border-left: 2px solid transparent;
+  text-decoration: none;
+}
+.sidebar-lesson:hover { color: var(--text); background: rgba(255,255,255,.03); }
+.sidebar-lesson.active { color: var(--accent); border-left-color: var(--accent); background: rgba(0,229,255,.05); }
+.sidebar-lesson.done { color: var(--accent3); }
+.lesson-num {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+}
+.sidebar-lesson.active .lesson-num { border-color: var(--accent); color: var(--accent); }
+.sidebar-lesson.done .lesson-num { border-color: var(--accent3); background: var(--accent3); color: var(--bg); }
+.sidebar-progress {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  margin-top: 16px;
+}
+.progress-bar-wrap {
+  background: var(--surface);
+  height: 4px;
+  border-radius: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: var(--accent3);
+  border-radius: 2px;
+  transition: width .5s ease;
+}
+
+/* Lesson content */
+.course-content {
+  padding: 48px 64px;
+  max-width: 860px;
+}
+.lesson-header {
+  margin-bottom: 40px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+}
+.lesson-module-tag {
+  font-size: 11px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 12px;
+}
+.lesson-title {
+  font-family: var(--font-head);
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 800;
+  color: var(--heading);
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+  line-height: 1.1;
+}
+.lesson-meta {
+  display: flex;
+  gap: 20px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Content blocks */
+.lesson-body h2 {
+  font-family: var(--font-head);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--heading);
+  margin: 40px 0 16px;
+  letter-spacing: -.5px;
+}
+.lesson-body h3 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--heading);
+  margin: 28px 0 12px;
+}
+.lesson-body p {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+.lesson-body ul, .lesson-body ol {
+  padding-left: 20px;
+  margin-bottom: 16px;
+}
+.lesson-body li {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.8;
+  margin-bottom: 6px;
+}
+
+/* Code blocks */
+.code-block {
+  background: #0a0e18;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  padding: 20px 24px;
+  margin: 20px 0;
+  border-radius: 0;
+  position: relative;
+  overflow-x: auto;
+}
+.code-block pre {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: #c9d1d9;
+  line-height: 1.7;
+  margin: 0;
+  white-space: pre;
+}
+.code-block .comment { color: #6e7681; }
+.code-block .cmd { color: var(--accent); }
+.code-block .str { color: var(--accent3); }
+.code-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+}
+.copy-btn {
+  position: absolute;
+  top: 12px; right: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 11px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  transition: all .2s;
+}
+.copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+/* Note / Warning / Tip blocks */
+.note-block {
+  padding: 16px 20px;
+  margin: 20px 0;
+  border-left: 3px solid;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.note-block.info { border-color: var(--accent); background: rgba(0,229,255,.05); color: var(--text); }
+.note-block.warn { border-color: #f0a500; background: rgba(240,165,0,.05); color: var(--text); }
+.note-block.tip  { border-color: var(--accent3); background: rgba(0,255,136,.05); color: var(--text); }
+.note-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 6px; }
+.note-block.info .note-label { color: var(--accent); }
+.note-block.warn .note-label { color: #f0a500; }
+.note-block.tip  .note-label { color: var(--accent3); }
+
+/* Step counter */
+.steps-list { list-style: none; padding: 0; margin: 20px 0; }
+.steps-list li {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  align-items: flex-start;
+}
+.step-n {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+}
+.step-text { font-size: 14px; color: var(--text); line-height: 1.7; padding-top: 4px; }
+
+/* Nav between lessons */
+.lesson-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 56px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+  gap: 16px;
+}
+.lesson-nav-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 24px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  cursor: pointer;
+  transition: all .2s;
+  text-decoration: none;
+  max-width: 280px;
+}
+.lesson-nav-btn:hover { border-color: var(--accent); background: var(--surface); }
+.nav-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.nav-title { font-size: 14px; color: var(--heading); font-weight: 500; }
+
+/* Password gate */
+#passwordGate {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gate-box {
+  text-align: center;
+  max-width: 420px;
+  padding: 48px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+}
+.gate-logo { margin-bottom: 24px; }
+.gate-title { font-family: var(--font-head); font-size: 24px; font-weight: 800; color: var(--heading); margin-bottom: 8px; }
+.gate-desc { font-size: 13px; color: var(--muted); margin-bottom: 28px; line-height: 1.7; }
+.gate-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px 16px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  margin-bottom: 12px;
+  outline: none;
+  transition: border-color .2s;
+  box-sizing: border-box;
+}
+.gate-input:focus { border-color: var(--accent); }
+.gate-error { font-size: 12px; color: #ff6b6b; margin-bottom: 12px; display: none; }
+.gate-buy { font-size: 13px; color: var(--muted); margin-top: 20px; }
+.gate-buy a { color: var(--accent); text-decoration: none; }
+
+@media (max-width: 900px) {
+  .course-layout { grid-template-columns: 1fr; }
+  .course-sidebar { position: static; height: auto; }
+  .course-content { padding: 32px 24px; }
+}
+
+/* ── Прогресс курса v2 ─────────────────────────────────── */
+.progress-wrap { padding:14px 20px 12px; border-bottom:1px solid var(--border); }
+.progress-label { display:flex; justify-content:space-between; font-size:10px; color:var(--muted); font-family:var(--font-mono); margin-bottom:6px; text-transform:uppercase; letter-spacing:.08em; }
+.progress-fill  { height:3px; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:2px; transition:width .4s; }
+.sidebar-item-done::after { content:'\2713'; position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:10px; color:var(--accent3); }
+.sidebar-lesson  { position:relative; }
+.complete-btn    { display:flex; align-items:center; gap:8px; padding:10px 16px; background:rgba(0,255,136,.05); border:1px solid rgba(0,255,136,.2); color:var(--accent3); font-size:11px; font-family:var(--font-mono); cursor:pointer; width:100%; margin-top:16px; transition:all .15s; }
+.complete-btn:hover { background:rgba(0,255,136,.12); }
+.complete-btn.done  { background:rgba(0,255,136,.1); border-color:var(--accent3); }
+
+/* ── Course Quiz ─────────────────────────────────────────── */
+.cquiz-wrap    { margin-top: 40px; }
+.cquiz-header  { padding: 20px 24px; background: rgba(123,97,255,.06); border: 1px solid rgba(123,97,255,.2); border-bottom: none; }
+.cquiz-title   { font-family: var(--font-head); font-size: 18px; font-weight: 800; color: var(--heading); margin-bottom: 4px; }
+.cquiz-sub     { font-size: 12px; color: var(--muted); font-family: var(--font-mono); }
+.cquiz-q       { background: var(--bg2); border: 1px solid var(--border); border-top: none; padding: 20px 24px; }
+.cquiz-qtext   { font-size: 15px; color: var(--heading); font-weight: 600; margin-bottom: 14px; line-height: 1.5; }
+.cquiz-qn      { font-size: 10px; color: var(--muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 8px; }
+.cquiz-opts    { display: flex; flex-direction: column; gap: 6px; margin-bottom: 0; }
+.cquiz-opt     { display: flex; gap: 10px; align-items: center; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); cursor: pointer; font-size: 13px; color: var(--text); transition: all .15s; }
+.cquiz-opt:hover    { border-color: var(--accent); }
+.cquiz-opt.correct  { border-color: var(--accent3); background: rgba(0,255,136,.06); color: var(--accent3); }
+.cquiz-opt.wrong    { border-color: #ff6b6b; background: rgba(255,107,107,.05); color: #ff6b6b; }
+.cquiz-opt-key { min-width: 22px; height: 22px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 10px; font-family: var(--font-mono); color: var(--muted); flex-shrink: 0; }
+.cquiz-opt.correct .cquiz-opt-key { border-color: var(--accent3); color: var(--accent3); }
+.cquiz-opt.wrong    .cquiz-opt-key { border-color: #ff6b6b; color: #ff6b6b; }
+.cquiz-explain { margin-top: 10px; padding: 10px 14px; background: var(--surface); border-left: 3px solid var(--accent); font-size: 12px; color: var(--muted); line-height: 1.7; display: none; }
+.cquiz-explain.show { display: block; }
+.cquiz-progress { padding: 14px 24px; background: var(--bg2); border: 1px solid var(--border); border-top: none; display: flex; align-items: center; gap: 14px; }
+.cquiz-bar     { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.cquiz-fill    { height: 100%; background: linear-gradient(90deg, var(--accent3), var(--accent)); border-radius: 2px; transition: width .4s; }
+.cquiz-result  { padding: 24px; background: var(--surface); border: 1px solid rgba(0,229,255,.2); border-top: none; text-align: center; display: none; }
+.cquiz-result.show { display: block; }
+
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+#courseFinale { animation: fadeIn .5s ease; }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="passwordGate">
+  <div class="gate-box">
+    <div class="gate-logo">
+      <svg width="210" height="22" viewBox="0 0 270 28" fill="none">
+        <rect x="1" y="1" width="40" height="26" rx="3" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1"/>
+        <polyline points="1,1 21,14 41,1" fill="none" stroke="#00e5ff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+        <text x="5" y="24" fill="#00e5ff" font-family="'JetBrains Mono', monospace" font-size="12">›_</text>
+        <text x="50" y="21" fill="#ffffff" font-family="'Syne', sans-serif" font-size="20" font-weight="800" letter-spacing="-1">MAIL<tspan fill="#00e5ff">STACK</tspan></text>
+      </svg>
+    </div>
+    <div class="gate-title">Отчётность для клиентов</div>
+    <div class="gate-desc">Этот курс доступен после оплаты. Введите токен доступа который вы получили в Telegram после покупки.</div>
+    <input type="password" id="gateInput" class="gate-input" placeholder="Введите токен доступа" onkeydown="if(event.key==='Enter')checkPassword()">
+    <div class="gate-error" id="gateError">Неверный токен. Проверьте сообщение в Telegram или напишите нам.</div>
+    <button onclick="checkPassword()" id="pwBtn" class="btn-primary" style="width:100%">Войти в курс</button>
+    <div class="gate-buy">Нет доступа? <a href="courses.html">Купить курс &rarr;</a></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="index.html" class="logo">
+    <svg width="270" height="28" viewBox="0 0 270 28" fill="none">
+      <rect x="1" y="1" width="40" height="26" rx="3" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1"/>
+      <polyline points="1,1 21,14 41,1" fill="none" stroke="#00e5ff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      <text x="5" y="24" fill="#00e5ff" font-family="'JetBrains Mono', monospace" font-size="12">›_</text>
+      <text x="50" y="21" fill="#ffffff" font-family="'Syne', sans-serif" font-size="20" font-weight="800" letter-spacing="-1">MAIL<tspan fill="#00e5ff">STACK</tspan></text>
+    </svg>
+  </a>
+    <ul class="nav-links">
+    <li><a href="index.html">Главная</a></li>
+    <li><a href="services.html">Услуги</a></li>
+    <li><a href="compare.html">Сравнение</a></li>
+    <li><a href="servers.html">Серверы</a></li>
+    <li><a href="courses.html" class="active">Курсы</a></li>
+    <li><a href="workflows.html" style="color:var(--accent3)">Воркфлоу <span style="font-size:9px;background:var(--accent3);color:var(--bg);padding:1px 6px;margin-left:4px;font-weight:600;letter-spacing:.05em">NEW</span></a></li>
+  </ul>
+  <a href="courses.html" class="nav-cta">Все курсы</a>
+  <button class="nav-burger" id="navBurger"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- COURSE LAYOUT -->
+<div class="course-layout" id="courseLayout" style="display:none">
+
+  <!-- SIDEBAR -->
+  <aside class="course-sidebar">
+    <div class="sidebar-title">Отчётность для клиентов</div>
+    <div class="progress-wrap"><span id="progressText" style="font-size:12px;color:var(--muted);font-family:var(--font-mono)">0 / 10 пройдено</span></div>
+
+    <div class="sidebar-module-title">Модуль 1 &middot; Основы отчётности</div>
+    <a class="sidebar-lesson" data-n="1" onclick="showLesson(1)" href="#">
+      <div class="lesson-num">1</div>Зачем нужна отчётность
+    </a>
+    <a class="sidebar-lesson" data-n="2" onclick="showLesson(2)" href="#">
+      <div class="lesson-num">2</div>Ключевые метрики email-маркетинга
+    </a>
+    <a class="sidebar-lesson" data-n="3" onclick="showLesson(3)" href="#">
+      <div class="lesson-num">3</div>Как собирать данные
+    </a>
+    <div class="sidebar-module-title">Модуль 2 &middot; Инструменты</div>
+    <a class="sidebar-lesson" data-n="4" onclick="showLesson(4)" href="#">
+      <div class="lesson-num">4</div>Google Sheets дашборд
+    </a>
+    <a class="sidebar-lesson" data-n="5" onclick="showLesson(5)" href="#">
+      <div class="lesson-num">5</div>n8n workflow для отчётности
+    </a>
+    <a class="sidebar-lesson" data-n="6" onclick="showLesson(6)" href="#">
+      <div class="lesson-num">6</div>Визуализация данных
+    </a>
+    <div class="sidebar-module-title">Модуль 3 &middot; Шаблоны отчётов</div>
+    <a class="sidebar-lesson" data-n="7" onclick="showLesson(7)" href="#">
+      <div class="lesson-num">7</div>Еженедельный отчёт
+    </a>
+    <a class="sidebar-lesson" data-n="8" onclick="showLesson(8)" href="#">
+      <div class="lesson-num">8</div>Ежемесячный отчёт
+    </a>
+    <div class="sidebar-module-title">Модуль 4 &middot; Продвинутое</div>
+    <a class="sidebar-lesson" data-n="9" onclick="showLesson(9)" href="#">
+      <div class="lesson-num">9</div>Объяснение метрик клиенту
+    </a>
+    <a class="sidebar-lesson" data-n="10" onclick="showLesson(10)" href="#">
+      <div class="lesson-num">10</div>Автоматизация полного цикла
+    </a>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="course-content" id="lessonContent">
+    <!-- Уроки рендерятся JS-ом -->
+  </main>
+
+</div>
+
+<script src="js/main.js"></script>
+<script>
+function openCourse() {
+  document.getElementById('passwordGate').style.display = 'none';
+  document.getElementById('courseLayout').style.display = 'grid';
+  window._courseOpen = true;
+  if (typeof showLesson === 'function') {
+    showLesson(window.currentLesson || 1);
+  }
+}
+
+// ── PROGRESS SYSTEM ──
+
+function getDone() {
+  try { return JSON.parse(localStorage.getItem(DONE_KEY) || '[]'); } catch(e) { return []; }
+}
+
+function saveDone(arr) {
+  try { localStorage.setItem(DONE_KEY, JSON.stringify(arr)); } catch(e) {}
+}
+
+function markDone(n) {
+  var done = getDone();
+  if (done.indexOf(n) < 0) done.push(n);
+  saveDone(done);
+  refreshProgress();
+}
+
+function refreshProgress() {
+  var done = getDone();
+  var total = Object.keys(lessons).length;
+  var el = document.getElementById('progressText');
+  if (el) el.textContent = done.length + ' / ' + total + ' пройдено';
+  document.querySelectorAll('.sidebar-lesson').forEach(function(item) {
+    var attr = item.getAttribute('onclick') || '';
+    var match = attr.match(/showLesson.(\d+)./);
+    if (!match) return;
+    var num = parseInt(match[1]);
+    if (done.indexOf(num) >= 0) {
+      item.classList.add('done');
+    } else {
+      item.classList.remove('done');
+    }
+  });
+}
+
+function updateProgress() { refreshProgress(); }
+
+function showLesson(n) {
+  if (typeof currentLesson !== 'undefined' && currentLesson !== n && currentLesson >= 1) {
+    markDone(currentLesson);
+  }
+  currentLesson = n;
+  window.currentLesson = n;
+  var lesson = lessons[n];
+  if (!lesson) return;
+
+  refreshProgress();
+  document.querySelectorAll('.sidebar-lesson').forEach(function(el) {
+    var attr = el.getAttribute('onclick') || '';
+    var m = attr.match(/showLesson.(\d+)./);
+    if (!m) return;
+    el.classList.toggle('active', parseInt(m[1]) === n);
+  });
+
+  var total = Object.keys(lessons).length;
+  var prev = n > 1 ? lessons[n-1] : null;
+  var next = n < total ? lessons[n+1] : null;
+
+  var prevBtn = prev
+    ? '<a class="lesson-nav-btn" onclick="showLesson(' + (n-1) + ')" href="#"><div class="nav-label">&larr; Назад</div><div class="nav-title">' + prev.title + '</div></a>'
+    : '<div></div>';
+  var nextBtn = next
+    ? '<a class="lesson-nav-btn" onclick="showLesson(' + (n+1) + ')" href="#" style="text-align:right"><div class="nav-label">Вперёд &rarr;</div><div class="nav-title">' + next.title + '</div></a>'
+    : '<div></div>';
+
+  document.getElementById('lessonContent').innerHTML =
+    '<div class="lesson-header">'
+    + '<div class="lesson-module-tag">' + lesson.module + '</div>'
+    + '<div class="lesson-title">' + lesson.title + '</div>'
+    + '<div class="lesson-meta"><span>&#9201; ' + lesson.time + '</span><span>Урок ' + n + ' из ' + total + '</span></div>'
+    + '</div>'
+    + '<div class="lesson-body">' + lesson.content + '</div>'
+    + '<div class="lesson-nav">' + prevBtn + nextBtn + '</div>';
+
+  refreshProgress();
+  window.scrollTo(0, 0);
+  if (n === 10) {
+    var qb = document.getElementById("quizBlock");
+    if (qb && typeof quizInit_reporting === "function") quizInit_reporting();
+  }
+}
+
+// ── LESSONS DATA ──
+var lessons = {
+  1: {
+    module: 'Модуль 1 &middot; Основы отчётности',
+    title:  'Зачем нужна отчётность &mdash; что клиент хочет видеть',
+    time:   '14 мин',
+    content: `
+
+      <div style="margin:0 0 28px;padding:20px 24px;background:var(--bg2);border:1px solid rgba(0,229,255,.15)">
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px">&#128205; Дорожная карта обучения</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <a href="course-mailwizz.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">MailWizz &#10003;</a>
+          <a href="course-analytics.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">Аналитика &#10003;</a>
+          <a href="course-agency.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">Агентства &#10003;</a>
+          <span style="color:var(--muted);font-size:16px">&rarr;</span>
+          <span style="font-size:11px;padding:4px 10px;background:rgba(0,229,255,.08);border:1px solid var(--accent);color:var(--accent);font-family:var(--font-mono);font-weight:700">&#128202; Отчётность для клиентов</span>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:10px">Этот курс завершает блок клиентской работы</div>
+      </div>
+
+      <h2>Почему клиенту нужна отчётность</h2>
+
+      <p>Отчётность &mdash; это не формальность и не бюрократия. Это главный инструмент доверия между вами и клиентом. Когда клиент платит за email-инфраструктуру 30-100 тысяч рублей в месяц, он хочет видеть конкретные цифры: сколько писем отправлено, сколько доставлено, сколько открыто, сколько кликов произведено. Без регулярных отчётов клиент начинает сомневаться, стоит ли продолжать платить.</p>
+
+      <p>Большинство агентств теряют клиентов не из-за плохого качества работы, а из-за отсутствия прозрачности. Клиент не видит вашу работу &mdash; настройку DNS, мониторинг блеклистов, ротацию IP. Для него инфраструктура &mdash; чёрный ящик. Отчёт превращает этот чёрный ящик в понятную панель управления.</p>
+
+      <p>Правильный отчёт решает три задачи: демонстрирует результат вашей работы, показывает динамику (лучше стало или хуже), и содержит конкретные рекомендации. Если отчёт содержит только цифры без контекста &mdash; он бесполезен. Если содержит только слова без цифр &mdash; не вызывает доверия.</p>
+
+      <p>Ключевой принцип: клиент не должен разбираться в технических деталях SMTP, DKIM или SPF. Ваша задача &mdash; перевести техническую информацию в бизнес-метрики. Вместо &laquo;DKIM alignment pass rate 98.7%&raquo; пишите &laquo;Аутентификация писем работает корректно, 98.7% писем проходят все проверки&raquo;.</p>
+
+      <p>Частота отчётности зависит от масштаба. Для клиентов с объёмом до 50,000 писем в месяц достаточно еженедельного краткого отчёта и ежемесячного полного. Для крупных клиентов с 200,000+ писем может понадобиться ежедневный дашборд с автоматическим обновлением.</p>
+
+      <h2>Структура идеального отчёта</h2>
+
+      <p>Каждый отчёт должен содержать четыре секции: резюме (executive summary), метрики доставляемости, метрики вовлечённости, и рекомендации. Резюме &mdash; самая важная часть, потому что 70% клиентов читают только его. Сделайте его информативным и конкретным.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Структура отчёта (Markdown шаблон)</div>
+        <pre><span class="comment"># Еженедельный отчёт: [Название клиента]</span>
+<span class="comment"># Период: 17.03 — 23.03.2026</span>
+
+<span class="cmd">## Резюме</span>
+<span class="str">Отправлено: 12,450 писем</span>
+<span class="str">Доставлено: 12,180 (97.8%) — стабильно</span>
+<span class="str">Open Rate: 24.3% (+2.1% к прошлой неделе)</span>
+<span class="str">Проблемы: нет критических</span>
+
+<span class="cmd">## Метрики доставляемости</span>
+- Inbox Rate: 94.2%
+- Spam Rate: 3.1%
+- Bounce Rate: 2.2%
+- Blacklists: чисто (0 из 80 проверенных)
+
+<span class="cmd">## Рекомендации</span>
+- Увеличить прогрев домена domain3.com
+- Обновить DKIM ключ для domain1.com (старше 6 мес)</pre>
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Совет</div>
+        Всегда начинайте отчёт с позитива. Даже если есть проблемы &mdash; сначала покажите что работает хорошо, затем переходите к зонам роста. Это психологически правильный подход, который укрепляет доверие клиента.
+      </div>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Python: автоматическая генерация резюме</div>
+        <pre><span class="comment"># generate_summary.py</span>
+<span class="cmd">import</span> json
+<span class="cmd">from</span> datetime <span class="cmd">import</span> datetime, timedelta
+
+<span class="cmd">def</span> <span class="str">generate_summary</span>(stats):
+    sent = stats[<span class="str">'sent'</span>]
+    delivered = stats[<span class="str">'delivered'</span>]
+    opened = stats[<span class="str">'opened'</span>]
+    rate = round(delivered / sent * 100, 1) <span class="cmd">if</span> sent > 0 <span class="cmd">else</span> 0
+    open_rate = round(opened / delivered * 100, 1) <span class="cmd">if</span> delivered > 0 <span class="cmd">else</span> 0
+
+    status = <span class="str">"стабильно"</span> <span class="cmd">if</span> rate >= 95 <span class="cmd">else</span> <span class="str">"требует внимания"</span>
+
+    <span class="cmd">return</span> {
+        <span class="str">"sent"</span>: sent,
+        <span class="str">"delivered"</span>: delivered,
+        <span class="str">"delivery_rate"</span>: rate,
+        <span class="str">"open_rate"</span>: open_rate,
+        <span class="str">"status"</span>: status,
+        <span class="str">"date"</span>: datetime.now().strftime(<span class="str">"%d.%m.%Y"</span>)
+    }</pre>
+      </div>
+
+      <p>Обратите внимание: отчёт &mdash; это не только данные, но и ваша экспертная оценка. Клиент платит не за цифры (их он может получить сам), а за интерпретацию и рекомендации. Каждый отчёт должен заканчиваться минимум 2-3 конкретными действиями, которые вы планируете выполнить на следующей неделе.</p>
+
+      <div class="note-block warn">
+        <div class="note-label">Важно</div>
+        Никогда не отправляйте отчёт с падающими метриками без объяснения причин и плана исправления. Клиент должен видеть, что вы контролируете ситуацию. Фраза &laquo;Open Rate упал на 5%&raquo; без контекста вызывает панику. &laquo;Open Rate упал на 5% из-за сезонного снижения, план корректировки: обновление тем писем и сегментация базы&raquo; &mdash; вызывает доверие.
+      </div>
+    `
+  },
+
+  2: {
+    module: 'Модуль 1 &middot; Основы отчётности',
+    title:  'Ключевые метрики email-маркетинга',
+    time:   '16 мин',
+    content: `
+      <h2>Метрики доставляемости</h2>
+
+      <p>Метрики email-маркетинга делятся на две группы: метрики доставляемости (дошло ли письмо до ящика) и метрики вовлечённости (что получатель сделал с письмом). Для отчётности клиенту критически важно разделять эти группы и объяснять каждую в понятном контексте.</p>
+
+      <p><strong>Delivery Rate</strong> &mdash; процент писем, которые были приняты почтовым сервером получателя. Нормальный показатель: 95-99%. Если ниже 95% &mdash; есть проблемы с базой (невалидные адреса) или с репутацией отправителя. Этот показатель измеряет техническую доставку, но не гарантирует попадание во входящие.</p>
+
+      <p><strong>Inbox Placement Rate (IPR)</strong> &mdash; процент писем, попавших именно во входящие, а не в спам. Это самая важная метрика для клиента. Нормальный показатель: 85-95%. Измеряется через seed-тесты (GlockApps, Mail-Tester) или Google Postmaster Tools. Если IPR ниже 80% &mdash; нужно немедленно анализировать причины.</p>
+
+      <p><strong>Bounce Rate</strong> &mdash; процент отказов. Делится на Hard Bounce (адрес не существует, 550 ошибка) и Soft Bounce (временная проблема, ящик переполнен, 4xx ошибка). Hard Bounce выше 2% сигнализирует о проблемах с качеством базы. Soft Bounce выше 5% &mdash; о проблемах с инфраструктурой получателя или слишком агрессивной скорости отправки.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">SQL: расчёт Bounce Rate из Postal</div>
+        <pre><span class="comment">-- Запрос к БД Postal для расчёта bounce rate за период</span>
+<span class="cmd">SELECT</span>
+  <span class="str">DATE</span>(created_at) <span class="cmd">AS</span> day,
+  <span class="cmd">COUNT</span>(*) <span class="cmd">AS</span> total_sent,
+  <span class="cmd">SUM</span>(<span class="cmd">CASE WHEN</span> status = <span class="str">'HardFail'</span> <span class="cmd">THEN</span> 1 <span class="cmd">ELSE</span> 0 <span class="cmd">END</span>) <span class="cmd">AS</span> hard_bounces,
+  <span class="cmd">SUM</span>(<span class="cmd">CASE WHEN</span> status = <span class="str">'SoftFail'</span> <span class="cmd">THEN</span> 1 <span class="cmd">ELSE</span> 0 <span class="cmd">END</span>) <span class="cmd">AS</span> soft_bounces,
+  <span class="cmd">ROUND</span>(
+    <span class="cmd">SUM</span>(<span class="cmd">CASE WHEN</span> status <span class="cmd">IN</span> (<span class="str">'HardFail'</span>, <span class="str">'SoftFail'</span>) <span class="cmd">THEN</span> 1 <span class="cmd">ELSE</span> 0 <span class="cmd">END</span>) * 100.0
+    / <span class="cmd">COUNT</span>(*), 2
+  ) <span class="cmd">AS</span> bounce_rate_pct
+<span class="cmd">FROM</span> messages
+<span class="cmd">WHERE</span> created_at >= <span class="str">'2026-03-17'</span>
+  <span class="cmd">AND</span> created_at < <span class="str">'2026-03-24'</span>
+<span class="cmd">GROUP BY</span> <span class="str">DATE</span>(created_at)
+<span class="cmd">ORDER BY</span> day;</pre>
+      </div>
+
+      <h2>Метрики вовлечённости</h2>
+
+      <p><strong>Open Rate</strong> &mdash; процент открытий. Измеряется через tracking pixel (1x1 прозрачное изображение). Важно: с iOS 15+ Apple Mail Privacy Protection предзагружает изображения, что завышает Open Rate на 10-20%. Для точности рекомендуется отслеживать &laquo;реальные&raquo; открытия, исключая Apple Mail, или ориентироваться на CTR как более надёжный показатель.</p>
+
+      <p><strong>Click-Through Rate (CTR)</strong> &mdash; процент кликов по ссылкам в письме от общего числа доставленных. Нормальный показатель для холодных рассылок: 1-3%. Для тёплых списков: 3-8%. CTR &mdash; самая честная метрика вовлечённости, потому что клик требует осознанного действия получателя, в отличие от открытия.</p>
+
+      <p><strong>Conversion Rate</strong> &mdash; процент получателей, совершивших целевое действие (ответ на письмо, заполнение формы, покупка). Это финальная бизнес-метрика, которая интересует клиента больше всего. Нормальный показатель сильно зависит от ниши: для B2B SaaS холодные рассылки дают 0.5-2% ответов, для e-commerce &mdash; 1-5% покупок.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Python: расчёт всех метрик из MailWizz API</div>
+        <pre><span class="comment"># metrics_calculator.py</span>
+<span class="cmd">import</span> requests
+
+MAILWIZZ_URL = <span class="str">"https://mail.example.com/api"</span>
+API_KEY = <span class="str">"your-api-key-here"</span>
+
+<span class="cmd">def</span> <span class="str">get_campaign_metrics</span>(campaign_uid):
+    headers = {<span class="str">"X-Api-Key"</span>: API_KEY}
+    url = f<span class="str">"{MAILWIZZ_URL}/campaigns/{campaign_uid}/stats"</span>
+    resp = requests.get(url, headers=headers)
+    data = resp.json()[<span class="str">"data"</span>]
+
+    metrics = {
+        <span class="str">"sent"</span>: int(data[<span class="str">"processed_count"</span>]),
+        <span class="str">"delivered"</span>: int(data[<span class="str">"delivery_success_count"</span>]),
+        <span class="str">"opens"</span>: int(data[<span class="str">"opens_count"</span>]),
+        <span class="str">"unique_opens"</span>: int(data[<span class="str">"unique_opens_count"</span>]),
+        <span class="str">"clicks"</span>: int(data[<span class="str">"clicks_count"</span>]),
+        <span class="str">"bounces"</span>: int(data[<span class="str">"bounces_count"</span>]),
+        <span class="str">"unsubscribes"</span>: int(data[<span class="str">"unsubscribes_count"</span>]),
+    }
+
+    <span class="comment"># Расчёт процентов</span>
+    s = metrics[<span class="str">"delivered"</span>]
+    metrics[<span class="str">"open_rate"</span>] = round(metrics[<span class="str">"unique_opens"</span>] / s * 100, 1) <span class="cmd">if</span> s else 0
+    metrics[<span class="str">"ctr"</span>] = round(metrics[<span class="str">"clicks"</span>] / s * 100, 1) <span class="cmd">if</span> s else 0
+    metrics[<span class="str">"bounce_rate"</span>] = round(metrics[<span class="str">"bounces"</span>] / metrics[<span class="str">"sent"</span>] * 100, 1) <span class="cmd">if</span> metrics[<span class="str">"sent"</span>] else 0
+
+    <span class="cmd">return</span> metrics</pre>
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Совет</div>
+        Всегда показывайте метрики в сравнении: текущая неделя vs предыдущая, текущий месяц vs прошлый. Абсолютные цифры без контекста бессмысленны. Open Rate 22% &mdash; это хорошо или плохо? Зависит от ниши и предыдущих показателей. Стрелка вверх/вниз с процентом изменения &mdash; самый понятный формат для клиента.
+      </div>
+
+      <h2>Таблица нормативных показателей</h2>
+
+      <p>Ниже &mdash; ориентировочные нормы для разных типов рассылок. Используйте эту таблицу как reference при составлении отчётов, чтобы давать клиенту контекст его показателей:</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Нормативные показатели по типам рассылок</div>
+        <pre><span class="comment"># Холодные B2B рассылки (outbound)</span>
+Open Rate:      15-25%
+CTR:            1-3%
+Reply Rate:     1-5%
+Bounce Rate:    &lt;3%
+Unsubscribe:    &lt;1%
+
+<span class="comment"># Тёплые newsletter рассылки</span>
+Open Rate:      25-40%
+CTR:            3-8%
+Bounce Rate:    &lt;1%
+Unsubscribe:    &lt;0.5%
+
+<span class="comment"># Транзакционные письма</span>
+Open Rate:      60-80%
+CTR:            10-20%
+Bounce Rate:    &lt;0.5%
+Delivery Rate:  &gt;99%</pre>
+      </div>
+
+      <div class="note-block warn">
+        <div class="note-label">Важно</div>
+        Никогда не используйте Unsubscribe Rate как единственный индикатор проблем. Низкий unsub может означать, что люди просто нажимают &laquo;спам&raquo; вместо отписки &mdash; а это гораздо хуже для репутации домена. Следите за Spam Complaint Rate через Google Postmaster &mdash; он должен быть ниже 0.1%.
+      </div>
+    `
+  },
+
+  3: {
+    module: 'Модуль 1 &middot; Основы отчётности',
+    title:  'Как собирать данные &mdash; MailWizz API, Postal API, Google Postmaster',
+    time:   '18 мин',
+    content: `
+      <h2>Источники данных для отчётности</h2>
+
+      <p>Качественная отчётность строится на данных из нескольких источников. Нельзя полагаться только на один &mdash; каждый показывает свою часть картины. MailWizz даёт статистику кампаний (открытия, клики, отписки), Postal показывает техническую доставку (SMTP-коды, очереди, bounce), а Google Postmaster &mdash; репутацию домена в глазах Gmail (самого популярного провайдера).</p>
+
+      <p>Правильная архитектура сбора данных: настроить автоматический pull из каждого API раз в час или раз в день, складывать в единую базу (PostgreSQL или Google Sheets для простых случаев), и генерировать отчёт из этой единой базы. Ручной сбор данных из разных панелей &mdash; это потеря времени и источник ошибок.</p>
+
+      <h2>MailWizz API</h2>
+
+      <p>MailWizz предоставляет REST API с ключом авторизации через заголовок X-Api-Key. Основные эндпоинты для отчётности: /campaigns (список кампаний), /campaigns/{uid}/stats (статистика конкретной кампании), /lists/{uid}/subscribers (подписчики списка). API возвращает JSON и поддерживает пагинацию через параметры page и per_page.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Python: сбор данных из MailWizz API</div>
+        <pre><span class="comment"># mailwizz_collector.py</span>
+<span class="cmd">import</span> requests
+<span class="cmd">import</span> json
+<span class="cmd">from</span> datetime <span class="cmd">import</span> datetime
+
+MAILWIZZ_BASE = <span class="str">"https://mail.example.com/api"</span>
+API_KEY = <span class="str">"your-mailwizz-api-key"</span>
+
+<span class="cmd">def</span> <span class="str">fetch_all_campaigns</span>():
+    <span class="str">"""Получить все кампании с пагинацией"""</span>
+    campaigns = []
+    page = 1
+    <span class="cmd">while True</span>:
+        resp = requests.get(
+            f<span class="str">"{MAILWIZZ_BASE}/campaigns"</span>,
+            headers={<span class="str">"X-Api-Key"</span>: API_KEY},
+            params={<span class="str">"page"</span>: page, <span class="str">"per_page"</span>: 50}
+        )
+        data = resp.json()
+        records = data.get(<span class="str">"data"</span>, {}).get(<span class="str">"records"</span>, [])
+        <span class="cmd">if not</span> records:
+            <span class="cmd">break</span>
+        campaigns.extend(records)
+        page += 1
+    <span class="cmd">return</span> campaigns
+
+<span class="cmd">def</span> <span class="str">fetch_campaign_stats</span>(campaign_uid):
+    <span class="str">"""Статистика одной кампании"""</span>
+    resp = requests.get(
+        f<span class="str">"{MAILWIZZ_BASE}/campaigns/{campaign_uid}/stats"</span>,
+        headers={<span class="str">"X-Api-Key"</span>: API_KEY}
+    )
+    <span class="cmd">return</span> resp.json().get(<span class="str">"data"</span>, {})
+
+<span class="comment"># Собираем данные по всем кампаниям</span>
+all_stats = []
+<span class="cmd">for</span> c <span class="cmd">in</span> fetch_all_campaigns():
+    stats = fetch_campaign_stats(c[<span class="str">"campaign_uid"</span>])
+    stats[<span class="str">"name"</span>] = c[<span class="str">"name"</span>]
+    stats[<span class="str">"send_at"</span>] = c.get(<span class="str">"send_at"</span>, <span class="str">""</span>)
+    all_stats.append(stats)
+
+<span class="cmd">with</span> open(<span class="str">"mailwizz_stats.json"</span>, <span class="str">"w"</span>) <span class="cmd">as</span> f:
+    json.dump(all_stats, f, indent=2)
+print(f<span class="str">"Собрано {len(all_stats)} кампаний"</span>)</pre>
+      </div>
+
+      <h2>Postal API</h2>
+
+      <p>Postal использует API с авторизацией через заголовок X-Server-API-Key. Ключевой эндпоинт для отчётности &mdash; /api/v1/messages/deliveries, который возвращает историю доставки конкретного письма. Для массового сбора данных эффективнее работать напрямую с базой PostgreSQL через SQL-запросы, чем через API &mdash; это значительно быстрее.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Python: сбор статистики из Postal</div>
+        <pre><span class="comment"># postal_collector.py</span>
+<span class="cmd">import</span> requests
+
+POSTAL_URL = <span class="str">"https://postal.example.com"</span>
+POSTAL_KEY = <span class="str">"your-postal-server-api-key"</span>
+
+<span class="cmd">def</span> <span class="str">get_message_deliveries</span>(message_id):
+    <span class="str">"""Получить статус доставки конкретного письма"""</span>
+    resp = requests.post(
+        f<span class="str">"{POSTAL_URL}/api/v1/messages/deliveries"</span>,
+        headers={
+            <span class="str">"X-Server-API-Key"</span>: POSTAL_KEY,
+            <span class="str">"Content-Type"</span>: <span class="str">"application/json"</span>
+        },
+        json={<span class="str">"id"</span>: message_id}
+    )
+    <span class="cmd">return</span> resp.json()
+
+<span class="comment"># Прямой SQL к Postal PostgreSQL — быстрее для массовых отчётов</span>
+<span class="cmd">import</span> psycopg2
+
+<span class="cmd">def</span> <span class="str">get_postal_stats_sql</span>(date_from, date_to):
+    conn = psycopg2.connect(
+        host=<span class="str">"localhost"</span>, dbname=<span class="str">"postal"</span>,
+        user=<span class="str">"postal"</span>, password=<span class="str">"postal_password"</span>
+    )
+    cur = conn.cursor()
+    cur.execute(<span class="str">"""
+        SELECT
+            COUNT(*) as total,
+            SUM(CASE WHEN status='Sent' THEN 1 ELSE 0 END) as delivered,
+            SUM(CASE WHEN status='HardFail' THEN 1 ELSE 0 END) as hard_bounce,
+            SUM(CASE WHEN status='SoftFail' THEN 1 ELSE 0 END) as soft_bounce,
+            SUM(CASE WHEN status='Held' THEN 1 ELSE 0 END) as held
+        FROM messages
+        WHERE created_at BETWEEN %s AND %s
+    """</span>, (date_from, date_to))
+    row = cur.fetchone()
+    conn.close()
+    <span class="cmd">return</span> {
+        <span class="str">"total"</span>: row[0], <span class="str">"delivered"</span>: row[1],
+        <span class="str">"hard_bounce"</span>: row[2], <span class="str">"soft_bounce"</span>: row[3],
+        <span class="str">"held"</span>: row[4]
+    }</pre>
+      </div>
+
+      <h2>Google Postmaster Tools</h2>
+
+      <p>Google Postmaster Tools (GPT) &mdash; бесплатный инструмент от Google, который показывает репутацию вашего домена в Gmail. Это единственный источник данных о том, как Gmail видит ваши письма. GPT показывает: Domain Reputation (High/Medium/Low/Bad), Spam Rate, IP Reputation, Authentication (SPF/DKIM/DMARC), и Encryption.</p>
+
+      <p>Google Postmaster API позволяет автоматически забирать эти данные. Для доступа нужно создать OAuth2 credentials в Google Cloud Console и верифицировать домен в Postmaster Tools. API возвращает данные с задержкой 24-48 часов &mdash; это нормально.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Python: Google Postmaster Tools API</div>
+        <pre><span class="comment"># postmaster_collector.py</span>
+<span class="cmd">from</span> google.oauth2 <span class="cmd">import</span> service_account
+<span class="cmd">from</span> googleapiclient.discovery <span class="cmd">import</span> build
+<span class="cmd">from</span> datetime <span class="cmd">import</span> datetime, timedelta
+
+SCOPES = [<span class="str">"https://www.googleapis.com/auth/postmaster.readonly"</span>]
+SERVICE_ACCOUNT_FILE = <span class="str">"credentials.json"</span>
+
+creds = service_account.Credentials.from_service_account_file(
+    SERVICE_ACCOUNT_FILE, scopes=SCOPES
+)
+service = build(<span class="str">"gmailpostmastertools"</span>, <span class="str">"v1"</span>, credentials=creds)
+
+<span class="cmd">def</span> <span class="str">get_domain_reputation</span>(domain, days=7):
+    <span class="str">"""Получить репутацию домена за N дней"""</span>
+    results = []
+    <span class="cmd">for</span> i <span class="cmd">in</span> range(days):
+        date = (datetime.now() - timedelta(days=i+2)).strftime(<span class="str">"%Y%m%d"</span>)
+        <span class="cmd">try</span>:
+            traffic = service.domains().trafficStats().get(
+                name=f<span class="str">"domains/{domain}/trafficStats/{date}"</span>
+            ).execute()
+            results.append({
+                <span class="str">"date"</span>: date,
+                <span class="str">"reputation"</span>: traffic.get(<span class="str">"domainReputation"</span>, <span class="str">"UNKNOWN"</span>),
+                <span class="str">"spam_rate"</span>: traffic.get(<span class="str">"spammyFeedbackLoops"</span>, [{}]),
+                <span class="str">"ip_rep"</span>: traffic.get(<span class="str">"ipReputations"</span>, []),
+                <span class="str">"user_volume"</span>: traffic.get(<span class="str">"userReportedSpamRatio"</span>, 0)
+            })
+        <span class="cmd">except</span> Exception <span class="cmd">as</span> e:
+            print(f<span class="str">"Нет данных за {date}: {e}"</span>)
+    <span class="cmd">return</span> results</pre>
+      </div>
+
+      <div class="note-block info">
+        <div class="note-label">Информация</div>
+        Google Postmaster показывает данные только если домен отправляет достаточный объём писем на Gmail (обычно от 100+ в день). Для доменов с маленьким объёмом данные могут быть недоступны. В таком случае используйте seed-тесты через GlockApps или Mail-Tester как альтернативу.
+      </div>
+
+      <p>Итоговая архитектура сбора: cron-задача запускает три скрипта (MailWizz, Postal, Postmaster) каждый день в 06:00, результаты складываются в PostgreSQL таблицу report_data. Из этой таблицы генерируется отчёт в нужном формате &mdash; Google Sheets, PDF, или HTML-письмо клиенту.</p>
+    `
+  },
+
+  4: {
+    module: 'Модуль 2 &middot; Инструменты',
+    title:  'Google Sheets дашборд &mdash; автоматический сбор данных',
+    time:   '20 мин',
+    content: `
+      <h2>Почему Google Sheets</h2>
+
+      <p>Google Sheets &mdash; идеальный инструмент для клиентских дашбордов по нескольким причинам. Во-первых, клиент может смотреть данные в реальном времени, без запроса у вас. Во-вторых, Google Sheets API позволяет автоматически записывать данные из скриптов. В-третьих, встроенные графики и условное форматирование позволяют создать красивый визуальный дашборд без дополнительных инструментов.</p>
+
+      <p>Архитектура проста: Python-скрипт на сервере собирает данные из MailWizz и Postal, форматирует их, и записывает в Google Sheet через API. Клиент получает ссылку на sheet и видит обновляемый дашборд. Вы настраиваете это один раз, дальше всё работает автоматически.</p>
+
+      <p>Для работы с Google Sheets API нужно: создать проект в Google Cloud Console, включить Google Sheets API, создать Service Account, скачать JSON-ключ, и расшарить нужный spreadsheet на email сервисного аккаунта. Весь процесс занимает 10-15 минут.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Python: запись метрик в Google Sheets</div>
+        <pre><span class="comment"># sheets_dashboard.py</span>
+<span class="cmd">import</span> gspread
+<span class="cmd">from</span> google.oauth2.service_account <span class="cmd">import</span> Credentials
+<span class="cmd">from</span> datetime <span class="cmd">import</span> datetime
+
+SCOPES = [
+    <span class="str">"https://www.googleapis.com/auth/spreadsheets"</span>,
+    <span class="str">"https://www.googleapis.com/auth/drive"</span>
+]
+
+creds = Credentials.from_service_account_file(
+    <span class="str">"service-account.json"</span>, scopes=SCOPES
+)
+gc = gspread.authorize(creds)
+
+<span class="comment"># Открываем spreadsheet по ID</span>
+SHEET_ID = <span class="str">"1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"</span>
+sh = gc.open_by_key(SHEET_ID)
+
+<span class="cmd">def</span> <span class="str">write_daily_stats</span>(stats):
+    <span class="str">"""Записать дневную статистику в лист 'Daily'"""</span>
+    ws = sh.worksheet(<span class="str">"Daily"</span>)
+    row = [
+        datetime.now().strftime(<span class="str">"%d.%m.%Y"</span>),
+        stats[<span class="str">"sent"</span>],
+        stats[<span class="str">"delivered"</span>],
+        stats[<span class="str">"opens"</span>],
+        stats[<span class="str">"clicks"</span>],
+        stats[<span class="str">"bounces"</span>],
+        stats[<span class="str">"unsubscribes"</span>],
+        f<span class="str">'{stats["delivery_rate"]:.1f}%'</span>,
+        f<span class="str">'{stats["open_rate"]:.1f}%'</span>,
+        f<span class="str">'{stats["ctr"]:.1f}%'</span>,
+    ]
+    ws.append_row(row, value_input_option=<span class="str">"USER_ENTERED"</span>)
+    print(f<span class="str">"Записано за {row[0]}"</span>)
+
+<span class="cmd">def</span> <span class="str">update_summary_cell</span>(cell, value):
+    <span class="str">"""Обновить ячейку в листе 'Summary'"""</span>
+    ws = sh.worksheet(<span class="str">"Summary"</span>)
+    ws.update_acell(cell, value)</pre>
+      </div>
+
+      <h2>Структура дашборда</h2>
+
+      <p>Рекомендуемая структура Google Sheet для клиентского дашборда включает четыре листа. Лист &laquo;Summary&raquo; &mdash; главная страница с текущими показателями, графиками и статусами. Лист &laquo;Daily&raquo; &mdash; ежедневные данные в табличном формате. Лист &laquo;Campaigns&raquo; &mdash; статистика по каждой кампании отдельно. Лист &laquo;Infrastructure&raquo; &mdash; технические показатели (DNS, blacklists, IP reputation).</p>
+
+      <p>На листе Summary используйте условное форматирование: зелёный цвет для метрик в норме, жёлтый для предупреждений, красный для критических. Это позволяет клиенту за 5 секунд понять общее состояние. Добавьте sparkline-графики через формулу =SPARKLINE() для визуализации трендов прямо в ячейке.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Google Sheets формулы для Summary листа</div>
+        <pre><span class="comment"># Ячейка B2 — текущий Delivery Rate (среднее за 7 дней)</span>
+<span class="cmd">=AVERAGE(INDIRECT("Daily!H"&(COUNTA(Daily!A:A)-6)&":H"&COUNTA(Daily!A:A)))</span>
+
+<span class="comment"># Ячейка B4 — тренд Open Rate (sparkline за 30 дней)</span>
+<span class="cmd">=SPARKLINE(INDIRECT("Daily!I"&(COUNTA(Daily!A:A)-29)&":I"&COUNTA(Daily!A:A)),</span>
+<span class="cmd">  {"charttype","line";"color","#00e5ff";"linewidth",2})</span>
+
+<span class="comment"># Ячейка B6 — статус: OK / WARNING / CRITICAL</span>
+<span class="cmd">=IF(B2>=95%,"OK",IF(B2>=90%,"WARNING","CRITICAL"))</span>
+
+<span class="comment"># Ячейка C2 — изменение к прошлой неделе</span>
+<span class="cmd">=B2-AVERAGE(INDIRECT("Daily!H"&(COUNTA(Daily!A:A)-13)&":H"&(COUNTA(Daily!A:A)-7)))</span></pre>
+      </div>
+
+      <h2>Автоматический cron</h2>
+
+      <p>Настройте cron-задачу на сервере для ежедневного обновления дашборда. Скрипт запускается в 07:00 по московскому времени, собирает данные за предыдущий день из всех источников, и записывает в Google Sheet. Клиент просыпается и видит актуальный дашборд.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Bash: cron + полный скрипт обновления</div>
+        <pre><span class="comment"># Добавить в crontab -e</span>
+<span class="cmd">0 7 * * * /usr/bin/python3 /opt/reporting/update_dashboard.py >> /var/log/reporting.log 2>&1</span>
+
+<span class="comment"># /opt/reporting/update_dashboard.py</span>
+<span class="comment">#!/usr/bin/env python3</span>
+<span class="cmd">import</span> sys
+sys.path.insert(0, <span class="str">"/opt/reporting"</span>)
+
+<span class="cmd">from</span> mailwizz_collector <span class="cmd">import</span> fetch_all_campaigns, fetch_campaign_stats
+<span class="cmd">from</span> postal_collector <span class="cmd">import</span> get_postal_stats_sql
+<span class="cmd">from</span> sheets_dashboard <span class="cmd">import</span> write_daily_stats
+<span class="cmd">from</span> datetime <span class="cmd">import</span> datetime, timedelta
+
+yesterday = (datetime.now() - timedelta(days=1)).strftime(<span class="str">"%Y-%m-%d"</span>)
+today = datetime.now().strftime(<span class="str">"%Y-%m-%d"</span>)
+
+<span class="comment"># 1. Postal stats</span>
+postal = get_postal_stats_sql(yesterday, today)
+
+<span class="comment"># 2. MailWizz stats (aggregate)</span>
+campaigns = fetch_all_campaigns()
+total_opens = 0
+total_clicks = 0
+<span class="cmd">for</span> c <span class="cmd">in</span> campaigns:
+    s = fetch_campaign_stats(c[<span class="str">"campaign_uid"</span>])
+    total_opens += int(s.get(<span class="str">"unique_opens_count"</span>, 0))
+    total_clicks += int(s.get(<span class="str">"clicks_count"</span>, 0))
+
+<span class="comment"># 3. Merge & write</span>
+combined = {
+    <span class="str">"sent"</span>: postal[<span class="str">"total"</span>],
+    <span class="str">"delivered"</span>: postal[<span class="str">"delivered"</span>],
+    <span class="str">"opens"</span>: total_opens,
+    <span class="str">"clicks"</span>: total_clicks,
+    <span class="str">"bounces"</span>: postal[<span class="str">"hard_bounce"</span>] + postal[<span class="str">"soft_bounce"</span>],
+    <span class="str">"unsubscribes"</span>: 0,
+    <span class="str">"delivery_rate"</span>: postal[<span class="str">"delivered"</span>] / postal[<span class="str">"total"</span>] * 100,
+    <span class="str">"open_rate"</span>: total_opens / postal[<span class="str">"delivered"</span>] * 100 <span class="cmd">if</span> postal[<span class="str">"delivered"</span>] else 0,
+    <span class="str">"ctr"</span>: total_clicks / postal[<span class="str">"delivered"</span>] * 100 <span class="cmd">if</span> postal[<span class="str">"delivered"</span>] else 0,
+}
+write_daily_stats(combined)
+print(f<span class="str">"Dashboard updated for {yesterday}"</span>)</pre>
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Совет</div>
+        Создайте отдельный Google Sheet для каждого клиента. Не смешивайте данные разных клиентов в одном файле. Это важно для безопасности (клиент не увидит чужие данные) и для масштабирования (легко удалить доступ при завершении контракта).
+      </div>
+    `
+  },
+
+  5: {
+    module: 'Модуль 2 &middot; Инструменты',
+    title:  'n8n workflow для автоматической отчётности',
+    time:   '18 мин',
+    content: `
+      <h2>Почему n8n для отчётности</h2>
+
+      <p>n8n &mdash; open-source инструмент для автоматизации workflow, который идеально подходит для построения системы отчётности. В отличие от cron + Python скриптов, n8n предоставляет визуальный интерфейс, встроенные коннекторы к сотням сервисов, обработку ошибок с retry, и мониторинг выполнения. Если один шаг workflow упал &mdash; вы видите это в UI и можете перезапустить с нужного шага.</p>
+
+      <p>Для email-отчётности типичный n8n workflow выглядит так: Schedule Trigger (каждый понедельник в 09:00) &rarr; HTTP Request к MailWizz API &rarr; HTTP Request к Postal API &rarr; Code Node для расчёта метрик &rarr; Google Sheets Node для записи &rarr; Email Node для отправки отчёта клиенту. Весь процесс настраивается за 30-40 минут через drag-and-drop интерфейс.</p>
+
+      <p>Ключевое преимущество n8n перед чистыми скриптами &mdash; визуальная отладка. Вы видите данные на каждом шаге, можете тестировать каждый node отдельно, и у вас есть история выполнений с полными логами. Когда клиентов становится 5-10, это критически важно для поддержки.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">JSON: n8n workflow для еженедельного отчёта</div>
+        <pre>{
+  <span class="str">"name"</span>: <span class="str">"Weekly Email Report"</span>,
+  <span class="str">"nodes"</span>: [
+    {
+      <span class="str">"type"</span>: <span class="str">"n8n-nodes-base.scheduleTrigger"</span>,
+      <span class="str">"name"</span>: <span class="str">"Every Monday 9AM"</span>,
+      <span class="str">"parameters"</span>: {
+        <span class="str">"rule"</span>: {
+          <span class="str">"interval"</span>: [{
+            <span class="str">"field"</span>: <span class="str">"cronExpression"</span>,
+            <span class="str">"expression"</span>: <span class="str">"0 9 * * 1"</span>
+          }]
+        }
+      }
+    },
+    {
+      <span class="str">"type"</span>: <span class="str">"n8n-nodes-base.httpRequest"</span>,
+      <span class="str">"name"</span>: <span class="str">"MailWizz Stats"</span>,
+      <span class="str">"parameters"</span>: {
+        <span class="str">"url"</span>: <span class="str">"https://mail.example.com/api/campaigns"</span>,
+        <span class="str">"method"</span>: <span class="str">"GET"</span>,
+        <span class="str">"headers"</span>: {
+          <span class="str">"X-Api-Key"</span>: <span class="str">"={{$env.MAILWIZZ_API_KEY}}"</span>
+        }
+      }
+    },
+    {
+      <span class="str">"type"</span>: <span class="str">"n8n-nodes-base.code"</span>,
+      <span class="str">"name"</span>: <span class="str">"Calculate Metrics"</span>,
+      <span class="str">"parameters"</span>: {
+        <span class="str">"jsCode"</span>: <span class="str">"// см. код ниже"</span>
+      }
+    }
+  ]
+}</pre>
+      </div>
+
+      <h2>Code Node: расчёт метрик</h2>
+
+      <p>Code Node в n8n позволяет писать JavaScript-код для обработки данных между шагами. Это самый гибкий node, который используется для агрегации данных из разных API, расчёта процентов, сравнения с предыдущим периодом, и форматирования итогового отчёта.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">JavaScript: Code Node для расчёта метрик</div>
+        <pre><span class="comment">// n8n Code Node — Calculate Metrics</span>
+<span class="cmd">const</span> mailwizzData = $input.all();
+<span class="cmd">const</span> campaigns = mailwizzData[0].json.data.records;
+
+<span class="cmd">let</span> totalSent = 0, totalDelivered = 0;
+<span class="cmd">let</span> totalOpens = 0, totalClicks = 0, totalBounces = 0;
+
+<span class="cmd">for</span> (<span class="cmd">const</span> c <span class="cmd">of</span> campaigns) {
+  totalSent += parseInt(c.subscribers_count || 0);
+  totalDelivered += parseInt(c.delivery_success_count || 0);
+  totalOpens += parseInt(c.unique_opens_count || 0);
+  totalClicks += parseInt(c.clicks_count || 0);
+  totalBounces += parseInt(c.bounces_count || 0);
+}
+
+<span class="cmd">const</span> deliveryRate = totalSent > 0
+  ? (totalDelivered / totalSent * 100).toFixed(1) : <span class="str">"0.0"</span>;
+<span class="cmd">const</span> openRate = totalDelivered > 0
+  ? (totalOpens / totalDelivered * 100).toFixed(1) : <span class="str">"0.0"</span>;
+<span class="cmd">const</span> ctr = totalDelivered > 0
+  ? (totalClicks / totalDelivered * 100).toFixed(1) : <span class="str">"0.0"</span>;
+
+<span class="cmd">return</span> [{
+  json: {
+    sent: totalSent,
+    delivered: totalDelivered,
+    opens: totalOpens,
+    clicks: totalClicks,
+    bounces: totalBounces,
+    delivery_rate: deliveryRate + <span class="str">"%"</span>,
+    open_rate: openRate + <span class="str">"%"</span>,
+    ctr: ctr + <span class="str">"%"</span>,
+    report_date: <span class="cmd">new</span> Date().toLocaleDateString(<span class="str">"ru-RU"</span>),
+    status: parseFloat(deliveryRate) >= 95 ? <span class="str">"OK"</span> : <span class="str">"WARNING"</span>
+  }
+}];</pre>
+      </div>
+
+      <h2>Email Node: отправка отчёта</h2>
+
+      <p>Последний шаг workflow &mdash; отправка отчёта клиенту по email. n8n поддерживает HTML-шаблоны в Email Node, что позволяет создавать красиво оформленные отчёты. Используйте переменные из предыдущих шагов через синтаксис {{ $json.field_name }}.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">HTML: шаблон email-отчёта для n8n</div>
+        <pre><span class="comment">&lt;!-- HTML шаблон для Email Node в n8n --&gt;</span>
+<span class="cmd">&lt;div</span> style=<span class="str">"font-family:Arial,sans-serif;max-width:600px;margin:0 auto"</span><span class="cmd">&gt;</span>
+  <span class="cmd">&lt;h2</span> style=<span class="str">"color:#1a1a2e;border-bottom:2px solid #00e5ff;padding-bottom:12px"</span><span class="cmd">&gt;</span>
+    Еженедельный отчёт — {{ $json.report_date }}
+  <span class="cmd">&lt;/h2&gt;</span>
+
+  <span class="cmd">&lt;table</span> style=<span class="str">"width:100%;border-collapse:collapse;margin:20px 0"</span><span class="cmd">&gt;</span>
+    <span class="cmd">&lt;tr</span> style=<span class="str">"background:#f8f9fa"</span><span class="cmd">&gt;</span>
+      <span class="cmd">&lt;td</span> style=<span class="str">"padding:12px;font-weight:bold"</span><span class="cmd">&gt;</span>Отправлено<span class="cmd">&lt;/td&gt;</span>
+      <span class="cmd">&lt;td</span> style=<span class="str">"padding:12px;text-align:right"</span><span class="cmd">&gt;</span>{{ $json.sent }}<span class="cmd">&lt;/td&gt;</span>
+    <span class="cmd">&lt;/tr&gt;</span>
+    <span class="cmd">&lt;tr&gt;</span>
+      <span class="cmd">&lt;td</span> style=<span class="str">"padding:12px;font-weight:bold"</span><span class="cmd">&gt;</span>Delivery Rate<span class="cmd">&lt;/td&gt;</span>
+      <span class="cmd">&lt;td</span> style=<span class="str">"padding:12px;text-align:right;color:#00c853"</span><span class="cmd">&gt;</span>{{ $json.delivery_rate }}<span class="cmd">&lt;/td&gt;</span>
+    <span class="cmd">&lt;/tr&gt;</span>
+    <span class="cmd">&lt;tr</span> style=<span class="str">"background:#f8f9fa"</span><span class="cmd">&gt;</span>
+      <span class="cmd">&lt;td</span> style=<span class="str">"padding:12px;font-weight:bold"</span><span class="cmd">&gt;</span>Open Rate<span class="cmd">&lt;/td&gt;</span>
+      <span class="cmd">&lt;td</span> style=<span class="str">"padding:12px;text-align:right"</span><span class="cmd">&gt;</span>{{ $json.open_rate }}<span class="cmd">&lt;/td&gt;</span>
+    <span class="cmd">&lt;/tr&gt;</span>
+    <span class="cmd">&lt;tr&gt;</span>
+      <span class="cmd">&lt;td</span> style=<span class="str">"padding:12px;font-weight:bold"</span><span class="cmd">&gt;</span>CTR<span class="cmd">&lt;/td&gt;</span>
+      <span class="cmd">&lt;td</span> style=<span class="str">"padding:12px;text-align:right"</span><span class="cmd">&gt;</span>{{ $json.ctr }}<span class="cmd">&lt;/td&gt;</span>
+    <span class="cmd">&lt;/tr&gt;</span>
+  <span class="cmd">&lt;/table&gt;</span>
+
+  <span class="cmd">&lt;p</span> style=<span class="str">"color:#666;font-size:12px"</span><span class="cmd">&gt;</span>
+    Статус: {{ $json.status }} | Автоматический отчёт MAILSTACK
+  <span class="cmd">&lt;/p&gt;</span>
+<span class="cmd">&lt;/div&gt;</span></pre>
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Совет</div>
+        Добавьте Error Trigger workflow, который отправит вам уведомление в Telegram если основной workflow упал. Это гарантирует, что клиент всегда получит отчёт вовремя. Если workflow не смог выполниться &mdash; вы узнаете об этом раньше клиента.
+      </div>
+
+      <p>Для масштабирования на нескольких клиентов используйте переменные окружения в n8n. Создайте один template workflow и клонируйте его для каждого клиента, меняя только API ключи и email адреса. Или используйте один workflow с итерацией по массиву клиентов &mdash; это сложнее в настройке, но проще в поддержке.</p>
+    `
+  },
+
+  6: {
+    module: 'Модуль 2 &middot; Инструменты',
+    title:  'Визуализация данных &mdash; графики, тренды, сравнения',
+    time:   '15 мин',
+    content: `
+      <h2>Принципы визуализации для клиента</h2>
+
+      <p>Визуализация данных &mdash; это искусство превращения цифр в понятную историю. Клиент не хочет разбираться в таблицах с сотнями строк. Он хочет за 10 секунд понять: всё хорошо или есть проблемы, растут показатели или падают, и что нужно делать дальше. Правильный график заменяет страницу текста.</p>
+
+      <p>Три золотых правила визуализации для отчётности: 1) Один график = одна мысль. Не пытайтесь показать все метрики на одном графике. 2) Используйте цвета со смыслом: зелёный = норма, жёлтый = внимание, красный = проблема. 3) Всегда показывайте сравнение: текущий период vs предыдущий, или текущее значение vs бенчмарк.</p>
+
+      <p>Для email-отчётности рекомендуются четыре типа визуализации: line chart для трендов (Open Rate за 30 дней), bar chart для сравнения (кампании между собой), gauge/donut для текущего статуса (Delivery Rate 97.5%), и heatmap для активности по дням/часам (когда письма открывают чаще всего).</p>
+
+      <h2>Chart.js для HTML-отчётов</h2>
+
+      <p>Если вы генерируете HTML-отчёты (для отправки по email или встраивания в веб-панель), Chart.js &mdash; лучший выбор. Это лёгкая JavaScript-библиотека, которая рисует красивые интерактивные графики. Для статичных отчётов используйте QuickChart API &mdash; он рендерит Chart.js конфигурацию в PNG-изображение, которое можно вставить в email.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Python: генерация графика через QuickChart API</div>
+        <pre><span class="comment"># chart_generator.py</span>
+<span class="cmd">import</span> requests
+<span class="cmd">import</span> json
+
+<span class="cmd">def</span> <span class="str">generate_trend_chart</span>(dates, values, label, color=<span class="str">"#00e5ff"</span>):
+    <span class="str">"""Генерирует PNG-график тренда через QuickChart"""</span>
+    config = {
+        <span class="str">"type"</span>: <span class="str">"line"</span>,
+        <span class="str">"data"</span>: {
+            <span class="str">"labels"</span>: dates,
+            <span class="str">"datasets"</span>: [{
+                <span class="str">"label"</span>: label,
+                <span class="str">"data"</span>: values,
+                <span class="str">"borderColor"</span>: color,
+                <span class="str">"backgroundColor"</span>: color + <span class="str">"33"</span>,
+                <span class="str">"fill"</span>: True,
+                <span class="str">"tension"</span>: 0.3,
+                <span class="str">"pointRadius"</span>: 3
+            }]
+        },
+        <span class="str">"options"</span>: {
+            <span class="str">"plugins"</span>: {<span class="str">"legend"</span>: {<span class="str">"display"</span>: True}},
+            <span class="str">"scales"</span>: {
+                <span class="str">"y"</span>: {<span class="str">"beginAtZero"</span>: False, <span class="str">"grid"</span>: {<span class="str">"color"</span>: <span class="str">"#1a1a2e"</span>}},
+                <span class="str">"x"</span>: {<span class="str">"grid"</span>: {<span class="str">"display"</span>: False}}
+            }
+        }
+    }
+
+    resp = requests.get(
+        <span class="str">"https://quickchart.io/chart"</span>,
+        params={
+            <span class="str">"c"</span>: json.dumps(config),
+            <span class="str">"w"</span>: 600,
+            <span class="str">"h"</span>: 300,
+            <span class="str">"bkg"</span>: <span class="str">"#0a0e18"</span>
+        }
+    )
+
+    <span class="cmd">with</span> open(f<span class="str">"{label}_trend.png"</span>, <span class="str">"wb"</span>) <span class="cmd">as</span> f:
+        f.write(resp.content)
+    <span class="cmd">return</span> f<span class="str">"{label}_trend.png"</span>
+
+<span class="comment"># Пример использования</span>
+dates = [<span class="str">"17.03"</span>, <span class="str">"18.03"</span>, <span class="str">"19.03"</span>, <span class="str">"20.03"</span>, <span class="str">"21.03"</span>, <span class="str">"22.03"</span>, <span class="str">"23.03"</span>]
+open_rates = [22.1, 23.4, 21.8, 24.3, 25.1, 23.9, 24.7]
+generate_trend_chart(dates, open_rates, <span class="str">"Open Rate %"</span>)</pre>
+      </div>
+
+      <h2>Сравнительные таблицы</h2>
+
+      <p>Не все данные нужно визуализировать графиками. Для сравнения доменов или кампаний между собой лучше работает цветная таблица с условным форматированием. Каждая ячейка с метрикой получает цвет фона в зависимости от значения &mdash; клиент сразу видит, какой домен работает хуже.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Python: генерация HTML-таблицы с цветовой кодировкой</div>
+        <pre><span class="comment"># html_table_generator.py</span>
+<span class="cmd">def</span> <span class="str">color_for_rate</span>(value, good=95, warn=90):
+    <span class="str">"""Цвет фона ячейки по значению"""</span>
+    <span class="cmd">if</span> value >= good: <span class="cmd">return</span> <span class="str">"#0d3320"</span>  <span class="comment"># зелёный</span>
+    <span class="cmd">if</span> value >= warn: <span class="cmd">return</span> <span class="str">"#332d0d"</span>  <span class="comment"># жёлтый</span>
+    <span class="cmd">return</span> <span class="str">"#330d0d"</span>  <span class="comment"># красный</span>
+
+<span class="cmd">def</span> <span class="str">generate_domain_table</span>(domains_data):
+    <span class="str">"""Генерирует HTML-таблицу сравнения доменов"""</span>
+    html = <span class="str">'&lt;table style="width:100%;border-collapse:collapse"&gt;'</span>
+    html += <span class="str">'&lt;tr style="background:#1a1a2e"&gt;'</span>
+    <span class="cmd">for</span> h <span class="cmd">in</span> [<span class="str">"Домен"</span>, <span class="str">"Delivery%"</span>, <span class="str">"Open%"</span>, <span class="str">"CTR%"</span>, <span class="str">"Bounce%"</span>]:
+        html += f<span class="str">'&lt;th style="padding:10px;color:#8892b0;font-size:11px"&gt;{h}&lt;/th&gt;'</span>
+    html += <span class="str">'&lt;/tr&gt;'</span>
+
+    <span class="cmd">for</span> d <span class="cmd">in</span> domains_data:
+        html += <span class="str">'&lt;tr&gt;'</span>
+        html += f<span class="str">'&lt;td style="padding:10px;color:#ccd6f6"&gt;{d["domain"]}&lt;/td&gt;'</span>
+        html += f<span class="str">'&lt;td style="padding:10px;background:{color_for_rate(d["delivery"])}"&gt;{d["delivery"]}%&lt;/td&gt;'</span>
+        html += f<span class="str">'&lt;td style="padding:10px;background:{color_for_rate(d["open_rate"], 20, 15)}"&gt;{d["open_rate"]}%&lt;/td&gt;'</span>
+        html += f<span class="str">'&lt;td style="padding:10px;background:{color_for_rate(d["ctr"], 3, 1)}"&gt;{d["ctr"]}%&lt;/td&gt;'</span>
+        html += f<span class="str">'&lt;td style="padding:10px;background:{color_for_rate(100-d["bounce"], 98, 95)}"&gt;{d["bounce"]}%&lt;/td&gt;'</span>
+        html += <span class="str">'&lt;/tr&gt;'</span>
+    html += <span class="str">'&lt;/table&gt;'</span>
+    <span class="cmd">return</span> html</pre>
+      </div>
+
+      <div class="note-block warn">
+        <div class="note-label">Важно</div>
+        Не перегружайте отчёт графиками. 3-4 визуализации на еженедельный отчёт &mdash; оптимум. Больше &mdash; клиент перестаёт воспринимать информацию. Ключевые графики: тренд Delivery Rate, тренд Open Rate, сравнение доменов, и pie chart распределения bounce-причин.
+      </div>
+
+      <p>Для Google Sheets дашбордов используйте встроенные графики. Они автоматически обновляются при добавлении новых данных. Создайте chart на отдельном листе &laquo;Charts&raquo; и вставьте в лист &laquo;Summary&raquo; через Insert &rarr; Chart. Привяжите data range к колонкам с данными &mdash; при обновлении данных скриптом графики обновятся автоматически.</p>
+
+      <div class="note-block tip">
+        <div class="note-label">Совет</div>
+        Добавьте в отчёт аннотации на графиках &mdash; вертикальные линии или метки в точках важных событий (смена IP, обновление шаблона письма, чистка базы). Это помогает клиенту связать изменения метрик с конкретными действиями и повышает его понимание процесса.
+      </div>
+    `
+  },
+
+  7: {
+    module: 'Модуль 3 &middot; Шаблоны отчётов',
+    title:  'Еженедельный отчёт &mdash; шаблон и структура',
+    time:   '16 мин',
+    content: `
+      <h2>Структура еженедельного отчёта</h2>
+
+      <p>Еженедельный отчёт &mdash; это ваш основной инструмент коммуникации с клиентом. Он должен быть кратким (1-2 страницы), конкретным (только цифры и факты), и actionable (содержать рекомендации). Клиент тратит на чтение еженедельного отчёта 2-3 минуты &mdash; уложитесь в это время.</p>
+
+      <p>Формат отправки: email с HTML-телом (не вложение PDF, потому что PDF открывают реже). Тема письма должна содержать период и ключевой показатель: &laquo;Отчёт 17-23.03 | Delivery 97.8% | OR 24.3%&raquo;. Клиент видит главное ещё до открытия письма.</p>
+
+      <p>Ритм отправки: каждый понедельник в 09:00-10:00 по времени клиента. Стабильность важна &mdash; клиент привыкает получать отчёт в определённое время и начинает ожидать его. Если отчёт не пришёл &mdash; клиент начинает волноваться. Автоматизируйте отправку через n8n или cron.</p>
+
+      <h2>Секция 1: Executive Summary</h2>
+
+      <p>Executive Summary занимает 3-5 строк и содержит самое важное. Начинайте с общего статуса (зелёный/жёлтый/красный), затем ключевые цифры, затем одно предложение о главном событии недели. Пример: &laquo;Все системы работают стабильно. Отправлено 15,230 писем, доставлено 97.8%. Open Rate вырос до 24.3% благодаря новой сегментации.&raquo;</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Python: генерация еженедельного отчёта</div>
+        <pre><span class="comment"># weekly_report.py</span>
+<span class="cmd">from</span> datetime <span class="cmd">import</span> datetime, timedelta
+<span class="cmd">from</span> jinja2 <span class="cmd">import</span> Template
+
+WEEKLY_TEMPLATE = <span class="str">"""
+&lt;div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;
+            background:#0a0e18;color:#ccd6f6;padding:32px"&gt;
+
+  &lt;!-- Header --&gt;
+  &lt;div style="border-bottom:2px solid #00e5ff;padding-bottom:16px;margin-bottom:24px"&gt;
+    &lt;h1 style="font-size:20px;color:#e6f1ff;margin:0"&gt;
+      Еженедельный отчёт: {{ client_name }}
+    &lt;/h1&gt;
+    &lt;p style="color:#8892b0;font-size:12px;margin:4px 0 0"&gt;
+      Период: {{ date_from }} — {{ date_to }}
+    &lt;/p&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Status Badge --&gt;
+  &lt;div style="display:inline-block;padding:6px 16px;border-radius:4px;font-size:12px;
+              font-weight:bold;margin-bottom:20px;
+              background:{{ '#0d3320' if status == 'OK' else '#332d0d' }};
+              color:{{ '#00ff88' if status == 'OK' else '#f0a500' }}"&gt;
+    {{ status }}
+  &lt;/div&gt;
+
+  &lt;!-- Key Metrics --&gt;
+  &lt;table style="width:100%;border-collapse:collapse;margin:20px 0"&gt;
+    {% for m in metrics %}
+    &lt;tr style="border-bottom:1px solid #1a1a2e"&gt;
+      &lt;td style="padding:12px 0;color:#8892b0"&gt;{{ m.label }}&lt;/td&gt;
+      &lt;td style="padding:12px 0;text-align:right;font-weight:bold;
+                 color:{{ m.color }}"&gt;{{ m.value }}&lt;/td&gt;
+      &lt;td style="padding:12px 0;text-align:right;font-size:12px;
+                 color:{{ '#00ff88' if m.delta &gt; 0 else '#ff6b6b' }}"&gt;
+        {{ '+' if m.delta &gt; 0 else '' }}{{ m.delta }}%
+      &lt;/td&gt;
+    &lt;/tr&gt;
+    {% endfor %}
+  &lt;/table&gt;
+
+  &lt;!-- Recommendations --&gt;
+  &lt;div style="background:#112240;padding:16px;margin-top:20px;
+              border-left:3px solid #00e5ff"&gt;
+    &lt;h3 style="font-size:14px;color:#e6f1ff;margin:0 0 8px"&gt;Рекомендации&lt;/h3&gt;
+    &lt;ul style="margin:0;padding-left:16px;color:#8892b0;font-size:13px"&gt;
+      {% for r in recommendations %}
+      &lt;li style="margin-bottom:4px"&gt;{{ r }}&lt;/li&gt;
+      {% endfor %}
+    &lt;/ul&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Footer --&gt;
+  &lt;p style="color:#495670;font-size:11px;margin-top:24px;text-align:center"&gt;
+    Автоматический отчёт MAILSTACK | {{ generated_at }}
+  &lt;/p&gt;
+&lt;/div&gt;
+"""</span>
+
+<span class="cmd">def</span> <span class="str">build_weekly_report</span>(client, stats, prev_stats):
+    <span class="cmd">def</span> delta(cur, prev): <span class="cmd">return</span> round(cur - prev, 1)
+
+    metrics = [
+        {<span class="str">"label"</span>: <span class="str">"Отправлено"</span>, <span class="str">"value"</span>: f<span class="str">'{stats["sent"]:,}'</span>,
+         <span class="str">"color"</span>: <span class="str">"#e6f1ff"</span>, <span class="str">"delta"</span>: delta(stats[<span class="str">"sent"</span>], prev_stats[<span class="str">"sent"</span>])},
+        {<span class="str">"label"</span>: <span class="str">"Delivery Rate"</span>, <span class="str">"value"</span>: f<span class="str">'{stats["delivery_rate"]:.1f}%'</span>,
+         <span class="str">"color"</span>: <span class="str">"#00ff88"</span>, <span class="str">"delta"</span>: delta(stats[<span class="str">"delivery_rate"</span>], prev_stats[<span class="str">"delivery_rate"</span>])},
+        {<span class="str">"label"</span>: <span class="str">"Open Rate"</span>, <span class="str">"value"</span>: f<span class="str">'{stats["open_rate"]:.1f}%'</span>,
+         <span class="str">"color"</span>: <span class="str">"#00e5ff"</span>, <span class="str">"delta"</span>: delta(stats[<span class="str">"open_rate"</span>], prev_stats[<span class="str">"open_rate"</span>])},
+        {<span class="str">"label"</span>: <span class="str">"CTR"</span>, <span class="str">"value"</span>: f<span class="str">'{stats["ctr"]:.1f}%'</span>,
+         <span class="str">"color"</span>: <span class="str">"#e6f1ff"</span>, <span class="str">"delta"</span>: delta(stats[<span class="str">"ctr"</span>], prev_stats[<span class="str">"ctr"</span>])},
+    ]
+
+    tmpl = Template(WEEKLY_TEMPLATE)
+    <span class="cmd">return</span> tmpl.render(
+        client_name=client,
+        date_from=<span class="str">"17.03.2026"</span>,
+        date_to=<span class="str">"23.03.2026"</span>,
+        status=<span class="str">"OK"</span> <span class="cmd">if</span> stats[<span class="str">"delivery_rate"</span>] >= 95 <span class="cmd">else</span> <span class="str">"WARNING"</span>,
+        metrics=metrics,
+        recommendations=[
+            <span class="str">"Продолжить прогрев domain3.com"</span>,
+            <span class="str">"Обновить тему письма для сегмента B"</span>,
+        ],
+        generated_at=datetime.now().strftime(<span class="str">"%d.%m.%Y %H:%M"</span>)
+    )</pre>
+      </div>
+
+      <h2>Секция 2: Детализация по доменам</h2>
+
+      <p>Если клиент использует несколько доменов для рассылки &mdash; покажите статистику по каждому отдельно. Это позволяет быстро найти проблемный домен и сфокусировать усилия на нём. Таблица с условным форматированием (зелёный/жёлтый/красный) &mdash; самый эффективный формат.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Python: таблица метрик по доменам</div>
+        <pre><span class="comment"># domain_breakdown.py</span>
+<span class="cmd">def</span> <span class="str">get_per_domain_stats</span>(postal_conn, date_from, date_to):
+    <span class="str">"""Получить статистику по каждому домену отправки"""</span>
+    cur = postal_conn.cursor()
+    cur.execute(<span class="str">"""
+        SELECT
+            split_part(mail_from, '@', 2) AS domain,
+            COUNT(*) AS total,
+            SUM(CASE WHEN status='Sent' THEN 1 ELSE 0 END) AS delivered,
+            SUM(CASE WHEN status='HardFail' THEN 1 ELSE 0 END) AS bounced
+        FROM messages
+        WHERE created_at BETWEEN %s AND %s
+        GROUP BY domain
+        ORDER BY total DESC
+    """</span>, (date_from, date_to))
+
+    domains = []
+    <span class="cmd">for</span> row <span class="cmd">in</span> cur.fetchall():
+        d_rate = round(row[2] / row[1] * 100, 1) <span class="cmd">if</span> row[1] > 0 <span class="cmd">else</span> 0
+        domains.append({
+            <span class="str">"domain"</span>: row[0],
+            <span class="str">"sent"</span>: row[1],
+            <span class="str">"delivered"</span>: row[2],
+            <span class="str">"bounced"</span>: row[3],
+            <span class="str">"delivery_rate"</span>: d_rate,
+            <span class="str">"status"</span>: <span class="str">"OK"</span> <span class="cmd">if</span> d_rate >= 95 <span class="cmd">else</span> <span class="str">"WARN"</span>
+        })
+    <span class="cmd">return</span> domains</pre>
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Совет</div>
+        Отправляйте еженедельный отчёт даже если ничего не изменилось. &laquo;Все показатели стабильны, изменений нет&raquo; &mdash; это тоже ценная информация для клиента. Пропуск отчёта создаёт впечатление, что вы забыли о клиенте. Автоматизация через n8n гарантирует, что отчёт уйдёт вовремя даже если вы в отпуске.
+      </div>
+
+      <div class="note-block warn">
+        <div class="note-label">Важно</div>
+        Еженедельный отчёт НЕ должен содержать технические подробности вроде &laquo;обновили DKIM-ключ&raquo; или &laquo;перезапустили Postal контейнер&raquo;. Это ваша внутренняя работа. Клиенту важны результаты: &laquo;улучшилась аутентификация, что повысит попадание в inbox&raquo;. Технические детали оставьте для ежемесячного отчёта.
+      </div>
+    `
+  },
+
+  8: {
+    module: 'Модуль 3 &middot; Шаблоны отчётов',
+    title:  'Ежемесячный отчёт &mdash; глубокий анализ и рекомендации',
+    time:   '18 мин',
+    content: `
+      <h2>Чем ежемесячный отчёт отличается от еженедельного</h2>
+
+      <p>Ежемесячный отчёт &mdash; это стратегический документ. Если еженедельный отчёт отвечает на вопрос &laquo;что произошло за неделю?&raquo;, то ежемесячный отвечает на вопросы &laquo;какие тренды мы видим?&raquo;, &laquo;достигаем ли мы целей?&raquo;, и &laquo;что нужно изменить в стратегии?&raquo;. Этот отчёт читает не только маркетолог, но и руководитель &mdash; поэтому он должен содержать бизнес-выводы.</p>
+
+      <p>Объём ежемесячного отчёта: 3-5 страниц. Формат: PDF-документ с графиками, таблицами и текстовым анализом. В отличие от еженедельного (только email), ежемесячный стоит отправлять как вложение + краткое summary в теле письма. Некоторые агентства проводят 15-минутный Zoom-звонок для обсуждения отчёта &mdash; это повышает retention клиентов на 30-40%.</p>
+
+      <p>Ежемесячный отчёт содержит: Executive Summary (полстраницы), обзор метрик с графиками трендов (1-2 страницы), анализ проблем и решений (полстраницы), рекомендации на следующий месяц (полстраницы), и appendix с детализацией по доменам/кампаниям.</p>
+
+      <h2>Шаблон ежемесячного отчёта</h2>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Python: генерация ежемесячного PDF-отчёта</div>
+        <pre><span class="comment"># monthly_report.py</span>
+<span class="cmd">from</span> reportlab.lib.pagesizes <span class="cmd">import</span> A4
+<span class="cmd">from</span> reportlab.lib.units <span class="cmd">import</span> mm
+<span class="cmd">from</span> reportlab.platypus <span class="cmd">import</span> SimpleDocTemplate, Table, TableStyle
+<span class="cmd">from</span> reportlab.platypus <span class="cmd">import</span> Paragraph, Spacer, Image
+<span class="cmd">from</span> reportlab.lib.styles <span class="cmd">import</span> getSampleStyleSheet
+<span class="cmd">from</span> reportlab.lib.colors <span class="cmd">import</span> HexColor
+
+<span class="cmd">def</span> <span class="str">create_monthly_report</span>(client, month_data, prev_month):
+    filename = f<span class="str">"report_{client}_{month_data['period']}.pdf"</span>
+    doc = SimpleDocTemplate(filename, pagesize=A4,
+                            topMargin=20*mm, bottomMargin=20*mm)
+    styles = getSampleStyleSheet()
+    elements = []
+
+    <span class="comment"># Заголовок</span>
+    title_style = styles[<span class="str">'Title'</span>]
+    elements.append(Paragraph(
+        f<span class="str">"Ежемесячный отчёт: {client}"</span>, title_style
+    ))
+    elements.append(Paragraph(
+        f<span class="str">"Период: {month_data['period']}"</span>, styles[<span class="str">'Normal'</span>]
+    ))
+    elements.append(Spacer(1, 10*mm))
+
+    <span class="comment"># Таблица ключевых метрик</span>
+    data = [
+        [<span class="str">"Метрика"</span>, <span class="str">"Текущий месяц"</span>, <span class="str">"Прошлый месяц"</span>, <span class="str">"Изменение"</span>],
+        [<span class="str">"Отправлено"</span>, f<span class="str">'{month_data["sent"]:,}'</span>,
+         f<span class="str">'{prev_month["sent"]:,}'</span>,
+         f<span class="str">'{month_data["sent"]-prev_month["sent"]:+,}'</span>],
+        [<span class="str">"Delivery Rate"</span>, f<span class="str">'{month_data["dr"]:.1f}%'</span>,
+         f<span class="str">'{prev_month["dr"]:.1f}%'</span>,
+         f<span class="str">'{month_data["dr"]-prev_month["dr"]:+.1f}%'</span>],
+        [<span class="str">"Open Rate"</span>, f<span class="str">'{month_data["or"]:.1f}%'</span>,
+         f<span class="str">'{prev_month["or"]:.1f}%'</span>,
+         f<span class="str">'{month_data["or"]-prev_month["or"]:+.1f}%'</span>],
+        [<span class="str">"CTR"</span>, f<span class="str">'{month_data["ctr"]:.1f}%'</span>,
+         f<span class="str">'{prev_month["ctr"]:.1f}%'</span>,
+         f<span class="str">'{month_data["ctr"]-prev_month["ctr"]:+.1f}%'</span>],
+    ]
+
+    table = Table(data, colWidths=[40*mm, 35*mm, 35*mm, 30*mm])
+    table.setStyle(TableStyle([
+        (<span class="str">'BACKGROUND'</span>, (0,0), (-1,0), HexColor(<span class="str">'#1a1a2e'</span>)),
+        (<span class="str">'TEXTCOLOR'</span>, (0,0), (-1,0), HexColor(<span class="str">'#00e5ff'</span>)),
+        (<span class="str">'FONTSIZE'</span>, (0,0), (-1,-1), 10),
+        (<span class="str">'GRID'</span>, (0,0), (-1,-1), 0.5, HexColor(<span class="str">'#233554'</span>)),
+        (<span class="str">'ALIGN'</span>, (1,0), (-1,-1), <span class="str">'CENTER'</span>),
+    ]))
+    elements.append(table)
+    elements.append(Spacer(1, 8*mm))
+
+    <span class="comment"># Графики (вставляем как изображения)</span>
+    elements.append(Paragraph(<span class="str">"Тренды"</span>, styles[<span class="str">'Heading2'</span>]))
+    elements.append(Image(<span class="str">"Open Rate %_trend.png"</span>, width=150*mm, height=75*mm))
+
+    doc.build(elements)
+    <span class="cmd">return</span> filename</pre>
+      </div>
+
+      <h2>Анализ трендов</h2>
+
+      <p>Главная ценность ежемесячного отчёта &mdash; анализ трендов. Покажите клиенту, как менялись показатели на протяжении месяца, что повлияло на рост или падение, и какие паттерны вы заметили. Например: &laquo;Open Rate стабильно растёт по вторникам-четвергам и падает в пятницу-субботу. Рекомендуем сместить отправку основных кампаний на вторник-среду.&raquo;</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Python: анализ трендов и аномалий</div>
+        <pre><span class="comment"># trend_analysis.py</span>
+<span class="cmd">import</span> numpy <span class="cmd">as</span> np
+
+<span class="cmd">def</span> <span class="str">analyze_trends</span>(daily_metrics, metric_name):
+    <span class="str">"""Анализирует тренд метрики за месяц"""</span>
+    values = [d[metric_name] <span class="cmd">for</span> d <span class="cmd">in</span> daily_metrics]
+    dates = [d[<span class="str">"date"</span>] <span class="cmd">for</span> d <span class="cmd">in</span> daily_metrics]
+
+    <span class="comment"># Линейный тренд</span>
+    x = np.arange(len(values))
+    slope, intercept = np.polyfit(x, values, 1)
+    trend = <span class="str">"растёт"</span> <span class="cmd">if</span> slope > 0.1 <span class="cmd">else</span> (<span class="str">"падает"</span> <span class="cmd">if</span> slope < -0.1 <span class="cmd">else</span> <span class="str">"стабилен"</span>)
+
+    <span class="comment"># Аномалии (отклонение > 2 стандартных отклонений)</span>
+    mean = np.mean(values)
+    std = np.std(values)
+    anomalies = []
+    <span class="cmd">for</span> i, v <span class="cmd">in</span> enumerate(values):
+        <span class="cmd">if</span> abs(v - mean) > 2 * std:
+            anomalies.append({<span class="str">"date"</span>: dates[i], <span class="str">"value"</span>: v,
+                              <span class="str">"expected"</span>: round(mean, 1)})
+
+    <span class="comment"># Лучший и худший день</span>
+    best_idx = np.argmax(values)
+    worst_idx = np.argmin(values)
+
+    <span class="cmd">return</span> {
+        <span class="str">"trend"</span>: trend,
+        <span class="str">"slope"</span>: round(slope, 3),
+        <span class="str">"average"</span>: round(mean, 1),
+        <span class="str">"best_day"</span>: {<span class="str">"date"</span>: dates[best_idx], <span class="str">"value"</span>: values[best_idx]},
+        <span class="str">"worst_day"</span>: {<span class="str">"date"</span>: dates[worst_idx], <span class="str">"value"</span>: values[worst_idx]},
+        <span class="str">"anomalies"</span>: anomalies
+    }
+
+<span class="comment"># Пример вывода:</span>
+<span class="comment"># "Open Rate: тренд растёт (+0.15%/день), среднее 23.4%,</span>
+<span class="comment">#  лучший день: 21.03 (27.1%), аномалий: 0"</span></pre>
+      </div>
+
+      <h2>Рекомендации и план действий</h2>
+
+      <p>Заключительная секция ежемесячного отчёта &mdash; конкретный план действий на следующий месяц. Каждая рекомендация должна быть: конкретной (что именно делать), измеримой (какого результата ожидаем), и срочной (когда начинаем). Не пишите &laquo;улучшить доставляемость&raquo; &mdash; пишите &laquo;ротировать IP для домена A, ожидаемый рост Inbox Rate с 85% до 92%, начало: первая неделя апреля&raquo;.</p>
+
+      <div class="note-block tip">
+        <div class="note-label">Совет</div>
+        Проводите 15-минутный звонок с клиентом после отправки ежемесячного отчёта. Это даёт возможность ответить на вопросы, скорректировать приоритеты, и показать свою вовлечённость. Агентства, которые проводят такие звонки, удерживают клиентов на 35% дольше, чем те, которые просто отправляют PDF.
+      </div>
+
+      <div class="note-block warn">
+        <div class="note-label">Важно</div>
+        В ежемесячном отчёте обязательно указывайте стоимость инфраструктуры и ROI. Клиент платит вам X рублей и хочет видеть, что получает Y лидов/продаж. Если вы не связываете метрики с бизнес-результатами &mdash; клиент воспринимает отчёт как &laquo;красивые цифры, которые ничего не значат&raquo;.
+      </div>
+    `
+  },
+
+  9: {
+    module: 'Модуль 4 &middot; Продвинутое',
+    title:  'Объяснение метрик клиенту простым языком',
+    time:   '14 мин',
+    content: `
+      <h2>Перевод технического языка на бизнес-язык</h2>
+
+      <p>Один из самых сложных навыков в клиентской работе &mdash; объяснить техническую информацию так, чтобы нетехнический человек понял суть и принял правильное решение. Клиент не знает, что такое DKIM, SPF, MTA или Reverse DNS. И ему не нужно это знать. Ему нужно понимать: &laquo;мои письма доходят до клиентов или нет?&raquo;</p>
+
+      <p>Используйте аналогии из физического мира. DKIM и SPF &mdash; это как паспорт и прописка для писем. Без них почтовый сервер не &laquo;пускает&raquo; ваше письмо. Delivery Rate &mdash; это процент писем, которые &laquo;дошли до двери&raquo;. Inbox Rate &mdash; процент писем, которые &laquo;попали в гостиную, а не в мусорку у входа&raquo;.</p>
+
+      <p>Важный принцип: не упрощайте до абсурда, но и не перегружайте деталями. Найдите баланс. Если клиент спрашивает &laquo;почему упал Open Rate?&raquo; &mdash; не отвечайте &laquo;из-за деградации IP reputation в результате повышенного spam complaint rate&raquo;. Ответьте: &laquo;Некоторые получатели пометили наши письма как нежелательные, поэтому Gmail стал показывать их реже. Мы уже чистим базу от неактивных адресов, показатели вернутся к норме через 5-7 дней.&raquo;</p>
+
+      <h2>Словарь метрик для клиента</h2>
+
+      <p>Создайте для каждого клиента документ &laquo;Глоссарий метрик&raquo; &mdash; короткую страницу с объяснением каждой метрики, которая встречается в отчётах. Это сэкономит вам время на объяснения и повысит самостоятельность клиента.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Markdown: глоссарий метрик для клиента</div>
+        <pre><span class="comment"># Глоссарий метрик — для клиента</span>
+
+<span class="cmd">## Delivery Rate (Доставляемость)</span>
+<span class="str">Что это:</span> Процент писем, принятых почтовыми серверами
+<span class="str">Норма:</span> 95-99%
+<span class="str">Простыми словами:</span> Из 100 отправленных писем 97 дошли
+                    до почтового ящика получателя
+<span class="str">Если падает:</span> Проблемы с базой адресов или репутацией
+
+<span class="cmd">## Open Rate (Открываемость)</span>
+<span class="str">Что это:</span> Процент получателей, открывших письмо
+<span class="str">Норма:</span> 15-30% (зависит от типа рассылки)
+<span class="str">Простыми словами:</span> Из 100 доставленных писем 22 были прочитаны
+<span class="str">Если падает:</span> Нужно улучшить тему письма или время отправки
+
+<span class="cmd">## CTR (Кликабельность)</span>
+<span class="str">Что это:</span> Процент получателей, кликнувших по ссылке
+<span class="str">Норма:</span> 1-5% (зависит от типа рассылки)
+<span class="str">Простыми словами:</span> Из 100 прочитавших 3 перешли на сайт
+<span class="str">Если падает:</span> Контент письма не мотивирует к действию
+
+<span class="cmd">## Bounce Rate (Отказы)</span>
+<span class="str">Что это:</span> Процент писем, которые вернулись как недоставленные
+<span class="str">Норма:</span> менее 2%
+<span class="str">Простыми словами:</span> Письмо &laquo;вернулось&raquo; — адрес не существует
+<span class="str">Если растёт:</span> Базу пора чистить от старых адресов
+
+<span class="cmd">## Spam Complaint Rate</span>
+<span class="str">Что это:</span> Процент получателей, нажавших &laquo;Это спам&raquo;
+<span class="str">Норма:</span> менее 0.1%
+<span class="str">Простыми словами:</span> На 1000 писем менее 1 жалобы
+<span class="str">Если растёт:</span> КРИТИЧНО — нужно срочно менять подход</pre>
+      </div>
+
+      <h2>Как представлять плохие новости</h2>
+
+      <p>Рано или поздно метрики упадут &mdash; это неизбежно. Ваша задача: сообщить об этом так, чтобы клиент не запаниковал и не потерял доверие. Формула: Факт + Причина + План действий + Сроки. &laquo;Open Rate снизился с 24% до 18% (факт). Это произошло из-за попадания IP в блеклист Spamhaus (причина). Мы уже подали запрос на делистинг и переключили отправку на резервный IP (план). Восстановление ожидаем в течение 48 часов (сроки).&raquo;</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Python: генерация alert-уведомления для клиента</div>
+        <pre><span class="comment"># client_alert.py</span>
+<span class="cmd">def</span> <span class="str">generate_alert</span>(metric, current, threshold, cause, plan, eta):
+    <span class="str">"""Генерирует понятное alert-сообщение для клиента"""</span>
+    severity = <span class="str">"ВНИМАНИЕ"</span> <span class="cmd">if</span> current >= threshold * 0.8 <span class="cmd">else</span> <span class="str">"КРИТИЧНО"</span>
+
+    message = f<span class="str">"""
+{severity}: {metric}
+
+Текущее значение: {current}%
+Нормальное значение: {threshold}%+
+
+Причина: {cause}
+
+Что мы делаем: {plan}
+
+Ожидаемое восстановление: {eta}
+
+Мы контролируем ситуацию. Следующее обновление —
+через 24 часа или раньше, если проблема решится.
+
+— Команда MAILSTACK
+"""</span>
+    <span class="cmd">return</span> message
+
+<span class="comment"># Пример</span>
+alert = generate_alert(
+    metric=<span class="str">"Delivery Rate"</span>,
+    current=89.2,
+    threshold=95,
+    cause=<span class="str">"IP 192.168.1.10 попал в блеклист Spamhaus SBL"</span>,
+    plan=<span class="str">"Подан запрос на делистинг. Отправка переключена на резервный IP."</span>,
+    eta=<span class="str">"24-48 часов"</span>
+)
+print(alert)</pre>
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Совет</div>
+        Никогда не скрывайте проблемы от клиента. Если метрики упали &mdash; сообщите сами, не ждите, пока клиент заметит. Проактивная коммуникация (&laquo;мы заметили проблему и уже решаем&raquo;) вызывает в 10 раз больше доверия, чем реактивная (&laquo;да, мы знаем, разбираемся&raquo; в ответ на вопрос клиента).
+      </div>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Шаблон: ответы на частые вопросы клиентов</div>
+        <pre><span class="comment"># FAQ — типичные вопросы клиентов и правильные ответы</span>
+
+<span class="cmd">Вопрос:</span> <span class="str">"Почему мои письма попадают в спам?"</span>
+<span class="cmd">Плохой ответ:</span> "DMARC alignment fail, IP reputation degraded"
+<span class="cmd">Хороший ответ:</span> "Некоторые почтовые провайдеры временно
+   фильтруют письма с нового домена. Это нормальный процесс
+   прогрева. Мы постепенно увеличиваем объём отправки, чтобы
+   построить репутацию. Через 2-3 недели ситуация стабилизируется."
+
+<span class="cmd">Вопрос:</span> <span class="str">"Конкуренты говорят, что дадут 50% Open Rate"</span>
+<span class="cmd">Плохой ответ:</span> "Это невозможно технически"
+<span class="cmd">Хороший ответ:</span> "Open Rate 50% возможен для транзакционных
+   писем (подтверждение заказа). Для маркетинговых рассылок
+   реалистичный показатель — 20-30%. Мы фокусируемся на CTR
+   и конверсии, потому что клики = реальный бизнес-результат."
+
+<span class="cmd">Вопрос:</span> <span class="str">"Зачем платить за инфраструктуру, если есть Mailchimp?"</span>
+<span class="cmd">Хороший ответ:</span> "Mailchimp подходит для компаний с базой
+   до 10,000. При большем объёме собственная инфраструктура
+   экономит 60-80% и даёт полный контроль над репутацией,
+   скоростью, и конфиденциальностью данных."</pre>
+      </div>
+
+      <div class="note-block warn">
+        <div class="note-label">Важно</div>
+        Никогда не обещайте конкретные цифры Open Rate или CTR. Эти метрики зависят от десятков факторов, которые вы не контролируете (качество контента, время отправки, сезонность, аудитория). Обещайте процесс: &laquo;мы обеспечим максимально возможную доставляемость и будем оптимизировать показатели каждую неделю&raquo;.
+      </div>
+    `
+  },
+
+  10: {
+    module: 'Модуль 4 &middot; Продвинутое',
+    title:  'Автоматизация полного цикла &mdash; от сбора до отправки клиенту',
+    time:   '20 мин',
+    content: `
+      <h2>Архитектура полного цикла отчётности</h2>
+
+      <p>Полностью автоматизированный цикл отчётности состоит из пяти этапов: сбор данных (каждый час/день), агрегация и расчёт метрик, генерация визуализаций, формирование отчёта, и отправка клиенту. Каждый этап должен быть автоматизирован и иметь мониторинг ошибок. Если один этап сломается &mdash; вы должны узнать об этом до того, как клиент не получит отчёт.</p>
+
+      <p>Реализация зависит от масштаба. Для 1-3 клиентов достаточно cron + Python скрипты + Google Sheets. Для 5-10 клиентов &mdash; n8n workflows + PostgreSQL + Jinja2 шаблоны. Для 10+ клиентов стоит рассмотреть Metabase или Grafana для автоматических дашбордов и Airflow для оркестрации пайплайнов.</p>
+
+      <p>Ключевой принцип автоматизации: каждый скрипт должен быть идемпотентным. Если он запустится дважды для одного периода &mdash; данные не должны задвоиться. Используйте UPSERT вместо INSERT, и всегда проверяйте, существуют ли данные за текущую дату перед записью.</p>
+
+      <h2>Полный пайплайн на Python</h2>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Python: оркестратор полного цикла отчётности</div>
+        <pre><span class="comment"># reporting_pipeline.py</span>
+<span class="comment">#!/usr/bin/env python3</span>
+<span class="cmd">import</span> logging
+<span class="cmd">import</span> json
+<span class="cmd">import</span> smtplib
+<span class="cmd">from</span> email.mime.multipart <span class="cmd">import</span> MIMEMultipart
+<span class="cmd">from</span> email.mime.text <span class="cmd">import</span> MIMEText
+<span class="cmd">from</span> email.mime.base <span class="cmd">import</span> MIMEBase
+<span class="cmd">from</span> email <span class="cmd">import</span> encoders
+<span class="cmd">from</span> datetime <span class="cmd">import</span> datetime, timedelta
+
+logging.basicConfig(level=logging.INFO,
+                    format=<span class="str">'%(asctime)s %(levelname)s %(message)s'</span>)
+log = logging.getLogger(<span class="str">"reporting"</span>)
+
+<span class="comment"># Конфигурация клиентов</span>
+CLIENTS = [
+    {
+        <span class="str">"name"</span>: <span class="str">"Клиент А"</span>,
+        <span class="str">"email"</span>: <span class="str">"client-a@example.com"</span>,
+        <span class="str">"mailwizz_key"</span>: <span class="str">"key-client-a"</span>,
+        <span class="str">"postal_org"</span>: <span class="str">"client-a"</span>,
+        <span class="str">"sheet_id"</span>: <span class="str">"1Bxi...abc"</span>,
+        <span class="str">"domains"</span>: [<span class="str">"domain1.com"</span>, <span class="str">"domain2.com"</span>]
+    },
+    {
+        <span class="str">"name"</span>: <span class="str">"Клиент Б"</span>,
+        <span class="str">"email"</span>: <span class="str">"client-b@example.com"</span>,
+        <span class="str">"mailwizz_key"</span>: <span class="str">"key-client-b"</span>,
+        <span class="str">"postal_org"</span>: <span class="str">"client-b"</span>,
+        <span class="str">"sheet_id"</span>: <span class="str">"1Cde...xyz"</span>,
+        <span class="str">"domains"</span>: [<span class="str">"domainX.com"</span>]
+    }
+]
+
+<span class="cmd">def</span> <span class="str">run_pipeline</span>(client, report_type=<span class="str">"weekly"</span>):
+    log.info(f<span class="str">"Starting {report_type} report for {client['name']}"</span>)
+
+    <span class="comment"># Этап 1: Сбор данных</span>
+    log.info(<span class="str">"Step 1: Collecting data..."</span>)
+    mailwizz_data = collect_mailwizz(client[<span class="str">"mailwizz_key"</span>])
+    postal_data = collect_postal(client[<span class="str">"postal_org"</span>])
+    postmaster_data = collect_postmaster(client[<span class="str">"domains"</span>])
+
+    <span class="comment"># Этап 2: Агрегация</span>
+    log.info(<span class="str">"Step 2: Aggregating metrics..."</span>)
+    metrics = aggregate_metrics(mailwizz_data, postal_data, postmaster_data)
+
+    <span class="comment"># Этап 3: Визуализация</span>
+    log.info(<span class="str">"Step 3: Generating charts..."</span>)
+    charts = generate_charts(metrics)
+
+    <span class="comment"># Этап 4: Генерация отчёта</span>
+    log.info(<span class="str">"Step 4: Building report..."</span>)
+    <span class="cmd">if</span> report_type == <span class="str">"weekly"</span>:
+        report_html = build_weekly_html(client[<span class="str">"name"</span>], metrics)
+    <span class="cmd">else</span>:
+        report_pdf = build_monthly_pdf(client[<span class="str">"name"</span>], metrics, charts)
+
+    <span class="comment"># Этап 5: Отправка</span>
+    log.info(<span class="str">"Step 5: Sending report..."</span>)
+    send_report(client[<span class="str">"email"</span>], report_html, report_type)
+
+    <span class="comment"># Этап 6: Обновление дашборда</span>
+    log.info(<span class="str">"Step 6: Updating dashboard..."</span>)
+    update_google_sheet(client[<span class="str">"sheet_id"</span>], metrics)
+
+    log.info(f<span class="str">"Done for {client['name']}"</span>)
+
+<span class="comment"># Запуск для всех клиентов</span>
+<span class="cmd">for</span> client <span class="cmd">in</span> CLIENTS:
+    <span class="cmd">try</span>:
+        run_pipeline(client, <span class="str">"weekly"</span>)
+    <span class="cmd">except</span> Exception <span class="cmd">as</span> e:
+        log.error(f<span class="str">"FAILED for {client['name']}: {e}"</span>)
+        send_telegram_alert(f<span class="str">"Reporting failed: {client['name']}: {e}"</span>)</pre>
+      </div>
+
+      <h2>Мониторинг пайплайна</h2>
+
+      <p>Автоматизация бесполезна без мониторинга. Вы должны знать: запустился ли пайплайн, успешно ли завершился каждый этап, получил ли клиент отчёт. Настройте Telegram-уведомления для ошибок и еженедельный summary о статусе всех отчётов.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Python: Telegram мониторинг пайплайна</div>
+        <pre><span class="comment"># monitor.py</span>
+<span class="cmd">import</span> requests
+
+TELEGRAM_BOT_TOKEN = <span class="str">"your-bot-token"</span>
+TELEGRAM_CHAT_ID = <span class="str">"your-chat-id"</span>
+
+<span class="cmd">def</span> <span class="str">send_telegram_alert</span>(message, level=<span class="str">"error"</span>):
+    emoji = {<span class="str">"error"</span>: <span class="str">"&#10060;"</span>, <span class="str">"warn"</span>: <span class="str">"&#9888;&#65039;"</span>, <span class="str">"ok"</span>: <span class="str">"&#9989;"</span>}
+    text = f<span class="str">"{emoji.get(level, '')} Reporting: {message}"</span>
+    requests.post(
+        f<span class="str">"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"</span>,
+        json={<span class="str">"chat_id"</span>: TELEGRAM_CHAT_ID, <span class="str">"text"</span>: text}
+    )
+
+<span class="cmd">def</span> <span class="str">send_pipeline_summary</span>(results):
+    <span class="str">"""Итог выполнения всех отчётов"""</span>
+    ok = sum(1 <span class="cmd">for</span> r <span class="cmd">in</span> results <span class="cmd">if</span> r[<span class="str">"status"</span>] == <span class="str">"ok"</span>)
+    fail = sum(1 <span class="cmd">for</span> r <span class="cmd">in</span> results <span class="cmd">if</span> r[<span class="str">"status"</span>] == <span class="str">"error"</span>)
+    lines = [f<span class="str">"Reporting summary: {ok} OK, {fail} FAILED"</span>]
+    <span class="cmd">for</span> r <span class="cmd">in</span> results:
+        icon = <span class="str">"&#9989;"</span> <span class="cmd">if</span> r[<span class="str">"status"</span>] == <span class="str">"ok"</span> <span class="cmd">else</span> <span class="str">"&#10060;"</span>
+        lines.append(f<span class="str">"  {icon} {r['client']}"</span>)
+    send_telegram_alert(<span class="str">"\\n"</span>.join(lines), <span class="str">"ok"</span> <span class="cmd">if</span> fail == 0 <span class="cmd">else</span> <span class="str">"error"</span>)</pre>
+      </div>
+
+      <h2>Масштабирование на 10+ клиентов</h2>
+
+      <p>Когда клиентов становится много, ключевые проблемы: время выполнения пайплайна (параллелизация), хранение данных (общая БД с tenant isolation), и поддержка шаблонов (единый template с кастомизацией). Используйте ThreadPoolExecutor для параллельного сбора данных и генерации отчётов. Храните настройки клиентов в YAML-файле или БД, а не в коде.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">копировать</button>
+        <div class="code-label">Python: параллельная генерация отчётов</div>
+        <pre><span class="comment"># parallel_reports.py</span>
+<span class="cmd">from</span> concurrent.futures <span class="cmd">import</span> ThreadPoolExecutor, as_completed
+<span class="cmd">import</span> yaml
+
+<span class="comment"># Загрузка конфигурации клиентов из YAML</span>
+<span class="cmd">with</span> open(<span class="str">"clients.yaml"</span>) <span class="cmd">as</span> f:
+    clients = yaml.safe_load(f)[<span class="str">"clients"</span>]
+
+<span class="cmd">def</span> <span class="str">process_client</span>(client):
+    <span class="cmd">try</span>:
+        run_pipeline(client, <span class="str">"weekly"</span>)
+        <span class="cmd">return</span> {<span class="str">"client"</span>: client[<span class="str">"name"</span>], <span class="str">"status"</span>: <span class="str">"ok"</span>}
+    <span class="cmd">except</span> Exception <span class="cmd">as</span> e:
+        <span class="cmd">return</span> {<span class="str">"client"</span>: client[<span class="str">"name"</span>], <span class="str">"status"</span>: <span class="str">"error"</span>, <span class="str">"error"</span>: str(e)}
+
+<span class="comment"># Параллельная обработка (до 5 одновременно)</span>
+results = []
+<span class="cmd">with</span> ThreadPoolExecutor(max_workers=5) <span class="cmd">as</span> executor:
+    futures = {executor.submit(process_client, c): c <span class="cmd">for</span> c <span class="cmd">in</span> clients}
+    <span class="cmd">for</span> future <span class="cmd">in</span> as_completed(futures):
+        results.append(future.result())
+
+<span class="comment"># Итоговый summary в Telegram</span>
+send_pipeline_summary(results)</pre>
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Совет</div>
+        Создайте &laquo;health check&raquo; endpoint, который возвращает статус последней генерации отчёта для каждого клиента. Это позволит вам быстро проверить, что все отчёты уходят вовремя, не заходя на сервер. Простой Flask-сервер с JSON ответом + UptimeKuma для мониторинга этого endpoint.
+      </div>
+
+      <div class="note-block warn">
+        <div class="note-label">Важно</div>
+        При автоматизации на 10+ клиентов обязательно реализуйте rate limiting для API-запросов. MailWizz и Postal имеют лимиты на количество запросов в минуту. Без throttling пайплайн будет падать с 429 Too Many Requests. Добавьте time.sleep(0.5) между запросами или используйте библиотеку ratelimit.
+      </div>
+
+      <!-- ══ ТЕСТ КУРСА ═══════════════════════════════════════════ -->
+      <div id="quizBlock" style="margin-top:40px">
+        <div style="padding:20px 24px;background:rgba(123,97,255,.06);border:1px solid rgba(123,97,255,.25);margin-bottom:20px">
+          <div style="font-size:10px;color:var(--accent2);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Финальный тест</div>
+          <div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--heading);margin-bottom:6px">Проверьте знания</div>
+          <div style="font-size:13px;color:var(--muted)">5 вопросов — нужно 4 правильных.</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px">
+          <div style="flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden">
+            <div id="quizBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;transition:width .4s"></div>
+          </div>
+          <span id="quizCount" style="font-size:11px;color:var(--muted);font-family:var(--font-mono);min-width:50px;text-align:right">0 из 5</span>
+        </div>
+        <div id="quizQuestions"></div>
+        <div id="quizResult" style="display:none;margin-top:20px;padding:24px;background:var(--surface);border:1px solid rgba(0,229,255,.2);text-align:center"></div>
+      </div>
+      <div id="courseFinale" style="display:none;margin-top:32px;padding:28px;background:var(--surface);border:1px solid rgba(0,229,255,.2)"><div style="font-size:36px;margin-bottom:12px">&#127891;</div><div style="font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--heading);margin-bottom:10px">Курс завершён!</div><div style="font-size:14px;color:var(--muted);line-height:1.9;margin-bottom:20px">Вы прошли все уроки и финальный тест. Теперь вы умеете строить полный цикл отчётности для клиентов email-инфраструктуры.</div><div style="display:flex;gap:12px;flex-wrap:wrap"><a href="certificate.html" class="btn-primary">Получить сертификат &rarr;</a><a href="courses.html" class="btn-ghost">Все курсы</a></div></div>
+    `
+  }
+}
+window.lessons = lessons;
+window.currentLesson = currentLesson;
+
+// quiz:reporting
+var qData_reporting = [{"q": "Главная цель клиентской отчётности:", "opts": ["Показать сколько писем отправлено", "Построить доверие и продемонстрировать ценность вашей работы через метрики и рекомендации", "Выполнить обязательства по договору", "Загрузить клиента цифрами"], "c": 1, "e": "Отчётность — это инструмент доверия. Клиент платит не за цифры, а за экспертную интерпретацию и рекомендации. Без прозрачности клиенты уходят."}, {"q": "Какая метрика наиболее точно отражает реальную вовлечённость получателей?", "opts": ["Open Rate", "Delivery Rate", "CTR (Click-Through Rate)", "Bounce Rate"], "c": 2, "e": "CTR требует осознанного действия (клик по ссылке), в отличие от Open Rate который может быть завышен из-за Apple Mail Privacy Protection и других автозагрузок пикселей."}, {"q": "Spam Complaint Rate должен быть:", "opts": ["Менее 1%", "Менее 0.5%", "Менее 0.1%", "Менее 5%"], "c": 2, "e": "Google рекомендует держать Spam Complaint Rate ниже 0.1%. Выше 0.3% — критическая зона, которая приведёт к массовому попаданию в спам."}, {"q": "При падении метрик клиенту нужно сообщить:", "opts": ["Только когда метрики восстановятся", "Факт + причина + план действий + сроки восстановления", "Только факт падения без деталей", "Ничего, это техническая деталь"], "c": 1, "e": "Формула правильного сообщения: Факт + Причина + План + Сроки. Проактивная коммуникация вызывает больше доверия, чем замалчивание проблем."}, {"q": "Для автоматизации отчётности на 10+ клиентов критически важно:", "opts": ["Нанять отдельного сотрудника", "Использовать rate limiting, идемпотентность скриптов и мониторинг ошибок", "Отправлять все отчёты вручную", "Использовать только Google Sheets"], "c": 1, "e": "При масштабировании ключевые требования: rate limiting (API лимиты), идемпотентность (повторный запуск не дублирует данные), и мониторинг (Telegram алерты при сбоях)."}];
+var qAns_reporting = {};
+var qOk_reporting = 0;
+
+function quizInit_reporting() {
+  qAns_reporting = {}; qOk_reporting = 0;
+  var c = document.getElementById("quizQuestions");
+  if (!c) return;
+  var h = "";
+  qData_reporting.forEach(function(q, i) {
+    h += "<div style=\"margin-bottom:12px;padding:20px;background:var(--bg2);border:1px solid var(--border)\">";
+    h += "<div style=\"font-size:11px;color:var(--muted);font-family:var(--font-mono);margin-bottom:8px\">Вопрос " + (i+1) + " из 5</div>";
+    h += "<div style=\"font-size:15px;color:var(--heading);font-weight:600;line-height:1.5;margin-bottom:14px\">" + q.q + "</div>";
+    h += "<div style=\"display:flex;flex-direction:column;gap:6px\">";
+    q.opts.forEach(function(opt, j) {
+      h += "<div id=\"qo_reporting_" + i + "_" + j + "\" onclick=\"quizAns_reporting(" + i + "," + j + ")\" style=\"display:flex;gap:10px;align-items:flex-start;padding:10px 14px;background:var(--bg);border:1px solid var(--border);cursor:pointer;font-size:13px;color:var(--text)\">";
+      h += "<div style=\"min-width:22px;height:22px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-family:var(--font-mono);color:var(--muted);flex-shrink:0\">" + String.fromCharCode(65+j) + "</div>";
+      h += opt + "</div>";
+    });
+    h += "</div>";
+    h += "<div id=\"qe_reporting_" + i + "\" style=\"display:none;margin-top:10px;padding:10px 14px;background:var(--surface);border-left:3px solid var(--accent);font-size:12px;color:var(--muted);line-height:1.7\">" + (q.e||"") + "</div>";
+    h += "</div>";
+  });
+  c.innerHTML = h;
+  var bar = document.getElementById("quizBar");
+  var cnt = document.getElementById("quizCount");
+  if (bar) bar.style.width = "0%";
+  if (cnt) cnt.textContent = "0 из 5";
+  var res = document.getElementById("quizResult");
+  if (res) res.style.display = "none";
+}
+
+window["quizAns_reporting"] = function(qi, oi) {
+  if (qAns_reporting[qi] !== undefined) return;
+  qAns_reporting[qi] = oi;
+  var q = qData_reporting[qi];
+  var correct = (q.c !== undefined) ? q.c : q.correct;
+  var isOk = (oi === correct);
+  if (isOk) qOk_reporting++;
+  q.opts.forEach(function(_, j) {
+    var el = document.getElementById("qo_reporting_" + qi + "_" + j);
+    if (!el) return;
+    el.style.pointerEvents = "none";
+    if (j === correct) { el.style.borderColor = "var(--accent3)"; el.style.background = "rgba(0,255,136,.06)"; }
+    else if (j === oi && !isOk) { el.style.borderColor = "#ff6b6b"; el.style.background = "rgba(255,107,107,.06)"; }
+  });
+  var exp = document.getElementById("qe_reporting_" + qi);
+  if (exp) exp.style.display = "block";
+  var answered = Object.keys(qAns_reporting).length;
+  var bar = document.getElementById("quizBar");
+  var cnt = document.getElementById("quizCount");
+  if (bar) bar.style.width = Math.round(answered/5*100) + "%";
+  if (cnt) cnt.textContent = answered + " из 5";
+  if (answered === 5) {
+    setTimeout(function() {
+      var passed = qOk_reporting >= 4;
+      var res = document.getElementById("quizResult");
+      if (!res) return;
+      res.style.display = "block";
+      if (passed) {
+        res.innerHTML = "<div style=\"font-size:36px;margin-bottom:10px\">&#127942;</div>"
+          + "<div style=\"font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--heading);margin-bottom:8px\">Тест пройден! " + qOk_reporting + "/5</div>"
+          + "<div style=\"font-size:13px;color:var(--muted);margin-bottom:16px\">Курс завершён — смотрите финальный блок ниже.</div>";
+        var f = document.getElementById("courseFinale");
+        if (f) { f.style.display = "block"; f.scrollIntoView({behavior:"smooth",block:"nearest"}); }
+        try { localStorage.setItem("reporting_quiz_passed","1"); } catch(e) {}
+      } else {
+        res.innerHTML = "<div style=\"font-size:36px;margin-bottom:10px\">&#128170;</div>"
+          + "<div style=\"font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--heading);margin-bottom:8px\">Почти! " + qOk_reporting + "/5</div>"
+          + "<div style=\"font-size:13px;color:var(--muted);margin-bottom:16px\">Нужно 4 правильных. Попробуйте снова.</div>"
+          + "<button class=\"btn-ghost\" onclick=\"quizInit_reporting()\">Попробовать снова</button>";
+      }
+      res.scrollIntoView({behavior:"smooth",block:"nearest"});
+    }, 400);
+  }
+};
+
+// ── LESSON NAVIGATION ──
+
+function copyCode(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.textContent = 'скопировано!';
+    setTimeout(() => btn.textContent = 'копировать', 2000);
+  });
+}
+
+// ── Прогресс курса ──────────────────────────────────────
+const COURSE_KEY = window.location.pathname.replace(/.*\//, '').replace('.html','');
+const DONE_KEY   = COURSE_KEY + '_done_lessons';
+
+function updateProgress() {
+  var done = getDone();
+  var total = Object.keys(lessons).length;
+  var el = document.getElementById('progressText');
+  if (el) el.textContent = done.length + ' / ' + total + ' пройдено';
+  document.querySelectorAll('.sidebar-lesson').forEach(function(sl) {
+    var attr = sl.getAttribute('onclick') || '';
+    var m = attr.match(/showLesson\((\d+)\)/);
+    if (m) {
+      if (done.indexOf(parseInt(m[1])) >= 0) sl.classList.add('done');
+      else sl.classList.remove('done');
+    }
+  });
+}
+
+function toggleComplete() {
+  const cur  = window._currentLesson || 1;
+  const done = getDone();
+  const idx  = done.indexOf(cur);
+  if (idx >= 0) done.splice(idx, 1); else done.push(cur);
+  saveDone(done);
+  updateProgress();
+}
+
+const _origShowLesson = showLesson;
+showLesson = function(n) {
+  _origShowLesson(n);
+  window._currentLesson = n;
+  setTimeout(updateProgress, 50);
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  window._currentLesson = 1;
+  updateProgress();
+});
+
+</script>
+</body>
+</html>

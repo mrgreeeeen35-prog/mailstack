@@ -665,7 +665,7 @@ var lessons = {
         Postmaster Tools показывает данные только по доставке на @gmail.com и G Suite аккаунты. Для Yandex и Mail.ru данные нужно смотреть в других инструментах или по косвенным признакам.
       </div>
     `
-  }
+  },
   2: {
     module: 'Модуль 1 · Подключение',
     title:  'Подключение домена',
@@ -714,7 +714,7 @@ google-site-verification=xxxxxxxxxxxxxxxxxxxxxxxxxxx</pre>
         После верификации вы попадёте в дашборд. Первые данные появятся через 24–48 часов после начала отправки писем на Gmail-адреса.
       </div>
     `
-  }
+  },
   3: {
     module: 'Модуль 1 · Подключение',
     title:  'Обзор дашборда',
@@ -775,7 +775,7 @@ google-site-verification=xxxxxxxxxxxxxxxxxxxxxxxxxxx</pre>
         <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="font-size:12px;color:var(--text)">Стабильный прогретый домен</span><span style="font-size:12px;color:var(--muted)">Раз в неделю</span></div>
       </div>
     `
-  }
+  },
   4: {
     module: 'Модуль 2 · Метрики',
     title:  'Domain Reputation — как читать',
@@ -863,7 +863,7 @@ google-site-verification=xxxxxxxxxxxxxxxxxxxxxxxxxxx</pre>
         </div>
       </div>
     `
-  }
+  },
   5: {
     module: 'Модуль 2 · Метрики',
     title:  'Spam Rate — норма и алёрты',
@@ -944,7 +944,7 @@ google-site-verification=xxxxxxxxxxxxxxxxxxxxxxxxxxx</pre>
         </div>
       </div>
     `
-  }
+  },
   6: {
     module: 'Модуль 2 · Метрики',
     title:  'Authentication — SPF, DKIM, DMARC в метриках',
@@ -1008,7 +1008,7 @@ dig -x IP_АДРЕС +short
       <h2>Email forwarding — частая причина проблем</h2>
       <p>Если подписчики пересылают ваши письма на другой ящик — SPF и DKIM могут сломаться. Это нормально и не страшно. Для protection от этого используется DMARC с <code>adkim=r aspf=r</code> (relaxed режим).</p>
     `
-  }
+  },
   7: {
     module: 'Модуль 2 · Метрики',
     title:  'Delivery Errors — что означает',
@@ -1068,7 +1068,7 @@ dig -x IP_АДРЕС +short
         <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)"><div style="display:flex;gap:10px;margin-bottom:4px"><code style="color:var(--accent);font-size:13px">550-5.1.1</code><div style="font-size:13px;color:var(--heading);font-weight:600">Address not found</div></div><div style="font-size:12px;color:var(--muted)">Адрес не существует. Высокий процент таких ошибок = грязная база. Почистите через ZeroBounce.</div></div>
       </div>
     `
-  }
+  },
   8: {
     module: 'Модуль 3 · Решение проблем',
     title:  'Как выйти из спама если попали',
@@ -1159,7 +1159,7 @@ dig -x IP_АДРЕС +short
 <span class="comment"># Неделя 2+: постепенный рост</span>
 <span class="comment"># Следуем плану прогрева как для нового домена</span></pre></div>
     `
-  }
+  },
   9: {
     module: 'Модуль 3 · Решение проблем',
     title:  'Алёрты при падении репутации',
@@ -1231,7 +1231,7 @@ Postmaster Alert!
 Spam Rate: {{ $json.spamRate * 100 }}%
 Reputation: {{ $json.domainRep }}</pre></div>
     `
-  }
+  },
   10: {
     module: 'Модуль 3 · Решение проблем',
     title:  'Чеклист здоровой репутации',
@@ -1432,7 +1432,309 @@ Reputation: {{ $json.domainRep }}</pre></div>
 
 <span class="comment"># Заявка: postmaster.mail.ru -> Whitelist -> Подать заявку</span>
 <span class="comment"># Рассматривают 5-10 рабочих дней</span></pre></div>`
-  }
+  },
+  11: {
+    module: 'Модуль 3 · Mail.ru Postmaster',
+    title:  'Mail.ru Postmaster — важнейший инструмент для России',
+    time:   '15 мин',
+    content: `
+      <h2>Почему Mail.ru Postmaster критически важен</h2>
+      <p>Если Google Postmaster Tools — это ваш главный инструмент для работы с Gmail, то Mail.ru Postmaster занимает аналогичную позицию для российского рынка. Mail.ru (VK Mail) остаётся крупнейшим почтовым провайдером в России и СНГ — более 50 миллионов активных ящиков ежемесячно. Любая рассылка, нацеленная на русскоязычную аудиторию, неизбежно включает значительную долю адресов @mail.ru, @inbox.ru, @list.ru и @bk.ru.</p>
+      <p>Mail.ru Postmaster (postmaster.mail.ru) предоставляет отправителям прямой доступ к статистике доставки. Без этого инструмента вы работаете вслепую — не знаете, сколько писем попало в спам, какова репутация вашего домена и IP, и почему часть сообщений вообще не доходит до получателей.</p>
+      <p>В отличие от Google Postmaster, который показывает данные только при достаточном объёме отправок (обычно от 200-500 писем в день), Mail.ru Postmaster начинает отображать статистику уже при небольших объёмах — от 50-100 писем. Это делает его особенно полезным на этапе прогрева домена.</p>
+
+      <h2>Отличия от Google Postmaster Tools</h2>
+      <p>Mail.ru Postmaster имеет ряд принципиальных отличий от Google Postmaster Tools. Понимание этих различий поможет вам эффективнее работать с обоими инструментами и выстроить комплексный мониторинг доставляемости.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Сравнение Google Postmaster vs Mail.ru Postmaster</span>
+
+<span class="comment"># Google Postmaster:</span>
+<span class="comment"># - Репутация: High / Medium / Low / Bad</span>
+<span class="comment"># - Данные появляются при > 200-500 писем/день</span>
+<span class="comment"># - Привязка по домену (DNS TXT запись)</span>
+<span class="comment"># - Нет FBL (Feedback Loop) API</span>
+<span class="comment"># - Данные с задержкой 24-48 часов</span>
+
+<span class="comment"># Mail.ru Postmaster:</span>
+<span class="comment"># - Репутация: числовое значение 0-100</span>
+<span class="comment"># - Данные появляются при > 50 писем/день</span>
+<span class="comment"># - Привязка по домену (DNS TXT или CNAME)</span>
+<span class="comment"># - Встроенный FBL (жалобы на спам)</span>
+<span class="comment"># - Данные обновляются каждые 4-6 часов</span></pre></div>
+
+      <p>Ключевое преимущество Mail.ru — более детальная и быстрая статистика. Вы получаете числовую оценку репутации от 0 до 100 (вместо абстрактных «High/Low»), видите точное количество писем попавших в папку «Спам», и получаете данные о жалобах через встроенный Feedback Loop.</p>
+
+      <h2>Что показывает Mail.ru Postmaster</h2>
+      <p>Дашборд Mail.ru Postmaster предоставляет несколько ключевых разделов данных. Каждый из них важен для диагностики проблем с доставляемостью и поддержания здоровой репутации отправителя.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Основные разделы Mail.ru Postmaster:</span>
+
+<span class="comment"># 1. Репутация домена (0-100)</span>
+<span class="comment">#    > 80 — отличная, письма идут во Входящие</span>
+<span class="comment">#    60-80 — хорошая, возможны единичные попадания в спам</span>
+<span class="comment">#    40-60 — средняя, часть писем фильтруется</span>
+<span class="comment">#    < 40 — плохая, большинство писем в спаме</span>
+
+<span class="comment"># 2. Статистика доставки</span>
+<span class="comment">#    - Всего отправлено</span>
+<span class="comment">#    - Доставлено во Входящие</span>
+<span class="comment">#    - Попало в Спам</span>
+<span class="comment">#    - Отклонено (rejected)</span>
+
+<span class="comment"># 3. Аутентификация</span>
+<span class="comment">#    - SPF pass/fail</span>
+<span class="comment">#    - DKIM pass/fail</span>
+<span class="comment">#    - DMARC alignment</span>
+
+<span class="comment"># 4. Жалобы (FBL)</span>
+<span class="comment">#    - Количество нажатий "Это спам"</span>
+<span class="comment">#    - Spam Complaint Rate</span></pre></div>
+
+      <div class="note-block info">
+        <div class="note-label">Важно</div>
+        Mail.ru Postmaster показывает данные по всем доменам Mail.ru Group: @mail.ru, @inbox.ru, @list.ru, @bk.ru. Это покрывает подавляющее большинство российских почтовых адресов вместе с @yandex.ru.
+      </div>
+
+      <h2>Архитектура антиспама Mail.ru</h2>
+      <p>Mail.ru использует собственную систему антиспам-фильтрации, которая значительно отличается от Google. Понимание её работы — ключ к высокой доставляемости на русскоязычную аудиторию.</p>
+      <p>Система Mail.ru оценивает каждое письмо по множеству факторов: репутация отправляющего IP, репутация домена, содержимое письма, поведение получателей (открытия, клики, жалобы), а также технические параметры (аутентификация, TLS, заголовки). В отличие от Gmail, Mail.ru уделяет больше внимания IP-репутации — если ваш IP попал в их внутренний blacklist, даже идеальный контент не поможет.</p>
+
+      <div class="note-block warn">
+        <div class="note-label">Предупреждение</div>
+        Mail.ru агрессивнее Gmail блокирует новые IP-адреса. Если вы начинаете отправку с нового IP без прогрева, Mail.ru может отклонять до 100% писем в первые дни. Прогрев для Mail.ru должен быть более плавным: начинайте с 10-20 писем в день и увеличивайте объём на 20-30% каждые 2-3 дня.
+      </div>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Проверка текущей репутации IP на Mail.ru</span>
+<span class="comment"># Используйте DNS-запрос к RBL Mail.ru:</span>
+
+<span class="cmd">dig</span> +short YOUR_IP_REVERSED.dnsbl.mail.ru
+<span class="comment"># Если ответ пустой — IP не заблокирован</span>
+<span class="comment"># Если вернул 127.0.0.2 — IP в блоклисте</span>
+
+<span class="comment"># Пример для IP 1.2.3.4:</span>
+<span class="cmd">dig</span> +short 4.3.2.1.dnsbl.mail.ru
+<span class="comment"># Пустой ответ = IP чист</span>
+
+<span class="comment"># Проверка PTR записи (важно для Mail.ru):</span>
+<span class="cmd">dig</span> -x YOUR_IP +short
+<span class="comment"># Должна возвращать FQDN, совпадающий с HELO</span></pre></div>
+
+      <p>Помимо IP-репутации, Mail.ru внимательно анализирует контент писем. Система использует машинное обучение для определения спама, и особенно чувствительна к типичным паттернам коммерческих рассылок: большим изображениям без текста, коротким ссылкам (bit.ly и аналоги), а также к письмам, содержащим только один большой баннер.</p>
+
+      <div class="note-block tip">
+        <div class="note-label">Совет</div>
+        Для максимальной доставляемости на Mail.ru соблюдайте соотношение текст/изображения не менее 60/40. Избегайте коротких ссылок и трекинг-доменов, которые уже были замечены в спаме. Используйте собственный домен для отслеживания кликов.
+      </div>
+    `
+  },
+  12: {
+    module: 'Модуль 3 · Mail.ru Postmaster',
+    title:  'Регистрация и подключение домена',
+    time:   '12 мин',
+    content: `
+      <h2>Создание аккаунта в Mail.ru Postmaster</h2>
+      <p>Для начала работы с Mail.ru Postmaster вам потребуется аккаунт на Mail.ru. Если у вас уже есть почтовый ящик @mail.ru — отлично, используйте его. Если нет — создайте новый аккаунт специально для администрирования. Рекомендуется использовать отдельный аккаунт для постмастера, не связанный с вашими рассылками, чтобы разделить роли.</p>
+      <p>Mail.ru Postmaster доступен по адресу postmaster.mail.ru. Интерфейс полностью на русском языке, что упрощает работу для русскоязычных администраторов. После авторизации вы попадёте на главную страницу, где можно добавить свой домен для мониторинга.</p>
+
+      <h2>Пошаговое подключение домена</h2>
+      <p>Подключение домена к Mail.ru Postmaster включает два этапа: добавление домена в интерфейсе и подтверждение владения через DNS. Весь процесс занимает 5-10 минут, если у вас есть доступ к DNS-зоне домена.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Шаг 1: Авторизация</span>
+<span class="comment"># Откройте https://postmaster.mail.ru</span>
+<span class="comment"># Войдите с аккаунтом Mail.ru</span>
+
+<span class="comment"># Шаг 2: Добавление домена</span>
+<span class="comment"># Нажмите "Добавить домен"</span>
+<span class="comment"># Введите ваш домен: example.com</span>
+<span class="comment"># Система предложит способ верификации</span>
+
+<span class="comment"># Шаг 3: Выбор метода верификации</span>
+<span class="comment"># Вариант A: DNS TXT запись (рекомендуется)</span>
+<span class="comment"># Вариант B: HTML файл в корне сайта</span>
+<span class="comment"># Вариант C: Meta тег на главной странице</span>
+
+<span class="comment"># Рекомендуем DNS TXT — работает даже без веб-сервера</span></pre></div>
+
+      <p>После выбора метода верификации Mail.ru сгенерирует уникальный код подтверждения. Для DNS-метода это будет TXT-запись, которую нужно добавить в DNS-зону вашего домена. Код выглядит примерно так: mailru-verification: abc123def456.</p>
+
+      <h2>Настройка DNS для верификации</h2>
+      <p>Добавление TXT-записи для верификации — стандартная операция, аналогичная подтверждению домена в Google Postmaster. Запись добавляется в корень DNS-зоны вашего домена.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Добавление TXT записи для верификации Mail.ru Postmaster</span>
+<span class="comment"># В панели управления DNS добавьте:</span>
+
+<span class="comment"># Тип: TXT</span>
+<span class="comment"># Хост: @ (корень домена)</span>
+<span class="comment"># Значение: mailru-verification: ВАША_УНИКАЛЬНАЯ_СТРОКА</span>
+<span class="comment"># TTL: 3600</span>
+
+<span class="comment"># Проверка через dig:</span>
+<span class="cmd">dig</span> TXT example.com +short
+<span class="comment"># Должно вернуть: "mailru-verification: abc123def456"</span>
+
+<span class="comment"># Если у вас несколько доменов, добавьте TXT для каждого:</span>
+<span class="cmd">for</span> domain <span class="cmd">in</span> domain1.com domain2.com domain3.com; <span class="cmd">do</span>
+  <span class="cmd">echo</span> <span class="str">"Проверяю $domain..."</span>
+  <span class="cmd">dig</span> TXT "$domain" +short | <span class="cmd">grep</span> mailru-verification
+<span class="cmd">done</span></pre></div>
+
+      <div class="note-block info">
+        <div class="note-label">Важно</div>
+        DNS-пропагация может занять от 5 минут до 48 часов в зависимости от регистратора и TTL. Большинство популярных DNS-провайдеров (Cloudflare, Timeweb, Beget) обновляются в течение 5-15 минут. Не нажимайте кнопку верификации слишком рано — дождитесь пропагации.
+      </div>
+
+      <h2>Верификация и первые данные</h2>
+      <p>После добавления DNS-записи вернитесь в интерфейс Mail.ru Postmaster и нажмите кнопку «Подтвердить». Система проверит наличие TXT-записи и, если всё корректно, домен будет верифицирован. Статус изменится на «Подтверждён» с зелёной отметкой.</p>
+      <p>Первые данные по доставляемости появятся в течение 4-24 часов после начала отправки писем на адреса Mail.ru. Если вы уже отправляете письма — данные начнут поступать практически сразу после верификации.</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Автоматическая проверка верификации через API</span>
+<span class="comment"># (неофициальный метод через DNS)</span>
+
+<span class="comment"># Проверяем что TXT запись на месте:</span>
+<span class="cmd">dig</span> TXT example.com @8.8.8.8 +short
+<span class="comment"># Ожидаем: "mailru-verification: ..."</span>
+
+<span class="comment"># Проверяем SPF (должен включать серверы отправки):</span>
+<span class="cmd">dig</span> TXT example.com +short | <span class="cmd">grep</span> <span class="str">"v=spf1"</span>
+
+<span class="comment"># Проверяем DKIM:</span>
+<span class="cmd">dig</span> TXT postal._domainkey.example.com +short
+<span class="comment"># Должен вернуть DKIM публичный ключ</span>
+
+<span class="comment"># Проверяем DMARC:</span>
+<span class="cmd">dig</span> TXT _dmarc.example.com +short
+<span class="comment"># Ожидаем: "v=DMARC1; p=quarantine; ..."</span></pre></div>
+
+      <div class="note-block warn">
+        <div class="note-label">Распространённая ошибка</div>
+        Не путайте верификацию домена в Postmaster с настройкой MX-записей. Postmaster только мониторит вашу отправку — он не влияет на приём почты. MX-записи нужны для Mailcow, а TXT-запись для Postmaster — это отдельная сущность для подтверждения владения доменом.
+      </div>
+
+      <h2>Подключение нескольких доменов</h2>
+      <p>Если вы используете пул доменов для рассылок (например, 20 доменов в Pool 1 и 20 в Pool 2), каждый домен нужно подключить к Postmaster отдельно. Процесс можно частично автоматизировать с помощью скрипта для массовой проверки DNS.</p>
+      <p>Рекомендуется подключить все рабочие домены к Mail.ru Postmaster — это даст полную картину доставляемости по каждому домену и позволит быстро выявлять проблемные домены до того, как они повлияют на весь пул.</p>
+
+      <div class="note-block tip">
+        <div class="note-label">Совет</div>
+        Создайте скрипт, который ежедневно проверяет наличие TXT-записей верификации для всех ваших доменов. Если кто-то случайно удалит запись или сменит DNS — вы узнаете об этом сразу, а не когда данные в Postmaster перестанут обновляться.
+      </div>
+    `
+  },
+  13: {
+    module: 'Модуль 3 · Mail.ru Postmaster',
+    title:  'Метрики и дашборд Mail.ru Postmaster',
+    time:   '18 мин',
+    content: `
+      <h2>Обзор дашборда</h2>
+      <p>Главная страница Mail.ru Postmaster после верификации домена отображает сводную статистику за последние 30 дней. Здесь вы видите общий объём отправленных писем, процент доставки во Входящие, процент попадания в Спам и количество отклонённых сообщений. Эта сводка — ваш ежедневный «пульс» доставляемости на Mail.ru.</p>
+      <p>Дашборд разделён на несколько ключевых секций, каждая из которых отвечает за определённый аспект доставляемости. Рассмотрим каждую метрику подробно и разберём, как интерпретировать данные и какие действия предпринимать при отклонениях от нормы.</p>
+
+      <h2>Репутация домена — главная метрика</h2>
+      <p>Репутация домена в Mail.ru Postmaster выражается числовым значением от 0 до 100. Это ваш главный индикатор — от него напрямую зависит, куда попадают письма: во Входящие или в Спам. В отличие от Google Postmaster, где репутация обозначается абстрактными уровнями (High/Medium/Low/Bad), Mail.ru даёт точное числовое значение, что позволяет отслеживать динамику с высокой точностью.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Шкала репутации Mail.ru Postmaster</span>
+
+<span class="comment"># 90-100: Превосходная репутация</span>
+<span class="comment">#   → Все письма во Входящие</span>
+<span class="comment">#   → Можно подавать заявку на Whitelist</span>
+<span class="comment">#   → Увеличенные лимиты отправки</span>
+
+<span class="comment"># 70-89: Хорошая репутация</span>
+<span class="comment">#   → 95%+ писем во Входящие</span>
+<span class="comment">#   → Единичные попадания в спам при триггерных словах</span>
+<span class="comment">#   → Стандартные лимиты</span>
+
+<span class="comment"># 50-69: Средняя репутация</span>
+<span class="comment">#   → 70-90% писем во Входящие</span>
+<span class="comment">#   → Усиленная фильтрация контента</span>
+<span class="comment">#   → Требуется диагностика</span>
+
+<span class="comment"># 30-49: Низкая репутация</span>
+<span class="comment">#   → Менее 50% писем во Входящие</span>
+<span class="comment">#   → Возможно временное ограничение объёма</span>
+<span class="comment">#   → Срочная оптимизация необходима</span>
+
+<span class="comment"># 0-29: Критическая репутация</span>
+<span class="comment">#   → Почти все письма в Спам или отклоняются</span>
+<span class="comment">#   → IP может быть в блоклисте Mail.ru</span>
+<span class="comment">#   → Остановить рассылки, провести аудит</span></pre></div>
+
+      <p>Репутация обновляется каждые 4-6 часов и рассчитывается на основе данных за последние 30 дней. Это означает, что после устранения проблемы репутация будет восстанавливаться постепенно — в течение 2-4 недель. Не ожидайте мгновенного роста после исправления ошибок.</p>
+
+      <h2>Статистика доставки</h2>
+      <p>Раздел статистики доставки показывает точные цифры по каждому этапу: сколько писем было принято сервером Mail.ru, сколько доставлено во Входящие, сколько попало в Спам, и сколько было отклонено на уровне SMTP (rejected). Эти данные можно просматривать по дням, неделям и месяцам.</p>
+      <p>Особое внимание обращайте на соотношение «Входящие / Спам». Нормальный показатель — более 95% писем во Входящие. Если в Спам попадает более 10% писем — это серьёзный сигнал, требующий немедленного реагирования. Проверьте содержимое писем, частоту отправки и наличие жалоб.</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Мониторинг ключевых метрик — что считать нормой</span>
+
+<span class="comment"># Delivery Rate (процент доставки):</span>
+<span class="comment">#   > 98% — отлично</span>
+<span class="comment">#   95-98% — хорошо</span>
+<span class="comment">#   90-95% — требует внимания</span>
+<span class="comment">#   < 90% — проблема</span>
+
+<span class="comment"># Inbox Rate (процент во Входящие):</span>
+<span class="comment">#   > 95% — отлично</span>
+<span class="comment">#   85-95% — допустимо</span>
+<span class="comment">#   70-85% — контент-фильтрация</span>
+<span class="comment">#   < 70% — критично</span>
+
+<span class="comment"># Spam Complaint Rate (жалобы):</span>
+<span class="comment">#   < 0.1% — норма</span>
+<span class="comment">#   0.1-0.3% — повышенный</span>
+<span class="comment">#   0.3-0.5% — опасный</span>
+<span class="comment">#   > 0.5% — критический (возможна блокировка)</span>
+
+<span class="comment"># Rejection Rate (отклонения SMTP):</span>
+<span class="comment">#   < 2% — норма</span>
+<span class="comment">#   2-5% — возможные проблемы с IP</span>
+<span class="comment">#   > 5% — IP в ограниченном режиме</span></pre></div>
+
+      <h2>Аутентификация — SPF, DKIM, DMARC</h2>
+      <p>Раздел аутентификации в Mail.ru Postmaster показывает процент писем, прошедших проверки SPF, DKIM и DMARC. Все три показателя должны быть на уровне 100%. Любое отклонение от 100% означает техническую проблему в вашей конфигурации, которую необходимо устранить.</p>
+      <p>Mail.ru строже относится к DKIM-подписям по сравнению с некоторыми другими провайдерами. Если ваш DKIM-ключ слабый (менее 1024 бит) или подпись содержит ошибки — Mail.ru может понизить репутацию домена. Рекомендуется использовать DKIM-ключи длиной 2048 бит.</p>
+
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Диагностика проблем аутентификации для Mail.ru</span>
+
+<span class="comment"># Проверка SPF:</span>
+<span class="cmd">dig</span> TXT example.com +short | <span class="cmd">grep</span> <span class="str">"v=spf1"</span>
+<span class="comment"># Убедитесь что IP вашего сервера включён в SPF</span>
+<span class="comment"># Пример: "v=spf1 ip4:1.2.3.4 ip4:5.6.7.8 -all"</span>
+
+<span class="comment"># Проверка DKIM:</span>
+<span class="cmd">dig</span> TXT postal._domainkey.example.com +short
+<span class="comment"># Должен вернуть публичный ключ</span>
+<span class="comment"># Ключ должен быть >= 1024 бит (рекомендуется 2048)</span>
+
+<span class="comment"># Проверка DMARC:</span>
+<span class="cmd">dig</span> TXT _dmarc.example.com +short
+<span class="comment"># Рекомендуемая политика для Mail.ru:</span>
+<span class="comment"># "v=DMARC1; p=quarantine; rua=mailto:dmarc@example.com; pct=100"</span>
+
+<span class="comment"># Тестовая отправка с проверкой заголовков:</span>
+<span class="comment"># Отправьте тестовое письмо на свой @mail.ru адрес</span>
+<span class="comment"># Откройте письмо → Ещё → Служебные заголовки</span>
+<span class="comment"># Ищите: Authentication-Results:</span>
+<span class="comment">#   dkim=pass</span>
+<span class="comment">#   spf=pass</span>
+<span class="comment">#   dmarc=pass</span></pre></div>
+
+      <div class="note-block info">
+        <div class="note-label">Важно</div>
+        Mail.ru поддерживает DMARC-отчёты (RUA). Указав адрес для отчётов в DMARC-записи, вы будете получать XML-отчёты о том, как Mail.ru обрабатывает ваши письма. Это ценный источник данных для диагностики — он показывает каждый IP, с которого отправляются письма от вашего имени.
+      </div>
+
+      <h2>Feedback Loop (FBL) — жалобы пользователей</h2>
+      <p>Одно из главных преимуществ Mail.ru Postmaster — встроенный Feedback Loop. Когда получатель нажимает кнопку «Это спам» на вашем письме, эта информация отображается в Postmaster. Вы видите общее количество жалоб и процент жалоб от общего числа доставленных писем.</p>
+      <p>Spam Complaint Rate (SCR) — критически важная метрика. Mail.ru начинает снижать репутацию при SCR выше 0.1%. При SCR выше 0.5% система может временно ограничить приём писем с вашего домена или IP. При стабильно высоком SCR возможна полная блокировка.</p>
+      <p>В отличие от Gmail, где FBL недоступен для большинства отправителей, Mail.ru предоставляет эти данные открыто через Postmaster. Используйте их для очистки базы — если получатель пожаловался, немедленно удалите его из всех списков рассылки.</p>
+
+      <div class="note-block warn">
+        <div class="note-label">Предупреждение</div>
+        Не игнорируйте всплески жалоб. Если SCR резко вырос после определённой кампании — проанализируйте содержимое этой кампании, тему письма и целевую аудиторию. Часто проблема в нерелевантном контенте или устаревшей базе подписчиков.
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Совет</div>
+        Настройте автоматический мониторинг метрик Mail.ru Postmaster. Создайте скрипт, который каждый день проверяет репутацию, SCR и Inbox Rate, и отправляет уведомление в Telegram при отклонении от нормы. Реакция в течение 24 часов может предотвратить серьёзное падение репутации.
+      </div>
+    `
+  },
   14: {
     module: 'Модуль 3 · Mail.ru Postmaster',
     title:  'Решение проблем с доставкой на Mail.ru',
@@ -1456,7 +1758,7 @@ dig -x ВАШ_IP +short
         <div style="padding:10px 14px;background:var(--bg2);border:1px solid var(--border);margin-bottom:6px"><div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:3px">Спам-слова в теме</div><div style="font-size:12px;color:var(--muted)">«БЕСПЛАТНО», «100% ГАРАНТИЯ», «СРОЧНО» — Mail.ru фильтрует агрессивнее Gmail.</div></div>
         <div style="padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><div style="font-size:12px;color:#f0a500;font-weight:600;margin-bottom:3px">Молодой домен без репутации</div><div style="font-size:12px;color:var(--muted)">Mail.ru не доверяет доменам моложе 30 дней. Прогревайте постепенно.</div></div>
       </div>`
-  }
+  },
   15: {
     module: 'Модуль 3 · Mail.ru Postmaster',
     title:  'Итог — мониторинг трёх провайдеров',

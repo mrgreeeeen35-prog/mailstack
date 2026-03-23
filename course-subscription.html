@@ -936,7 +936,7 @@ var lessons = {
     module: 'Модуль 1 · Основы',
     title:  'Как работает форма подписки — архитектура',
     time:   '10 мин',
-    content: `<div style="margin:0 0 28px;padding:20px 24px;background:var(--bg2);border:1px solid rgba(0,229,255,.15)"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px">📍 Дорожная карта</div><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><a href="course-mailwizz.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">MailWizz ✓</a><a href="course-n8n.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">n8n ✓</a><span style="color:var(--muted);font-size:16px">→</span><span style="font-size:11px;padding:4px 10px;background:rgba(0,229,255,.08);border:1px solid var(--accent);color:var(--accent);font-family:var(--font-mono);font-weight:700">📖 Форма подписки</span></div></div>
+    content: `<div style="margin:0 0 28px;padding:20px 24px;background:var(--bg2);border:1px solid rgba(0,229,255,.15)"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px">📍 Дорожная карта</div><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><a href="course-mailwizz.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">MailWizz ✓</a><span style="color:var(--muted);font-size:16px">→</span><span style="font-size:11px;padding:4px 10px;background:rgba(0,229,255,.08);border:1px solid var(--accent);color:var(--accent);font-family:var(--font-mono);font-weight:700">📖 Форма подписки</span><span style="color:var(--muted);font-size:16px">→</span><a href="course-html-email.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">HTML-шаблоны</a></div></div>
       <h2>Три способа собирать подписчиков в MailWizz</h2>
       <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0">
         <div style="padding:14px;background:var(--bg2);border:1px solid rgba(0,229,255,.2)"><div style="font-size:13px;color:var(--heading);font-weight:700;margin-bottom:4px">1. Встроенная форма MailWizz</div><div style="font-size:12px;color:var(--muted)">Генерируется в панели, вставляется как iframe или HTML. Самый простой способ — нет кода.</div></div>
@@ -950,6 +950,16 @@ var lessons = {
         <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">Только реальные адреса — нет опечаток и фейков</span></div>
         <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">Низкий Spam Rate — люди подтвердили что хотят письма</span></div>
         <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">Юридическая защита — есть доказательство согласия (требование 152-ФЗ)</span></div>
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Какой способ выбрать</div>
+        Начинающим — встроенная форма MailWizz (урок 2). Для продакшена с валидацией, аналитикой и гибкостью — n8n webhook + API (урок 6). Способ через API можно внедрить позже, не переделывая уже работающую форму.
+      </div>
+
+      <div class="note-block warn">
+        <div class="note-label">⚠ Single opt-in = риск</div>
+        Без double opt-in невозможно доказать согласие подписчика. В России это нарушение 152-ФЗ, в ЕС — GDPR. Кроме юридических последствий, single opt-in приводит к попаданию спамтрапов в базу и снижению репутации домена.
       </div>`
   }
   2: {
@@ -981,7 +991,17 @@ var lessons = {
         width="100%" height="400" frameborder="0"&gt;&lt;/iframe&gt;
 
 <span class="comment">&lt;!-- Вариант 2: встроенный HTML (скопировать из MailWizz) --&gt;</span>
-<span class="comment">&lt;!-- Lists → Subscribe forms → View → HTML code --&gt;</span></pre></div>`
+<span class="comment">&lt;!-- Lists → Subscribe forms → View → HTML code --&gt;</span></pre></div>
+
+      <div class="note-block tip">
+        <div class="note-label">Кастомизация письма подтверждения</div>
+        Стандартное письмо MailWizz выглядит скучно. Перейдите в Lists → Settings → Subscribers → Confirmation email и замените шаблон на фирменный HTML. Ключевой тег — [CONFIRMATION_URL] — он обязателен, без него кнопка подтверждения не будет работать.
+      </div>
+
+      <div class="note-block warn">
+        <div class="note-label">⚠ iframe блокируется некоторыми CMS</div>
+        WordPress, Wix и ряд других платформ могут блокировать iframe из соображений безопасности (X-Frame-Options). Если форма не отображается — используйте вариант 2 (встроенный HTML) или подключайте через API (урок 5).
+      </div>`
   }
   3: {
     module: 'Модуль 2 · Интеграции',
@@ -1023,7 +1043,17 @@ if (status === 'success') {
   return [{ json: { result: 'already_subscribed' } }];
 } else {
   return [{ json: { result: 'error', details: items[0].json } }];
-}</pre></div>`
+}</pre></div>
+
+      <div class="note-block tip">
+        <div class="note-label">Формат webhook URL в Tilda</div>
+        URL вебхука из n8n вставляется в Tilda без изменений. Формат: <code>https://n8n.yourdomain.com/webhook/xxxxx</code>. Убедитесь что в Tilda указан метод POST. Тестируйте через встроенную кнопку «Отправить тестовые данные» в настройках формы Tilda — в n8n увидите запрос в Executions.
+      </div>
+
+      <div class="note-block warn">
+        <div class="note-label">⚠ Tilda отправляет поля в нестандартном формате</div>
+        Tilda передаёт данные как form-urlencoded, а не JSON. В n8n Webhook Trigger это обрабатывается автоматически, но если вы используете собственный backend — парсите body как <code>application/x-www-form-urlencoded</code>. Имена полей в Tilda: <code>Email</code>, <code>Name</code> (с большой буквы).
+      </div>`
   }
   4: {
     module: 'Модуль 2 · Интеграции',
@@ -1081,7 +1111,17 @@ curl_setopt_array($ch, [
 ]);
 $r = json_decode(curl_exec($ch), true);
 echo json_encode(['ok' => ($r['status'] ?? '') === 'success']);
-curl_close($ch);</pre></div>`
+curl_close($ch);</pre></div>
+
+      <div class="note-block warn">
+        <div class="note-label">⚠ Совместимость плагинов WordPress</div>
+        Contact Form 7 v5.8+ изменил API хуков. Если <code>wpcf7_mail_sent</code> не срабатывает — проверьте версию CF7 и попробуйте хук <code>wpcf7_before_send_mail</code>. Также: WP Rocket и другие плагины кеширования могут кешировать страницу с формой — исключите её из кеша.
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Gravity Forms — самый надёжный вариант для WordPress</div>
+        Gravity Forms имеет встроенный аддон Webhooks (не нужен код). Настройка: Form → Settings → Webhooks → Add New. Поддерживает условную логику — можно отправлять webhook только если пользователь отметил чекбокс согласия на рассылку.
+      </div>`
   }
   5: {
     module: 'Модуль 2 · Интеграции',
@@ -1142,7 +1182,17 @@ return [{ json: { email: email.toLowerCase().trim(), name: name || '' } }];
 
 <span class="comment"># Respond to Webhook нода:</span>
 <span class="comment"># Response Code: 200</span>
-<span class="comment"># Body: { "ok": true }</span></pre></div>`
+<span class="comment"># Body: { "ok": true }</span></pre></div>
+
+      <div class="note-block warn">
+        <div class="note-label">⚠ Защита от XSS и спам-ботов</div>
+        Кастомная HTML форма без защиты — открытая дверь для ботов. Обязательно: 1) добавьте honeypot-поле (скрытый input, который заполняют только боты), 2) валидируйте email на стороне n8n через regex, 3) ограничьте rate-limit (не более 3 подписок с одного IP в час). Без этого боты могут забить вашу базу тысячами фейковых адресов.
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Honeypot-поле — простая защита без captcha</div>
+        Добавьте в форму скрытое поле: <code>&lt;input type="text" name="website" style="display:none"&gt;</code>. В n8n проверяйте: если поле <code>website</code> заполнено — это бот, игнорируйте запрос. Реальные пользователи не видят и не заполняют это поле. Эффективнее reCAPTCHA для большинства ботов и не раздражает пользователей.
+      </div>`
   }
   6: {
     module: 'Модуль 3 · Double opt-in',
@@ -1157,6 +1207,16 @@ return [{ json: { email: email.toLowerCase().trim(), name: name || '' } }];
         <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent);font-weight:700;min-width:20px">4</span><span style="font-size:12px">n8n отправляет письмо через Postal: «Подтвердите подписку — ссылка с токеном»</span></div>
         <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent);font-weight:700;min-width:20px">5</span><span style="font-size:12px">Человек кликает → второй webhook → n8n проверяет token в Sheets</span></div>
         <div style="display:flex;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3);font-weight:700;min-width:20px">6</span><span style="font-size:12px">Если token валиден (не старше 24ч) → добавляем в MailWizz со статусом confirmed</span></div>
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Почему свой double opt-in, а не встроенный MailWizz</div>
+        Встроенный double opt-in MailWizz работает, но вы не контролируете: дизайн письма подтверждения, логику дедупликации, хранение доказательств согласия. Через n8n вы получаете полный аудит-лог в Google Sheets — email, IP, timestamp, user-agent — что критично для проверок РКН и GDPR.
+      </div>
+
+      <div class="note-block warn">
+        <div class="note-label">⚠ Токен должен быть одноразовым</div>
+        После успешного подтверждения обязательно помечайте токен как использованный (status=confirmed в Sheets). Иначе злоумышленник может переиспользовать ссылку. Также устанавливайте TTL: токен старше 24 часов должен считаться невалидным — проверяйте expiry в Code-ноде n8n.
       </div>
 
       <h2>Генерация токена в n8n</h2>
@@ -1201,7 +1261,17 @@ return [{
   }
 })();
 &lt;/script&gt;
-&lt;p&gt;Подтверждаем подписку...&lt;/p&gt;</pre></div>`
+&lt;p&gt;Подтверждаем подписку...&lt;/p&gt;</pre></div>
+
+      <div class="note-block tip">
+        <div class="note-label">Страница «Спасибо» повышает конверсию</div>
+        На странице /subscribe-thanks добавьте: 1) чёткую инструкцию «Проверьте почту, в том числе папку Спам», 2) кнопку «Открыть Gmail» / «Открыть Яндекс.Почту» (deep link), 3) таймер ожидания (создаёт ощущение процесса). Это увеличивает процент подтверждений на 15-25%.
+      </div>
+
+      <div class="note-block warn">
+        <div class="note-label">⚠ Не перенаправляйте на главную после подтверждения</div>
+        Частая ошибка — после клика по ссылке подтверждения редирект на главную страницу сайта. Пользователь не понимает, подписался он или нет. Всегда делайте отдельную страницу /subscribe-confirmed с явным сообщением и следующим шагом (CTA).
+      </div>`
   }
   8: {
     module: 'Модуль 4 · Практика',
@@ -1223,14 +1293,63 @@ return [{
         <div style="padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.2)"><div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:2px">Single opt-in в России</div><div style="font-size:12px;color:var(--muted)">Без подтверждения нет доказательства согласия → нарушение 152-ФЗ.</div></div>
         <div style="padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.2)"><div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:2px">Форма без валидации email</div><div style="font-size:12px;color:var(--muted)">Без проверки — попадают spamtrap адреса. Всегда валидируйте через regex и/или ZeroBounce.</div></div>
         <div style="padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.2)"><div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:2px">CORS ошибки при fetch</div><div style="font-size:12px;color:var(--muted)">Браузер блокирует запрос с другого домена. Настройте CORS в n8n: Settings → Allow origins.</div></div>
+        <div style="padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.2)"><div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:2px">Нет honeypot / rate-limit</div><div style="font-size:12px;color:var(--muted)">Без защиты от ботов форма будет заспамлена. Добавьте honeypot-поле и ограничьте частоту запросов с одного IP.</div></div>
+        <div style="padding:10px 14px;background:rgba(255,107,107,.04);border:1px solid rgba(255,107,107,.2)"><div style="font-size:12px;color:#ff6b6b;font-weight:600;margin-bottom:2px">Нет страницы «Спасибо»</div><div style="font-size:12px;color:var(--muted)">Пользователь заполнил форму и не знает что делать дальше. Без инструкции «Проверьте почту» — теряется до 40% подтверждений.</div></div>
       </div>
+
+      <div class="note-block warn">
+        <div class="note-label">⚠ Тестируйте на реальных почтовых провайдерах</div>
+        Перед запуском обязательно протестируйте полный цикл подписки на Gmail, Яндекс, Mail.ru и Outlook. Письмо подтверждения может попадать в спам у конкретного провайдера — особенно если вы используете новый домен без прогрева. Проверьте через mail-tester.com — оценка должна быть не ниже 8/10.
+      </div>
+
+      <div class="note-block tip">
+        <div class="note-label">Мониторинг формы после запуска</div>
+        Настройте алерты в n8n: если за 24 часа ни одной подписки — уведомление в Telegram. Также отслеживайте: процент подтверждений (норма 60-80%), количество ошибок API, количество дубликатов. Это можно сделать через Google Sheets + n8n Schedule Trigger.
+      </div>
+
+      <h2>Расширенный чеклист: до запуска, запуск, после запуска</h2>
+      <h3>До запуска</h3>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">Домен отправки прогрет минимум 2 недели (Coldy/Warmup)</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">SPF, DKIM, DMARC настроены и проверены через mail-tester.com</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">Письмо подтверждения кастомизировано (не стандартный шаблон MailWizz)</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">Honeypot-поле добавлено в форму</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">CORS настроен в n8n (разрешён только домен формы)</span></div>
+      </div>
+
+      <h3>Во время запуска</h3>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">Тест на Gmail — письмо приходит, кнопка подтверждения работает</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">Тест на Яндекс — письмо не в спаме</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">Тест на Mail.ru — письмо доставлено</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">Тест дубликата — повторная подписка обработана корректно</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">Тест невалидного email — форма показывает ошибку</span></div>
+      </div>
+
+      <h3>После запуска (еженедельно)</h3>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">Процент подтверждений выше 60% (если ниже — проблема с доставкой или UX)</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">Нет всплеска ботов (проверить honeypot-логи)</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">n8n workflow не падает (проверить Executions → Failed)</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">✓</span><span style="font-size:12px">Google Sheets аудит-лог растёт (доказательство согласия для РКН)</span></div>
+      </div>
+
+      <h2>Итого: что вы научились делать</h2>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:16px 0">
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid rgba(0,229,255,.15)"><div style="font-size:13px;color:var(--heading);font-weight:700;margin-bottom:4px">Встроенная форма MailWizz</div><div style="font-size:12px;color:var(--muted)">Создание, настройка double opt-in, вставка через iframe/HTML на любой сайт.</div></div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid rgba(0,229,255,.15)"><div style="font-size:13px;color:var(--heading);font-weight:700;margin-bottom:4px">Интеграция с Tilda и WordPress</div><div style="font-size:12px;color:var(--muted)">Webhooks, плагины CF7/Gravity Forms, кастомный PHP — три способа на выбор.</div></div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid rgba(0,229,255,.15)"><div style="font-size:13px;color:var(--heading);font-weight:700;margin-bottom:4px">Кастомная HTML форма</div><div style="font-size:12px;color:var(--muted)">Работает на любом сайте. Защита: honeypot, валидация, rate-limit.</div></div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid rgba(0,229,255,.15)"><div style="font-size:13px;color:var(--heading);font-weight:700;margin-bottom:4px">Полный double opt-in через n8n</div><div style="font-size:12px;color:var(--muted)">Генерация токена, отправка письма через Postal, верификация, аудит-лог в Google Sheets.</div></div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid rgba(0,229,255,.15)"><div style="font-size:13px;color:var(--heading);font-weight:700;margin-bottom:4px">Страницы подписки</div><div style="font-size:12px;color:var(--muted)">subscribe-thanks, confirm, subscribe-confirmed — полный UX-цикл.</div></div>
+      </div>
+
       <div style="margin-top:32px;padding:28px;background:var(--surface);border:1px solid rgba(0,229,255,.2)"><div style="font-size:32px;margin-bottom:12px">🎓</div><div style="font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--heading);margin-bottom:10px;letter-spacing:-.5px">Курс завершён!</div><div style="font-size:14px;color:var(--muted);line-height:1.9;margin-bottom:20px">✓ Форма на Tilda, WordPress, кастомном сайте
 ✓ Double opt-in через n8n
 ✓ Страницы подтверждения
 ✓ Чеклист запуска</div>
-      
-      
-        
+
+
+
       </div>
       <div id="quizBlock" style="margin-top:40px">
         <div style="padding:20px 24px;background:rgba(123,97,255,.06);border:1px solid rgba(123,97,255,.25);margin-bottom:20px">

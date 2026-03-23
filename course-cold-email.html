@@ -764,6 +764,10 @@ footer {
     <a class="sidebar-lesson" data-n="7" onclick="showLesson(7)" href="#">
       <div class="lesson-num">7</div>Метрики cold email — что считать и что значит
     </a>
+    <div class="sidebar-module-title">Модуль 5 · Юридические аспекты</div>
+    <a class="sidebar-lesson" data-n="8" onclick="showLesson(8)" href="#">
+      <div class="lesson-num">8</div>Правовые нормы — GDPR, CAN-SPAM, 152-ФЗ
+    </a>
   </aside>
 
   <!-- CONTENT -->
@@ -934,7 +938,7 @@ var lessons = {
     module: 'Модуль 1 · Основы',
     title:  'Cold email vs массовые рассылки — принципиальная разница',
     time:   '15 мин',
-    content: `<div style="margin:0 0 28px;padding:20px 24px;background:var(--bg2);border:1px solid rgba(0,229,255,.15)"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px">📍 Дорожная карта</div><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><a href="course-warmup.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">Прогрев ✓</a><a href="course-agency.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">Email-агентства ✓</a><span style="color:var(--muted);font-size:16px">→</span><span style="font-size:11px;padding:4px 10px;background:rgba(0,229,255,.08);border:1px solid var(--accent);color:var(--accent);font-family:var(--font-mono);font-weight:700">📖 Cold Email / B2B Outreach</span></div></div>
+    content: `<div style="margin:0 0 28px;padding:20px 24px;background:var(--bg2);border:1px solid rgba(0,229,255,.15)"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px">📍 Дорожная карта</div><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><a href="course-warmup.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">Прогрев домена ✓</a><span style="color:var(--muted);font-size:16px">→</span><span style="font-size:11px;padding:4px 10px;background:rgba(0,229,255,.08);border:1px solid var(--accent);color:var(--accent);font-family:var(--font-mono);font-weight:700">📖 Холодные рассылки</span><span style="color:var(--muted);font-size:16px">→</span><a href="course-analytics.html" style="font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-family:var(--font-mono)">Аналитика</a></div></div>
       <h2>Это разные дисциплины</h2>
       <div style="display:flex;gap:12px;margin:16px 0">
         <div style="flex:1;padding:16px;background:var(--bg2);border:1px solid var(--border)">
@@ -959,7 +963,7 @@ var lessons = {
         <div class="note-label">Юридический аспект</div>
         В России cold email в B2B допускается при условии профессиональной релевантности (ст.18 ФЗ «О рекламе» — исключение для деловой корреспонденции). Всегда указывайте реальные данные отправителя и возможность отказа.
       </div>`
-  }
+  },
   2: {
     module: 'Модуль 1 · Основы',
     title:  'ICP и база — кому и откуда брать контакты',
@@ -988,7 +992,7 @@ var lessons = {
 <span class="comment"># NeverBounce, ZeroBounce или Millionverifier</span>
 <span class="comment"># Цель: Bounce Rate &lt; 2% чтобы не убить репутацию ящиков</span>
 <span class="comment"># Стоимость: $0.003-0.008 за адрес — дешевле чем лечить репутацию</span></pre></div>`
-  }
+  },
   3: {
     module: 'Модуль 2 · Инфраструктура',
     title:  'Инфраструктура для cold email — отдельные домены',
@@ -1022,7 +1026,7 @@ var lessons = {
         <div style="display:grid;grid-template-columns:160px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--muted)">Задержка между</span><span>120-300 секунд — имитация живого человека</span></div>
         <div style="display:grid;grid-template-columns:160px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--muted)">Рабочие часы</span><span>Отправлять 09:00-18:00 рабочие дни</span></div>
       </div>`
-  }
+  },
   4: {
     module: 'Модуль 3 · Тексты',
     title:  'Структура cold email — что работает в 2025',
@@ -1055,7 +1059,7 @@ var lessons = {
         <div style="display:grid;grid-template-columns:80px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--muted)">День 9</span><span>Follow-up 2: новый угол — кейс или вопрос</span></div>
         <div style="display:grid;grid-template-columns:80px 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--muted)">День 16</span><span>Break-up: «Понимаю что не актуально, закрываю тему»</span></div>
       </div>`
-  }
+  },
   5: {
     module: 'Модуль 4 · Инструменты',
     title:  'Instantly, Lemlist, Smartlead — обзор платформ',
@@ -1082,7 +1086,7 @@ var lessons = {
         <div style="display:grid;grid-template-columns:160px 1fr 100px;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--heading);font-weight:600">Spam Rate</span><span style="color:var(--muted)">Критично — выше 0.3% меняем подход</span><span style="color:#ff6b6b">&lt;0.3%</span></div>
       </div>
       <div style="margin-top:32px;padding:28px;background:var(--surface);border:1px solid rgba(0,229,255,.2)"><div style="font-size:32px;margin-bottom:12px">🎓</div><div style="font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--heading);margin-bottom:10px">Курс завершён!</div><div style="font-size:14px;color:var(--muted);line-height:1.9;margin-bottom:20px">✓ Понимаете разницу cold email vs рассылки<br>✓ Знаете как строить ICP и искать контакты<br>✓ Настроили отдельную инфраструктуру для outreach<br>✓ Пишете письма которые получают ответы<br>✓ Умеете работать с Instantly/Lemlist</div><div style="display:flex;gap:12px;flex-wrap:wrap"><a href="courses.html" class="btn-ghost">Все курсы</a></div></div>`
-  }
+  },
   6: {
     module: 'Модуль 3 · Тексты',
     title:  'Follow-up последовательность — 4 письма',
@@ -1134,7 +1138,7 @@ var lessons = {
 
 Удачи,
 {{senderName}}</pre></div>`
-  }
+  },
   7: {
     module: 'Модуль 4 · Метрики',
     title:  'Метрики cold email — что считать и что значит',
@@ -1177,6 +1181,141 @@ var lessons = {
       <div id="courseFinale" style="display:none;margin-top:32px;padding:28px;background:var(--surface);border:1px solid rgba(0,229,255,.2)"><div style="font-size:36px;margin-bottom:12px">&#127891;</div><div style="font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--heading);margin-bottom:10px">Курс завершён!</div><div style="font-size:14px;color:var(--muted);line-height:1.9;margin-bottom:20px">Вы прошли все уроки и финальный тест.</div><div style="display:flex;gap:12px;flex-wrap:wrap"><a href="courses.html" class="btn-primary">Все курсы →</a><a href="courses.html" class="btn-ghost">Все курсы</a></div></div>`<div style="margin-bottom:12px;padding:20px;background:var(--bg2);border:1px solid var(--border)"><div style="font-size:10px;color:var(--muted);font-family:var(--font-mono);margin-bottom:8px">Вопрос ${i+1} / ${CQ.length}</div><div style="font-size:15px;color:var(--heading);font-weight:600;line-height:1.5;margin-bottom:14px">${q.q}</div><div style="display:flex;flex-direction:column;gap:6px">${q.opts.map((o,j)=>`<div id="cq${i}o${j}" onclick="cqAnswer(${i},${j})" style="display:flex;gap:10px;align-items:center;padding:10px 14px;background:var(--bg);border:1px solid var(--border);cursor:pointer;font-size:13px;color:var(--text);transition:all .12s" onmouseover="if(!this.dataset.l)this.style.borderColor='var(--accent)'" onmouseout="if(!this.dataset.l)this.style.borderColor='var(--border)'"><div style="min-width:22px;height:22px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-family:var(--font-mono);color:var(--muted)">${String.fromCharCode(65+j)}</div>${o}</div>`).join('')}</div><div id="cq${i}e" style="display:none;margin-top:10px;padding:10px 14px;background:var(--surface);border-left:3px solid var(--accent);font-size:12px;color:var(--muted);line-height:1.7">${q.e}</div></div>`).join('');cqUpd();}window.cqAnswer=function(qi,oi){if(cqA[qi]!==undefined)return;cqA[qi]=oi;const q=CQ[qi];const ok=oi===q.c;if(ok)cqC++;q.opts.forEach((_,j)=>{const e=document.getElementById(`cq${qi}o${j}`);if(!e)return;e.dataset.l='1';e.style.cursor='default';e.style.pointerEvents='none';if(j===q.c){e.style.borderColor='var(--accent3)';e.style.background='rgba(0,255,136,.08)';e.style.color='var(--accent3)';}else if(j===oi&&!ok){e.style.borderColor='#ff6b6b';e.style.background='rgba(255,107,107,.06)';e.style.color='#ff6b6b';}});document.getElementById(`cq${qi}e`).style.display='block';cqUpd();if(Object.keys(cqA).length===CQ.length)setTimeout(cqResult,500);};function cqUpd(){const n=Object.keys(cqA).length,p=CQ.length?Math.round(cqC/CQ.length*100):0;const c=document.getElementById('cq-score-circle'),b=document.getElementById('cq-bar'),s=document.getElementById('cq-status');if(c){c.textContent=cqC+'/'+CQ.length;c.style.borderColor=p>=80?'var(--accent3)':'var(--accent2)';}if(b)b.style.width=p+'%';if(s)s.textContent=n+' из '+CQ.length;}function cqResult(){const passed=cqC>=4;const ri=document.getElementById('cq-result-icon'),rt=document.getElementById('cq-result-title'),rx=document.getElementById('cq-result-text'),rb=document.getElementById('cq-retry-btn'),rp=document.getElementById('cq-result');if(passed){ri.textContent='🏆';rt.textContent='Тест пройден! '+cqC+' из '+CQ.length;rx.textContent='Курс завершён — смотрите финальный блок ниже.';if(rb)rb.style.display='none';const f=document.getElementById('courseFinale');if(f){f.style.display='block';f.scrollIntoView({behavior:'smooth',block:'nearest'});}try{localStorage.setItem(CQ_KEY,'1');}catch(e){}}else{ri.textContent='💪';rt.textContent='Почти! '+cqC+' из '+CQ.length;rx.textContent='Нужно 4 правильных. Читайте объяснения и попробуйте снова.';if(rb)rb.style.display='inline-flex';}if(rp)rp.style.display='block';}window.cqRetry=function(){document.getElementById('cq-result').style.display='none';cqRender();};const done=localStorage.getItem(CQ_KEY);if(done){const f=document.getElementById('courseFinale');if(f)f.style.display='block';const w=document.getElementById('courseQuizWrap');if(w)w.style.display='none';}else{cqRender();}})(  );
       <\/script>
       `
+  },
+  8: {
+    module: 'Модуль 5 · Юридические аспекты',
+    title:  'Правовые нормы — GDPR, CAN-SPAM, 152-ФЗ',
+    time:   '25 мин',
+    content: `
+      <h2>Зачем разбираться в законах если вы просто шлёте письма</h2>
+      <p>Cold email находится в серой зоне законодательства большинства стран. Незнание закона не освобождает от штрафов — а штрафы серьёзные: до 20 млн евро по GDPR, до $46 000 за каждое письмо по CAN-SPAM, до 18 млн рублей по 152-ФЗ. Разберём три ключевых регулятора и что конкретно вам нужно делать.</p>
+
+      <div class="note-block warn">
+        <div class="note-label">Дисклеймер</div>
+        Этот урок — обзор ключевых требований для практиков. Он не заменяет консультацию юриста. Если вы работаете с крупными объёмами или чувствительными рынками (здравоохранение, финансы) — обязательно проконсультируйтесь со специалистом.
+      </div>
+
+      <h2>GDPR — General Data Protection Regulation (ЕС)</h2>
+      <p>GDPR действует с мая 2018 года и распространяется на <strong>любую компанию</strong>, которая обрабатывает данные резидентов ЕС — независимо от того, где зарегистрирована ваша компания.</p>
+
+      <h3>Основания для отправки cold email в ЕС</h3>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:16px 0">
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)"><div style="font-size:12px;color:var(--heading);font-weight:700;margin-bottom:4px">Legitimate Interest (Статья 6(1)(f))</div><div style="font-size:12px;color:var(--muted)">B2B cold email допускается если у вас есть «законный интерес» — ваше предложение релевантно бизнесу получателя. Но вы обязаны провести LIA (Legitimate Interest Assessment) и задокументировать обоснование.</div></div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)"><div style="font-size:12px;color:var(--heading);font-weight:700;margin-bottom:4px">Consent (Статья 6(1)(a))</div><div style="font-size:12px;color:var(--muted)">Явное согласие — самое надёжное основание. Подписка на сайте, заполнение формы, согласие на обработку данных. Для B2C в ЕС — практически единственный вариант.</div></div>
+      </div>
+
+      <h3>Ключевые требования GDPR для cold email</h3>
+      <ul class="steps-list">
+        <li><div class="step-n">1</div><div class="step-text">Право на удаление (Right to be Forgotten) — по запросу получателя вы обязаны удалить все его данные в течение 30 дней</div></li>
+        <li><div class="step-n">2</div><div class="step-text">Право на доступ (Right of Access) — получатель может запросить все данные, которые вы о нём храните</div></li>
+        <li><div class="step-n">3</div><div class="step-text">Прозрачность — в первом письме укажите откуда у вас email получателя и зачем вы пишете</div></li>
+        <li><div class="step-n">4</div><div class="step-text">Data Protection Officer — при обработке данных более 5000 субъектов ЕС рекомендуется назначить DPO</div></li>
+        <li><div class="step-n">5</div><div class="step-text">Privacy Policy — на вашем сайте должна быть политика конфиденциальности с описанием обработки данных</div></li>
+      </ul>
+
+      <div class="note-block warn">
+        <div class="note-label">Штрафы GDPR</div>
+        До 20 млн евро или 4% годового оборота компании (что больше). В 2023-2025 годах средний штраф за email-нарушения составил 50 000-500 000 евро.
+      </div>
+
+      <h2>CAN-SPAM Act (США)</h2>
+      <p>CAN-SPAM (Controlling the Assault of Non-Solicited Pornography And Marketing Act, 2003) — федеральный закон США, регулирующий коммерческие email. В отличие от GDPR, CAN-SPAM <strong>не требует предварительного согласия</strong> — но устанавливает строгие правила к содержимому письма.</p>
+
+      <h3>7 обязательных требований CAN-SPAM</h3>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">1</span><span style="font-size:12px"><strong>Не использовать обманчивые заголовки</strong> — From, To и Reply-To должны точно идентифицировать отправителя</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">2</span><span style="font-size:12px"><strong>Тема должна отражать содержание</strong> — нельзя писать «Re: наш разговор» если разговора не было</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">3</span><span style="font-size:12px"><strong>Маркировать как рекламу</strong> — письмо должно быть идентифицируемо как коммерческое (не обязательно слово «реклама», но должно быть понятно)</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">4</span><span style="font-size:12px"><strong>Физический адрес отправителя</strong> — каждое письмо должно содержать действующий почтовый адрес вашей компании или P.O. Box</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">5</span><span style="font-size:12px"><strong>Механизм отписки</strong> — каждое письмо должно содержать понятный способ отказаться от дальнейших писем</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">6</span><span style="font-size:12px"><strong>Обработка отписки за 10 дней</strong> — запросы на отписку должны быть выполнены в течение 10 рабочих дней</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">7</span><span style="font-size:12px"><strong>Ответственность за подрядчиков</strong> — если вы наняли агентство для рассылки, вы всё равно несёте ответственность</span></div>
+      </div>
+
+      <div class="note-block warn">
+        <div class="note-label">Штрафы CAN-SPAM</div>
+        До $46 517 за каждое письмо, нарушающее закон (сумма индексируется ежегодно). FTC активно преследует нарушителей — были кейсы штрафов на $1M+ за массовые рассылки без unsubscribe.
+      </div>
+
+      <h2>152-ФЗ — Закон о персональных данных (Россия)</h2>
+      <p>Федеральный закон №152-ФЗ «О персональных данных» регулирует обработку любых данных, по которым можно идентифицировать физическое лицо — включая email-адрес и имя.</p>
+
+      <h3>Ключевые требования для cold email в РФ</h3>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:16px 0">
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)"><div style="font-size:12px;color:var(--heading);font-weight:700;margin-bottom:4px">Согласие на обработку ПД</div><div style="font-size:12px;color:var(--muted)">По умолчанию необходимо согласие субъекта. Для B2B cold email есть исключение: ст.18 ФЗ «О рекламе» допускает деловую корреспонденцию при условии профессиональной релевантности.</div></div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)"><div style="font-size:12px;color:var(--heading);font-weight:700;margin-bottom:4px">Уведомление Роскомнадзора</div><div style="font-size:12px;color:var(--muted)">Если вы систематически обрабатываете персональные данные — обязаны уведомить РКН и внести себя в реестр операторов ПД. Форма на pd.rkn.gov.ru.</div></div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)"><div style="font-size:12px;color:var(--heading);font-weight:700;margin-bottom:4px">Хранение данных на территории РФ</div><div style="font-size:12px;color:var(--muted)">Первичный сбор и хранение ПД граждан РФ должны осуществляться на серверах в России (ч.5 ст.18 152-ФЗ).</div></div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border)"><div style="font-size:12px;color:var(--heading);font-weight:700;margin-bottom:4px">Право на отзыв согласия</div><div style="font-size:12px;color:var(--muted)">Субъект может отозвать согласие в любой момент. Вы обязаны прекратить обработку и удалить данные в течение 30 дней.</div></div>
+      </div>
+
+      <div class="note-block info">
+        <div class="note-label">Штрафы 152-ФЗ (с 2025 года)</div>
+        Обработка без согласия: до 300 000 руб. для юрлиц (повторно — до 18 млн руб.). Неуведомление РКН: до 300 000 руб. Утечка данных: от 3 до 15 млн руб. в зависимости от объёма.
+      </div>
+
+      <h2>Практический чеклист — что ОБЯЗАТЕЛЬНО в каждом cold email</h2>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">&#10003;</span><span style="font-size:12px"><strong>Реальное имя отправителя</strong> — «Иван Петров» а не «Sales Team» или «noreply»</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">&#10003;</span><span style="font-size:12px"><strong>Настоящий email для ответа</strong> — Reply-To должен работать и приходить к живому человеку</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">&#10003;</span><span style="font-size:12px"><strong>Физический адрес компании</strong> — юридический или фактический, P.O. Box допускается</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">&#10003;</span><span style="font-size:12px"><strong>Ссылка/механизм отписки</strong> — один клик или ответ «отписаться» — оба варианта допустимы</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">&#10003;</span><span style="font-size:12px"><strong>Идентификация компании</strong> — название компании, чем занимаетесь, сайт</span></div>
+        <div style="display:flex;gap:10px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border)"><span style="color:var(--accent3)">&#10003;</span><span style="font-size:12px"><strong>Правдивая тема письма</strong> — тема должна отражать содержание, никаких фейковых «Re:» или «Fwd:»</span></div>
+      </div>
+
+      <h2>Как правильно реализовать opt-out</h2>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:16px 0">
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid rgba(0,229,255,.2)"><div style="font-size:12px;color:var(--heading);font-weight:700;margin-bottom:4px">Вариант 1: Ссылка unsubscribe</div><div style="font-size:12px;color:var(--muted)">Ссылка в подписи ведёт на страницу подтверждения отписки. Instantly, Lemlist и Smartlead делают это автоматически. Обязательно проверьте что ссылка работает.</div></div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid rgba(0,229,255,.2)"><div style="font-size:12px;color:var(--heading);font-weight:700;margin-bottom:4px">Вариант 2: Текстовый opt-out</div><div style="font-size:12px;color:var(--muted)">«Если это письмо нерелевантно — ответьте "стоп" и я удалю ваш контакт.» Допустимо для cold email — даже предпочтительнее, так как провоцирует reply (улучшает deliverability).</div></div>
+        <div style="padding:12px 14px;background:var(--bg2);border:1px solid rgba(0,229,255,.2)"><div style="font-size:12px;color:var(--heading);font-weight:700;margin-bottom:4px">Обработка отписок</div><div style="font-size:12px;color:var(--muted)">Ведите глобальный suppression list. Любой адрес, запросивший отписку, должен быть исключён из ВСЕХ кампаний — текущих и будущих. Срок обработки: 10 дней (CAN-SPAM), рекомендуется — 48 часов.</div></div>
+      </div>
+
+      <div class="note-block warn">
+        <div class="note-label">Частые нарушения</div>
+        <div style="font-size:12px;line-height:1.8">
+        1. Фейковые «Re:» в теме — создаёт иллюзию предыдущей переписки. Штраф по CAN-SPAM.<br>
+        2. Нет физического адреса — самое частое нарушение. Добавьте в подпись.<br>
+        3. Unsubscribe не работает или обрабатывается дольше 10 дней.<br>
+        4. Продолжение отправки после отписки — прямой путь к штрафу и блокировке домена.<br>
+        5. Покупка баз с личными email (Gmail, Mail.ru) для B2C рассылки без согласия.
+        </div>
+      </div>
+
+      <h2>Пример compliant email footer</h2>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">копировать</button><pre><span class="comment"># Подпись для cold email — включает все обязательные элементы:</span>
+
+--
+Иван Петров
+Head of Partnerships | CompanyName
+ivan@getcompany.ru | +7 (999) 123-45-67
+getcompany.ru
+
+CompanyName LLC
+123456, Москва, ул. Примерная, д. 10, офис 5
+
+<span class="comment"># Для США добавьте английский вариант:</span>
+CompanyName LLC, 123 Main St, Suite 100, New York, NY 10001
+
+Если это письмо нерелевантно — ответьте "стоп"
+и я немедленно удалю ваш контакт из базы.
+
+<span class="comment"># Или ссылка (Instantly/Smartlead генерируют автоматически):</span>
+Отписаться: {{unsubscribe_link}}</pre></div>
+
+      <h2>Рекомендации по юрисдикциям</h2>
+      <div style="display:flex;flex-direction:column;gap:4px;margin:16px 0">
+        <div style="display:grid;grid-template-columns:100px 1fr 1fr;padding:8px 14px;background:var(--surface);border:1px solid var(--border);font-size:10px;color:var(--muted)"><span>Регион</span><span>Можно ли слать cold email</span><span>Ключевое условие</span></div>
+        <div style="display:grid;grid-template-columns:100px 1fr 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--heading);font-weight:600">США</span><span style="color:var(--accent3)">Да — opt-out модель</span><span style="color:var(--muted)">Unsubscribe + физ. адрес + честная тема</span></div>
+        <div style="display:grid;grid-template-columns:100px 1fr 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--heading);font-weight:600">ЕС</span><span style="color:#f0a500">B2B — да (Legitimate Interest)</span><span style="color:var(--muted)">LIA + прозрачность + право на удаление</span></div>
+        <div style="display:grid;grid-template-columns:100px 1fr 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--heading);font-weight:600">Россия</span><span style="color:#f0a500">B2B — да (деловая переписка)</span><span style="color:var(--muted)">Релевантность + opt-out + уведомление РКН</span></div>
+        <div style="display:grid;grid-template-columns:100px 1fr 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--heading);font-weight:600">Канада</span><span style="color:#ff6b6b">Строго — CASL (opt-in)</span><span style="color:var(--muted)">Требуется явное согласие для коммерческих email</span></div>
+        <div style="display:grid;grid-template-columns:100px 1fr 1fr;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-top:none;font-size:12px"><span style="color:var(--heading);font-weight:600">UK</span><span style="color:#f0a500">B2B — да (PECR + UK GDPR)</span><span style="color:var(--muted)">Аналогично ЕС, отдельный регулятор ICO</span></div>
+      </div>
+
+      <div class="note-block info">
+        <div class="note-label">Итого</div>
+        Соблюдение закона — это не бюрократия, а защита вашего бизнеса и репутации. Один штраф может стоить больше чем вся прибыль от cold email за год. Физический адрес в подписи, работающий unsubscribe и честная тема письма — три вещи которые занимают 30 секунд настройки и защищают от 90% проблем.
+      </div>`
   }
 }
 window.lessons = lessons;
