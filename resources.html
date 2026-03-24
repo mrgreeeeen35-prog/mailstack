@@ -41,7 +41,23 @@
     .time-block { display:flex; gap:6px; align-items:center; font-size:11px; color:var(--muted); margin-top:8px; }
     .time-dot { width:6px; height:6px; border-radius:50%; background:var(--accent3); }
     @media(max-width:900px){ .res-grid { grid-template-columns:1fr; } }
-  
+    @media(max-width:768px){
+      .section-tabs { flex-wrap:wrap; }
+      .section-tab { padding:8px 14px; font-size:11px; }
+      .lock-box { padding:32px 24px; }
+      .lock-title { font-size:22px; }
+      .code-box { max-width:95vw; }
+    }
+    @media(max-width:480px){
+      .lock-box { padding:24px 16px; }
+      .lock-title { font-size:20px; }
+      .lock-desc { font-size:13px; }
+      .lock-feat { font-size:11px; padding:6px 10px; }
+      .section-tab { padding:6px 10px; font-size:10px; }
+      .res-card { padding:20px 16px; }
+      .code-box-body pre { padding:16px; font-size:11px; }
+    }
+
 /* ── Resources Lock ────────────────────────────────────── */
 .resources-locked   { display: none; }
 .resources-unlocked { display: none; }

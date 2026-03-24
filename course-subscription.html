@@ -683,6 +683,14 @@ footer {
   .course-sidebar { position: static; height: auto; }
   .course-content { padding: 32px 24px; }
 }
+
+/* ── Mobile sidebar toggle ───────────────────────────── */
+@media (max-width: 900px) {
+  .course-sidebar { max-height: 0; overflow: hidden; transition: max-height 0.3s; }
+  .course-sidebar.sidebar-open { max-height: 60vh; overflow-y: auto; }
+  .sidebar-toggle { display: block; background: var(--surface); border: 1px solid var(--border); border-bottom: none; color: var(--accent); padding: 10px; font-family: var(--font-mono); font-size: 12px; cursor: pointer; text-align: center; width: 100%; }
+}
+.sidebar-toggle { display: none; }
 </style>
 
 </head>
@@ -734,6 +742,7 @@ footer {
 <div class="course-layout" id="courseLayout" style="display:none">
 
   <!-- SIDEBAR -->
+  <button class="sidebar-toggle" onclick="this.nextElementSibling.classList.toggle('sidebar-open');this.textContent=this.nextElementSibling.classList.contains('sidebar-open')?'▲ Скрыть меню':'▼ Меню уроков'">▼ Меню уроков</button>
   <aside class="course-sidebar">
     <div class="sidebar-title">Форма подписки с сайта</div>
     <div class="progress-wrap"><span id="progressText" style="font-size:12px;color:var(--muted);font-family:var(--font-mono)">0 / 0 пройдено</span></div>
@@ -1482,5 +1491,6 @@ function copyCode(btn) {
 
 
 </script>
+<script src="js/main.js"></script>
 </body>
 </html>

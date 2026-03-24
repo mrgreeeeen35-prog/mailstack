@@ -721,6 +721,14 @@ footer {
 .cquiz-fill    { height: 100%; background: linear-gradient(90deg, var(--accent3), var(--accent)); border-radius: 2px; transition: width .4s; }
 .cquiz-result  { padding: 24px; background: var(--surface); border: 1px solid rgba(0,229,255,.2); border-top: none; text-align: center; display: none; }
 .cquiz-result.show { display: block; }
+
+/* ── Mobile sidebar toggle ───────────────────────────── */
+@media (max-width: 900px) {
+  .course-sidebar { max-height: 0; overflow: hidden; transition: max-height 0.3s; }
+  .course-sidebar.sidebar-open { max-height: 60vh; overflow-y: auto; }
+  .sidebar-toggle { display: block; background: var(--surface); border: 1px solid var(--border); border-bottom: none; color: var(--accent); padding: 10px; font-family: var(--font-mono); font-size: 12px; cursor: pointer; text-align: center; width: 100%; }
+}
+.sidebar-toggle { display: none; }
 </style>
 </head>
 <body>
@@ -771,6 +779,7 @@ footer {
 <div class="course-layout" id="courseLayout" style="display:none">
 
   <!-- SIDEBAR -->
+  <button class="sidebar-toggle" onclick="this.nextElementSibling.classList.toggle('sidebar-open');this.textContent=this.nextElementSibling.classList.contains('sidebar-open')?'▲ Скрыть меню':'▼ Меню уроков'">▼ Меню уроков</button>
   <aside class="course-sidebar">
     <div class="sidebar-title">Blacklist</div>
     <div class="progress-wrap"><span id="progressText" style="font-size:12px;color:var(--muted);font-family:var(--font-mono)">0 / 0 пройдено</span></div>
@@ -1676,5 +1685,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 </script>
+<script src="js/main.js"></script>
 </body>
 </html>

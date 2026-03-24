@@ -183,11 +183,20 @@
   line-height: 1.8;
 }
 
+/* Pricing rows wrapper */
+.pricing-rows-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
 @media (max-width: 900px) {
   .servers-grid { grid-template-columns: 1fr; }
   .server-steps { grid-template-columns: 1fr; }
   .compare-table { font-size: 12px; }
   .compare-table th, .compare-table td { padding: 10px 12px; }
+  .pricing-rows-wrap > div { min-width: 700px; }
+}
+@media (max-width: 600px) {
+  .server-card { padding: 28px 20px; }
+  .server-price { font-size: 32px; }
+  .compare-table th, .compare-table td { padding: 8px 10px; font-size: 11px; }
 }
 </style>
 </head>
@@ -300,7 +309,7 @@
   <h2>Выберите<br><em>объём рассылок</em></h2>
   <p class="section-desc">Все тарифы включают VPS, Mailcow + Postal + MailWizz, настройку DNS, SPF/DKIM/DMARC и передачу в управление.</p>
 
-  <div style="display:flex;flex-direction:column;background:var(--border);border:1px solid var(--border)" class="reveal">
+  <div class="pricing-rows-wrap"><div style="display:flex;flex-direction:column;background:var(--border);border:1px solid var(--border)" class="reveal">
 
     <!-- 500/день -->
     <div style="background:var(--bg);display:grid;grid-template-columns:180px 1fr 100px 110px 110px 180px;align-items:center;transition:background .2s;position:relative" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background='var(--bg)'">
@@ -563,7 +572,7 @@
         <a href="https://t.me/yourusername" style="display:inline-block;margin-top:8px;font-size:11px;text-decoration:none;font-family:var(--font-mono);border:1px solid rgba(123,97,255,.4);color:#7b61ff;padding:5px 14px;transition:opacity .2s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">Под заказ →</a>
       </div>
     </div>
-  </div>
+  </div></div>
 
   <!-- Примечание -->
   <div style="margin-top:20px;padding:16px 24px;border:1px solid var(--border);background:var(--bg);font-size:13px;color:var(--muted);line-height:1.7">
@@ -617,6 +626,7 @@
   <h2>Почему готовый сервер<br><em>лучше чем настройка самому</em></h2>
   <p class="section-desc">Вы экономите 2–4 недели и десятки часов работы. Мы уже прошли этот путь — отдаём результат.</p>
 
+  <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
   <table class="compare-table reveal" style="margin-top:40px">
     <thead>
       <tr>
@@ -668,6 +678,7 @@
       </tr>
     </tbody>
   </table>
+  </div>
 
   <div style="margin-top:24px;padding:16px 24px;border:1px solid rgba(0,229,255,.15);background:rgba(0,229,255,.03);font-size:13px;color:var(--muted);line-height:1.7">
     Самостоятельная настройка подходит, если вы хотите глубоко разобраться в email-инфраструктуре. Для этого у нас есть <a href="courses.html" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(0,229,255,.3)">24 курса</a> и <a href="compare.html" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(0,229,255,.3)">подробное сравнение инструментов</a>.

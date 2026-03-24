@@ -1167,6 +1167,33 @@
     .stack-bar { padding: 20px 24px; }
     .c-summary { position: static; }
     .calc-result { position: static; }
+    .price-amount { font-size: 36px !important; }
+    .calc-result-amount { font-size: 36px !important; }
+    .rv-quote { font-size: 28px !important; }
+    .c-cards-grid { grid-template-columns: repeat(2,1fr) !important; }
+  }
+
+  @media (max-width: 600px) {
+    .hero { padding: 90px 20px 48px !important; }
+    section { padding: 40px 20px !important; }
+    .hero-stats { gap: 16px; }
+    .hero-stats > div { min-width: 40%; }
+    .stat-val { font-size: 28px !important; }
+    .price-amount { font-size: 32px !important; }
+    .calc-result-amount { font-size: 32px !important; }
+    .c-cards-grid { grid-template-columns: 1fr !important; }
+    .grid-4 { grid-template-columns: 1fr !important; }
+    .cta-section { padding: 60px 20px !important; }
+    .rv-quote { font-size: 22px !important; }
+    .review-card { min-width: 260px !important; max-width: 260px !important; }
+  }
+
+  @media (max-width: 480px) {
+    .hero { padding: 80px 16px 40px !important; }
+    section { padding: 32px 16px !important; }
+    .cta-section { padding: 48px 16px !important; }
+    .stack-bar { padding: 16px !important; }
+    .review-card { min-width: 240px !important; max-width: 240px !important; }
   }
 </style>
 
