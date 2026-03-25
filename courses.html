@@ -1082,60 +1082,84 @@ const PATHS = {
 
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:32px" class="reveal authors-grid">
 
-    <div style="background:var(--bg);padding:28px">
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Дмитрий Волков</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Системный архитектор</div>
-      <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono);margin-bottom:12px">Инфраструктура · VPS · Docker · Nginx</div>
-      <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">8 лет в DevOps. Обслуживает email-инфраструктуру для 40+ агентств. Автор блоков по VPS, Docker, Nginx, безопасности и резервному копированию.</p>
+    <div style="background:var(--bg);padding:28px;display:flex;gap:16px;align-items:flex-start">
+      <img src="img/team/andrey.jpg" alt="Андрей" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);flex-shrink:0">
+      <div>
+        <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Андрей</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Founder / Архитектор</div>
+        <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono);margin-bottom:12px">Инфраструктура · Стратегия · Клиенты</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">Основатель MAILSTACK. Проектирует email-стеки под ключ, от одного сервера до кластеров на 100K+ писем в день. Автор и куратор всех курсов.</p>
+      </div>
     </div>
 
-    <div style="background:var(--bg);padding:28px">
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Александр Петров</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Специалист по доставляемости</div>
-      <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono);margin-bottom:12px">SPF · DKIM · DMARC · Прогрев</div>
-      <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">Вывел из спама более 200 доменов. Работал с базами от 10 000 до 3 млн подписчиков. Автор курсов по аутентификации, прогреву и постмастерам.</p>
+    <div style="background:var(--bg);padding:28px;display:flex;gap:16px;align-items:flex-start">
+      <img src="img/team/dmitry.jpg" alt="Дмитрий" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0">
+      <div>
+        <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Дмитрий</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">DevOps-инженер</div>
+        <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono);margin-bottom:12px">VPS · Docker · Nginx · CI/CD</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">8 лет в DevOps. Обслуживает email-инфраструктуру для 40+ агентств. Автор блоков по VPS, Docker, Nginx, безопасности и резервному копированию.</p>
+      </div>
     </div>
 
-    <div style="background:var(--bg);padding:28px">
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Мария Соколова</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Email-маркетолог</div>
-      <div style="font-size:11px;color:var(--accent2);font-family:var(--font-mono);margin-bottom:12px">MailWizz · Копирайтинг · A/B тесты</div>
-      <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">7 лет в email-маркетинге. Средний Open Rate клиентов — 28–34%. Автор курсов по MailWizz, HTML-шаблонам, копирайтингу и сегментации.</p>
+    <div style="background:var(--bg);padding:28px;display:flex;gap:16px;align-items:flex-start">
+      <img src="img/team/egor.jpg" alt="Егор" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0">
+      <div>
+        <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Егор</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Специалист по доставляемости</div>
+        <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono);margin-bottom:12px">SPF · DKIM · DMARC · Прогрев</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">Вывел из спама более 200 доменов. Работал с базами от 10K до 3 млн подписчиков. Автор курсов по аутентификации, прогреву и постмастерам.</p>
+      </div>
     </div>
 
-    <div style="background:var(--bg);padding:28px">
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Игорь Михайлов</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Инженер автоматизации</div>
-      <div style="font-size:11px;color:var(--accent2);font-family:var(--font-mono);margin-bottom:12px">n8n · Chatwoot · API интеграции</div>
-      <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">Построил 150+ workflow автоматизации для email-агентств. Сократил ручную работу клиентов на 80%. Автор курсов по n8n и Chatwoot.</p>
+    <div style="background:var(--bg);padding:28px;display:flex;gap:16px;align-items:flex-start">
+      <img src="img/team/marina.jpg" alt="Марина" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0">
+      <div>
+        <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Марина</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Email-маркетолог</div>
+        <div style="font-size:11px;color:var(--accent2);font-family:var(--font-mono);margin-bottom:12px">MailWizz · Копирайтинг · A/B тесты</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">7 лет в email-маркетинге. Средний Open Rate клиентов — 28–34%. Автор курсов по MailWizz, HTML-шаблонам, копирайтингу и сегментации.</p>
+      </div>
     </div>
 
-    <div style="background:var(--bg);padding:28px">
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Андрей Козлов</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Специалист по Postal и Mailcow</div>
-      <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono);margin-bottom:12px">Mailcow · Postal · SMTP · Ротация IP</div>
-      <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">Установил и настроил 80+ почтовых серверов на базе Mailcow+Postal. Знает все edge cases и типичные ошибки. Автор курса Mailcow + Postal.</p>
+    <div style="background:var(--bg);padding:28px;display:flex;gap:16px;align-items:flex-start">
+      <img src="img/team/artem.jpg" alt="Артём" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0">
+      <div>
+        <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Артём</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Безопасность / Mailcow + Postal</div>
+        <div style="font-size:11px;color:var(--accent);font-family:var(--font-mono);margin-bottom:12px">Mailcow · Postal · Firewall · Бэкапы</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">Установил и настроил 80+ почтовых серверов на базе Mailcow+Postal. Знает все edge cases и типичные ошибки. Автор курса Mailcow + Postal.</p>
+      </div>
     </div>
 
-    <div style="background:var(--bg);padding:28px">
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Кирилл Новиков</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Эксперт по B2B outreach</div>
-      <div style="font-size:11px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:12px">Cold Email · Instantly · Lemlist</div>
-      <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">Провёл 300+ cold email кампаний с Reply Rate выше 8%. Строил outreach-инфраструктуры для SaaS и агентств с нуля. Автор курса Cold Email / B2B.</p>
+    <div style="background:var(--bg);padding:28px;display:flex;gap:16px;align-items:flex-start">
+      <img src="img/team/olga.jpg" alt="Ольга" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0">
+      <div>
+        <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Ольга</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Мониторинг / Интеграции</div>
+        <div style="font-size:11px;color:var(--accent2);font-family:var(--font-mono);margin-bottom:12px">n8n · Chatwoot · Grafana · API</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">Построила 150+ workflow автоматизации для email-агентств. Сократила ручную работу клиентов на 80%. Автор курсов по n8n и Chatwoot.</p>
+      </div>
     </div>
 
-    <div style="background:var(--bg);padding:28px">
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Елена Громова</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Юрист по персональным данным</div>
-      <div style="font-size:11px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:12px">152-ФЗ · GDPR · CAN-SPAM</div>
-      <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">Специализируется на защите данных и email-маркетинге. Консультировал 50+ агентств по выстраиванию юридически чистых процессов рассылок. Автор курса 152-ФЗ/GDPR.</p>
+    <div style="background:var(--bg);padding:28px;display:flex;gap:16px;align-items:flex-start">
+      <img src="img/team/kirill.jpg" alt="Кирилл" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0">
+      <div>
+        <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Кирилл</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Техподдержка / B2B outreach</div>
+        <div style="font-size:11px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:12px">Cold Email · Тикеты · Консультации</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">Провёл 300+ cold email кампаний с Reply Rate выше 8%. Строил outreach-инфраструктуры для SaaS и агентств с нуля. Автор курса Cold Email / B2B.</p>
+      </div>
     </div>
 
-    <div style="background:var(--bg);padding:28px">
-      <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Сергей Ильин</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Руководитель email-агентства</div>
-      <div style="font-size:11px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:12px">Агентство · Клиенты · Масштабирование</div>
-      <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">Управляет агентством с 15+ клиентами. Прошёл путь от первого клиента до стабильного бизнеса на email-инфраструктуре. Автор курса Email-агентства.</p>
+    <div style="background:var(--bg);padding:28px;display:flex;gap:16px;align-items:flex-start">
+      <img src="img/team/nikita.jpg" alt="Никита" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0">
+      <div>
+        <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--heading);margin-bottom:2px">Никита</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">QA / Тестирование</div>
+        <div style="font-size:11px;color:var(--accent3);font-family:var(--font-mono);margin-bottom:12px">Deliverability · mail-tester · inbox</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.8;margin:0">Тестирует каждую инфраструктуру перед сдачей. Отвечает за 97.9% deliverability в продакшене. Автор курса по аналитике и отчётности.</p>
+      </div>
     </div>
 
   </div>
